@@ -1,0 +1,50 @@
+var express = require('express');
+var router = express.Router();
+var controller = require('../controllers/administrator_controller');
+
+var dataSuccess = {
+    status: '0', 
+    msg: '请求成功'
+};
+
+var parameterError = {
+    status: '1', 
+    msg: '参数错误'
+};
+
+//查找所有管理员
+router.get('/selectList', function(req, res, next) {
+    if (req == '') {
+		res.end(parameterError);
+        return;
+    }
+    controller.selectList(req , res);
+});
+
+//查找一个管理员
+router.get('/selectByUserName', function(req, res, next) {
+    controller.selectByUserName(req , res);
+});
+
+//添加一条管理员
+router.post('/addOne', function(req, res, next) {
+	//如果没有post数据或者数据为空,直接返回
+    if (req.body.username == undefined ||req.body.username == ''
+        || req.body.password == undefined || req.body.password == '') {
+        res.end(parameterError);
+        return;
+    }
+    controller.addOne(req , res);
+});
+
+//删除一个管理员
+router.get('/deleteByUserName', function(req, res, next) {
+    controller.deleteByUserName(req , res);
+});
+
+//更新一条管理员
+router.post('/updateByUserName', function(req, res, next) {
+    controller.updateByUserName(req , res);
+});
+
+module.exports = router;

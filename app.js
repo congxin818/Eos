@@ -8,7 +8,8 @@ var bodyParser = require('body-parser');
 ///=======路由信息 （接口地址）开始 存放在./routes目录下===========//
 var index = require('./routes/index');
 var users = require('./routes/users');
-var message = require('./routes/route_message');
+var message = require('./routes/message_route');
+var administrator = require('./routes/administrator_route');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use("*", function(request, response, next) {
 app.use('/', index);//在app中注册index该接口 
 app.use('/user', users);//在app中注册users接口
 app.use('/message' , message);
+app.use('/admin' , administrator);
 
 // 404 错误
 var errorData_404 = {
