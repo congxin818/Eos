@@ -107,9 +107,9 @@ exports.adminLogin = function(req , res) {
         if (data == undefined || data == '') {
             loginError.msg = '用户不存在！'
             res.end(JSON.stringify(loginError));
+            return;
         }
         if (password == data.password) {
-
             dataSuccess.data = data;
             res.end(JSON.stringify(dataSuccess));  
         }else{
