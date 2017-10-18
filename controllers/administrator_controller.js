@@ -93,6 +93,7 @@ exports.updateByUserName = function(req , res) {
 
 //管理员登入login接口
 exports.adminLogin = function(req , res) {
+    console.log('req -> ' + JSON.stringify(req));
     //如果没有post数据或者数据为空,直接返回
     var username = req.body.username;
     var password = req.body.password;
