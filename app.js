@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // charset=utf-8 解决json数据中中文乱码
 app.use("*", function(request, response, next) {
     response.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
+    response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
     next();
 });
 
