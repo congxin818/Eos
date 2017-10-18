@@ -103,7 +103,7 @@ exports.adminLogin = function(req , res) {
     }
 
     service.selectByUserName(req , res).then(function(data) {
-        console.log(JSON.stringify(data));
+        console.log('req -> ' + JSON.stringify(data));
         if (data == undefined || data == '') {
             loginError.msg = '用户不存在！'
             res.end(JSON.stringify(loginError));
