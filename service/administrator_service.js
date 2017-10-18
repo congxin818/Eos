@@ -24,7 +24,7 @@ exports.selectByUserName = function(req , res) {
     var p = new Promise(function(resolve , reject) {
         Administrator.findOne({
             where:{
-                username:req.query.username
+                username:req.body.username
             }
         }).then(function(data){
             resolve(data);

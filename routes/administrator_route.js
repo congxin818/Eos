@@ -14,26 +14,16 @@ var parameterError = {
 
 //查找所有管理员
 router.get('/selectList', function(req, res, next) {
-    if (req == '') {
-		res.end(parameterError);
-        return;
-    }
     controller.selectList(req , res);
 });
 
 //查找一个管理员
-router.get('/selectByUserName', function(req, res, next) {
+router.post('/selectByUserName', function(req, res, next) {
     controller.selectByUserName(req , res);
 });
 
 //添加一条管理员
 router.post('/addOne', function(req, res, next) {
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.username == undefined ||req.body.username == ''
-        || req.body.password == undefined || req.body.password == '') {
-        res.end(parameterError);
-        return;
-    }
     controller.addOne(req , res);
 });
 
@@ -47,4 +37,7 @@ router.post('/updateByUserName', function(req, res, next) {
     controller.updateByUserName(req , res);
 });
 
+router.post('/adminLogin' , function(req , res ,next) {
+	controller.adminLogin(req , res);
+});
 module.exports = router;

@@ -11,6 +11,11 @@ var parameterError = {
     msg: '参数错误'
 };
 
+var loginError = {
+    status:'2',
+    msg:'用户名或密码验证失败'
+};
+
 //查找所有Administrator
 exports.selectList = function(req , res) {
     if (req == '') {
@@ -27,7 +32,7 @@ exports.selectList = function(req , res) {
 //根据username查找一个Administrator
 exports.selectByUserName = function(req , res) {
 	//如果没有username或者username为空,直接返回
-    if (req.query.username == undefined || req.query.username == '') {
+    if (req.body.username == undefined || req.body.username == '') {
         res.end(JOSN.stringify(parameterError));
         return;
     }
@@ -83,5 +88,31 @@ exports.updateByUserName = function(req , res) {
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
+    });
+}
+
+//管理员登入login接口
+exports.adminLogin = function(req , res) {
+    //如果没有post数据或者数据为空,直接返回
+    var username = req.body.username;
+    var password = req.body.password;
+    if (username == undefined ||username == ''
+        || password == undefined || password == '') {
+        res.end(parameterError);
+        return;
+    }
+
+    service.selectByUserName(req , res).then(function(data) {
+        
+        if (data == undefined || data == '') {
+            loginError.msg = '用户不存在！'
+            res.end(JSON.stringify(loginError));
+        }
+        if (password == data.password) {
+            dataSuccess.data = data;
+            res.end(JSON.stringify(dataSuccess));  
+        }else{
+            res.end(JSON.stringify(loginError));
+        }
     });
 }
