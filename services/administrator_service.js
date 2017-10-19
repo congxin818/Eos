@@ -57,9 +57,14 @@ exports.deleteByUserName = function(req , res) {
                 username:req.query.username
             }
         }).then(function(msg){
-            msg.destroy().then(function(msg){
-                resolve(msg);
-            });
+            //console.log('yuzhizhe->' + JSON.stringify(msg));
+            if (msg == '') {
+                resolve(parameterError);
+            }else{
+                msg.destroy().then(function(msg){
+                    resolve(msg);
+                });
+            } 
         });
     });
     return p;

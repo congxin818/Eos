@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var message = require('./routes/message_route');
 var administrator = require('./routes/administrator_route');
+var user = require('./routes/user_route');
 
 var app = express();
 
@@ -36,9 +37,10 @@ app.use("*", function(request, response, next) {
 
 // 路由
 app.use('/', index);//在app中注册index该接口 
-app.use('/user', users);//在app中注册users接口
+app.use('/users', users);//在app中注册users接口
 app.use('/message' , message);
 app.use('/admin' , administrator);
+app.use('/user' , user);
 
 // 404 错误
 var errorData_404 = {

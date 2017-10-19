@@ -40,4 +40,5 @@ router.post('/updateByUserName', function(req, res, next) {
 router.post('/adminLogin' , function(req , res ,next) {
 	controller.adminLogin(req , res);
 });
+
 module.exports = router;

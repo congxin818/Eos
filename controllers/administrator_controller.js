@@ -1,5 +1,5 @@
 var Administrator = require('../models/administrator');//引入数据库Message模块
-var service = require('../service/administrator_service');
+var service = require('../services/administrator_service');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
