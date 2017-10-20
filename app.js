@@ -10,6 +10,10 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var message = require('./routes/message_route');
 var administrator = require('./routes/administrator_route');
+var groupSet = require('./routes/group_route'); //集团
+var factorySet = require('./routes/factory_route'); //工厂
+var workshopSet = require('./routes/workshop_route'); //车间
+var linebodySet = require('./routes/linebody_route'); //线体
 
 var app = express();
 
@@ -27,8 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // application/json  接口返回json数据
 // charset=utf-8 解决json数据中中文乱码
 app.use("*", function(request, response, next) {
-    response.writeHead(200, { "Content-Type": "application/json;charset=utf-8" });
-    response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
+    response.writeHead(200, { "Content-Type": "application/json;charset=utf-8","Access-Control-Allow-Origin": "*" });
+    //response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
     next();
 });
 
@@ -37,6 +41,10 @@ app.use('/', index);//在app中注册index该接口
 app.use('/user', users);//在app中注册users接口
 app.use('/message' , message);
 app.use('/admin' , administrator);
+app.use('/groupset' , groupSet);//在app中注册集团设置接口
+app.use('/factorySet' , factorySet);//在app中注册工厂设置接口
+app.use('/workshopSet' , workshopSet);//在app中注册车间设置接口
+app.use('/linebodySet' , linebodySet);//在app中注册线体设置接口
 
 // 404 错误
 var errorData_404 = {
