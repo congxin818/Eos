@@ -6,8 +6,9 @@
 
 //引入数据库Message模块
 var Workshop = require('../models/workshop');
-var service = require('../service/workshop_service');
-var nameEtdService = require('../service/workshop_extend_service');
+var service = require('../services/workshop_service');
+var nameEtdService = require('../services/workshop_extend_service');
+
 var dataSuccess = {
     status: '0', 
     msg: '操作成功',

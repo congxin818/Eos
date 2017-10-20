@@ -129,8 +129,8 @@ exports.deleteUserById = function(req , res) {
         if (data == null || data == undefined || data == '') {
             res.end(JSON.stringify(parameterError));
         }else{
-            dataSuccess.data = data;
-            res.end(JSON.stringify(dataSuccess));
+            //dataSuccess.data = data;
+            res.end(JSON.stringify(data));
         }
     });
 }
@@ -138,19 +138,17 @@ exports.deleteUserById = function(req , res) {
 //根据userId跟新User
 exports.updateUserById = function(req , res) {
 	//如果没有post数据或者数据为空,直接返回
-    if (req.body.userName == undefined ||req.body.userName == ''
+    if (req.body.userId == undefined ||req.body.userId == ''
+        ||req.body.userName == undefined ||req.body.userName == ''
         || req.body.userPsd == undefined || req.body.userPsd == ''
         || req.body.userAbbName == undefined|| req.body.userJob == undefined
         || req.body.userLeader == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-
     //创建一条记录,创建成功后跳转回首页
     service.updateUserById(req , res).then(function(data){
         //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
+        res.end(JSON.stringify(data));
     });
 }
-

@@ -119,12 +119,12 @@ exports.deleteUserById = function(req , res) {
                 userId:req.query.userId
             }
         }).then(function(msg){
-            console.log('yuzhizhe->' + JSON.stringify(msg));
+            //console.log('yuzhizhe->' + JSON.stringify(msg));
             if (msg == '' || msg == undefined) {
-                console.log('yuzhizhe01');
+                //console.log('yuzhizhe01');
                 resolve(null);
             }else{
-                console.log('yuzhizhe02');
+                //console.log('yuzhizhe02');
                 msg.destroy().then(function(data){
                     dataSuccess.data = data;
                     resolve(dataSuccess);
@@ -138,6 +138,7 @@ exports.deleteUserById = function(req , res) {
 //根据userId跟新User
 exports.updateUserById = function(req , res) {
     var user = {
+        userid:req.body.userId,
         username: req.body.userName,
         userpsd: req.body.userPsd,
         useraddname:req.body.userAddName,
@@ -148,10 +149,15 @@ exports.updateUserById = function(req , res) {
         //创建一条记录,创建成功后跳转回首页
         User.update(user,{
             where:{
-                userId:req.body.userId
+                userid:req.body.userId
             }
         }).then(function(data){
-            resolve(data);
+            if (data == 0) {
+                resolve(parameterError);
+            }else{
+                dataSuccess.data = data;
+                resolve(dataSuccess);
+            }
         });
     });
     return p;

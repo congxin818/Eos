@@ -6,8 +6,8 @@
 
 //引入数据库Message模块
 var Factory = require('../models/factory');
-var service = require('../service/factory_service');
-var nameEtdService = require('../service/factory_extend_service');
+var service = require('../services/factory_service');
+var nameEtdService = require('../services/factory_extend_service');
 var dataSuccess = {
     status: '0', 
     msg: '操作成功',
