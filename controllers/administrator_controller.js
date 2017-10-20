@@ -1,5 +1,5 @@
 var Administrator = require('../models/administrator');//引入数据库Message模块
-var service = require('../service/administrator_service');
+var service = require('../services/administrator_service');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -104,12 +104,13 @@ exports.adminLogin = function(req , res) {
     }
 
     service.selectByUserName(req , res).then(function(data) {
+        console.log('data->' + JSON.stringify(data));
         if (data == undefined || data == '') {
             loginError.msg = '用户不存在！'
             res.end(JSON.stringify(loginError));
+            return;
         }
         if (password == data.password) {
-
             dataSuccess.data = data;
             res.end(JSON.stringify(dataSuccess));  
         }else{
