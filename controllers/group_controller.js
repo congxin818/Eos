@@ -10,7 +10,7 @@ var service = require('../service/group_service');
 var nameEtdService = require('../service/group_extend_service');
 var dataSuccess = {
     status: '0', 
-    msg: '操作成功',
+    msg: '请求成功',
     data:'fas'
 };
 
