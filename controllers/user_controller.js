@@ -94,7 +94,7 @@ exports.selectUserById = function(req , res) {
 /*
 	添加一个User
 */
-exports.addUserOne = function(req , res) {
+exports.addUserOne = function(req , res , next) {
 	if (req == '') {
         res.end(JSON.stringify(parameterError));
         return;
@@ -107,27 +107,11 @@ exports.addUserOne = function(req , res) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-    var existed = false;
-    service.selectUserByName(req , res).then(function(data) {
-        console.log('yuzhizhe02->' + JSON.stringify(data));
-        if (data.userName == req.body.userName) {
-            existed = true;
-        }
-    });
-    console.log('yuzhizhe03->' + JSON.stringify(existed));
-    if (existed) {
-        console.log('yuzhizhe01->' + JSON.stringify(existed));
-        res.end(JSON.stringify(existError));
-        return ;
-    }else{
-      //创建一条记录,创建成功后返回json数据
-        service.addUserOne(req , res).then(function(data){
-            //console.log(data);
-            dataSuccess.data = data;
-            res.end(JSON.stringify(dataSuccess));
-        }); 
-    }
-    console.log('yuzhizhe04->' + JSON.stringify(existed));
+    //创建一条记录,创建成功后返回json数据
+    service.addUserOne(req , res).then(function(data){
+        //dataSuccess.data = data;
+        res.end(JSON.stringify(data));
+    })
 }
 
 /*

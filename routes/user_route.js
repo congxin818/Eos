@@ -25,7 +25,7 @@ router.post('/selectUserById', function(req, res, next) {
 
 //添加一条用户
 router.post('/addUserOne', function(req, res, next) {
-    controller.addUserOne(req , res);
+    controller.addUserOne(req , res , next);
 });
 
 //删除一个用户

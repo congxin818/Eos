@@ -22,18 +22,31 @@ var loginError = {
     msg:'用户名或密码验证失败'
 };
 
+var existError = {
+    status:'3',
+    msg:'用户名已存在！'
+};
+
+var serviceError = {
+    status:'4',
+    msg:'服务器错误！'
+};
 /*
 	查找所有User
 */
-exports.selectUserAll = function(req , res) {
+
+
+function selectUserAll (req , res) {
     var p = new Promise(function(resolve, reject) {
         //console.log('yuzhizhe04->' + req);
         User.findAll().then(function(data) {
             resolve(data);
         });
     });
-	return p;
+    return p;
 }
+
+exports.selectUserAll = selectUserAll
 
 /*
  	根据username查找一个User
@@ -70,7 +83,7 @@ exports.selectUserById = function(req , res) {
 /*
 	添加一个Administrator
 */
-exports.addUserOne = function(req , res) {
+exports.addUserOne = function(req , res , next) {
     var user = {
         username: req.body.userName,
         userpsd: req.body.userPsd,
@@ -81,7 +94,15 @@ exports.addUserOne = function(req , res) {
     var p = new Promise(function(resolve, reject) {
         //创建一条记录,创建成功后跳转回首页
         User.create(user).then(function(data){
-            resolve(data);
+            dataSuccess.data = data;
+            resolve(dataSuccess);
+        }).catch (err => {
+            if (err.parent.code == 'ER_DUP_ENTRY') {
+                resolve(existError);
+            }else{
+                resolve(serviceError);
+            }
+            //console.log (err.parent.code)
         });
     });
     return p;
