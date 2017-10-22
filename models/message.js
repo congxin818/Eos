@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
 //定义表的模型
 var Message = sequelize.define('message', {

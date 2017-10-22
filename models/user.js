@@ -5,9 +5,11 @@
  */
 
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
-var User = sequelize.define('user' , {
+module.exports = function(sequelize , DataTypes){
+//var User = sequelize.define('user' , {
+	return sequelize.define('user' , {
 	userid:{
 		type:Sequelize.INTEGER,
         autoIncrement:true,
@@ -51,6 +53,6 @@ var User = sequelize.define('user' , {
 	charset: 'utf8',
     collate: 'utf8_general_ci'
 });
-
+}
 //User.sync();
-module.exports = User;
+//module.exports = User;

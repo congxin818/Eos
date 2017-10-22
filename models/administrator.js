@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
 var Administrator = sequelize.define('administrator' , {
 	id:{ //自增长id,主键,整形

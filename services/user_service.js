@@ -4,8 +4,9 @@
  time:20171019
  */
 
-var User = require('../models/user');//引入数据库User模块
-var Group = require('../models/group');
+
+var User = require('../models').User;//引入数据库User模块
+var Group = require('../models').Group;
 
 var dataSuccess = {
     status: '0', 
@@ -35,16 +36,20 @@ var serviceError = {
 
 function createUserGroup(req, res, next) {
     Promise.all([
-        User.create({username:'itbilu', userpsd:'itbilu.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
-        Group.create({groupname:'管理员'})
+        User.create({username:'itbilu1', userpsd:'itbilu1.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
+        Group.create({groupname:'管理员1'})
     ]).then(function(results){
-        console.log(results[0]);
+        console.log('yuzhizhe01'+results[0]);
+        var user = results[0];
+        console.log('yuzhizhe02'+results[1]);
+        var group = results[1];
+        user.setUserGroups(group);
         res.set('Content-Type', 'text/html; charset=utf-8');
         //res.end('创建成功：'+JSON.stringify({user:results[0].dataValues, role:results[1].dataValues}));
-        res.end(JSON.stringify(results));
+        res.end(JSON.stringify(results[0]));
     }).catch(next);
 }
-
+exports.createUserGroup = createUserGroup;
 /*
 	查找所有User
 */
@@ -59,7 +64,7 @@ function selectUserAll (req , res) {
     return p;
 }
 
-exports.selectUserAll = selectUserAll
+exports.selectUserAll = selectUserAll;
 
 /*
  	根据username查找一个User

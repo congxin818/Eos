@@ -4,10 +4,12 @@
     时间：2017/10/18
 */
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
-var Group = sequelize.define('group' , {
-	groupid:{ //自增长id,主键,整形
+module.exports = function(sequelize , DataTypes){
+//var Group = sequelize.define('group' , {
+	return sequelize.define('group' , {
+    groupid:{ //自增长id,主键,整形
         type:Sequelize.INTEGER,
         autoIncrement:true,
         primaryKey: true
@@ -21,7 +23,7 @@ var Group = sequelize.define('group' , {
     charset: 'utf8',
     collate: 'utf8_general_ci'
   });
-
+}
 //Group.sync();
 
-module.exports = Group;
+//module.exports = Group;

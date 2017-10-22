@@ -38,4 +38,9 @@ router.post('/updateUserById', function(req, res, next) {
     controller.updateUserById(req , res);
 });
 
+//测试user和group关联
+router.get('/createUserGroup' , function(req , res , next){
+	controller.createUserGroup(req , res , next);
+});
+
 module.exports = router;

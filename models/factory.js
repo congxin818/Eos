@@ -4,7 +4,7 @@
     时间：2017/10/18
 */
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
 var Factory = sequelize.define('factory' , {
 	factoryid:{ //自增长id,主键,整形

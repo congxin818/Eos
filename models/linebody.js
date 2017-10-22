@@ -4,7 +4,7 @@
     时间：2017/10/19
 */
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
 var Linebody = sequelize.define('linebody' , {
 	linebodyid:{ //自增长id,主键,整形
