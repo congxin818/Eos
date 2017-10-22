@@ -5,6 +5,7 @@
  */
 
 var User = require('../models/user');//引入数据库User模块
+var Group = require('../models/group');
 
 var dataSuccess = {
     status: '0', 
@@ -14,7 +15,7 @@ var dataSuccess = {
 
 var parameterError = {
     status: '1', 
-    msg: '参数错误'
+    msg: '请求缺少必要参数或参数错误'
 };
 
 var loginError = {
@@ -24,17 +25,29 @@ var loginError = {
 
 var existError = {
     status:'3',
-    msg:'用户名已存在！'
+    msg:'用户名已存在'
 };
 
 var serviceError = {
-    status:'4',
-    msg:'服务器错误！'
+    status:'-2',
+    msg:'服务器错误'
 };
+
+function createUserGroup(req, res, next) {
+    Promise.all([
+        User.create({username:'itbilu', userpsd:'itbilu.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
+        Group.create({groupname:'管理员'})
+    ]).then(function(results){
+        console.log(results[0]);
+        res.set('Content-Type', 'text/html; charset=utf-8');
+        //res.end('创建成功：'+JSON.stringify({user:results[0].dataValues, role:results[1].dataValues}));
+        res.end(JSON.stringify(results));
+    }).catch(next);
+}
+
 /*
 	查找所有User
 */
-
 
 function selectUserAll (req , res) {
     var p = new Promise(function(resolve, reject) {
@@ -81,7 +94,7 @@ exports.selectUserById = function(req , res) {
 }
 
 /*
-	添加一个Administrator
+	添加一个User
 */
 exports.addUserOne = function(req , res , next) {
     var user = {

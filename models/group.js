@@ -17,7 +17,11 @@ var Group = sequelize.define('group' , {
         charset:'utf8',
         collate:'utf8_general_ci'
     }
-});
-Group.sync();
+},{
+    charset: 'utf8',
+    collate: 'utf8_general_ci'
+  });
+
+//Group.sync();
 
 module.exports = Group;

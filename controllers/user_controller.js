@@ -27,6 +27,14 @@ var existError = {
     msg:'用户名已存在！'
 };
 
+exports.createUserGroup = function(req , res , next) {
+    if (req == '' || req == undefined) {
+        res.end(JSON.stringify(parameterError));
+        return;
+    }
+    service.createUserGroup(req , res , next);
+}
+
 /*
 	查找所有User
 */
@@ -37,7 +45,11 @@ exports.selectUserAll = function(req , res) {
     }
 	service.selectUserAll(req , res).then(function(data){
         //console.log(data);
-        dataSuccess.data = data;
+        if (data == '' || data == undefined || data == null) {
+            dataSuccess.data = null;
+        }else{
+            dataSuccess.data = data;
+        }
         res.end(JSON.stringify(dataSuccess));
     });
 }
