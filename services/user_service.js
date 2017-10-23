@@ -34,10 +34,13 @@ var serviceError = {
     msg:'服务器错误'
 };
 
+/*
+    测试关联添加
+ */
 function createUserGroup(req, res, next) {
     Promise.all([
-        User.create({username:'itbilu1', userpsd:'itbilu1.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
-        Group.create({groupname:'管理员1'})
+        User.create({username:'itbilu3', userpsd:'itbilu3.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
+        Group.create({groupname:'管理员3'})
     ]).then(function(results){
         console.log('yuzhizhe01'+results[0]);
         var user = results[0];
@@ -50,6 +53,24 @@ function createUserGroup(req, res, next) {
     }).catch(next);
 }
 exports.createUserGroup = createUserGroup;
+
+/*
+    测试关联查询
+ */
+function selectUserGroup(req , res , next) {
+    User.findOne({
+            where:{
+                userid:req.query.userId
+            }
+        }).then(function(user){
+            user.getUserGroups().then(function(value) {
+                res.end(JSON.stringify(value));
+            });
+            //res.set('Content-Type', 'text/html; charset=utf-8');
+            //res.end(JSON.stringify(value));
+    });
+}
+exports.selectUserGroup = selectUserGroup;
 
 /*
 	查找所有User

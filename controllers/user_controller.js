@@ -27,12 +27,26 @@ var existError = {
     msg:'用户名已存在！'
 };
 
+/*
+    测试关联添加
+ */
 exports.createUserGroup = function(req , res , next) {
     if (req == '' || req == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
     service.createUserGroup(req , res , next);
+}
+
+/*
+    测试关联查询
+ */
+exports.selectUserGroup = function(req , res , next) {
+    if (req == '' || req == undefined) {
+        res.end(JSON.stringify(parameterError));
+        return;
+    }
+    service.selectUserGroup(req , res , next);
 }
 
 /*
