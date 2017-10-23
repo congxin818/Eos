@@ -50,10 +50,10 @@ function createUserGroup(req, res, next) {
     }).catch(next);
 }
 exports.createUserGroup = createUserGroup;
+
 /*
 	查找所有User
 */
-
 function selectUserAll (req , res) {
     var p = new Promise(function(resolve, reject) {
         //console.log('yuzhizhe04->' + req);

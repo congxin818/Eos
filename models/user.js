@@ -43,6 +43,10 @@ module.exports = function(sequelize , DataTypes){
 		type: Sequelize.STRING(100),
         charset:'utf8',
         collate:'utf8_general_ci'
+	},
+	check:{
+		type:Sequelize.BOOLEAN,
+		defaultValue: false,
 	}
 },
 {

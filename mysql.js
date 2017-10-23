@@ -26,5 +26,6 @@ exports.sequelize = function() {
             'host': settings.mysql.host,
             'port': settings.mysql.port,
             'charset':'utf8',
+            'collate':'utf8_general_ci'
         });
 }
