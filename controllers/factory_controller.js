@@ -6,11 +6,10 @@
 
 //引入数据库Message模块
 var Factory = require('../models/factory');
-<<<<<<< HEAD
+
 var service = require('../services/factory_service');
-=======
+
 var services = require('../services/factory_service');
->>>>>>> 3de5121e0c8b77e6d823104be8d1702659ed8186
 var nameEtdService = require('../services/factory_extend_service');
 var dataSuccess = {
     status: '0', 

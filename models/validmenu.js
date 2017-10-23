@@ -4,9 +4,11 @@
     时间：2017/10/23
 */
 var Sequelize = require('sequelize');
-var sequelize = require('../mysql');
+var sequelize = require('../mysql').sequelize();
 
-var Validmenu = sequelize.define('validmenu' , {
+module.exports = function(sequelize , DataTypes){
+//var Validmenu = sequelize.define('validmenu' , {
+     return sequelize.define('validmenu' , {
 	validmenuid:{ //自增长id,主键,整形
         type:Sequelize.INTEGER,
         autoIncrement:true,
@@ -23,6 +25,7 @@ var Validmenu = sequelize.define('validmenu' , {
     }
 
 });
-Validmenu.sync();
+ }
+//Validmenu.sync();
 
-module.exports = Validmenu;
+//module.exports = Validmenu;

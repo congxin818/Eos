@@ -6,11 +6,8 @@
 
 //引入数据库Message模块
 var Linebody = require('../models/linebody');
-<<<<<<< HEAD
 var service = require('../services/linebody_service');
-=======
 var services = require('../services/linebody_service');
->>>>>>> 3de5121e0c8b77e6d823104be8d1702659ed8186
 var nameEtdService = require('../services/linebody_extend_service');
 var dataSuccess = {
     status: '0', 

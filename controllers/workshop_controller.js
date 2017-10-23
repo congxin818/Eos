@@ -6,14 +6,13 @@
 
 //引入数据库Message模块
 var Workshop = require('../models/workshop');
-<<<<<<< HEAD
+
 var service = require('../services/workshop_service');
 var nameEtdService = require('../services/workshop_extend_service');
 
-=======
+
 var services = require('../services/workshop_service');
 var nameEtdService = require('../services/workshop_extend_service');
->>>>>>> 3de5121e0c8b77e6d823104be8d1702659ed8186
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',

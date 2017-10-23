@@ -6,14 +6,13 @@
 
 //引入数据库Message模块
 var Group = require('../models/group');
-<<<<<<< HEAD
+
 var service = require('../services/group_service');
 var nameEtdService = require('../services/group_extend_service');
-=======
+
 var services = require('../services/group_service');
 var nameEtdService = require('../services/group_extend_service');
 var facServices = require('../services/factory_service');
->>>>>>> 3de5121e0c8b77e6d823104be8d1702659ed8186
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
