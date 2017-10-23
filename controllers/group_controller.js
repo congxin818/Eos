@@ -6,8 +6,8 @@
 
 //引入数据库Message模块
 var Group = require('../models/group');
-var service = require('../service/group_service');
-var nameEtdService = require('../service/group_extend_service');
+var services = require('../services/group_service');
+var nameEtdService = require('../services/group_extend_service');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -32,7 +32,7 @@ exports.selectGroupAll = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-	service.selectGroupAll(req , res).then(function(data){
+	services.selectGroupAll(req , res).then(function(data){
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
@@ -50,7 +50,7 @@ exports.selectGroupById = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectGroupById(req , res).then(function(data){
+    services.selectGroupById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -72,7 +72,7 @@ exports.addGroupOne = function(req , res) {
             // 对集团名字是否成功进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                service.addGroupOne(req , res).then(function(data){
+                services.addGroupOne(req , res).then(function(data){
                 dataSuccess.data = data;
                 res.end(JSON.stringify(dataSuccess));
                 });
@@ -98,7 +98,7 @@ exports.deleteGroupById = function(req , res) {
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    service.deleteGroupById(req , res).then(function(data){
+    services.deleteGroupById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -109,13 +109,14 @@ exports.deleteGroupById = function(req , res) {
 	根据id更新集团
 */
 exports.updateGroupById = function(req , res) {
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.groupName == undefined ||req.body.groupName == '') {
-        res.end(JOSN.stringify(parameterError));
+    //如果没有post数据或者数据为空,直接返回
+    if (req.body.groupId == undefined ||req.body.groupId == ''
+        ||req.body.groupName == undefined ||req.body.groupName == '') {
+        res.end(JSON.stringify(parameterError));
         return;
     }
     //更新一条记录,更新成功后跳转回首页
-    service.updateGroupById(req , res).then(function(data){
+    services.updateGroupById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));

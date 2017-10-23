@@ -73,7 +73,6 @@ exports.deleteGroupById = function(req , res) {
 */
 exports.updateGroupById = function(req , res) {
 	var group = {
-		groupid: req.body.groupId,
         groupname: req.body.groupName
     };
     var p = new Promise(function(resolve , reject) {

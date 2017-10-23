@@ -6,8 +6,8 @@
 
 //引入数据库Message模块
 var Linebody = require('../models/linebody');
-var service = require('../service/linebody_service');
-var nameEtdService = require('../service/linebody_extend_service');
+var services = require('../services/linebody_service');
+var nameEtdService = require('../services/linebody_extend_service');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -27,7 +27,7 @@ exports.selectLinebodyAll = function(req , res) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-	service.selectLinebodyAll(req , res).then(function(data){
+	services.selectLinebodyAll(req , res).then(function(data){
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
@@ -49,7 +49,7 @@ exports.selectLinebodyById = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectLinebodyById(req , res).then(function(data){
+    services.selectLinebodyById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -71,7 +71,7 @@ exports.addLinebodyOne = function(req , res) {
             // 对线体名字是否重复进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                service.addLinebodyOne(req , res).then(function(data){
+                services.addLinebodyOne(req , res).then(function(data){
                 dataSuccess.data = data;
                 res.end(JSON.stringify(dataSuccess));
                 });
@@ -96,7 +96,7 @@ exports.deleteLinebodyById = function(req , res) {
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    service.deleteLinebodyById(req , res).then(function(data){
+    services.deleteLinebodyById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -115,7 +115,7 @@ exports.updateLinebodyById = function(req , res) {
         return;
     }
     //更新一条记录,更新成功后跳转回首页
-    service.updateLinebodyById(req , res).then(function(data){
+    services.updateLinebodyById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));

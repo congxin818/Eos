@@ -6,8 +6,8 @@
 
 //引入数据库Message模块
 var Workshop = require('../models/workshop');
-var service = require('../service/workshop_service');
-var nameEtdService = require('../service/workshop_extend_service');
+var services = require('../services/workshop_service');
+var nameEtdService = require('../services/workshop_extend_service');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -27,7 +27,7 @@ exports.selectWorkshopAll = function(req , res) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-	service.selectWorkshopAll(req , res).then(function(data){
+	services.selectWorkshopAll(req , res).then(function(data){
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
@@ -49,7 +49,7 @@ exports.selectWorkshopById = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectWorkshopById(req , res).then(function(data){
+    services.selectWorkshopById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -71,7 +71,7 @@ exports.addWorkshopOne = function(req , res) {
             // 对车间名字是否重复进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                service.addWorkshopOne(req , res).then(function(data){
+                services.addWorkshopOne(req , res).then(function(data){
                 dataSuccess.data = data;
                 res.end(JSON.stringify(dataSuccess));
                 });
@@ -96,7 +96,7 @@ exports.deleteWorkshopById = function(req , res) {
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    service.deleteWorkshopById(req , res).then(function(data){
+    services.deleteWorkshopById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -115,7 +115,7 @@ exports.updateWorkshopById = function(req , res) {
         return;
     }
     //更新一条记录,更新成功后跳转回首页
-    service.updateWorkshopById(req , res).then(function(data){
+    services.updateWorkshopById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
