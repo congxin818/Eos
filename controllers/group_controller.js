@@ -8,6 +8,7 @@
 var Group = require('../models/group');
 var services = require('../services/group_service');
 var nameEtdService = require('../services/group_extend_service');
+var facServices = require('../services/factory_service');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -121,4 +122,22 @@ exports.updateGroupById = function(req , res) {
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
     });
+}
+
+/*
+    查询所有集团和工厂
+*/
+exports.selectAreaAll = function(req , res) {
+    if (req == '') {
+        res.end(JOSN.stringify(parameterError));
+        return;
+    }
+    services.selectGroupAll(req , res).then(function(groupData){
+        //console.log(data);
+        facServices.selectFactoryAll(req , res).then(function(factoryData){
+            var contGFData = groupData.concat(factoryData);
+            dataSuccess.data = contGFData;
+            res.end(JSON.stringify(dataSuccess));
+        });
+    });  
 }

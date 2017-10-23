@@ -19,6 +19,11 @@ var Factory = sequelize.define('factory' , {
     },
     factorybelong: { //工厂所属
         type: Sequelize.INTEGER
+    },
+    tfactoryid:{ //工厂临时id ‘f+id’
+        type: Sequelize.STRING(50),
+        charset:'utf8',
+        collate:'utf8_general_ci'
     }
 
 });

@@ -15,7 +15,7 @@ var groupSet = require('./routes/group_route'); //集团
 var factorySet = require('./routes/factory_route'); //工厂
 var workshopSet = require('./routes/workshop_route'); //车间
 var linebodySet = require('./routes/linebody_route'); //线体
-var validmenuSet = require('./routes/validmenu_route'); //线体
+var validmenuSet = require('./routes/validmenu_route'); //有效菜单
 
 var app = express();
 

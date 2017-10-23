@@ -45,6 +45,10 @@ exports.addFactoryOne = function(req , res) {
         //创建一条记录,创建成功后跳转回首页
         Factory.create(factory).then(function(data){
             resolve(data);
+            var factoryUpdate={tfactoryid:'f'+ data.factoryid};
+            Factory.update(factoryUpdate,{where:{
+                factoryid:data.factoryid
+            }});
         });
     });
     return p;
