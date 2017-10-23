@@ -37,4 +37,11 @@ router.get('/deleteGroupById', function(req, res, next) {
 router.post('/updateGroupById', function(req, res, next) {
     controller.updateGroupById(req , res);
 });
+/*
+	查询所有集团和工厂
+*/
+router.get('/selectAreaAll', function(req, res, next) {
+    controller.selectAreaAll(req , res);
+});
+
 module.exports = router;

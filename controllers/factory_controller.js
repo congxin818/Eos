@@ -6,11 +6,15 @@
 
 //引入数据库Message模块
 var Factory = require('../models/factory');
+<<<<<<< HEAD
 var service = require('../services/factory_service');
+=======
+var services = require('../services/factory_service');
+>>>>>>> 3de5121e0c8b77e6d823104be8d1702659ed8186
 var nameEtdService = require('../services/factory_extend_service');
 var dataSuccess = {
     status: '0', 
-    msg: '操作成功',
+    msg: '请求成功',
     data:'fas'
 };
 
@@ -27,7 +31,7 @@ exports.selectFactoryAll = function(req , res) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-	service.selectFactoryAll(req , res).then(function(data){
+	services.selectFactoryAll(req , res).then(function(data){
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
@@ -49,7 +53,7 @@ exports.selectFactoryById = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectFactoryById(req , res).then(function(data){
+    services.selectFactoryById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -71,7 +75,7 @@ exports.addFactoryOne = function(req , res) {
             // 对工厂名字是否重复进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                service.addFactoryOne(req , res).then(function(data){
+                services.addFactoryOne(req , res).then(function(data){
                 dataSuccess.data = data;
                 res.end(JSON.stringify(dataSuccess));
                 });
@@ -90,13 +94,13 @@ exports.addFactoryOne = function(req , res) {
 	根据id删除工厂
 */
 exports.deleteFactoryById = function(req , res) {
-	//如果没有username字段,返回404
+
     if (req.query.factoryId == undefined ||req.query.factoryId == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    service.deleteFactoryById(req , res).then(function(data){
+    services.deleteFactoryById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
@@ -115,7 +119,7 @@ exports.updateFactoryById = function(req , res) {
         return;
     }
     //更新一条记录,更新成功后跳转回首页
-    service.updateFactoryById(req , res).then(function(data){
+    services.updateFactoryById(req , res).then(function(data){
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
