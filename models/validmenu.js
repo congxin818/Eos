@@ -22,6 +22,10 @@ module.exports = function(sequelize , DataTypes){
     userid: { //用户id
         type: Sequelize.INTEGER,
         allowNull: false
+    },
+    check:{
+        type:Sequelize.BOOLEAN,
+        defaultValue: false,
     }
 
 });
