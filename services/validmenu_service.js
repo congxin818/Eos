@@ -5,7 +5,7 @@
 */
 
 //引入数据库Message模块
-var Validmenu = require('../models/validmenu');
+var Validmenu = require('../models').Validmenu;
 
 /*
 	查找某个用户所有有效菜单数据，根据用户id
