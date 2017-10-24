@@ -21,8 +21,14 @@ module.exports = function(sequelize , DataTypes){
             collate:'utf8_general_ci'
         },
         factorybelong: { //工厂所属
+
             type: Sequelize.INTEGER,
             field: 'factorybelong'
+        },
+        id:{
+            type: Sequelize.STRING(50),
+            charset:'utf8',
+            collate:'utf8_general_ci'
         }
     },{
         indexes: [{

@@ -5,7 +5,7 @@
 */
 
 //引入数据库Message模块
-var Linebody = require('../models/linebody');
+var Linebody = require('../models').Linebody;
 
 /*
 	根据线体名字查找一条线体数据
