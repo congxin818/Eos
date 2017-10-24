@@ -103,7 +103,6 @@ exports.selectUserGroup = selectUserGroup;
 */
 async function selectUserAll (req , res , next) {
     var array = new Array();
-
     const users = await User.findAll ();
 
     if (users == '' || users == undefined || users == null)
@@ -112,7 +111,7 @@ async function selectUserAll (req , res , next) {
     }
     for(j = 0,len=users.length; j < len; j++) {
         var extraData = {
-                user:'user',
+                user:'',
                 group:'group',
                 factory:'factory',
                 workshop:'workshop',
@@ -127,7 +126,7 @@ async function selectUserAll (req , res , next) {
         const validmenu = await users[j].getUserValidmenus ();
 
 
-        extraData.user = users[j];
+        extraData.user = users[j].toarray();
         extraData.group = group;
         extraData.workshop = workshop;
         extraData.linebody = linebody;
