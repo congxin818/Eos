@@ -22,6 +22,11 @@ module.exports = function(sequelize , DataTypes){
         },
         factorybelong: { //工厂所属
             type: Sequelize.INTEGER
+        },
+        id:{
+            type: Sequelize.STRING(50),
+            charset:'utf8',
+            collate:'utf8_general_ci'
         }
     });
 }

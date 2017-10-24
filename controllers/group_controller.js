@@ -29,7 +29,9 @@ status: '101',
 msg: '集团已存在'
 };
 
-/*
+
+
+/* 
 	展示所有集团
 */
 exports.selectGroupAll = function(req , res) {
@@ -131,17 +133,59 @@ exports.updateGroupById = function(req , res) {
 /*
     查询所有集团和工厂
 */
+ 
+
+
 exports.selectAreaAll = function(req , res) {
     if (req == '') {
         res.end(JOSN.stringify(parameterError));
         return;
     }
     services.selectGroupAll(req , res).then(function(groupData){
-        //console.log(data);
+        //把集团表通过一定格式展示出来
+        var treeShowGroupData = [];
+        groupData.forEach(function(groupDataOne) {
+
+            var data1=groupValSet(groupDataOne);
+            treeShowGroupData.push(data1);
+
+  
+       });
+
+        //把工厂表通过一定格式展示出来
         facServices.selectFactoryAll(req , res).then(function(factoryData){
-            var contGFData = groupData.concat(factoryData);
-            dataSuccess.data = contGFData;
-            res.end(JSON.stringify(dataSuccess));
+
+            var treeShowFacData = [];
+            factoryData.forEach(function(factoryDataOne) {
+            var data2=factoryValSet(factoryDataOne);
+            treeShowFacData.push(data2);
+            });  
+
+
+            var contGFData = treeShowGroupData.concat(treeShowFacData);
+            res.end(JSON.stringify(contGFData));
         });
     });  
+}
+
+var groupValSet =function(groupDataOne){
+    var treeShow = {
+      id:'fas',
+      name:'fas',
+      pId:0
+    };
+    treeShow.id= groupDataOne.groupid;
+    treeShow.name= groupDataOne.groupname;
+    return treeShow;
+}
+var factoryValSet =function(factoryDataOne){
+    var treeShow = {
+      id:'fas',
+      name:'fas',
+      pId:''
+    };
+    treeShow.id = factoryDataOne.id;
+    treeShow.name = factoryDataOne.factoryname;
+    treeShow.pId = factoryDataOne.factorybelong;
+    return treeShow;
 }

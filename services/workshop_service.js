@@ -5,7 +5,7 @@
 */
 
 //引入数据库Message模块
-var Workshop = require('../models/workshop');
+var Workshop = require('../models').Workshop;
 
 /*
 	查找所有车间数据

@@ -5,7 +5,7 @@
 */
 
 //引入数据库Message模块
-var Workshop = require('../models/workshop');
+var Workshop = require('../models').Workshop;
 
 /*
 	根据车间名字查找一条车间数据
