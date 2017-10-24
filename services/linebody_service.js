@@ -5,7 +5,7 @@
 */
 
 //引入数据库Message模块
-var Linebody = require('../models/linebody');
+var Linebody = require('../models').Linebody;
 
 /*
 	查找所有线体数据

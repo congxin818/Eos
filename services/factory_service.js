@@ -5,7 +5,7 @@
 */
 
 //引入数据库Message模块
-var Factory = require('../models/factory');
+var Factory = require('../models').Factory;
 
 /*
 	查找所有工厂数据

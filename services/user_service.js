@@ -14,6 +14,15 @@ var dataSuccess = {
     data:'fas'
 };
 
+var extraData = {
+    user:'user',
+    group:'group',
+    factory:'factory',
+    workshop:'workshop',
+    linebody:'linebody',
+    validmenu:'validmenu'
+};
+
 var parameterError = {
     status: '1', 
     msg: '请求缺少必要参数或参数错误'
@@ -55,7 +64,7 @@ function createUserGroup(req, res, next) {
 exports.createUserGroup = createUserGroup;
 
 /*
-    测试关联查询
+    测试关联根据ID查询用户
  */
 function selectUserGroup(req , res , next) {
     User.findOne({
@@ -63,24 +72,90 @@ function selectUserGroup(req , res , next) {
                 userid:req.query.userId
             }
         }).then(function(user){
-            user.getUserGroups().then(function(value) {
-                res.end(JSON.stringify(value));
+            extraData.user = user;
+            //console.log('yuzhizhe01');
+            user.getUserGroups().then(function(group) {
+                //console.log('group->' + group);
+                extraData.group = group;
+            });
+            //console.log('yuzhizhe02');
+            user.getUserFactorys().then(function(factory) {
+                //console.log('factory->' + factory);
+                extraData.factory = factory;
+                
+            });
+            //console.log('yuzhizhe03');
+            user.getUserWorkshops().then(function(workshop) {
+                //console.log('workshop->' + workshop);
+                extraData.workshop = workshop;
+            });
+            // console.log('yuzhizhe04');
+            user.getUserLinebodys().then(function(linebody) {
+                //console.log('linebody->' + linebody);
+                extraData.linebody = linebody;
+                //res.end(JSON.stringify(extraData));
+            });
+            //console.log('yuzhizhe05');
+            user.getUserValidmenus().then(function(validmenu) {
+                //console.log('validmenu->' + validmenu);
+                extraData.validmenu = validmenu;
+                res.end(JSON.stringify(extraData));
             });
             //res.set('Content-Type', 'text/html; charset=utf-8');
-            //res.end(JSON.stringify(value));
+            //res.end(JSON.stringify(extraData));
     });
+
 }
 exports.selectUserGroup = selectUserGroup;
 
 /*
 	查找所有User
 */
-function selectUserAll (req , res) {
+function selectUserAll (req , res , next) {
+    var array = new Array();
     var p = new Promise(function(resolve, reject) {
         //console.log('yuzhizhe04->' + req);
-        User.findAll().then(function(data) {
-            resolve(data);
+        User.findAll().then(function(users) {
+            users.forEach(function(user) {
+                if (user == '' || user == undefined || user == null) {
+                    resolve(null);
+                    return;
+                }
+                extraData.user = user;
+                console.log(user);
+                //console.log('yuzhizhe01');
+                user.getUserGroups().then(function(group) {
+                    //console.log('group->' + group);
+                    extraData.group = group;
+                    //console.log('yuzhizhe02');
+                    user.getUserFactorys().then(function(factory) {
+                        //console.log('factory->' + factory);
+                        extraData.factory = factory;
+                        //console.log('yuzhizhe03');
+                        user.getUserWorkshops().then(function(workshop) {
+                            //console.log('workshop->' + workshop);
+                            extraData.workshop = workshop;
+                            //console.log('yuzhizhe04');
+                            user.getUserLinebodys().then(function(linebody) {
+                                //console.log('linebody->' + linebody);
+                                extraData.linebody = linebody;
+                                //res.end(JSON.stringify(extraData));
+                                ////console.log('yuzhizhe05');
+                                user.getUserValidmenus().then(function(validmenu) {
+                                    //console.log('validmenu->' + validmenu);
+                                    extraData.validmenu = validmenu;
+                                    //res.end(JSON.stringify(extraData)); 
+                                    array.push(extraData); 
+                                });
+                            });
+                        });
+                    });
+                });
+                
+            });
+            resolve(array);
         });
+
     });
     return p;
 }
@@ -90,14 +165,46 @@ exports.selectUserAll = selectUserAll;
 /*
  	根据username查找一个User
 */
-exports.selectUserByName = function(req , res) {
+exports.selectUserByName = function(req , res , next) {
     var p = new Promise(function(resolve , reject) {
         User.findOne({
             where:{
                 username:req.body.userName
             }
-        }).then(function(data){
-            resolve(data);
+        }).then(function(user){
+            if (user == '' || user == undefined || user == null) {
+                resolve(null);
+                return;
+            }
+            extraData.user = user;
+            //console.log('yuzhizhe01');
+            user.getUserGroups().then(function(group) {
+                //console.log('group->' + group);
+                extraData.group = group;
+            });
+            //console.log('yuzhizhe02');
+            user.getUserFactorys().then(function(factory) {
+                //console.log('factory->' + factory);
+                extraData.factory = factory;
+            });
+            //console.log('yuzhizhe03');
+            user.getUserWorkshops().then(function(workshop) {
+                //console.log('workshop->' + workshop);
+                extraData.workshop = workshop;
+            });
+            //console.log('yuzhizhe04');
+            user.getUserLinebodys().then(function(linebody) {
+                //console.log('linebody->' + linebody);
+                extraData.linebody = linebody;
+                //res.end(JSON.stringify(extraData));
+            });
+            //console.log('yuzhizhe05');
+            user.getUserValidmenus().then(function(validmenu) {
+                //console.log('validmenu->' + validmenu);
+                extraData.validmenu = validmenu;
+                //res.end(JSON.stringify(extraData));
+                resolve(extraData);
+            });
         });
     });
     return p;
@@ -106,14 +213,48 @@ exports.selectUserByName = function(req , res) {
 /*
     根据id查找一个User
 */
-exports.selectUserById = function(req , res) {
+exports.selectUserById = function(req , res , next) {
     var p = new Promise(function(resolve , reject) {
         User.findOne({
             where:{
                 userid:req.body.userId
             }
-        }).then(function(data){
-            resolve(data);
+        }).then(function(user){
+            if (user == '' || user == undefined || user == null) {
+                resolve(null);
+                return;
+            }
+            extraData.user = user;
+            //console.log('yuzhizhe01');
+            user.getUserGroups().then(function(group) {
+                //console.log('group->' + group);
+                extraData.group = group;
+            });
+            //console.log('yuzhizhe02');
+            user.getUserFactorys().then(function(factory) {
+                //console.log('factory->' + factory);
+                extraData.factory = factory;
+            });
+            //console.log('yuzhizhe03');
+            user.getUserWorkshops().then(function(workshop) {
+                //console.log('workshop->' + workshop);
+                extraData.workshop = workshop;
+            });
+            //console.log('yuzhizhe04');
+            user.getUserLinebodys().then(function(linebody) {
+                //console.log('linebody->' + linebody);
+                extraData.linebody = linebody;
+                //res.end(JSON.stringify(extraData));
+            });
+            //console.log('yuzhizhe05');
+            user.getUserValidmenus().then(function(validmenu) {
+                //console.log('validmenu->' + validmenu);
+                extraData.validmenu = validmenu;
+                //res.end(JSON.stringify(extraData));
+                resolve(extraData);
+            });
+            //res.set('Content-Type', 'text/html; charset=utf-8');
+            //res.end(JSON.stringify(extraData));
         });
     });
     return p;
@@ -150,7 +291,7 @@ exports.addUserOne = function(req , res , next) {
 /*
 	根据userId删除User
 */
-exports.deleteUserById = function(req , res) {
+exports.deleteUserById = function(req , res , next) {
     var p = new Promise(function(resolve , reject) {
         //先查找,再调用删除,最后返回首页
         User.findOne({
@@ -175,7 +316,7 @@ exports.deleteUserById = function(req , res) {
 }
 
 //根据userId跟新User
-exports.updateUserById = function(req , res) {
+exports.updateUserById = function(req , res , next) {
     var user = {
         userid:req.body.userId,
         username: req.body.userName,

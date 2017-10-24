@@ -10,17 +10,17 @@ var controller = require('../controllers/user_controller');
 
 //查找所有用户
 router.get('/selectUserAll', function(req, res, next) {
-    controller.selectUserAll(req , res);
+    controller.selectUserAll(req , res , next);
 });
 
 //根据用户名查找一个用户
 router.post('/selectUserByName', function(req, res, next) {
-    controller.selectUserByName(req , res);
+    controller.selectUserByName(req , res , next);
 });
 
 //根据用户名ID查找一个用户
 router.post('/selectUserById', function(req, res, next) {
-    controller.selectUserById(req , res);
+    controller.selectUserById(req , res , next);
 });
 
 //添加一条用户
@@ -30,12 +30,12 @@ router.post('/addUserOne', function(req, res, next) {
 
 //删除一个用户
 router.get('/deleteUserById', function(req, res, next) {
-    controller.deleteUserById(req , res);
+    controller.deleteUserById(req , res , next);
 });
 
 //更新一条用户
 router.post('/updateUserById', function(req, res, next) {
-    controller.updateUserById(req , res);
+    controller.updateUserById(req , res , next);
 });
 
 //测试user和group关联——添加

@@ -46,18 +46,19 @@ exports.selectUserGroup = function(req , res , next) {
         res.end(JSON.stringify(parameterError));
         return;
     }
+    
     service.selectUserGroup(req , res , next);
 }
 
 /*
 	查找所有User
 */
-exports.selectUserAll = function(req , res) {
+exports.selectUserAll = function(req , res , next) {
     if (req == '' || req == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-	service.selectUserAll(req , res).then(function(data){
+	service.selectUserAll(req , res , next).then(function(data){
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
@@ -71,7 +72,7 @@ exports.selectUserAll = function(req , res) {
 /*
  	根据username查找一个User
 */
-exports.selectUserByName = function(req , res) {
+exports.selectUserByName = function(req , res , next) {
 	if (req == '') {
         res.end(JSON.stringify(parameterError));
         return;
@@ -82,7 +83,7 @@ exports.selectUserByName = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectUserByName(req , res).then(function(data){
+    service.selectUserByName(req , res , next).then(function(data){
         //console.log(data);
         if (data == null || data == '' || data == undefined) {
             res.end(JSON.stringify(parameterError));
@@ -96,7 +97,7 @@ exports.selectUserByName = function(req , res) {
 /*
  	根据userId查找一个User
 */
-exports.selectUserById = function(req , res) {
+exports.selectUserById = function(req , res , next) {
 	if (req == '') {
         res.end(JSON.stringify(parameterError));
         return;
@@ -106,7 +107,7 @@ exports.selectUserById = function(req , res) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectUserById(req , res).then(function(data){
+    service.selectUserById(req , res , next).then(function(data){
         //console.log(data);
         if (data == null || data == '' || data == undefined) {
             res.end(JSON.stringify(parameterError));
@@ -134,7 +135,7 @@ exports.addUserOne = function(req , res , next) {
         return;
     }
     //创建一条记录,创建成功后返回json数据
-    service.addUserOne(req , res).then(function(data){
+    service.addUserOne(req , res , next).then(function(data){
         //dataSuccess.data = data;
         res.end(JSON.stringify(data));
     })
@@ -143,14 +144,14 @@ exports.addUserOne = function(req , res , next) {
 /*
 	根据userId删除User
 */
-exports.deleteUserById = function(req , res) {
+exports.deleteUserById = function(req , res , next) {
 	//如果没有username字段,返回404
     if (req.query.userId == undefined ||req.query.userId == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    service.deleteUserById(req , res).then(function(data){
+    service.deleteUserById(req , res , next).then(function(data){
         console.log(JSON.stringify(data));
         if (data == null || data == undefined || data == '') {
             res.end(JSON.stringify(parameterError));
@@ -162,7 +163,7 @@ exports.deleteUserById = function(req , res) {
 }
 
 //根据userId跟新User
-exports.updateUserById = function(req , res) {
+exports.updateUserById = function(req , res , next) {
 	//如果没有post数据或者数据为空,直接返回
     if (req.body.userId == undefined ||req.body.userId == ''
         ||req.body.userName == undefined ||req.body.userName == ''
@@ -173,7 +174,7 @@ exports.updateUserById = function(req , res) {
         return;
     }
     //创建一条记录,创建成功后跳转回首页
-    service.updateUserById(req , res).then(function(data){
+    service.updateUserById(req , res , next).then(function(data){
         //console.log(data);
         res.end(JSON.stringify(data));
     });

@@ -24,7 +24,6 @@ module.exports = function(sequelize , DataTypes){
             type: Sequelize.INTEGER,
             allowNull: false
         }
-
     });
 }
 //Workshop.sync();

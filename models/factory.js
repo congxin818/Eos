@@ -21,8 +21,15 @@ module.exports = function(sequelize , DataTypes){
             collate:'utf8_general_ci'
         },
         factorybelong: { //工厂所属
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            field: 'factorybelong'
         }
+    },{
+        indexes: [{
+        name: 'Group_Factory',
+        method: 'BTREE',
+        fields: ['factorybelong']
+    }]
     });
 }
 //Factory.sync();

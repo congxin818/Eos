@@ -4,7 +4,14 @@ var Group = sequelize.import('./group.js');
 var Factory = sequelize.import('./factory.js');
 var Workshop = sequelize.import('./workshop.js');
 var Linebody = sequelize.import('./linebody.js');
+var Validmenu = sequelize.import('./validmenu.js');
 
+
+//group和factory之间1：N关系
+//Group.hasMany(Factory , {foreignKey:'factorybelong', targetKey:'factoryid', as:'GroupFactory'});
+
+//Factory和Workshop之间1：N关系
+//Factory.hasMany(Workshop , {foreignKey:'group_id', targetKey:'factoryid', as:'GroupFactory'});
 
 //user和group之间N:M关系
 User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
@@ -22,6 +29,10 @@ Workshop.belongsToMany(User,{through: 'userWorkshops', as:'UserWorkshops'});
 User.belongsToMany(Linebody,{through: 'userLinebodys', as:'UserLinebodys'});
 Linebody.belongsToMany(User,{through: 'userLinebodys', as:'UserLinebodys'});
 
+
+//user和Validmenu之间N:M关系
+User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
+Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 // 同步模型到数据库中
 sequelize.sync();
 
