@@ -118,8 +118,8 @@ async function selectUserAll (req , res , next) {
                 linebody:'linebody',
                 validmenu:'validmenu'
             };
-        var value = [];
-        value.push(users[j]);
+        // var value = [];
+        // value.push(users[j]);
         const group = await users[j].getUserGroups ();
         const factory = await users[j].getUserFactorys ();
         const workshop = await users[j].getUserWorkshops ();
@@ -127,7 +127,7 @@ async function selectUserAll (req , res , next) {
         const validmenu = await users[j].getUserValidmenus ();
 
 
-        extraData.user = value;
+        extraData.user = users[j];
         extraData.group = group;
         extraData.workshop = workshop;
         extraData.linebody = linebody;
