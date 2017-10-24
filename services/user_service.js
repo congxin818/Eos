@@ -14,15 +14,6 @@ var dataSuccess = {
     data:'fas'
 };
 
-var extraData = {
-    user:'user',
-    group:'group',
-    factory:'factory',
-    workshop:'workshop',
-    linebody:'linebody',
-    validmenu:'validmenu'
-};
-
 var parameterError = {
     status: '1', 
     msg: '请求缺少必要参数或参数错误'
@@ -104,60 +95,48 @@ function selectUserGroup(req , res , next) {
             //res.set('Content-Type', 'text/html; charset=utf-8');
             //res.end(JSON.stringify(extraData));
     });
-
 }
 exports.selectUserGroup = selectUserGroup;
 
 /*
 	查找所有User
 */
-function selectUserAll (req , res , next) {
+async function selectUserAll (req , res , next) {
     var array = new Array();
-    var p = new Promise(function(resolve, reject) {
-        //console.log('yuzhizhe04->' + req);
-        User.findAll().then(function(users) {
-            users.forEach(function(user) {
-                if (user == '' || user == undefined || user == null) {
-                    resolve(null);
-                    return;
-                }
-                extraData.user = user;
-                console.log(user);
-                //console.log('yuzhizhe01');
-                user.getUserGroups().then(function(group) {
-                    //console.log('group->' + group);
-                    extraData.group = group;
-                    //console.log('yuzhizhe02');
-                    user.getUserFactorys().then(function(factory) {
-                        //console.log('factory->' + factory);
-                        extraData.factory = factory;
-                        //console.log('yuzhizhe03');
-                        user.getUserWorkshops().then(function(workshop) {
-                            //console.log('workshop->' + workshop);
-                            extraData.workshop = workshop;
-                            //console.log('yuzhizhe04');
-                            user.getUserLinebodys().then(function(linebody) {
-                                //console.log('linebody->' + linebody);
-                                extraData.linebody = linebody;
-                                //res.end(JSON.stringify(extraData));
-                                ////console.log('yuzhizhe05');
-                                user.getUserValidmenus().then(function(validmenu) {
-                                    //console.log('validmenu->' + validmenu);
-                                    extraData.validmenu = validmenu;
-                                    //res.end(JSON.stringify(extraData)); 
-                                    array.push(extraData); 
-                                });
-                            });
-                        });
-                    });
-                });
-                
-            });
-            resolve(array);
-        });
 
-    });
-    return p;
+    const users = await User.findAll ();
+
+    if (users == '' || users == undefined || users == null)
+    {
+        return;
+    }
+    for(j = 0,len=users.length; j < len; j++) {
+        var extraData = {
+                user:'user',
+                group:'group',
+                factory:'factory',
+                workshop:'workshop',
+                linebody:'linebody',
+                validmenu:'validmenu'
+            };
+
+        const group = await users[j].getUserGroups ();
+        const factory = await users[j].getUserFactorys ();
+        const workshop = await users[j].getUserWorkshops ();
+        const linebody = await users[j].getUserLinebodys ();
+        const validmenu = await users[j].getUserValidmenus ();
+
+
+        extraData.user = users[j];
+        extraData.group = group;
+        extraData.workshop = workshop;
+        extraData.linebody = linebody;
+        extraData.validmenu = validmenu;
+
+        array.push(extraData);
+    }
+
+    return array;
 }
 
 exports.selectUserAll = selectUserAll;
@@ -165,49 +144,30 @@ exports.selectUserAll = selectUserAll;
 /*
  	根据username查找一个User
 */
-exports.selectUserByName = function(req , res , next) {
-    var p = new Promise(function(resolve , reject) {
-        User.findOne({
-            where:{
-                username:req.body.userName
-            }
-        }).then(function(user){
-            if (user == '' || user == undefined || user == null) {
-                resolve(null);
-                return;
-            }
-            extraData.user = user;
-            //console.log('yuzhizhe01');
-            user.getUserGroups().then(function(group) {
-                //console.log('group->' + group);
-                extraData.group = group;
-            });
-            //console.log('yuzhizhe02');
-            user.getUserFactorys().then(function(factory) {
-                //console.log('factory->' + factory);
-                extraData.factory = factory;
-            });
-            //console.log('yuzhizhe03');
-            user.getUserWorkshops().then(function(workshop) {
-                //console.log('workshop->' + workshop);
-                extraData.workshop = workshop;
-            });
-            //console.log('yuzhizhe04');
-            user.getUserLinebodys().then(function(linebody) {
-                //console.log('linebody->' + linebody);
-                extraData.linebody = linebody;
-                //res.end(JSON.stringify(extraData));
-            });
-            //console.log('yuzhizhe05');
-            user.getUserValidmenus().then(function(validmenu) {
-                //console.log('validmenu->' + validmenu);
-                extraData.validmenu = validmenu;
-                //res.end(JSON.stringify(extraData));
-                resolve(extraData);
-            });
-        });
-    });
-    return p;
+exports.selectUserByName = async function(req , res , next) {
+
+    const user = await User.findOne ({ where: { username: req.body.userName}})
+
+    if (user == '' || user == undefined || user == null) {
+            return null
+    }
+
+    const group = await user.getUserGroups ()
+    const factory = await user.getUserFactorys ()
+    const workshop = await user.getUserWorkshops ()
+    const linebody = await user.getUserLinebodys ()
+    const validmenu = await user.getUserValidmenus ()
+
+    var extraData = {
+    user: user,
+    group:group,
+    factory:factory,
+    workshop:workshop,
+    linebody:linebody,
+    validmenu: validmenu
+    };
+
+    return extraData
 }
 
 /*

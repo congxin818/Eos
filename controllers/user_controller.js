@@ -72,7 +72,7 @@ exports.selectUserAll = function(req , res , next) {
 /*
  	根据username查找一个User
 */
-exports.selectUserByName = function(req , res , next) {
+exports.selectUserByName = async function(req , res , next) {
 	if (req == '') {
         res.end(JSON.stringify(parameterError));
         return;
@@ -83,15 +83,14 @@ exports.selectUserByName = function(req , res , next) {
         res.end(JOSN.stringify(parameterError));
         return;
     }
-    service.selectUserByName(req , res , next).then(function(data){
-        //console.log(data);
-        if (data == null || data == '' || data == undefined) {
+    const data = await service.selectUserByName(req , res , next)
+
+    if (data == null || data == '' || data == undefined) {
             res.end(JSON.stringify(parameterError));
         }else{
             dataSuccess.data = data;
             res.end(JSON.stringify(dataSuccess));
         }
-    });
 }
 
 /*
