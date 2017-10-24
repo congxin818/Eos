@@ -126,7 +126,6 @@ async function selectUserAll (req , res , next) {
         const linebody = await users[j].getUserLinebodys ();
         const validmenu = await users[j].getUserValidmenus ();
 
-
         extraData.user = users[j];
         extraData.group = group;
         extraData.workshop = workshop;
@@ -173,51 +172,30 @@ exports.selectUserByName = async function(req , res , next) {
 /*
     根据id查找一个User
 */
-exports.selectUserById = function(req , res , next) {
-    var p = new Promise(function(resolve , reject) {
-        User.findOne({
-            where:{
-                userid:req.body.userId
-            }
-        }).then(function(user){
-            if (user == '' || user == undefined || user == null) {
-                resolve(null);
-                return;
-            }
-            extraData.user = user;
-            //console.log('yuzhizhe01');
-            user.getUserGroups().then(function(group) {
-                //console.log('group->' + group);
-                extraData.group = group;
-            });
-            //console.log('yuzhizhe02');
-            user.getUserFactorys().then(function(factory) {
-                //console.log('factory->' + factory);
-                extraData.factory = factory;
-            });
-            //console.log('yuzhizhe03');
-            user.getUserWorkshops().then(function(workshop) {
-                //console.log('workshop->' + workshop);
-                extraData.workshop = workshop;
-            });
-            //console.log('yuzhizhe04');
-            user.getUserLinebodys().then(function(linebody) {
-                //console.log('linebody->' + linebody);
-                extraData.linebody = linebody;
-                //res.end(JSON.stringify(extraData));
-            });
-            //console.log('yuzhizhe05');
-            user.getUserValidmenus().then(function(validmenu) {
-                //console.log('validmenu->' + validmenu);
-                extraData.validmenu = validmenu;
-                //res.end(JSON.stringify(extraData));
-                resolve(extraData);
-            });
-            //res.set('Content-Type', 'text/html; charset=utf-8');
-            //res.end(JSON.stringify(extraData));
-        });
-    });
-    return p;
+exports.selectUserById =async function(req , res , next) {
+    
+    const user = await User.findOne ({ where: { userid: req.body.userId}})
+
+    if (user == '' || user == undefined || user == null) {
+            return null
+    }
+
+    const group = await user.getUserGroups ()
+    const factory = await user.getUserFactorys ()
+    const workshop = await user.getUserWorkshops ()
+    const linebody = await user.getUserLinebodys ()
+    const validmenu = await user.getUserValidmenus ()
+
+    var extraData = {
+    user: user,
+    group:group,
+    factory:factory,
+    workshop:workshop,
+    linebody:linebody,
+    validmenu: validmenu
+    };
+
+    return extraData
 }
 
 /*
