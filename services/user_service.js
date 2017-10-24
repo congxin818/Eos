@@ -128,6 +128,7 @@ async function selectUserAll (req , res , next) {
 
         extraData.user = users[j];
         extraData.group = group;
+        extraData.factory = factory;
         extraData.workshop = workshop;
         extraData.linebody = linebody;
         extraData.validmenu = validmenu;
@@ -173,7 +174,7 @@ exports.selectUserByName = async function(req , res , next) {
     根据id查找一个User
 */
 exports.selectUserById =async function(req , res , next) {
-    
+
     const user = await User.findOne ({ where: { userid: req.body.userId}})
 
     if (user == '' || user == undefined || user == null) {
