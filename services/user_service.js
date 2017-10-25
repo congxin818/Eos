@@ -242,8 +242,9 @@ async function addUserOne(req , res , next) {
     // //     });
     // // });
     // // return p;
+    var value = req.body.validmenu;
     console.log(JSON.stringify(req.body.validMenu));
-    res.end(JSON.stringify(req.body.validMenu));
+    return value;
 }
 exports.addUserOne = addUserOne;
 
