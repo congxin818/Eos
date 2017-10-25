@@ -121,23 +121,27 @@ exports.selectUserById = function(req , res , next) {
 	添加一个User
 */
 exports.addUserOne = function(req , res , next) {
-	if (req == '') {
-        res.end(JSON.stringify(parameterError));
-        return;
-    }
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.userName == undefined ||req.body.userName == ''
-        || req.body.userPsd == undefined || req.body.userPsd == ''
-        || req.body.userAbbName == undefined|| req.body.userJob == undefined
-        || req.body.userLeader == undefined) {
-        res.end(JSON.stringify(parameterError));
-        return;
-    }
+	// if (req == '') {
+ //        res.end(JSON.stringify(parameterError));
+ //        return;
+ //    }
+	// //如果没有post数据或者数据为空,直接返回
+ //    if (req.body.userName == undefined ||req.body.userName == ''
+ //        || req.body.userPsd == undefined || req.body.userPsd == ''
+ //        || req.body.userAbbName == undefined|| req.body.userJob == undefined
+ //        || req.body.userLeader == undefined) {
+ //        res.end(JSON.stringify(parameterError));
+ //        return;
+ //    }
+    var value = req.body.validMenu;
+    console.log(value);
+    console.log(JSON.stringify(value));
+    res.end(JSON.stringify(value));
     //创建一条记录,创建成功后返回json数据
-    service.addUserOne(req , res , next).then(function(data){
-        //dataSuccess.data = data;
-        res.end(JSON.stringify(data));
-    })
+    // service.addUserOne(req , res , next).then(function(data){
+    //     //dataSuccess.data = data;
+    //     res.end(JSON.stringify(data));
+    // })
 }
 
 /*
