@@ -16,6 +16,7 @@ var factorySet = require('./routes/factory_route'); //工厂
 var workshopSet = require('./routes/workshop_route'); //车间
 var linebodySet = require('./routes/linebody_route'); //线体
 var validmenuSet = require('./routes/validmenu_route'); //有效菜单
+var kpiSet = require('./routes/kpiall_route'); //KPI设置
 
 var app = express();
 
@@ -48,6 +49,7 @@ app.use('/factorySet' , factorySet);//在app中注册工厂设置接口
 app.use('/workshopSet' , workshopSet);//在app中注册车间设置接口
 app.use('/linebodySet' , linebodySet);//在app中注册线体设置接口
 app.use('/validmenuSet' , validmenuSet);//在app中注册有效菜单设置接口
+app.use('/KPISet' , kpiSet);//在app中注册KPI设置接口
 
 // 404 错误
 var errorData_404 = {

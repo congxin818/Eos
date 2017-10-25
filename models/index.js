@@ -5,7 +5,8 @@ var Factory = sequelize.import('./factory.js');
 var Workshop = sequelize.import('./workshop.js');
 var Linebody = sequelize.import('./linebody.js');
 var Validmenu = sequelize.import('./validmenu.js');
-
+var Kpionelev = sequelize.import('./kpionelev.js');
+var Kpitwolev = sequelize.import('./kpitwolev.js');
 
 //group和factory之间1：N关系
 //Group.hasMany(Factory , {foreignKey:'factorybelong', targetKey:'factoryid', as:'GroupFactory'});
@@ -41,3 +42,5 @@ exports.Group = Group;
 exports.Factory = Factory;
 exports.Workshop = Workshop;
 exports.Linebody = Linebody;
+exports.Kpionelev = Kpionelev;
+exports.Kpitwolev = Kpitwolev;
