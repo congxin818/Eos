@@ -160,8 +160,6 @@ exports.selectAreaAll = function(req , res) {
             var data2=factoryValSet(factoryDataOne);
             treeShowFacData.push(data2);
             });  
-
-
             var contGFData = treeShowGroupData.concat(treeShowFacData);
             res.end(JSON.stringify(contGFData));
         });

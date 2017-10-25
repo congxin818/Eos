@@ -111,15 +111,14 @@ async function selectUserAll (req , res , next) {
     }
     for(j = 0,len=users.length; j < len; j++) {
         var extraData = {
-                user:'',
-                group:'group',
-                factory:'factory',
-                workshop:'workshop',
-                linebody:'linebody',
-                validmenu:'validmenu'
-            };
-        // var value = [];
-        // value.push(users[j]);
+            user:'',
+            group:'group',
+            factory:'factory',
+            workshop:'workshop',
+            linebody:'linebody',
+            validmenu:'validmenu'
+        };
+
         const group = await users[j].getUserGroups ();
         const factory = await users[j].getUserFactorys ();
         const workshop = await users[j].getUserWorkshops ();
@@ -159,12 +158,12 @@ exports.selectUserByName = async function(req , res , next) {
     const validmenu = await user.getUserValidmenus ()
 
     var extraData = {
-    user: user,
-    group:group,
-    factory:factory,
-    workshop:workshop,
-    linebody:linebody,
-    validmenu: validmenu
+        user: user,
+        group:group,
+        factory:factory,
+        workshop:workshop,
+        linebody:linebody,
+        validmenu: validmenu
     };
 
     return extraData
@@ -188,12 +187,12 @@ exports.selectUserById =async function(req , res , next) {
     const validmenu = await user.getUserValidmenus ()
 
     var extraData = {
-    user: user,
-    group:group,
-    factory:factory,
-    workshop:workshop,
-    linebody:linebody,
-    validmenu: validmenu
+        user: user,
+        group:group,
+        factory:factory,
+        workshop:workshop,
+        linebody:linebody,
+        validmenu: validmenu
     };
 
     return extraData

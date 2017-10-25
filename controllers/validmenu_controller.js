@@ -55,7 +55,7 @@ exports.addValidmenuOne = function(req , res) {
     services.addValidmenuOne(req , res).then(function(data){
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
-    });      
+    });
 }
 
 /*
