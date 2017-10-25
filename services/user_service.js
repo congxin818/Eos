@@ -7,6 +7,9 @@
 
 var User = require('../models').User;//引入数据库User模块
 var Group = require('../models').Group;
+var Validmenu = require('../models').Validmenu;
+
+var validmenu_service = require('./validmenu_service');
 
 var dataSuccess = {
     status: '0', 
@@ -24,7 +27,7 @@ var loginError = {
     msg:'用户名或密码验证失败'
 };
 
-var existError = {
+const existError = {
     status:'3',
     msg:'用户名已存在'
 };
@@ -197,54 +200,47 @@ var serviceError = {
 
         return extraData
     }
-    exports.selectUserById = selectUserById;
+exports.selectUserById = selectUserById;
 
 /*
 	添加一个User
     */
-    async function addUserOne(req , res , next) {
-    // var user = {
-    //     username: req.body.userName,
-    //     userpsd: req.body.userPsd,
-    //     userabbname:req.body.userAbbName,
-    //     userjob:req.body.userJob,
-    //     userleader:req.body.userLeader
-    // };
+const addUserOne = async (req , res , next) => {
+    let user = {
+        username: req.body.userName,
+        userpsd: req.body.userPsd,
+        userabbname:req.body.userAbbName,
+        userjob:req.body.userJob,
+        userleader:req.body.userLeader
+    };
+    let menuids = new Array();
+    const menuids_str = req.body.validMenu;
+    if (menuids_str != null || menuids_str != '') {
+        menuids = menuids_str.split(",");
+    }
+    try {
+        const data = await User.create (user);
+        
+        let values = new Array ()
+        for(var i = menuids.length - 1; i >= 0; i--) {
+            if (menuids[i] != null || menuids[i] != '') {
+                let value = await Validmenu.findById(menuids[i])
+                values.push (value)
+            }
+        }
+        values.forEach (async value => await data.setUserValidmenus (value))
 
-    // Promise.all([
-    //     User.create(user)
-    // ]).then(function(results){
-    //     var user = results[0];
-    //     // 或
-    //     // role.setUserRoles(user);
-    //     res.set('Content-Type', 'text/html; charset=utf-8');
-    //     res.end('userRoles 插入数据成功');
-    // }).catch(err => {
-    //         if (err.parent.code == 'ER_DUP_ENTRY') {
-    //             resolve(existError);
-    //         }else{
-    //             resolve(serviceError);
-    //         }
-    //         //console.log (err.parent.code)
-    //     });
-    // // var p = new Promise(function(resolve, reject) {
-    // //     //创建一条记录,创建成功后跳转回首页
-    // //     User.create(user).then(function(data){
-    // //         dataSuccess.data = data;
-    // //         resolve(dataSuccess);
-    // //     }).catch (err => {
-    // //         if (err.parent.code == 'ER_DUP_ENTRY') {
-    // //             resolve(existError);
-    // //         }else{
-    // //             resolve(serviceError);
-    // //         }
-    // //         //console.log (err.parent.code)
-    // //     });
-    // // });
-    // // return p;
-    var value = req.body.validMenu;
-    console.log(JSON.stringify(value));
-    return value;
+        dataSuccess.data = data;
+        return dataSuccess
+    }
+    catch (err) {
+        if (err.parent.code == 'ER_DUP_ENTRY') {
+            return existError
+        }
+        else {
+            return serviceError
+        }
+    }
 }
 exports.addUserOne = addUserOne;
 
