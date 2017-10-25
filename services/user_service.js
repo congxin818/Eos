@@ -36,29 +36,29 @@ var serviceError = {
 
 /*
     测试关联添加
- */
-function createUserGroup(req, res, next) {
-    Promise.all([
-        User.create({username:'itbilu3', userpsd:'itbilu3.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
-        Group.create({groupname:'管理员3'})
-    ]).then(function(results){
-        console.log('yuzhizhe01'+results[0]);
-        var user = results[0];
-        console.log('yuzhizhe02'+results[1]);
-        var group = results[1];
-        user.setUserGroups(group);
-        res.set('Content-Type', 'text/html; charset=utf-8');
+    */
+    function createUserGroup(req, res, next) {
+        Promise.all([
+            User.create({username:'itbilu3', userpsd:'itbilu3.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
+            Group.create({groupname:'管理员3'})
+            ]).then(function(results){
+                console.log('yuzhizhe01'+results[0]);
+                var user = results[0];
+                console.log('yuzhizhe02'+results[1]);
+                var group = results[1];
+                user.setUserGroups(group);
+                res.set('Content-Type', 'text/html; charset=utf-8');
         //res.end('创建成功：'+JSON.stringify({user:results[0].dataValues, role:results[1].dataValues}));
         res.end(JSON.stringify(results[0]));
     }).catch(next);
-}
-exports.createUserGroup = createUserGroup;
+        }
+        exports.createUserGroup = createUserGroup;
 
 /*
     测试关联根据ID查询用户
- */
-function selectUserGroup(req , res , next) {
-    User.findOne({
+    */
+    function selectUserGroup(req , res , next) {
+        User.findOne({
             where:{
                 userid:req.query.userId
             }
@@ -94,115 +94,115 @@ function selectUserGroup(req , res , next) {
             });
             //res.set('Content-Type', 'text/html; charset=utf-8');
             //res.end(JSON.stringify(extraData));
-    });
-}
-exports.selectUserGroup = selectUserGroup;
+        });
+    }
+    exports.selectUserGroup = selectUserGroup;
 
 /*
 	查找所有User
-*/
-async function selectUserAll (req , res , next) {
-    var array = new Array();
-    const users = await User.findAll ();
+    */
+    async function selectUserAll (req , res , next) {
+        var array = new Array();
+        const users = await User.findAll ();
 
-    if (users == '' || users == undefined || users == null)
-    {
-        return;
+        if (users == '' || users == undefined || users == null)
+        {
+            return;
+        }
+        for(j = 0,len=users.length; j < len; j++) {
+            var extraData = {
+                user:'',
+                group:'group',
+                factory:'factory',
+                workshop:'workshop',
+                linebody:'linebody',
+                validmenu:'validmenu'
+            };
+
+            const group = await users[j].getUserGroups ();
+            const factory = await users[j].getUserFactorys ();
+            const workshop = await users[j].getUserWorkshops ();
+            const linebody = await users[j].getUserLinebodys ();
+            const validmenu = await users[j].getUserValidmenus ();
+
+            extraData.user = users[j];
+            extraData.group = group;
+            extraData.factory = factory;
+            extraData.workshop = workshop;
+            extraData.linebody = linebody;
+            extraData.validmenu = validmenu;
+
+            array.push(extraData);
+        }
+        return array;
     }
-    for(j = 0,len=users.length; j < len; j++) {
-        var extraData = {
-            user:'',
-            group:'group',
-            factory:'factory',
-            workshop:'workshop',
-            linebody:'linebody',
-            validmenu:'validmenu'
-        };
 
-        const group = await users[j].getUserGroups ();
-        const factory = await users[j].getUserFactorys ();
-        const workshop = await users[j].getUserWorkshops ();
-        const linebody = await users[j].getUserLinebodys ();
-        const validmenu = await users[j].getUserValidmenus ();
-
-        extraData.user = users[j];
-        extraData.group = group;
-        extraData.factory = factory;
-        extraData.workshop = workshop;
-        extraData.linebody = linebody;
-        extraData.validmenu = validmenu;
-
-        array.push(extraData);
-    }
-    return array;
-}
-
-exports.selectUserAll = selectUserAll;
+    exports.selectUserAll = selectUserAll;
 
 /*
  	根据username查找一个User
-*/
-async function selectUserByName(req , res , next) {
+    */
+    async function selectUserByName(req , res , next) {
 
-    const user = await User.findOne ({ where: { username: req.body.userName}})
+        const user = await User.findOne ({ where: { username: req.body.userName}})
 
-    if (user == '' || user == undefined || user == null) {
+        if (user == '' || user == undefined || user == null) {
             return null
+        }
+
+        const group = await user.getUserGroups ()
+        const factory = await user.getUserFactorys ()
+        const workshop = await user.getUserWorkshops ()
+        const linebody = await user.getUserLinebodys ()
+        const validmenu = await user.getUserValidmenus ()
+
+        var extraData = {
+            user: user,
+            group:group,
+            factory:factory,
+            workshop:workshop,
+            linebody:linebody,
+            validmenu: validmenu
+        };
+
+        return extraData
     }
-
-    const group = await user.getUserGroups ()
-    const factory = await user.getUserFactorys ()
-    const workshop = await user.getUserWorkshops ()
-    const linebody = await user.getUserLinebodys ()
-    const validmenu = await user.getUserValidmenus ()
-
-    var extraData = {
-        user: user,
-        group:group,
-        factory:factory,
-        workshop:workshop,
-        linebody:linebody,
-        validmenu: validmenu
-    };
-
-    return extraData
-}
-exports.selectUserByName = selectUserByName;
+    exports.selectUserByName = selectUserByName;
 
 /*
     根据id查找一个User
-*/
-async function selectUserById(req , res , next) {
+    */
+    async function selectUserById(req , res , next) {
 
-    const user = await User.findOne ({ where: { userid: req.body.userId}})
+        const user = await User.findOne ({ where: { userid: req.body.userId}})
 
-    if (user == '' || user == undefined || user == null) {
+        if (user == '' || user == undefined || user == null) {
             return null
+        }
+
+        const group = await user.getUserGroups ()
+        const factory = await user.getUserFactorys ()
+        const workshop = await user.getUserWorkshops ()
+        const linebody = await user.getUserLinebodys ()
+        const validmenu = await user.getUserValidmenus ()
+
+        var extraData = {
+            user: user,
+            group:group,
+            factory:factory,
+            workshop:workshop,
+            linebody:linebody,
+            validmenu: validmenu
+        };
+
+        return extraData
     }
-
-    const group = await user.getUserGroups ()
-    const factory = await user.getUserFactorys ()
-    const workshop = await user.getUserWorkshops ()
-    const linebody = await user.getUserLinebodys ()
-    const validmenu = await user.getUserValidmenus ()
-
-    var extraData = {
-        user: user,
-        group:group,
-        factory:factory,
-        workshop:workshop,
-        linebody:linebody,
-        validmenu: validmenu
-    };
-
-    return extraData
-}
-exports.selectUserById = selectUserById;
+    exports.selectUserById = selectUserById;
 
 /*
 	添加一个User
-*/
-async function addUserOne(req , res , next) {
+    */
+    async function addUserOne(req , res , next) {
     // var user = {
     //     username: req.body.userName,
     //     userpsd: req.body.userPsd,
@@ -242,17 +242,17 @@ async function addUserOne(req , res , next) {
     // //     });
     // // });
     // // return p;
-    var value = req.body.validmenu;
-    console.log(JSON.stringify(req.body.validMenu));
+    var value = req.body.validMenu;
+    console.log(JSON.stringify(value));
     return value;
 }
 exports.addUserOne = addUserOne;
 
 /*
 	根据userId删除User
-*/
-async function deleteUserById(req , res , next) {
-    var p = new Promise(function(resolve , reject) {
+    */
+    async function deleteUserById(req , res , next) {
+        var p = new Promise(function(resolve , reject) {
         //先查找,再调用删除,最后返回首页
         User.findOne({
             where:{
@@ -272,9 +272,9 @@ async function deleteUserById(req , res , next) {
             }
         });
     });
-    return p;
-}
-exports.deleteUserById = deleteUserById;
+        return p;
+    }
+    exports.deleteUserById = deleteUserById;
 
 //根据userId跟新User
 async function updateUserById(req , res , next) {
