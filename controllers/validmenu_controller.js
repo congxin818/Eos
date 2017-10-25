@@ -19,15 +19,15 @@ var parameterError = {
 };
 
 /*
-	查找某个用户所有有效菜单数据，根据用户id
+	查找某个用户所有有效菜单数据，根据id
     用于init显示
 */
-exports.selectValmeuAlByUId = function(req , res) {
-    if (req.query.userId == ''||req.query.userId == undefined) {
+exports.selectValmeuById = function(req , res) {
+    if (req.body.validMenuId == ''||req.body.validMenuId == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-	services.selectValmeuAlByUId(req , res).then(function(data){
+	services.selectValmeuById(req.body.validMenuId).then(function(data){
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
@@ -35,8 +35,7 @@ exports.selectValmeuAlByUId = function(req , res) {
         }else{
             dataSuccess.data = data;
             res.end(JSON.stringify(dataSuccess));
-        }
-        
+        } 
     });
 }
 

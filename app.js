@@ -44,7 +44,7 @@ app.use('/users', users);//在app中注册users接口
 app.use('/message' , message);
 app.use('/admin' , administrator);
 app.use('/user' , user);
-app.use('/groupset' , groupSet);//在app中注册集团设置接口
+app.use('/groupSet' , groupSet);//在app中注册集团设置接口
 app.use('/factorySet' , factorySet);//在app中注册工厂设置接口
 app.use('/workshopSet' , workshopSet);//在app中注册车间设置接口
 app.use('/linebodySet' , linebodySet);//在app中注册线体设置接口

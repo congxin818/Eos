@@ -42,5 +42,6 @@ exports.Group = Group;
 exports.Factory = Factory;
 exports.Workshop = Workshop;
 exports.Linebody = Linebody;
+exports.Validmenu = Validmenu;
 exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;

@@ -8,22 +8,27 @@
 var Validmenu = require('../models').Validmenu;
 
 /*
-	查找某个用户所有有效菜单数据，根据用户id
+	查找某个用户所有有效菜单数据，根据id
     用于init显示
 */
-exports.selectValmeuAlByUId = function(req , res) {
-    var p = new Promise(function(resolve, reject) {
-        Validmenu.findAll({
-            where:{
-                userid:req.query.userId
-            }
-        }).then(function(data) {
-            resolve(data);
-        });
-    });
-	return p;
-}
+async function selectValmeuById(menuid) {
+    console.log('yuzhizhe01');
+    console.log(menuid);
 
+    const value = await Validmenu.findOne ({ where: {validmenuid:menuid}})
+    return value;
+ //    var p = new Promise(function(resolve, reject) {
+ //        Validmenu.findOne({
+ //            where:{
+ //                validmenuid:menuid
+ //            }
+ //        }).then(function(data) {
+ //            resolve(data);
+ //        });
+ //    });
+	// return p;
+}
+exports.selectValmeuById = selectValmeuById;
 /*
 	根据有效菜单id和用户id添加一条有效菜单数据
 */
