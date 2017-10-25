@@ -134,7 +134,6 @@ async function selectUserAll (req , res , next) {
 
         array.push(extraData);
     }
-
     return array;
 }
 
@@ -143,7 +142,7 @@ exports.selectUserAll = selectUserAll;
 /*
  	根据username查找一个User
 */
-exports.selectUserByName = async function(req , res , next) {
+async function selectUserByName(req , res , next) {
 
     const user = await User.findOne ({ where: { username: req.body.userName}})
 
@@ -168,11 +167,12 @@ exports.selectUserByName = async function(req , res , next) {
 
     return extraData
 }
+exports.selectUserByName = selectUserByName;
 
 /*
     根据id查找一个User
 */
-exports.selectUserById =async function(req , res , next) {
+async function selectUserById(req , res , next) {
 
     const user = await User.findOne ({ where: { userid: req.body.userId}})
 
@@ -197,39 +197,60 @@ exports.selectUserById =async function(req , res , next) {
 
     return extraData
 }
+exports.selectUserById = selectUserById;
 
 /*
 	添加一个User
 */
-exports.addUserOne = function(req , res , next) {
-    var user = {
-        username: req.body.userName,
-        userpsd: req.body.userPsd,
-        userabbname:req.body.userAbbName,
-        userjob:req.body.userJob,
-        userleader:req.body.userLeader
-    };
-    var p = new Promise(function(resolve, reject) {
-        //创建一条记录,创建成功后跳转回首页
-        User.create(user).then(function(data){
-            dataSuccess.data = data;
-            resolve(dataSuccess);
-        }).catch (err => {
-            if (err.parent.code == 'ER_DUP_ENTRY') {
-                resolve(existError);
-            }else{
-                resolve(serviceError);
-            }
-            //console.log (err.parent.code)
-        });
-    });
-    return p;
+async function addUserOne(req , res , next) {
+    // var user = {
+    //     username: req.body.userName,
+    //     userpsd: req.body.userPsd,
+    //     userabbname:req.body.userAbbName,
+    //     userjob:req.body.userJob,
+    //     userleader:req.body.userLeader
+    // };
+
+    // Promise.all([
+    //     User.create(user)
+    // ]).then(function(results){
+    //     var user = results[0];
+    //     // 或
+    //     // role.setUserRoles(user);
+    //     res.set('Content-Type', 'text/html; charset=utf-8');
+    //     res.end('userRoles 插入数据成功');
+    // }).catch(err => {
+    //         if (err.parent.code == 'ER_DUP_ENTRY') {
+    //             resolve(existError);
+    //         }else{
+    //             resolve(serviceError);
+    //         }
+    //         //console.log (err.parent.code)
+    //     });
+    // // var p = new Promise(function(resolve, reject) {
+    // //     //创建一条记录,创建成功后跳转回首页
+    // //     User.create(user).then(function(data){
+    // //         dataSuccess.data = data;
+    // //         resolve(dataSuccess);
+    // //     }).catch (err => {
+    // //         if (err.parent.code == 'ER_DUP_ENTRY') {
+    // //             resolve(existError);
+    // //         }else{
+    // //             resolve(serviceError);
+    // //         }
+    // //         //console.log (err.parent.code)
+    // //     });
+    // // });
+    // // return p;
+    console.log(JSON.stringify(req.body.validMenu));
+    res.end(JSON.stringify(req.body.validMenu));
 }
+exports.addUserOne = addUserOne;
 
 /*
 	根据userId删除User
 */
-exports.deleteUserById = function(req , res , next) {
+async function deleteUserById(req , res , next) {
     var p = new Promise(function(resolve , reject) {
         //先查找,再调用删除,最后返回首页
         User.findOne({
@@ -252,9 +273,10 @@ exports.deleteUserById = function(req , res , next) {
     });
     return p;
 }
+exports.deleteUserById = deleteUserById;
 
 //根据userId跟新User
-exports.updateUserById = function(req , res , next) {
+async function updateUserById(req , res , next) {
     var user = {
         userid:req.body.userId,
         username: req.body.userName,
@@ -280,3 +302,4 @@ exports.updateUserById = function(req , res , next) {
     });
     return p;
 }
+exports.updateUserById = updateUserById;
