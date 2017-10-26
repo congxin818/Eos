@@ -114,32 +114,32 @@ var serviceError = {
         {
             return;
         }
-        for(j = 0,len=users.length; j < len; j++) {
-            var extraData = {
-                user:'',
-                group:'group',
-                factory:'factory',
-                workshop:'workshop',
-                linebody:'linebody',
-                validmenu:'validmenu'
-            };
+        // for(j = 0,len=users.length; j < len; j++) {
+        //     var extraData = {
+        //         user:'',
+        //         group:'group',
+        //         factory:'factory',
+        //         workshop:'workshop',
+        //         linebody:'linebody',
+        //         validmenu:'validmenu'
+        //     };
 
-            const group = await users[j].getUserGroups ();
-            const factory = await users[j].getUserFactorys ();
-            const workshop = await users[j].getUserWorkshops ();
-            const linebody = await users[j].getUserLinebodys ();
-            const validmenu = await users[j].getUserValidmenus ();
+        //     const group = await users[j].getUserGroups ();
+        //     const factory = await users[j].getUserFactorys ();
+        //     const workshop = await users[j].getUserWorkshops ();
+        //     const linebody = await users[j].getUserLinebodys ();
+        //     const validmenu = await users[j].getUserValidmenus ();
 
-            extraData.user = users[j];
-            extraData.group = group;
-            extraData.factory = factory;
-            extraData.workshop = workshop;
-            extraData.linebody = linebody;
-            extraData.validmenu = validmenu;
+        //     extraData.user = users[j];
+        //     extraData.group = group;
+        //     extraData.factory = factory;
+        //     extraData.workshop = workshop;
+        //     extraData.linebody = linebody;
+        //     extraData.validmenu = validmenu;
 
-            array.push(extraData);
-        }
-        return array;
+        //     array.push(extraData);
+        // }
+        return users;
     }
 
     exports.selectUserAll = selectUserAll;
@@ -177,6 +177,7 @@ var serviceError = {
 /*
     根据id查找一个User
     */
+   let areaAll_controller = require('../controllers/areaall_controller');
     async function selectUserById(req , res , next) {
 
         const user = await User.findOne ({ where: { userid: req.body.userId}})
@@ -184,19 +185,41 @@ var serviceError = {
         if (user == '' || user == undefined || user == null) {
             return null
         }
+        let allData = await areaAll_controller.selectAreaAll(req , res);
+        console.log('allData.length->' + allData.length);
+        const allDataJsonStr = JSON.stringify(allData);
+        console.log(allDataJsonStr)
 
-        const group = await user.getUserGroups ()
-        const factory = await user.getUserFactorys ()
-        const workshop = await user.getUserWorkshops ()
-        const linebody = await user.getUserLinebodys ()
+        let groupIds = await stringUtil.getIds(allDataJsonStr , '');
+        let factoryIds = await stringUtil.getIds(allDataJsonStr , 'f');
+        let workshopIds = await stringUtil.getIds(allDataJsonStr , 'w');
+        let linebodyIds = await stringUtil.getIds(allDataJsonStr , 'l');
+
+        if (factoryIds.length > 0) {
+            let values = new Array ()
+            for(var i = factoryIds.length - 1; i >= 0; i--) {
+                if (factoryIds[i] != null || factoryIds[i] != '') {
+                    //console.log('groupIds['+i + ']' +':' +groupIds[i]);
+                    try {
+                    let value = await Factory.findById(factoryIds[i])
+                        let falg = await user.hasUserFactory(value);
+                        console.log(JSON.stringify(falg))
+                    }catch (err) {
+                        console.log ('error ------>')
+                        console.log (err)
+                    }
+
+                }
+            }
+        }
+        // const group = await user.getUserGroups ()
+        // const factory = await user.getUserFactorys ()
+        // const workshop = await user.getUserWorkshops ()
+        // const linebody = await user.getUserLinebodys ()
         const validmenu = await user.getUserValidmenus ()
 
         var extraData = {
             user: user,
-            group:group,
-            factory:factory,
-            workshop:workshop,
-            linebody:linebody,
             validmenu: validmenu
         };
 

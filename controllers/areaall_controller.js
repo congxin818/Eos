@@ -35,7 +35,7 @@ const namehasError = {
 /*
     查询所有集团和工厂
     */
-    exports.selectAreaAll = async (req , res) => {
+async function selectAreaAll(req , res){
         console.log ('开始查找')
         if (req == '') {
             return parameterError
@@ -81,7 +81,7 @@ const namehasError = {
 
         return contGFData
     }
-
+exports.selectAreaAll = selectAreaAll;
 /*
     把区域的格式设置为树图格式
     */
