@@ -97,18 +97,8 @@ const namehasError = {
 /*
 	根据id更新线体
     */
-    exports.updateLinebodyById = function(req , res) {
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.linebodyId == undefined ||req.body.linebodyId == ''
-        ||req.body.linebodyName == undefined ||req.body.linebodyName == ''
-        ||req.body.linebodyBelong==undefined||req.body.linebodyBelong== '') {
-        res.end(JSON.stringify(parameterError));
-    return;
-}
+    exports.updateLinebodyById = async function(req , res) {
     //更新一条记录,更新成功后跳转回首页
-    services.updateLinebodyById(req , res).then(function(data){
-        //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
-    });
+    const data = await services.updateLinebodyById(req , res)
+    return data;
 }

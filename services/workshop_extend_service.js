@@ -15,7 +15,7 @@ exports.selectWorkshopByName = function(req , res) {
         Workshop.findOne({
             where:{
                 workshopname:req.body.name,
-                workshopbelong:req.body.perId
+                workshopbelong:req.body.pId
             }
         }).then(function(data){
             resolve(data);

@@ -54,7 +54,7 @@ const namehasError = {
 
         const factoryData = await facServices.selectFactoryAll(req , res)
         factoryData.forEach(factoryDataOne => {
-            const data2 = areaValSet(factoryDataOne.factoryid +'f',factoryDataOne.factoryname,
+            const data2 = areaValSet('f'+ factoryDataOne.factoryid,factoryDataOne.factoryname,
                 factoryDataOne.factorybelong,factoryDataOne.checked)
             treeShowFacData.push(data2)
         })
@@ -62,7 +62,7 @@ const namehasError = {
         const workshopData = await wksServices.selectWorkshopAll(req , res)
         //把车间表通过一定格式展示出来
         workshopData.forEach(workshopDataOne => {
-            const data3 = areaValSet(workshopDataOne.workshopid + 'w',workshopDataOne.workshopname,
+            const data3 = areaValSet('w' + workshopDataOne.workshopid,workshopDataOne.workshopname,
                 workshopDataOne.workshopbelong,workshopDataOne.checked);
             treeShowWosData.push(data3)
         })
@@ -70,7 +70,7 @@ const namehasError = {
         const linebodyData = await linbyServices.selectLinebodyAll(req , res)
         //把线体表通过一定格式展示出来
         linebodyData.forEach(linebodyDataOne => {
-            const data4 = areaValSet(linebodyDataOne.linebodyid + 'l',linebodyDataOne.linebodyname,
+            const data4 = areaValSet('l' + linebodyDataOne.linebodyid,linebodyDataOne.linebodyname,
                 linebodyDataOne.linebodybelong,linebodyDataOne.checked);
             treeShowLinbyData.push(data4)
         })
@@ -108,32 +108,34 @@ const namehasError = {
           || req.body.name == ''){
             return parameterError
     }
-    if (req.body.perId == null){
+    if (req.body.pId == null){
         // 更改一个集团
         const updateReturn = await groupconler.updateGroupById(req , res);
         return updateReturn
-    }
-    var areaFlag = await req.body.perId.slice(0,1);
+    }   
+    var areaFlag = await req.body.pId.slice(0,1);
+    var areaId = req.body.id.slice(1,);
     if(!isNaN(areaFlag)){
         // 更改一个工厂
-        req.body.id.factoryId = req.body.id.slice(1,);
-        const updateReturn = await factoryconler.addFactoryOne(req , res);
+        req.body.factoryId = areaId;
+        const updateReturn = await factoryconler.updateFactoryById(req , res);
         return updateReturn
-        
     }else{
         if(areaFlag == 'f'){
             // 更改一个车间
-            const updateReturn = await workshopconler.addWorkshopOne(req , res);
+            req.body.workshopId = areaId;
+            const updateReturn = await workshopconler.updateWorkshopById(req , res);
             return updateReturn
         }else if(areaFlag == 'w'){
-            // 更改一个车间
-            const updateReturn = await linebodyconler.addLinebodyOne(req , res);
+            // 更改一个车间           
+            req.body.linebodyId = areaId;
+            const updateReturn = await linebodyconler.updateLinebodyById(req , res);
             return updateReturn
         }
     }
 }
 
-/*
+/*  
     判断要增加的表（集团、工厂、车间、线体）
     调用相对应的增加函数
     */
@@ -142,12 +144,12 @@ const namehasError = {
     if( req.body.name == null || req.body.name == ''){
         return parameterError
     }
-    if (areaFlag == null){
+    if (req.body.pId == null){
         // 添加一个集团
         const addReturn = await groupconler.addGroupOne(req , res);
         return addReturn
     }
-    var areaFlag = await req.body.perId.slice(0,1);
+    var areaFlag = await req.body.pId.slice(0,1);
     if(!isNaN(areaFlag)){  
         // 添加一个工厂
         const addReturn = await factoryconler.addFactoryOne(req , res);
@@ -190,7 +192,7 @@ const namehasError = {
     */
     exports.updateArea = async function(req , res){
         const updateReturn = await exports.updateAreafrist(req , res,);
-        if(updateReturn== undefined ||updateReturn == ''||updateReturn == null){
+        if(updateReturn== 1 ){
             const allData = await exports.selectAreaAll(req , res);
             res.end(JSON.stringify(allData));
         }
