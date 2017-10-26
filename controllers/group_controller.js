@@ -124,22 +124,22 @@ const namehasError = {
     var areaFlag = req.body.perId.slice(0,1);
     if(!isNaN(areaFlag)){
         if (areaFlag == 0){
-        // 添加一个集团
-        const addReturn = await exports.addGroupOne(req , res);
-        return addReturn
+            // 添加一个集团
+            const addReturn = await exports.addGroupOne(req , res);
+            return addReturn
+        }else{
+            // 添加一个工厂
+            factoryconler.addFactoryOne(req , res);
+        }
     }else{
-        // 添加一个工厂
-        factoryconler.addFactoryOne(req , res);
+        if(areaFlag == 'f'){
+            // 添加一个车间
+            workshopconler.addWorkshopOne(req , res);
+        }else if(areaFlag == 'w'){
+            // 添加一个车间
+            linebodyconler.addLinebodyOne(req , res);
+        }
     }
-}else{
-    if(areaFlag == 'f'){
-        // 添加一个车间
-        workshopconler.addWorkshopOne(req , res);
-    }else if(areaFlag == 'w'){
-        // 添加一个车间
-        linebodyconler.addLinebodyOne(req , res);
-    }
-}
 }
 
 /*

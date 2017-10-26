@@ -120,32 +120,28 @@ exports.selectUserById = function(req , res , next) {
 /*
 	添加一个User
 */
-exports.addUserOne = function(req , res , next) {
+var stringUtil = require('../utils/stringUtil');
+async function addUserOne(req , res , next) {
 	if (req == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }
-    if (req.body.validArea == undefined || req.body.validArea == '') {
+    
+	//如果没有post数据或者数据为空,直接返回
+    if (req.body.userName == undefined ||req.body.userName == ''
+        || req.body.userPsd == undefined || req.body.userPsd == ''
+        || req.body.userAbbName == undefined|| req.body.userJob == undefined
+        || req.body.userLeader == undefined || req.body.validArea == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-    console.log('validArea->'+req.body.validArea);
-    res.end(req.body.validArea);
-	//如果没有post数据或者数据为空,直接返回
-    // if (req.body.userName == undefined ||req.body.userName == ''
-    //     || req.body.userPsd == undefined || req.body.userPsd == ''
-    //     || req.body.userAbbName == undefined|| req.body.userJob == undefined
-    //     || req.body.userLeader == undefined) {
-    //     res.end(JSON.stringify(parameterError));
-    //     return;
-    // }
     //创建一条记录,创建成功后返回json数据
-    // service.addUserOne(req , res , next).then(function(data){
-    //     //dataSuccess.data = data;
-    //     res.end(JSON.stringify(data));
-    // })
+    service.addUserOne(req , res , next).then(function(data){
+        //dataSuccess.data = data;
+        res.end(JSON.stringify(data));
+    })
 }
-
+exports.addUserOne = addUserOne;
 /*
 	根据userId删除User
 */

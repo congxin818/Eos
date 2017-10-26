@@ -11,6 +11,7 @@ let Factory = require('../models').Factory;
 let Workshop = require('../models').Workshop;
 let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
+var stringUtil = require('../utils/stringUtil');
 
 var dataSuccess = {
     status: '0', 
@@ -217,8 +218,18 @@ const addUserOne = async (req , res , next) => {
     let menuids = new Array();
 
     const menuids_str = req.body.validMenu;
-    const area_str = req.body.validArea;
-    console.log(area_str);
+
+    const jsonString = req.body.validArea;
+    //console.log('validArea->'+jsonString);
+    let groupIds = await stringUtil.getIds(jsonString , '');
+    let factoryIds = await stringUtil.getIds(jsonString , 'F');
+    let workshopIds = await stringUtil.getIds(jsonString , 'W');
+    let linebodyIds = await stringUtil.getIds(jsonString , 'L');
+    
+    console.log('yuzhizhe01->'+groupIds.length);
+    console.log('yuzhizhe02->'+factoryIds.length);
+    console.log('yuzhizhe03->'+workshopIds.length);
+    console.log('yuzhizhe04->'+linebodyIds.length);
     
     if (menuids_str != null || menuids_str != '') {
         menuids = menuids_str.split(",");
@@ -227,14 +238,52 @@ const addUserOne = async (req , res , next) => {
         const data = await User.create (user);
         
         let values = new Array ()
-        for(var i = menuids.length - 1; i >= 0; i--) {
-            if (menuids[i] != null || menuids[i] != '') {
-                let value = await Validmenu.findById(menuids[i])
-                values.push (value)
+        if (menuids.length > 0) {
+            for(var i = menuids.length - 1; i >= 0; i--) {
+                if (menuids[i] != null || menuids[i] != '') {
+                    let value = await Validmenu.findById(menuids[i])
+                    values.push (value)
+                }
             }
+            values.forEach (async value => await data.setUserValidmenus (value));
         }
-        values.forEach (async value => await data.setUserValidmenus (value));
-
+        
+        if (groupIds.length > 0) {
+            for(var i = groupIds.length - 1; i >= 0; i--) {
+                if (groupIds[i] != null || groupIds[i] != '') {
+                    let value = await Group.findById(groupIds[i])
+                    values.push (value)
+                }
+            }
+            values.forEach (async value => await data.setUserGroups (value));
+        }
+        if (factoryIds.length > 0) {
+            for(var i = factoryIds.length - 1; i >= 0; i--) {
+                if (factoryIds[i] != null || factoryIds[i] != '') {
+                    let value = await Factory.findById(factoryIds[i])
+                    values.push (value)
+                }
+            }
+            values.forEach (async value => await data.setUserFactorys (value));
+        }
+        if (workshopIds.length > 0) {
+            for(var i = workshopIds.length - 1; i >= 0; i--) {
+                if (workshopIds[i] != null || workshopIds[i] != '') {
+                    let value = await Workshop.findById(workshopIds[i])
+                    values.push (value)
+                }
+            }
+            values.forEach (async value => await data.setUserWorkshops (value));
+        }
+        if (linebodyIds.length > 0) {
+            for(var i = linebodyIds.length - 1; i >= 0; i--) {
+                if (linebodyIds[i] != null || linebodyIds[i] != '') {
+                    let value = await Linebody.findById(linebodyIds[i])
+                    values.push (value)
+                }
+            }
+            values.forEach (async value => await data.setUserLinebodys (value));
+        }
         dataSuccess.data = data;
         return dataSuccess
     }
