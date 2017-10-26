@@ -220,7 +220,9 @@ const addUserOne = async (req , res , next) => {
     const menuids_str = req.body.validMenu;
 
     const jsonString = req.body.validArea;
-    //console.log('validArea->'+jsonString);
+    console.log('validArea->'+jsonString);
+    console.log('menuids_str->'+menuids_str);
+    
     let groupIds = await stringUtil.getIds(jsonString , '');
     let factoryIds = await stringUtil.getIds(jsonString , 'f');
     let workshopIds = await stringUtil.getIds(jsonString , 'w');
