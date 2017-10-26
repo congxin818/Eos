@@ -7,9 +7,10 @@
 
 var User = require('../models').User;//引入数据库User模块
 var Group = require('../models').Group;
+let Factory = require('../models').Factory;
+let Workshop = require('../models').Workshop;
+let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
-
-var validmenu_service = require('./validmenu_service');
 
 var dataSuccess = {
     status: '0', 
@@ -214,7 +215,11 @@ const addUserOne = async (req , res , next) => {
         userleader:req.body.userLeader
     };
     let menuids = new Array();
+
     const menuids_str = req.body.validMenu;
+    const area_str = req.body.validArea;
+    console.log(area_str);
+    
     if (menuids_str != null || menuids_str != '') {
         menuids = menuids_str.split(",");
     }
@@ -228,7 +233,7 @@ const addUserOne = async (req , res , next) => {
                 values.push (value)
             }
         }
-        values.forEach (async value => await data.setUserValidmenus (value))
+        values.forEach (async value => await data.setUserValidmenus (value));
 
         dataSuccess.data = data;
         return dataSuccess

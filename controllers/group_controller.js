@@ -13,6 +13,7 @@ var nameEtdService = require('../services/group_extend_service');
 var services = require('../services/group_service');
 var nameEtdService = require('../services/group_extend_service');
 var facServices = require('../services/factory_service');
+
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -136,7 +137,7 @@ exports.updateGroupById = function(req , res) {
  
 
 
-exports.selectAreaAll = function(req , res) {
+exports.selectAreaAll =function(req , res) {
     if (req == '') {
         res.end(JOSN.stringify(parameterError));
         return;
@@ -154,7 +155,6 @@ exports.selectAreaAll = function(req , res) {
 
         //把工厂表通过一定格式展示出来
         facServices.selectFactoryAll(req , res).then(function(factoryData){
-
             var treeShowFacData = [];
             factoryData.forEach(function(factoryDataOne) {
             var data2=factoryValSet(factoryDataOne);
