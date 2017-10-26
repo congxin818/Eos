@@ -66,8 +66,7 @@ exports.selectWorkshopById = function(req , res) {
 */
 exports.addWorkshopOne = function(req , res) {
 	//如果没有post数据或者数据为空,直接返回
-    if (req.body.workshopName == undefined ||req.body.workshopName == ''
-        ||req.body.workshopBelong==undefined||req.body.workshopBelong== '') {
+    if (req.body.workshopName == undefined ||req.body.workshopName == '') {
               res.end(JSON.stringify(parameterError));
         return;
     }
@@ -76,10 +75,7 @@ exports.addWorkshopOne = function(req , res) {
             // 对车间名字是否重复进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                services.addWorkshopOne(req , res).then(function(data){
-                dataSuccess.data = data;
-                res.end(JSON.stringify(dataSuccess));
-                });
+                services.addWorkshopOne(req , res);
             }else{
                  var namehasError = {
                      status: '101', 
