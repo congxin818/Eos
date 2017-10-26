@@ -130,8 +130,7 @@ exports.addUserOne = function(req , res , next) {
         return;
     }
     console.log('validArea->'+req.body.validArea);
-    res.end(JSON.stringify(req.body.validArea));
-
+    res.end(req.body.validArea);
 	//如果没有post数据或者数据为空,直接返回
     // if (req.body.userName == undefined ||req.body.userName == ''
     //     || req.body.userPsd == undefined || req.body.userPsd == ''
