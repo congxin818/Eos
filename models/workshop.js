@@ -21,8 +21,9 @@ module.exports = function(sequelize , DataTypes){
             collate:'utf8_general_ci'
         },
         workshopbelong: { //车间所属
-            type: Sequelize.INTEGER,
-            allowNull: false
+            type: Sequelize.STRING(50),
+            charset:'utf8',
+            collate:'utf8_general_ci'
         }
     });
 }

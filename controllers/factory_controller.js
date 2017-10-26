@@ -64,8 +64,7 @@ exports.selectFactoryById = function(req , res) {
 */
 exports.addFactoryOne = function(req , res) {
 	//如果没有post数据或者数据为空,直接返回
-    if (req.body.factoryName == undefined ||req.body.factoryName == ''
-        ||req.body.factoryBelong==undefined||req.body.factoryBelong== '') {
+    if (req.body.factoryName == undefined ||req.body.factoryName == '') {
               res.end(JSON.stringify(parameterError));
         return;
     }
@@ -74,10 +73,7 @@ exports.addFactoryOne = function(req , res) {
             // 对工厂名字是否重复进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                services.addFactoryOne(req , res).then(function(data){
-                dataSuccess.data = data;
-                res.end(JSON.stringify(dataSuccess));
-                });
+                services.addFactoryOne(req , res);
             }else{
                  var namehasError = {
                      status: '101', 

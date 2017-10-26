@@ -62,8 +62,7 @@ exports.selectLinebodyById = function(req , res) {
 */
 exports.addLinebodyOne = function(req , res) {
 	//如果没有post数据或者数据为空,直接返回
-    if (req.body.linebodyName == undefined ||req.body.linebodyName == ''
-        ||req.body.linebodyBelong==undefined||req.body.linebodyBelong== '') {
+    if (req.body.linebodyName == undefined ||req.body.linebodyName == '') {
               res.end(JSON.stringify(parameterError));
         return;
     }
@@ -72,10 +71,7 @@ exports.addLinebodyOne = function(req , res) {
             // 对线体名字是否重复进行判断
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                services.addLinebodyOne(req , res).then(function(data){
-                dataSuccess.data = data;
-                res.end(JSON.stringify(dataSuccess));
-                });
+                services.addLinebodyOne(req , res);
             }else{
                  var namehasError = {
                      status: '101', 
