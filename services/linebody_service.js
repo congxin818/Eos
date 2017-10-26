@@ -38,17 +38,13 @@ var Linebody = require('../models').Linebody;
     */
     exports.addLinebodyOne = function(req , res) {
         var linebody = {
-            linebodyname: req.body.linebodyName,
+            linebodyname: req.body.name,
             linebodybelong: req.body.perId
         };
         var p = new Promise(function(resolve, reject) {
         //创建一条记录,创建成功后跳转回首页
         Linebody.create(linebody).then(function(data){
             resolve(data);
-            var linebodyUpdate={id:'l'+ data.linebodyid};
-            Linebody.update(linebodyUpdate,{where:{
-                linebodyid:data.linebodyid
-            }});
         });
     });
         return p;
@@ -78,9 +74,7 @@ var Linebody = require('../models').Linebody;
     */
     exports.updateLinebodyById = function(req , res) {
        var linebody = {
-          linebodyid: req.body.linebodyId,
-          linebodyname: req.body.linebodyName,
-          linebodybelong:req.body.linebodyBelong
+          linebodyname: req.body.name
       };
       var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页

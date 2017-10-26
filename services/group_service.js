@@ -25,7 +25,7 @@ exports.selectGroupById = function(req , res) {
     var p = new Promise(function(resolve , reject) {
         Group.findOne({
             where:{
-                groupid:req.body.groupId
+                groupid:req.body.id
             }
         }).then(function(data){
             resolve(data);
@@ -38,7 +38,7 @@ exports.selectGroupById = function(req , res) {
 */
 exports.addGroupOne = function(req , res) {
     var group = {
-        groupname: req.body.groupName
+        groupname: req.body.name
     };
     var p = new Promise(function(resolve, reject) {
         //创建一条记录,创建成功后跳转回首页
@@ -73,13 +73,13 @@ exports.deleteGroupById = function(req , res) {
 */
 exports.updateGroupById = function(req , res) {
 	var group = {
-        groupname: req.body.groupName
+        groupname: req.body.name
     };
     var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页
         Group.update(group,{
             where:{
-                groupid:req.body.groupId
+                groupid:req.body.id
             }
         }).then(function(data){
             resolve(data);

@@ -13,7 +13,7 @@ exports.selectFactoryByName = function(req , res) {
     var p = new Promise(function(resolve , reject) {
         Factory.findOne({
             where:{
-                factoryname:req.body.factoryName
+                factoryname:req.body.name
             }
         }).then(function(data){
             resolve(data);

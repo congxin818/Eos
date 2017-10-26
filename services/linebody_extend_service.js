@@ -14,7 +14,7 @@ exports.selectLinebodyByName = function(req , res) {
     var p = new Promise(function(resolve , reject) {
         Linebody.findOne({
             where:{
-                linebodyname:req.body.linebodyName,
+                linebodyname:req.body.name,
                 linebodybelong:req.body.perId
             }
         }).then(function(data){

@@ -38,7 +38,7 @@ var Workshop = require('../models').Workshop;
     */
     exports.addWorkshopOne = function(req , res) {
         var workshop = {
-            workshopname: req.body.workshopName,
+            workshopname: req.body.name,
             workshopbelong: req.body.perId
         };
         var p = new Promise(function(resolve, reject) {
@@ -74,9 +74,7 @@ var Workshop = require('../models').Workshop;
     */
     exports.updateWorkshopById = function(req , res) {
        var workshop = {
-          workshopid: req.body.workshopId,
-          workshopname: req.body.workshopName,
-          workshopbelong:req.body.workshopBelong
+          workshopname: req.body.name
       };
       var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页

@@ -38,7 +38,7 @@ exports.selectFactoryById = function(req , res) {
 */
 exports.addFactoryOne = function(req , res) {
     var factory = {
-        factoryname: req.body.factoryName,
+        factoryname: req.body.name,
         factorybelong: req.body.perId
     };
     var p = new Promise(function(resolve, reject) {
@@ -74,9 +74,7 @@ exports.deleteFactoryById = function(req , res) {
 */
 exports.updateFactoryById = function(req , res) {
 	var factory = {
-		factoryid: req.body.factoryId,
-        factoryname: req.body.factoryName,
-        factorybelong:req.body.factoryBelong
+        factoryname: req.body.name
     };
     var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页

@@ -25,13 +25,6 @@ var controller = require('../controllers/group_controller');
 	});
 
 /*
-	添加一个区域范围
-	*/
-	router.post('/addAreaOne', function(req, res, next) {
-		controller.addAreaOne(req , res);
-	});
-
-/*
 	根据id删除集团
 	*/
 	router.get('/deleteGroupById', function(req, res, next) {
@@ -44,11 +37,6 @@ var controller = require('../controllers/group_controller');
 	router.post('/updateGroupById', function(req, res, next) {
 		controller.updateGroupById(req , res);
 	});
-/*
-	查询所有集团和工厂
-	*/
-	router.get('/selectAreaAll', function(req, res, next) {
-		controller.selectAreaAll(req , res);
-	});
+
 
 	module.exports = router;
