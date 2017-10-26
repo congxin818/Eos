@@ -39,7 +39,7 @@ exports.selectFactoryById = function(req , res) {
 exports.addFactoryOne = function(req , res) {
     var factory = {
         factoryname: req.body.name,
-        factorybelong: req.body.perId
+        factorybelong: req.body.pId
     };
     var p = new Promise(function(resolve, reject) {
         //创建一条记录,创建成功后跳转回首页

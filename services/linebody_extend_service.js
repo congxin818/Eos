@@ -15,7 +15,7 @@ exports.selectLinebodyByName = function(req , res) {
         Linebody.findOne({
             where:{
                 linebodyname:req.body.name,
-                linebodybelong:req.body.perId
+                linebodybelong:req.body.pId
             }
         }).then(function(data){
             resolve(data);

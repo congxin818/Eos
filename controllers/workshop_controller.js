@@ -98,18 +98,8 @@ const namehasError = {
 /*
 	根据id更新车间
     */
-    exports.updateWorkshopById = function(req , res) {
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.workshopId == undefined ||req.body.workshopId == ''
-        ||req.body.workshopName == undefined ||req.body.workshopName == ''
-        ||req.body.workshopBelong==undefined||req.body.workshopBelong== '') {
-        res.end(JSON.stringify(parameterError));
-    return;
-}
+    exports.updateWorkshopById = async function(req , res) {
     //更新一条记录,更新成功后跳转回首页
-    services.updateWorkshopById(req , res).then(function(data){
-        //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
-    });
+    const data = await services.updateWorkshopById(req , res)
+    return data;
 }

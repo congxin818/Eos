@@ -14,7 +14,7 @@ exports.selectGroupByName = function(req , res) {
     var p = new Promise(function(resolve , reject) {
         Group.findOne({
             where:{
-                groupname:req.body.groupName
+                groupname:req.body.name
             }
         }).then(function(data){
             resolve(data);

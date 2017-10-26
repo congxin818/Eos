@@ -39,7 +39,7 @@ var Workshop = require('../models').Workshop;
     exports.addWorkshopOne = function(req , res) {
         var workshop = {
             workshopname: req.body.name,
-            workshopbelong: req.body.perId
+            workshopbelong: req.body.pId
         };
         var p = new Promise(function(resolve, reject) {
         //创建一条记录,创建成功后跳转回首页
