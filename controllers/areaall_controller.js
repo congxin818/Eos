@@ -54,7 +54,7 @@ const namehasError = {
 
         const factoryData = await facServices.selectFactoryAll(req , res)
         factoryData.forEach(factoryDataOne => {
-            const data2 = areaValSet(factoryDataOne.factoryid +'f',factoryDataOne.factoryname,
+            const data2 = areaValSet('f' + factoryDataOne.factoryid,factoryDataOne.factoryname,
                 factoryDataOne.factorybelong,factoryDataOne.checked)
             treeShowFacData.push(data2)
         })
@@ -62,7 +62,7 @@ const namehasError = {
         const workshopData = await wksServices.selectWorkshopAll(req , res)
         //把车间表通过一定格式展示出来
         workshopData.forEach(workshopDataOne => {
-            const data3 = areaValSet(workshopDataOne.workshopid + 'w',workshopDataOne.workshopname,
+            const data3 = areaValSet('w'+ workshopDataOne.workshopid,workshopDataOne.workshopname,
                 workshopDataOne.workshopbelong,workshopDataOne.checked);
             treeShowWosData.push(data3)
         })
@@ -70,7 +70,7 @@ const namehasError = {
         const linebodyData = await linbyServices.selectLinebodyAll(req , res)
         //把线体表通过一定格式展示出来
         linebodyData.forEach(linebodyDataOne => {
-            const data4 = areaValSet(linebodyDataOne.linebodyid + 'l',linebodyDataOne.linebodyname,
+            const data4 = areaValSet('l' + linebodyDataOne.linebodyid,linebodyDataOne.linebodyname,
                 linebodyDataOne.linebodybelong,linebodyDataOne.checked);
             treeShowLinbyData.push(data4)
         })
