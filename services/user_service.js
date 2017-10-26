@@ -222,9 +222,9 @@ const addUserOne = async (req , res , next) => {
     const jsonString = req.body.validArea;
     //console.log('validArea->'+jsonString);
     let groupIds = await stringUtil.getIds(jsonString , '');
-    let factoryIds = await stringUtil.getIds(jsonString , 'F');
-    let workshopIds = await stringUtil.getIds(jsonString , 'W');
-    let linebodyIds = await stringUtil.getIds(jsonString , 'L');
+    let factoryIds = await stringUtil.getIds(jsonString , 'f');
+    let workshopIds = await stringUtil.getIds(jsonString , 'w');
+    let linebodyIds = await stringUtil.getIds(jsonString , 'l');
     
     console.log('yuzhizhe01->'+groupIds.length);
     console.log('yuzhizhe02->'+factoryIds.length);

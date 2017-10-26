@@ -55,7 +55,7 @@
  		console.log(data[i].id);
  		arr.push(data[i].id);
  	}
- 	console.log(arr.length);
+ 	//console.log(arr.length);
  	return arr;    
  }
  exports.jsonToArray = jsonToArray;
