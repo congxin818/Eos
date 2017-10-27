@@ -233,7 +233,7 @@ async function selectUserById(req , res , next) {
             validmenu: validmenu,
             validarea:allData
         };
-        //console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
+        console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
         return extraData
     }
 exports.selectUserById = selectUserById;
@@ -405,93 +405,93 @@ async function updateUserById(req , res , next) {
     }
     // console.log(falg);
     // console.log(JSON.stringify(falg));
-    await user.setUserValidmenus([]);
-    await user.setUserGroups([]);
-    await user.setUserFactorys([]);
-    await user.setUserWorkshops([]);
-    await user.setUserLinebodys([]);
+    // await user.setUserValidmenus([]);
+    // await user.setUserGroups([]);
+    // await user.setUserFactorys([]);
+    // await user.setUserWorkshops([]);
+    // await user.setUserLinebodys([]);
 
     let menuids = new Array();
     const menuids_str = req.body.validMenu;
     const jsonString = req.body.validArea;
-    //console.log('validArea->'+jsonString);
-    //console.log('menuids_str->'+menuids_str);
+    console.log('validArea->'+jsonString);
+    console.log('menuids_str->'+menuids_str);
 
-    let groupIds = await stringUtil.getIds(jsonString , '');
-    let factoryIds = await stringUtil.getIds(jsonString , 'f');
-    let workshopIds = await stringUtil.getIds(jsonString , 'w');
-    let linebodyIds = await stringUtil.getIds(jsonString , 'l');
+    // let groupIds = await stringUtil.getIds(jsonString , '');
+    // let factoryIds = await stringUtil.getIds(jsonString , 'f');
+    // let workshopIds = await stringUtil.getIds(jsonString , 'w');
+    // let linebodyIds = await stringUtil.getIds(jsonString , 'l');
     
-    //console.log('yuzhizhe01->'+groupIds.length);
-    // console.log('yuzhizhe02->'+factoryIds.length);
-    // console.log('yuzhizhe03->'+workshopIds.length);
-    //console.log('yuzhizhe04->'+linebodyIds.length);
+    // //console.log('yuzhizhe01->'+groupIds.length);
+    // // console.log('yuzhizhe02->'+factoryIds.length);
+    // // console.log('yuzhizhe03->'+workshopIds.length);
+    // //console.log('yuzhizhe04->'+linebodyIds.length);
     
-    if (menuids_str != null || menuids_str != '') {
-        menuids = menuids_str.split(",");
-    }
-    try {
-        if (menuids.length > 0) {
-            let values = new Array ()
-            for(var i = menuids.length - 1; i >= 0; i--) {
-                if (menuids[i] != null || menuids[i] != '') {
-                    //console.log('menuids['+i + ']' +':' +menuids[i]);
-                    let value = await Validmenu.findById(menuids[i])
-                    values.push (value)
-                }
-            }
-            values.forEach (async value => await user.setUserValidmenus (value));
-        }
+    // if (menuids_str != null || menuids_str != '') {
+    //     menuids = menuids_str.split(",");
+    // }
+    // try {
+    //     if (menuids.length > 0) {
+    //         let values = new Array ()
+    //         for(var i = menuids.length - 1; i >= 0; i--) {
+    //             if (menuids[i] != null || menuids[i] != '') {
+    //                 //console.log('menuids['+i + ']' +':' +menuids[i]);
+    //                 let value = await Validmenu.findById(menuids[i])
+    //                 values.push (value)
+    //             }
+    //         }
+    //         values.forEach (async value => await user.setUserValidmenus (value));
+    //     }
         
-        if (groupIds.length > 0) {
-            let values = new Array ()
-            for(var i = groupIds.length - 1; i >= 0; i--) {
-                if (groupIds[i] != null || groupIds[i] != '') {
-                    //console.log('groupIds['+i + ']' +':' +groupIds[i]);
-                    let value = await Group.findById(groupIds[i])
-                    values.push (value)
-                }
-            }
-            values.forEach (async value => await user.setUserGroups (value));
-        }
-        if (factoryIds.length > 0) {
-            let values = new Array ()
-            for(var i = factoryIds.length - 1; i >= 0; i--) {
-                if (factoryIds[i] != null || factoryIds[i] != '') {
-                    //console.log('factoryIds['+i + ']' +':' +factoryIds[i]);
-                    let value = await Factory.findById(factoryIds[i])
-                    values.push (value)
-                }
-            }
-            values.forEach (async value => await user.setUserFactorys (value));
-        }
-        if (workshopIds.length > 0) {
-            let values = new Array ()
-            for(var i = workshopIds.length - 1; i >= 0; i--) {
-                if (workshopIds[i] != null || workshopIds[i] != '') {
-                    //console.log('workshopIds['+i + ']' +':' +workshopIds[i]);
-                    let value = await Workshop.findById(workshopIds[i])
-                    values.push (value)
-                }
-            }
-            values.forEach (async value => await user.setUserWorkshops (value));
-        }
-        if (linebodyIds.length > 0) {
-            let values = new Array ()
-            for(var i = linebodyIds.length - 1; i >= 0; i--) {
-                if (linebodyIds[i] != null || linebodyIds[i] != '') {
-                    //console.log('linebodyIds['+i + ']' +':' +linebodyIds[i]);
-                    let value = await Linebody.findById(linebodyIds[i])
-                    values.push (value)
-                }
-            }
-            values.forEach (async value => await user.setUserLinebodys (value));
-        }
-        dataSuccess.data = falg;
-        return dataSuccess
-    }
-    catch (err) {
-        return serviceError;
-    }
+    //     if (groupIds.length > 0) {
+    //         let values = new Array ()
+    //         for(var i = groupIds.length - 1; i >= 0; i--) {
+    //             if (groupIds[i] != null || groupIds[i] != '') {
+    //                 //console.log('groupIds['+i + ']' +':' +groupIds[i]);
+    //                 let value = await Group.findById(groupIds[i])
+    //                 values.push (value)
+    //             }
+    //         }
+    //         values.forEach (async value => await user.setUserGroups (value));
+    //     }
+    //     if (factoryIds.length > 0) {
+    //         let values = new Array ()
+    //         for(var i = factoryIds.length - 1; i >= 0; i--) {
+    //             if (factoryIds[i] != null || factoryIds[i] != '') {
+    //                 //console.log('factoryIds['+i + ']' +':' +factoryIds[i]);
+    //                 let value = await Factory.findById(factoryIds[i])
+    //                 values.push (value)
+    //             }
+    //         }
+    //         values.forEach (async value => await user.setUserFactorys (value));
+    //     }
+    //     if (workshopIds.length > 0) {
+    //         let values = new Array ()
+    //         for(var i = workshopIds.length - 1; i >= 0; i--) {
+    //             if (workshopIds[i] != null || workshopIds[i] != '') {
+    //                 //console.log('workshopIds['+i + ']' +':' +workshopIds[i]);
+    //                 let value = await Workshop.findById(workshopIds[i])
+    //                 values.push (value)
+    //             }
+    //         }
+    //         values.forEach (async value => await user.setUserWorkshops (value));
+    //     }
+    //     if (linebodyIds.length > 0) {
+    //         let values = new Array ()
+    //         for(var i = linebodyIds.length - 1; i >= 0; i--) {
+    //             if (linebodyIds[i] != null || linebodyIds[i] != '') {
+    //                 //console.log('linebodyIds['+i + ']' +':' +linebodyIds[i]);
+    //                 let value = await Linebody.findById(linebodyIds[i])
+    //                 values.push (value)
+    //             }
+    //         }
+    //         values.forEach (async value => await user.setUserLinebodys (value));
+    //     }
+    //     dataSuccess.data = falg;
+    //     return dataSuccess;
+    // }
+    // catch (err) {
+    //     return serviceError;
+    // }
 }
 exports.updateUserById = updateUserById;
