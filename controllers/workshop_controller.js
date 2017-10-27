@@ -8,6 +8,8 @@
 const Workshop = require('../models/workshop');
 const nameEtdService = require('../services/workshop_extend_service');
 const services = require('../services/workshop_service');
+const lineEtdService = require('../services/linebody_extend_service');
+const linebodyService = require('../services/linebody_service');
 
 const dataSuccess = {
     status: '0', 
@@ -82,8 +84,17 @@ const namehasError = {
 	根据id删除车间
     */
     exports.deleteWorkshopById = async function(req , res) {
-    //先查找,再调用删除,最后返回json数据
+    //删除所指定车间
     await services.deleteWorkshopById(req , res)
+    // 删除指定车间下的线体
+    req.query.pId = req.query.id
+    const selectData = await lineEtdService.selectLinebodyBypId(req , res);
+    selectData.forEach(async selectDataDataOne => {
+        req.query.linebodyId = selectDataDataOne.linebodyid;
+        await linebodyService.deleteLinebodyById(req , res)
+    })
+
+
     return
 }
 

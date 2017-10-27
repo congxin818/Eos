@@ -53,20 +53,14 @@ var Linebody = require('../models').Linebody;
 /*
 	根据id删除一条线体数据
     */
-    exports.deleteLinebodyById = function(req , res) {
-        var p = new Promise(function(resolve , reject) {
-        //先查找,再调用删除,最后返回首页
-        Linebody.findOne({
+    exports.deleteLinebodyById = async function(req , res) {
+
+        const data = await Linebody.findOne({
             where:{
                 linebodyid:req.query.linebodyId
             }
-        }).then(function(data){
-        	data.destroy().then(function(data){
-                resolve(data);
-            });     
-        });
-    });
-        return p;
+        })
+        await data.destroy()
     }
 
 /*

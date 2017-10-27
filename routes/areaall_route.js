@@ -33,4 +33,10 @@ var controller = require('../controllers/areaall_controller');
 		controller.deleteArea(req , res);
 	});
 
+/*
+	测试*/
+router.get('/text123', function(req, res, next) {
+    controller.text123(req , res);
+});
+
 	module.exports = router;

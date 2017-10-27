@@ -53,20 +53,16 @@ var Workshop = require('../models').Workshop;
 /*
 	根据id删除一条车间数据
     */
-    exports.deleteWorkshopById = function(req , res) {
-        var p = new Promise(function(resolve , reject) {
+    exports.deleteWorkshopById = async function(req , res) {
         //先查找,再调用删除,最后返回首页
-        Workshop.findOne({
+        const data = await Workshop.findOne({
             where:{
                 workshopid:req.query.workshopId
             }
-        }).then(function(data){
-        	data.destroy().then(function(data){
-                resolve(data);
-            });     
-        });
-    });
-        return p;
+        })
+        console.log ('结束查找')
+        await data.destroy()
+        console.log ('结束删除')
     }
 
 /*

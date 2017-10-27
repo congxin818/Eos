@@ -34,6 +34,8 @@ Linebody.belongsToMany(User,{through: 'userLinebodys', as:'UserLinebodys'});
 //user和Validmenu之间N:M关系
 User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
+
+
 // 同步模型到数据库中
 sequelize.sync();
 

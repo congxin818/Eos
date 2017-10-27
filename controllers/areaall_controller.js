@@ -36,7 +36,6 @@ const namehasError = {
     查询所有集团和工厂
     */
 async function selectAreaAll(req , res){
-        console.log ('开始查找')
         if (req == '') {
             return parameterError
         }
@@ -218,7 +217,7 @@ exports.selectAreaAll = selectAreaAll;
     添加一个区域并重新刷新整个树图 合并
     */
     exports.addAreaOne = async function(req , res){
-        const addReturn = await exports.addAreaOnefrist(req , res,);
+        const addReturn = await exports.addAreaOnefrist(req , res);
         if(addReturn== undefined ||addReturn == ''||addReturn == null){
             const allData = await exports.selectAreaAll(req , res);
             res.end(JSON.stringify(allData));
@@ -230,7 +229,7 @@ exports.selectAreaAll = selectAreaAll;
     更改一个区域并重新刷新整个树图 合并
     */
     exports.updateArea = async function(req , res){
-        const updateReturn = await exports.updateAreafrist(req , res,);
+        const updateReturn = await exports.updateAreafrist(req , res);
         if(updateReturn== 1 ){
             const allData = await exports.selectAreaAll(req , res);
             res.end(JSON.stringify(allData));
@@ -243,11 +242,18 @@ exports.selectAreaAll = selectAreaAll;
     删除一个区域并重新刷新整个树图 合并
     */
     exports.deleteArea = async function(req , res){
-        const deleteReturn = await exports.deleteAreafrist(req , res,);
+        const deleteReturn = await exports.deleteAreafrist(req , res);
+
         if(deleteReturn== undefined ||deleteReturn == ''||deleteReturn == null ){
             const allData = await exports.selectAreaAll(req , res);
             res.end(JSON.stringify(allData));
         }
         res.end(JSON.stringify(deleteReturn));
         
+    }
+
+    exports.text123 = async function(req , res){
+       await wksServices.deleteWorkshopById(req , res);
+       const allData = await exports.selectAreaAll(req , res);
+       res.end(JSON.stringify(allData));
     }
