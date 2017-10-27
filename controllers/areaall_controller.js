@@ -105,7 +105,7 @@ const namehasError = {
     exports.updateAreafrist = async function(req , res){
         //如果没有post数据或者数据为空,直接返回
         if(req.body.id == null || req.body.id == '' || req.body.name == null 
-          || req.body.name == ''){
+          || req.body.name == ''||  req.body.pId == ''){
             return parameterError
     }
     if (req.body.pId == null){
@@ -141,7 +141,7 @@ const namehasError = {
     */
     exports.addAreaOnefrist = async function(req , res){
     //如果没有post数据或者数据为空,直接返回
-    if( req.body.name == null || req.body.name == ''){
+    if( req.body.name == null || req.body.name == ''||req.body.pId == ''){
         return parameterError
     }
     if (req.body.pId == null){
@@ -166,6 +166,43 @@ const namehasError = {
         }
     }
 }
+
+/*
+    判断要删除的表（集团、工厂、车间、线体）
+    调用相对应的update函数
+    */
+    exports.deleteAreafrist = async function(req , res){
+        //如果没有post数据或者数据为空,直接返回
+        if(req.query.id == null || req.query.id == ''){
+            return parameterError
+        }
+        var areaFlag = await req.query.id.slice(0,1);
+        var areaId = req.query.id.slice(1,);
+        if (!isNaN(areaFlag)){
+            // 删除一个集团
+            const deleteReturn = await groupconler.deleteGroupById(req , res);
+            return deleteReturn
+        }   
+        if(areaFlag == 'f'){
+            // 删除一个工厂
+            req.query.factoryId = areaId;
+            const deleteReturn = await factoryconler.deleteFactoryById(req , res);
+            return deleteReturn
+        }
+        if(areaFlag == 'w'){
+            // 删除一个车间
+            req.query.workshopId = areaId;
+            const deleteReturn = await workshopconler.deleteWorkshopById(req , res);
+            return deleteReturn
+        }
+        if(areaFlag == 'l'){
+            // 删除一个线体           
+            req.query.linebodyId = areaId;
+            const deleteReturn = await linebodyconler.deleteLinebodyById(req , res);
+            return deleteReturn
+        }
+
+    }
 
 /*
     把区域的树状图展示出来
@@ -197,5 +234,18 @@ const namehasError = {
             res.end(JSON.stringify(allData));
         }
         res.end(JSON.stringify(updateReturn));
+        
+    }
+
+/*
+    删除一个区域并重新刷新整个树图 合并
+    */
+    exports.deleteArea = async function(req , res){
+        const deleteReturn = await exports.deleteAreafrist(req , res,);
+        if(deleteReturn== undefined ||deleteReturn == ''||deleteReturn == null ){
+            const allData = await exports.selectAreaAll(req , res);
+            res.end(JSON.stringify(allData));
+        }
+        res.end(JSON.stringify(deleteReturn));
         
     }

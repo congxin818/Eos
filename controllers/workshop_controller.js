@@ -81,18 +81,10 @@ const namehasError = {
 /*
 	根据id删除车间
     */
-    exports.deleteWorkshopById = function(req , res) {
-	//如果没有id字段,返回404
-    if (req.query.workshopId == undefined ||req.query.workshopId == '') {
-        res.end(JSON.stringify(parameterError));
-        return;
-    }
+    exports.deleteWorkshopById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
-    services.deleteWorkshopById(req , res).then(function(data){
-        //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
-    });
+    await services.deleteWorkshopById(req , res)
+    return
 }
 
 /*

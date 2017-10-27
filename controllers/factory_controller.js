@@ -82,17 +82,10 @@ var parameterError = {
 /*
 	根据id删除工厂
     */
-    exports.deleteFactoryById = function(req , res) {
-        if (req.query.factoryId == undefined ||req.query.factoryId == '') {
-            res.end(JSON.stringify(parameterError));
-            return;
-        }
+    exports.deleteFactoryById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
-    services.deleteFactoryById(req , res).then(function(data){
-        //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
-    });
+    const data = await services.deleteFactoryById(req , res)
+    return
 }
 
 /*

@@ -80,18 +80,10 @@ const namehasError = {
 /*
 	根据id删除线体
     */
-    exports.deleteLinebodyById = function(req , res) {
-	//如果没有id字段,返回404
-    if (req.query.linebodyId == undefined ||req.query.linebodyId == '') {
-        res.end(JSON.stringify(parameterError));
-        return;
-    }
+    exports.deleteLinebodyById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
-    services.deleteLinebodyById(req , res).then(function(data){
-        //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
-    });
+    await services.deleteLinebodyById(req , res)
+    return
 }
 
 /*
