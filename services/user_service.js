@@ -186,7 +186,8 @@ var serviceError = {
             return null
         }
         let allData = await areaAll_controller.selectAreaAll(req , res);
-        console.log('allData.length->' + allData[1].id);
+        console.log('allData.length->' + allData[4].id);
+        console.log('allData.length->' + allData[4].checked);
         const allDataJsonStr = JSON.stringify(allData);
         console.log(allDataJsonStr)
 
@@ -194,6 +195,29 @@ var serviceError = {
         let factoryIds = await stringUtil.getIds(allDataJsonStr , 'f');
         let workshopIds = await stringUtil.getIds(allDataJsonStr , 'w');
         let linebodyIds = await stringUtil.getIds(allDataJsonStr , 'l');
+
+        if (groupIds.length > 0) {
+            for(var i = groupIds.length - 1; i >= 0; i--) {
+                if (groupIds[i] != null || groupIds[i] != '') {
+                    //console.log('groupIds['+i + ']' +':' +groupIds[i]);
+                    try {
+                        const ch = groupIds[i];
+                        console.log('ch---->'+ch);
+                        let value = await Group.findById(groupIds[i])
+                        let falg = await user.hasUserGroup(value);
+                        if (falg) {
+                            await updateAreaArray(allData , ch);
+                        }
+                        console.log(JSON.stringify(falg))
+                    }catch (err) {
+                        console.log ('error ------>')
+                        console.log (err)
+                        return serviceError;
+                    }
+
+                }
+            }
+        }
 
         if (factoryIds.length > 0) {
             for(var i = factoryIds.length - 1; i >= 0; i--) {
@@ -211,20 +235,64 @@ var serviceError = {
                     }catch (err) {
                         console.log ('error ------>')
                         console.log (err)
+                        return serviceError;
                     }
 
                 }
             }
         }
-        // const group = await user.getUserGroups ()
-        // const factory = await user.getUserFactorys ()
-        // const workshop = await user.getUserWorkshops ()
-        // const linebody = await user.getUserLinebodys ()
+
+        if (workshopIds.length > 0) {
+            for(var i = workshopIds.length - 1; i >= 0; i--) {
+                if (workshopIds[i] != null || workshopIds[i] != '') {
+                    //console.log('groupIds['+i + ']' +':' +groupIds[i]);
+                    try {
+                        const ch = 'w' + workshopIds[i];
+                        console.log('ch---->'+ch);
+                        let value = await Workshop.findById(workshopIds[i])
+                        let falg = await user.hasUserWorkshop(value);
+                        if (falg) {
+                            await updateAreaArray(allData , ch);
+                        }
+                        console.log(JSON.stringify(falg))
+                    }catch (err) {
+                        console.log ('error ------>')
+                        console.log (err)
+                        return serviceError;
+                    }
+
+                }
+            }
+        }
+
+        if (linebodyIds.length > 0) {
+            for(var i = linebodyIds.length - 1; i >= 0; i--) {
+                if (linebodyIds[i] != null || linebodyIds[i] != '') {
+                    //console.log('groupIds['+i + ']' +':' +groupIds[i]);
+                    try {
+                        const ch = 'w' + linebodyIds[i];
+                        console.log('ch---->'+ch);
+                        let value = await Linebody.findById(linebodyIds[i])
+                        let falg = await user.hasUserLinebody(value);
+                        if (falg) {
+                            await updateAreaArray(allData , ch);
+                        }
+                        console.log(JSON.stringify(falg))
+                    }catch (err) {
+                        console.log ('error ------>')
+                        console.log (err)
+                        return serviceError;
+                    }
+
+                }
+            }
+        }
         const validmenu = await user.getUserValidmenus ()
 
         var extraData = {
             user: user,
-            validmenu: validmenu
+            validmenu: validmenu,
+            validarea:allData
         };
 
         return extraData
