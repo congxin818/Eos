@@ -295,7 +295,7 @@ async function selectUserById(req , res , next) {
             validmenu: validmenu,
             validarea:allData
         };
-
+        console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
         return extraData
     }
 exports.selectUserById = selectUserById;
