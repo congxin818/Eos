@@ -7,6 +7,7 @@ var Linebody = sequelize.import('./linebody.js');
 var Validmenu = sequelize.import('./validmenu.js');
 var Kpionelev = sequelize.import('./kpionelev.js');
 var Kpitwolev = sequelize.import('./kpitwolev.js');
+var Message = sequelize.import('./message.js');
 
 //group和factory之间1：N关系
 //Group.hasMany(Factory , {foreignKey:'factorybelong', targetKey:'factoryid', as:'GroupFactory'});
@@ -34,6 +35,12 @@ Linebody.belongsToMany(User,{through: 'userLinebodys', as:'UserLinebodys'});
 //user和Validmenu之间N:M关系
 User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
+
+
+Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
+Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
+Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
+
 // 同步模型到数据库中
 sequelize.sync();
 
@@ -45,3 +52,4 @@ exports.Linebody = Linebody;
 exports.Validmenu = Validmenu;
 exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;
+exports.Message = Message;

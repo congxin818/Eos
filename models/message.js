@@ -2,7 +2,9 @@ var Sequelize = require('sequelize');
 var sequelize = require('../mysql').sequelize();
 
 //定义表的模型
-var Message = sequelize.define('message', {
+module.exports = function(sequelize , DataTypes){
+//var Message = 
+ return sequelize.define('message', {
     id:{ //自增长id,主键,整形
         type:Sequelize.INTEGER,
         primaryKey: true,
@@ -15,6 +17,7 @@ var Message = sequelize.define('message', {
         type: Sequelize.TEXT
     }
 });
-Message.sync(); //创建表
+}
+// Message.sync(); //创建表
 
-module.exports = Message;
+// module.exports = Message;

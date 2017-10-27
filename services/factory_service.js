@@ -88,3 +88,15 @@ exports.updateFactoryById = function(req , res) {
     });
     return p;
 }
+
+async function factoryClear(){
+    const factory = await Factory.findAll({where:{ groupGroupid:''}});
+    if (factory.length == 0) {
+        return ;
+    }
+    for (var i = factory.length - 1; i >= 0; i--) {
+        await factory[i].destroy();
+    }
+    return 1;
+}
+exports.factoryClear = factoryClear;

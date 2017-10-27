@@ -52,22 +52,16 @@ exports.addGroupOne = function(req , res) {
 /*
 	根据id删除一条集团数据
 */
-exports.deleteGroupById = function(req , res) {
-    var p = new Promise(function(resolve , reject) {
-        //先查找,再调用删除,最后返回首页
-        Group.findOne({
-            where:{
-                groupid:req.query.id
-            }
-        }).then(function(data){
-        	data.destroy().then(function(data){
-            resolve(data);
-            });     
-        });
-    });
-    return p;
-}
+ async function deleteGroupById(req , res) {
+    const group  = await Group.findById(req.query.groupId);
+    const falg = await group.destroy();
+    if (falg == null || falg == '' || falg != 1) {
+        return null;
+    }
 
+
+}
+exports.deleteGroupById =deleteGroupById;
 /*
 	根据id更新集团数据
 */
@@ -87,3 +81,4 @@ exports.updateGroupById = function(req , res) {
     });
     return p;
 }
+
