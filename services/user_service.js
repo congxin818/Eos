@@ -186,7 +186,7 @@ var serviceError = {
             return null
         }
         let allData = await areaAll_controller.selectAreaAll(req , res);
-        console.log('allData.length->' + allData.length);
+        console.log('allData.length->' + allData[1].id);
         const allDataJsonStr = JSON.stringify(allData);
         console.log(allDataJsonStr)
 
@@ -196,13 +196,17 @@ var serviceError = {
         let linebodyIds = await stringUtil.getIds(allDataJsonStr , 'l');
 
         if (factoryIds.length > 0) {
-            let values = new Array ()
             for(var i = factoryIds.length - 1; i >= 0; i--) {
                 if (factoryIds[i] != null || factoryIds[i] != '') {
                     //console.log('groupIds['+i + ']' +':' +groupIds[i]);
                     try {
-                    let value = await Factory.findById(factoryIds[i])
+                        const ch = 'f' + factoryIds[i];
+                        console.log('ch---->'+ch);
+                        let value = await Factory.findById(factoryIds[i])
                         let falg = await user.hasUserFactory(value);
+                        if (falg) {
+                            await updateAreaArray(allData , ch);
+                        }
                         console.log(JSON.stringify(falg))
                     }catch (err) {
                         console.log ('error ------>')
@@ -226,6 +230,18 @@ var serviceError = {
         return extraData
     }
 exports.selectUserById = selectUserById;
+
+async function updateAreaArray(array , id){
+    if (array == null || id == null) {
+        return null;
+    }
+    for (var i = array.length - 1; i >= 0; i--) {
+        if (array[i].id == id) {
+            array[i].checked = true;
+        }
+    }
+}
+exports.updateAreaArray = updateAreaArray;
 
 /*
 	添加一个User
