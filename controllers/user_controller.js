@@ -26,6 +26,19 @@ var existError = {
     status:'3',
     msg:'用户名已存在！'
 };
+/*
+    用户登录接口
+    */
+async function findAndCount(req , res , next){
+    if (req.query.page == undefined ||req.query.page == ''||req.query.page == null) {
+        res.end(parameterError);
+        return;
+    }
+    service.findAndCount(req , res , next).then(function(data){
+        res.end(JSON.stringify(data));
+    });
+}
+exports.findAndCount = findAndCount;
 
 /*
     用户登录接口
@@ -157,7 +170,7 @@ exports.deleteUserById = function(req , res , next) {
     }
     //先查找,再调用删除,最后返回json数据
     service.deleteUserById(req , res , next).then(function(data){
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
         if (data == null || data == undefined || data == '') {
             res.end(JSON.stringify(parameterError));
         }else{
@@ -170,14 +183,14 @@ exports.deleteUserById = function(req , res , next) {
 //根据userId跟新User
 exports.updateUserById = function(req , res , next) {
 	// //如果没有post数据或者数据为空,直接返回
- //    if (req.body.userId == undefined ||req.body.userId == ''
- //        ||req.body.userName == undefined ||req.body.userName == ''
- //        || req.body.userPsd == undefined || req.body.userPsd == ''
- //        || req.body.userAbbName == undefined|| req.body.userJob == undefined
- //        || req.body.userLeader == undefined) {
- //        res.end(JSON.stringify(parameterError));
- //        return;
- //    }
+    if (req.body.userId == undefined ||req.body.userId == ''
+        ||req.body.userName == undefined ||req.body.userName == ''
+        || req.body.userPsd == undefined || req.body.userPsd == ''
+        || req.body.userAbbName == undefined|| req.body.userJob == undefined
+        || req.body.userLeader == undefined) {
+        res.end(JSON.stringify(parameterError));
+        return;
+    }
     //创建一条记录,创建成功后跳转回首页
     service.updateUserById(req , res , next).then(function(data){
         //console.log(data);

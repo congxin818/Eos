@@ -8,6 +8,10 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/user_controller');
 
+//分页查找
+router.get('/findAndCount', function(req, res, next) {
+    controller.findAndCount(req , res , next);
+});
 //查找所有用户
 router.get('/selectUserAll', function(req, res, next) {
     controller.selectUserAll(req , res , next);

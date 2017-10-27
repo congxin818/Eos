@@ -13,7 +13,6 @@ let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
 var stringUtil = require('../utils/stringUtil');
 let areaAll_controller = require('../controllers/areaall_controller');
-
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -43,6 +42,24 @@ var serviceError = {
     msg:'服务器错误'
 };
 
+/*
+    分页查找
+    */
+async function findAndCount (req ,res , next){
+    const pageSize  = 5;
+    let page;
+    if(req.query.page != null && req.query.page != ""){
+        page = parseInt(req.query.page);
+    }
+    const data = await User.findAndCountAll({
+            where:'',//为空，获取全部，也可以自己添加条件
+            offset:(page - 1) * pageSize,//开始的数据索引，比如当page=2 时offset=10 ，而pagesize我们定义为10，则现在为索引为10，也就是从第11条开始返回数据条目
+            limit:pageSize//每页限制返回的数据条数
+        });
+    dataSuccess.data = data;
+    return dataSuccess;
+}
+exports.findAndCount = findAndCount;
 /*
 	查找所有User
     */
@@ -81,7 +98,6 @@ var serviceError = {
         // }
         return users;
     }
-
     exports.selectUserAll = selectUserAll;
 
 /*
@@ -111,13 +127,13 @@ var serviceError = {
         // };
         return user;
     }
-exports.selectUserByName = selectUserByName;
+    exports.selectUserByName = selectUserByName;
 
 /*
     根据id查找一个User
     */
 
-async function selectUserById(req , res , next) {
+    async function selectUserById(req , res , next) {
 
         const user = await User.findOne ({ where: { userid: req.body.userId}})
 
@@ -128,7 +144,7 @@ async function selectUserById(req , res , next) {
         //console.log('allData.length->' + allData.length);
        // console.log('allData.length->' + allData[4].id);
        // console.log('allData.length->' + allData[4].checked);
-        const allDataJsonStr = JSON.stringify(allData);
+       const allDataJsonStr = JSON.stringify(allData);
         //console.log('allDataJsonStr----->'+allDataJsonStr)
 
         let groupIds = await stringUtil.getIds(allDataJsonStr , '');
@@ -237,36 +253,36 @@ async function selectUserById(req , res , next) {
         //console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
         return extraData
     }
-exports.selectUserById = selectUserById;
+    exports.selectUserById = selectUserById;
 
-async function updateAreaArray(array , id){
-    if (array == null || id == null) {
-        return null;
-    }
-    for (var i = array.length - 1; i >= 0; i--) {
-        if (array[i].id == id) {
-            array[i].checked = true;
+    async function updateAreaArray(array , id){
+        if (array == null || id == null) {
+            return null;
+        }
+        for (var i = array.length - 1; i >= 0; i--) {
+            if (array[i].id == id) {
+                array[i].checked = true;
+            }
         }
     }
-}
-exports.updateAreaArray = updateAreaArray;
+    exports.updateAreaArray = updateAreaArray;
 
 /*
 	添加一个User
     */
-const addUserOne = async (req , res , next) => {
-    let user = {
-        username: req.body.userName,
-        userpsd: req.body.userPsd,
-        userabbname:req.body.userAbbName,
-        userjob:req.body.userJob,
-        userleader:req.body.userLeader
-    };
-    let menuids = new Array();
+    const addUserOne = async (req , res , next) => {
+        let user = {
+            username: req.body.userName,
+            userpsd: req.body.userPsd,
+            userabbname:req.body.userAbbName,
+            userjob:req.body.userJob,
+            userleader:req.body.userLeader
+        };
+        let menuids = new Array();
 
-    const menuids_str = req.body.validMenu;
+        const menuids_str = req.body.validMenu;
 
-    const jsonString = req.body.validArea;
+        const jsonString = req.body.validArea;
     //console.log('validArea->'+jsonString);
     //console.log('menuids_str->'+menuids_str);
 
@@ -359,24 +375,24 @@ exports.addUserOne = addUserOne;
 /*
 	根据userId删除User
     */
-async function deleteUserById(req , res , next) {
-    const user = await User.findById(req.query.userId);
-    if (user == undefined || user == null || user == '') {
-        return noExistError;
+    async function deleteUserById(req , res , next) {
+        const user = await User.findById(req.query.userId);
+        if (user == undefined || user == null || user == '') {
+            return noExistError;
+        }
+        const falg = await User.destroy({where:{userid:req.query.userId}});
+        if (falg == null && falg != 1) {
+            return noExistError;
+        }
+        await user.setUserValidmenus([]);
+        await user.setUserGroups([]);
+        await user.setUserFactorys([]);
+        await user.setUserWorkshops([]);
+        await user.setUserLinebodys([]);
+        dataSuccess.data = falg;
+        return dataSuccess;
     }
-    const falg = await User.destroy({where:{userid:req.query.userId}});
-    if (falg == null && falg != 1) {
-        return noExistError;
-    }
-    await user.setUserValidmenus([]);
-    await user.setUserGroups([]);
-    await user.setUserFactorys([]);
-    await user.setUserWorkshops([]);
-    await user.setUserLinebodys([]);
-    dataSuccess.data = falg;
-    return dataSuccess;
-}
-exports.deleteUserById = deleteUserById;
+    exports.deleteUserById = deleteUserById;
 
 //根据userId跟新User
 async function updateUserById(req , res , next) {
