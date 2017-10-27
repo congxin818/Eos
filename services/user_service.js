@@ -178,7 +178,7 @@ var serviceError = {
     根据id查找一个User
     */
    let areaAll_controller = require('../controllers/areaall_controller');
-    async function selectUserById(req , res , next) {
+async function selectUserById(req , res , next) {
 
         const user = await User.findOne ({ where: { userid: req.body.userId}})
 
@@ -186,10 +186,11 @@ var serviceError = {
             return null
         }
         let allData = await areaAll_controller.selectAreaAll(req , res);
-        console.log('allData.length->' + allData[4].id);
-        console.log('allData.length->' + allData[4].checked);
+        console.log('allData.length->' + allData.length);
+       // console.log('allData.length->' + allData[4].id);
+       // console.log('allData.length->' + allData[4].checked);
         const allDataJsonStr = JSON.stringify(allData);
-        console.log(allDataJsonStr)
+        console.log('allDataJsonStr----->'+allDataJsonStr)
 
         let groupIds = await stringUtil.getIds(allDataJsonStr , '');
         let factoryIds = await stringUtil.getIds(allDataJsonStr , 'f');
@@ -225,7 +226,7 @@ var serviceError = {
                     //console.log('groupIds['+i + ']' +':' +groupIds[i]);
                     try {
                         const ch = 'f' + factoryIds[i];
-                        console.log('ch---->'+ch);
+                        //console.log('ch---->'+ch);
                         let value = await Factory.findById(factoryIds[i])
                         let falg = await user.hasUserFactory(value);
                         if (falg) {
@@ -248,7 +249,7 @@ var serviceError = {
                     //console.log('groupIds['+i + ']' +':' +groupIds[i]);
                     try {
                         const ch = 'w' + workshopIds[i];
-                        console.log('ch---->'+ch);
+                        //console.log('ch---->'+ch);
                         let value = await Workshop.findById(workshopIds[i])
                         let falg = await user.hasUserWorkshop(value);
                         if (falg) {
@@ -271,7 +272,7 @@ var serviceError = {
                     //console.log('groupIds['+i + ']' +':' +groupIds[i]);
                     try {
                         const ch = 'w' + linebodyIds[i];
-                        console.log('ch---->'+ch);
+                        //console.log('ch---->'+ch);
                         let value = await Linebody.findById(linebodyIds[i])
                         let falg = await user.hasUserLinebody(value);
                         if (falg) {
@@ -327,8 +328,8 @@ const addUserOne = async (req , res , next) => {
     const menuids_str = req.body.validMenu;
 
     const jsonString = req.body.validArea;
-    //console.log('validArea->'+jsonString);
-    //console.log('menuids_str->'+menuids_str);
+    console.log('validArea->'+jsonString);
+    console.log('menuids_str->'+menuids_str);
 
     let groupIds = await stringUtil.getIds(jsonString , '');
     let factoryIds = await stringUtil.getIds(jsonString , 'f');
