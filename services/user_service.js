@@ -271,7 +271,7 @@ async function selectUserById(req , res , next) {
                 if (linebodyIds[i] != null || linebodyIds[i] != '') {
                     //console.log('groupIds['+i + ']' +':' +groupIds[i]);
                     try {
-                        const ch = 'w' + linebodyIds[i];
+                        const ch = 'l' + linebodyIds[i];
                         //console.log('ch---->'+ch);
                         let value = await Linebody.findById(linebodyIds[i])
                         let falg = await user.hasUserLinebody(value);
