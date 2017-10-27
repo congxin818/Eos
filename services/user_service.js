@@ -40,70 +40,6 @@ var serviceError = {
 };
 
 /*
-    测试关联添加
-    */
-    function createUserGroup(req, res, next) {
-        Promise.all([
-            User.create({username:'itbilu3', userpsd:'itbilu3.com' , userabbname:'fads' , userjob:'INT' , userleader:'user1'}),
-            Group.create({groupname:'管理员3'})
-            ]).then(function(results){
-                console.log('yuzhizhe01'+results[0]);
-                var user = results[0];
-                console.log('yuzhizhe02'+results[1]);
-                var group = results[1];
-                user.setUserGroups(group);
-                res.set('Content-Type', 'text/html; charset=utf-8');
-        //res.end('创建成功：'+JSON.stringify({user:results[0].dataValues, role:results[1].dataValues}));
-        res.end(JSON.stringify(results[0]));
-    }).catch(next);
-        }
-        exports.createUserGroup = createUserGroup;
-
-/*
-    测试关联根据ID查询用户
-    */
-    function selectUserGroup(req , res , next) {
-        User.findOne({
-            where:{
-                userid:req.query.userId
-            }
-        }).then(function(user){
-            extraData.user = user;
-            //console.log('yuzhizhe01');
-            user.getUserGroups().then(function(group) {
-                //console.log('group->' + group);
-                extraData.group = group;
-            });
-            //console.log('yuzhizhe02');
-            user.getUserFactorys().then(function(factory) {
-                //console.log('factory->' + factory);
-                extraData.factory = factory;
-                
-            });
-            //console.log('yuzhizhe03');
-            user.getUserWorkshops().then(function(workshop) {
-                //console.log('workshop->' + workshop);
-                extraData.workshop = workshop;
-            });
-            // console.log('yuzhizhe04');
-            user.getUserLinebodys().then(function(linebody) {
-                //console.log('linebody->' + linebody);
-                extraData.linebody = linebody;
-                //res.end(JSON.stringify(extraData));
-            });
-            //console.log('yuzhizhe05');
-            user.getUserValidmenus().then(function(validmenu) {
-                //console.log('validmenu->' + validmenu);
-                extraData.validmenu = validmenu;
-                res.end(JSON.stringify(extraData));
-            });
-            //res.set('Content-Type', 'text/html; charset=utf-8');
-            //res.end(JSON.stringify(extraData));
-        });
-    }
-    exports.selectUserGroup = selectUserGroup;
-
-/*
 	查找所有User
     */
     async function selectUserAll (req , res , next) {
@@ -155,24 +91,23 @@ var serviceError = {
             return null
         }
 
-        const group = await user.getUserGroups ()
-        const factory = await user.getUserFactorys ()
-        const workshop = await user.getUserWorkshops ()
-        const linebody = await user.getUserLinebodys ()
-        const validmenu = await user.getUserValidmenus ()
+        // const group = await user.getUserGroups ()
+        // const factory = await user.getUserFactorys ()
+        // const workshop = await user.getUserWorkshops ()
+        // const linebody = await user.getUserLinebodys ()
+        // const validmenu = await user.getUserValidmenus ()
 
-        var extraData = {
-            user: user,
-            group:group,
-            factory:factory,
-            workshop:workshop,
-            linebody:linebody,
-            validmenu: validmenu
-        };
-
-        return extraData
+        // var extraData = {
+        //     user: user,
+        //     group:group,
+        //     factory:factory,
+        //     workshop:workshop,
+        //     linebody:linebody,
+        //     validmenu: validmenu
+        // };
+        return user;
     }
-    exports.selectUserByName = selectUserByName;
+exports.selectUserByName = selectUserByName;
 
 /*
     根据id查找一个User
@@ -186,11 +121,11 @@ async function selectUserById(req , res , next) {
             return null
         }
         let allData = await areaAll_controller.selectAreaAll(req , res);
-        console.log('allData.length->' + allData.length);
+        //console.log('allData.length->' + allData.length);
        // console.log('allData.length->' + allData[4].id);
        // console.log('allData.length->' + allData[4].checked);
         const allDataJsonStr = JSON.stringify(allData);
-        console.log('allDataJsonStr----->'+allDataJsonStr)
+        //console.log('allDataJsonStr----->'+allDataJsonStr)
 
         let groupIds = await stringUtil.getIds(allDataJsonStr , '');
         let factoryIds = await stringUtil.getIds(allDataJsonStr , 'f');
@@ -203,7 +138,7 @@ async function selectUserById(req , res , next) {
                     //console.log('groupIds['+i + ']' +':' +groupIds[i]);
                     try {
                         const ch = groupIds[i];
-                        console.log('ch---->'+ch);
+                        //console.log('ch---->'+ch);
                         let value = await Group.findById(groupIds[i])
                         let falg = await user.hasUserGroup(value);
                         if (falg) {
@@ -295,7 +230,7 @@ async function selectUserById(req , res , next) {
             validmenu: validmenu,
             validarea:allData
         };
-        console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
+        //console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
         return extraData
     }
 exports.selectUserById = selectUserById;
@@ -328,8 +263,8 @@ const addUserOne = async (req , res , next) => {
     const menuids_str = req.body.validMenu;
 
     const jsonString = req.body.validArea;
-    console.log('validArea->'+jsonString);
-    console.log('menuids_str->'+menuids_str);
+    //console.log('validArea->'+jsonString);
+    //console.log('menuids_str->'+menuids_str);
 
     let groupIds = await stringUtil.getIds(jsonString , '');
     let factoryIds = await stringUtil.getIds(jsonString , 'f');

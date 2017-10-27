@@ -7,12 +7,12 @@ var Administrator = sequelize.define('administrator' , {
         autoIncrement:true,
         primaryKey: true
     },
-    username: { //名字
+    adminname: { //名字
         type: Sequelize.STRING(50),
         charset:'utf8',
         collate:'utf8_general_ci'
     },
-    password: { //密码
+    adminpsd: { //密码
         type: Sequelize.STRING(100)
     }
 });
