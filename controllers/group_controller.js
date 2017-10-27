@@ -79,18 +79,10 @@ const namehasError = {
 /*
 	根据id删除集团
     */
-    exports.deleteGroupById = function(req , res) {
-	//如果没有username字段,返回404
-    if (req.query.groupId == undefined ||req.query.groupId == '') {
-        res.end(JOSN.stringify(parameterError));
-        return;
-    }
+    exports.deleteGroupById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
-    services.deleteGroupById(req , res).then(function(data){
-        //console.log(data);
-        dataSuccess.data = data;
-        res.end(JSON.stringify(dataSuccess));
-    });
+     const data = await services.deleteGroupById(req , res)
+     return;
 }
 
 /*

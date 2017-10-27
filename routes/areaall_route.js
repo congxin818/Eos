@@ -26,4 +26,11 @@ var controller = require('../controllers/areaall_controller');
 		controller.updateArea(req , res);
 	});
 
+/*
+	删除地区
+	*/
+	router.get('/deleteArea', function(req, res, next) {
+		controller.deleteArea(req , res);
+	});
+
 	module.exports = router;

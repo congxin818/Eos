@@ -57,7 +57,7 @@ exports.deleteGroupById = function(req , res) {
         //先查找,再调用删除,最后返回首页
         Group.findOne({
             where:{
-                groupid:req.query.groupId
+                groupid:req.query.id
             }
         }).then(function(data){
         	data.destroy().then(function(data){
