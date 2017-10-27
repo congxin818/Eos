@@ -169,15 +169,15 @@ exports.deleteUserById = function(req , res , next) {
 
 //根据userId跟新User
 exports.updateUserById = function(req , res , next) {
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.userId == undefined ||req.body.userId == ''
-        ||req.body.userName == undefined ||req.body.userName == ''
-        || req.body.userPsd == undefined || req.body.userPsd == ''
-        || req.body.userAbbName == undefined|| req.body.userJob == undefined
-        || req.body.userLeader == undefined) {
-        res.end(JSON.stringify(parameterError));
-        return;
-    }
+	// //如果没有post数据或者数据为空,直接返回
+ //    if (req.body.userId == undefined ||req.body.userId == ''
+ //        ||req.body.userName == undefined ||req.body.userName == ''
+ //        || req.body.userPsd == undefined || req.body.userPsd == ''
+ //        || req.body.userAbbName == undefined|| req.body.userJob == undefined
+ //        || req.body.userLeader == undefined) {
+ //        res.end(JSON.stringify(parameterError));
+ //        return;
+ //    }
     //创建一条记录,创建成功后跳转回首页
     service.updateUserById(req , res , next).then(function(data){
         //console.log(data);
