@@ -6,6 +6,7 @@
 
 //引入数据库Message模块
 var Factory = require('../models').Factory;
+
 /*
 	根据工厂名字查找一条工厂数据
 */
@@ -14,6 +15,22 @@ exports.selectFactoryByName = function(req , res) {
         Factory.findOne({
             where:{
                 factoryname:req.body.name
+            }
+        }).then(function(data){
+            resolve(data);
+        });
+    });
+    return p;
+}
+
+/*
+    根据pId查找一条工厂数据
+*/
+exports.selectFactoryBypId = function(req , res) {
+    var p = new Promise(function(resolve , reject) {
+        Factory.findAll({
+            where:{
+                factorybelong:req.body.pId
             }
         }).then(function(data){
             resolve(data);

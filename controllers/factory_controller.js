@@ -5,10 +5,11 @@
     */
 
 //引入数据库Message模块
-var Factory = require('../models/factory');
-var service = require('../services/factory_service');
-var services = require('../services/factory_service');
-var nameEtdService = require('../services/factory_extend_service');
+const Factory = require('../models/factory');
+const services = require('../services/factory_service');
+const nameEtdService = require('../services/factory_extend_service');
+const workEtdService = require('../services/workshop_extend_service');
+const workshopController = require('./workshop_controller');
 
 var dataSuccess = {
     status: '0', 
@@ -71,12 +72,12 @@ var parameterError = {
             return parameterError;
         }
     }else{
-       var namehasError = {
-           status: '101', 
-           msg: '工厂已存在'
-       }
-       return namehasError;
-   }
+     var namehasError = {
+         status: '101', 
+         msg: '工厂已存在'
+     }
+     return namehasError;
+ }
 }
 
 /*
@@ -85,6 +86,16 @@ var parameterError = {
     exports.deleteFactoryById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
     const data = await services.deleteFactoryById(req , res)
+    // 删除指定工厂下的车间
+    req.query.pId = req.query.id
+    const selectData = await workEtdService.selectWorkshopBypId(req , res);
+     selectData.forEach(async selectDataDataOne => {
+        req.query.workshopId = selectDataDataOne.workshopid;
+        req.query.id = 'w' + selectDataDataOne.workshopid;
+        await workshopController.deleteWorkshopById(req , res);
+    })
+
+
     return
 }
 

@@ -37,9 +37,11 @@ User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 
 
+
 Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
 Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
+
 
 // 同步模型到数据库中
 sequelize.sync();
