@@ -57,12 +57,12 @@ var linebody_service = require('../services/linebody_service');
 	根据id删除一条线体数据
     */
     exports.deleteLinebodyById = async function(req , res) {
-        const Linebody  = await Linebody.findById(req.query.linebodyId);
-        console.log('Linebody--->'+ JSON.stringify(Linebody));
-        if (Linebody == null || Linebody == '') {
+        const linebody  = await Linebody.findById(req.query.linebodyId);
+        console.log('linebody--->'+ JSON.stringify(linebody));
+        if (linebody == null || linebody == '') {
             return errorUtil.noExistError;
         }
-        const falg = await Linebody.destroy();
+        const falg = await linebody.destroy();
         console.log('falg--->' + JSON.stringify(falg));
         if (falg == null || falg == '') {
             return errorUtil.noExistError;

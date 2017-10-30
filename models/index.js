@@ -5,15 +5,13 @@ var Factory = sequelize.import('./factory.js');
 var Workshop = sequelize.import('./workshop.js');
 var Linebody = sequelize.import('./linebody.js');
 var Validmenu = sequelize.import('./validmenu.js');
+
 var Kpionelev = sequelize.import('./kpionelev.js');
 var Kpitwolev = sequelize.import('./kpitwolev.js');
-var Message = sequelize.import('./message.js');
 
-//group和factory之间1：N关系
-//Group.hasMany(Factory , {foreignKey:'factorybelong', targetKey:'factoryid', as:'GroupFactory'});
+var Losscategory = sequelize.import('./losscategory.js');
 
-//Factory和Workshop之间1：N关系
-//Factory.hasMany(Workshop , {foreignKey:'group_id', targetKey:'factoryid', as:'GroupFactory'});
+
 
 //user和group之间N:M关系
 User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
@@ -37,11 +35,17 @@ User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 
 
-
+//Group和Factory建立1：N关系
 Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
+//Group和Workshop建立1：N关系
 Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
+//Workshop和Linebody建立1：N关系
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 
+//Kpionelev和Kpitwolev建立1：N关系
+Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
+//Kpitwolev和Losscategory建立1：N关系
+Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
 
 // 同步模型到数据库中
 sequelize.sync();
@@ -54,4 +58,4 @@ exports.Linebody = Linebody;
 exports.Validmenu = Validmenu;
 exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;
-exports.Message = Message;
+exports.Losscategory = Losscategory;

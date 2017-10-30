@@ -368,7 +368,7 @@ exports.findAndCount = findAndCount;
         return dataSuccess
     }
     catch (err) {
-         console.log('yuzhizhe_error------>' + err);
+        console.log('yuzhizhe_error------>' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
             return existError
         }

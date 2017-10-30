@@ -7,8 +7,6 @@ var bodyParser = require('body-parser');
 
 ///=======路由信息 （接口地址）开始 存放在./routes目录下===========//
 var index = require('./routes/index');
-var users = require('./routes/users');
-var message = require('./routes/message_route');
 var administrator = require('./routes/administrator_route');
 var user = require('./routes/user_route');
 var groupSet = require('./routes/group_route'); //集团
@@ -18,6 +16,7 @@ var linebodySet = require('./routes/linebody_route'); //线体
 var areaAllSet = require('./routes/areaall_route'); //区域设置
 var validmenuSet = require('./routes/validmenu_route'); //有效菜单
 var kpiSet = require('./routes/kpiall_route'); //KPI设置
+var losscategory = require('./routes/losscategory_route'); //KPI设置
 
 var app = express();
 
@@ -40,9 +39,7 @@ app.use("*", function(request, response, next) {
 });
 
 // 路由
-app.use('/', index);//在app中注册index该接口 
-app.use('/users', users);//在app中注册users接口
-app.use('/message' , message);
+app.use('/', index);//在app中注册index该接口
 app.use('/admin' , administrator);
 app.use('/user' , user);
 app.use('/groupSet' , groupSet);//在app中注册集团设置接口
@@ -52,6 +49,7 @@ app.use('/linebodySet' , linebodySet);//在app中注册线体设置接口
 app.use('/areaAllSet' , areaAllSet);//在app中注册区域设置接口
 app.use('/validmenuSet' , validmenuSet);//在app中注册有效菜单设置接口
 app.use('/KPISet' , kpiSet);//在app中注册KPI设置接口
+app.use('/losscategory' , losscategory);
 
 // 404 错误
 var errorData_404 = {
