@@ -296,10 +296,10 @@ exports.findAndCount = findAndCount;
         workshopIds = await stringUtil.getIds(jsonString , 'w');
         linebodyIds = await stringUtil.getIds(jsonString , 'l');
     }
-    console.log('yuzhizhe01->'+groupIds.length);
-    console.log('yuzhizhe02->'+factoryIds.length);
-    console.log('yuzhizhe03->'+workshopIds.length);
-    console.log('yuzhizhe04->'+linebodyIds.length);
+    // console.log('yuzhizhe01->'+groupIds.length);
+    // console.log('yuzhizhe02->'+factoryIds.length);
+    // console.log('yuzhizhe03->'+workshopIds.length);
+    // console.log('yuzhizhe04->'+linebodyIds.length);
     
     if (menuids_str != null || menuids_str != '') {
         menuids = menuids_str.split(",");
@@ -307,7 +307,7 @@ exports.findAndCount = findAndCount;
 
     try {
         const data = await User.create (user);
-        console.log('yuzhizhe06->'+ data);
+        //console.log('yuzhizhe06->'+ data);
         if (menuids.length > 0) {
             let values = new Array ()
             for(var i = menuids.length - 1; i >= 0; i--) {
@@ -368,7 +368,7 @@ exports.findAndCount = findAndCount;
         return dataSuccess
     }
     catch (err) {
-         console.log('error---yuzhizhe05->' + err);
+         console.log('yuzhizhe_error------>' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
             return existError
         }
@@ -434,10 +434,16 @@ async function updateUserById(req , res , next) {
     const jsonString = req.body.validArea;
     // console.log('validArea->'+jsonString);
     // console.log('menuids_str->'+menuids_str);
-    let groupIds = await stringUtil.getIds(jsonString , '');
-    let factoryIds = await stringUtil.getIds(jsonString , 'f');
-    let workshopIds = await stringUtil.getIds(jsonString , 'w');
-    let linebodyIds = await stringUtil.getIds(jsonString , 'l');
+    let groupIds = new Array();
+    let factoryIds = new Array();
+    let workshopIds = new Array();
+    let linebodyIds = new Array();
+    if (jsonString != null || jsonString != '') {
+        groupIds = await stringUtil.getIds(jsonString , '');
+        factoryIds = await stringUtil.getIds(jsonString , 'f');
+        workshopIds = await stringUtil.getIds(jsonString , 'w');
+        linebodyIds = await stringUtil.getIds(jsonString , 'l');
+    }
     //console.log('yuzhizhe01->'+groupIds.length);
     // console.log('yuzhizhe02->'+factoryIds.length);
     // console.log('yuzhizhe03->'+workshopIds.length);
@@ -507,7 +513,7 @@ async function updateUserById(req , res , next) {
         return dataSuccess;
     }
     catch (err) {
-        console.log('error---->' + err);
+        console.log('yuzhizhe_error---->' + err);
         return serviceError;
     }
 }
