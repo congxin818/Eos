@@ -85,17 +85,9 @@ const namehasError = {
     */
     exports.deleteWorkshopById = async function(req , res) {
     //删除所指定车间
-    await services.deleteWorkshopById(req , res)
+    const data = await services.deleteWorkshopById(req , res)
     // 删除指定车间下的线体
-    req.query.pId = req.query.id
-    const selectData = await lineEtdService.selectLinebodyBypId(req , res);
-    selectData.forEach(async selectDataDataOne => {
-        req.query.linebodyId = selectDataDataOne.linebodyid;
-        await linebodyService.deleteLinebodyById(req , res)
-    })
-
-
-    return
+    res.end(JSON.stringify(data));
 }
 
 /*

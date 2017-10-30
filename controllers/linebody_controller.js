@@ -83,7 +83,7 @@ const namehasError = {
     exports.deleteLinebodyById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
     await services.deleteLinebodyById(req , res)
-    return
+    res.end(JSON.stringify(data));
 }
 
 /*

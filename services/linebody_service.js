@@ -6,7 +6,10 @@
 
 //引入数据库Message模块
 var Linebody = require('../models').Linebody;
-
+var errorUtil = require('../utils/errorUtil');
+var factory_service = require('../services/factory_service');
+var workshop_service = require('../services/workshop_service');
+var linebody_service = require('../services/linebody_service');
 /*
 	查找所有线体数据
     */
@@ -54,13 +57,17 @@ var Linebody = require('../models').Linebody;
 	根据id删除一条线体数据
     */
     exports.deleteLinebodyById = async function(req , res) {
-
-        const data = await Linebody.findOne({
-            where:{
-                linebodyid:req.query.linebodyId
-            }
-        })
-        await data.destroy()
+        const Linebody  = await Linebody.findById(req.query.linebodyId);
+        console.log('Linebody--->'+ JSON.stringify(Linebody));
+        if (Linebody == null || Linebody == '') {
+            return errorUtil.noExistError;
+        }
+        const falg = await Linebody.destroy();
+        console.log('falg--->' + JSON.stringify(falg));
+        if (falg == null || falg == '') {
+            return errorUtil.noExistError;
+        }
+        return falg;
     }
 
 /*
@@ -82,3 +89,12 @@ var Linebody = require('../models').Linebody;
     });
       return p;
   }
+
+async function  linebodyClear(){
+    const linebody = await Linebody.findAll({where:{ workshopWorkshopid:null}});
+    console.log(JSON.stringify(linebody.length));
+    for (var i = linebody.length - 1; i >= 0; i--) {
+        await linebody[i].destroy();
+    }
+}
+exports.linebodyClear = linebodyClear;

@@ -7,6 +7,11 @@
 //引入数据库Message模块
 //var Group = require('../models/group');
 var Group = require('../models').Group;
+var errorUtil = require('../utils/errorUtil');
+var factory_service = require('../services/factory_service');
+var workshop_service = require('../services/workshop_service');
+var linebody_service = require('../services/linebody_service');
+
 /*
 	查找所有集团数据
 */
@@ -54,12 +59,19 @@ exports.addGroupOne = function(req , res) {
 */
  async function deleteGroupById(req , res) {
     const group  = await Group.findById(req.query.groupId);
-    const falg = await group.destroy();
-    if (falg == null || falg == '' || falg != 1) {
-        return null;
+    console.log('group--->'+ JSON.stringify(group));
+    if (group == null || group == '') {
+        return errorUtil.noExistError;
     }
-
-
+    const falg = await group.destroy();
+    console.log('falg--->' + JSON.stringify(falg));
+    if (falg == null || falg == '') {
+        return errorUtil.noExistError;
+    }
+    await factory_service.factoryClear();
+    await workshop_service.workshopClear();
+    await linebody_service.linebodyClear();
+    return falg;
 }
 exports.deleteGroupById =deleteGroupById;
 /*

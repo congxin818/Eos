@@ -86,17 +86,8 @@ var parameterError = {
     exports.deleteFactoryById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
     const data = await services.deleteFactoryById(req , res)
-    // 删除指定工厂下的车间
-    req.query.pId = req.query.id
-    const selectData = await workEtdService.selectWorkshopBypId(req , res);
-     selectData.forEach(async selectDataDataOne => {
-        req.query.workshopId = selectDataDataOne.workshopid;
-        req.query.id = 'w' + selectDataDataOne.workshopid;
-        await workshopController.deleteWorkshopById(req , res);
-    })
-
-
-    return
+    
+    res.end(JSON.stringify(data));
 }
 
 /*

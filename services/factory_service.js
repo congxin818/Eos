@@ -6,7 +6,10 @@
 
 //引入数据库Message模块
 var Factory = require('../models').Factory;
-
+var errorUtil = require('../utils/errorUtil');
+var factory_service = require('../services/factory_service');
+var workshop_service = require('../services/workshop_service');
+var linebody_service = require('../services/linebody_service');
 /*
 	查找所有工厂数据
     */
@@ -56,12 +59,20 @@ var Factory = require('../models').Factory;
     exports.deleteFactoryById = async function(req , res) {
 
         //先查找,再调用删除,最后返回首页
-        const data = await Factory.findOne({
-            where:{
-                factoryid:req.query.factoryId
-            }
-        })      
-        await data.destroy()
+
+    const factory  = await Factory.findById(req.query.factoryId);
+    console.log('factory--->'+ JSON.stringify(factory));
+    if (factory == null || factory == '') {
+        return errorUtil.noExistError;
+    }
+    const falg = await factory.destroy();
+    console.log('falg--->' + JSON.stringify(falg));
+    if (falg == null || falg == '') {
+        return errorUtil.noExistError;
+    }
+    await workshop_service.workshopClear();
+    await linebody_service.linebodyClear();
+    return falg;
     }
 
 /*
@@ -85,13 +96,10 @@ var Factory = require('../models').Factory;
 }
 
 async function factoryClear(){
-    const factory = await Factory.findAll({where:{ groupGroupid:''}});
-    if (factory.length == 0) {
-        return ;
-    }
+    const factory = await Factory.findAll({where:{ groupGroupid:null}});
+    console.log(JSON.stringify(factory.length));
     for (var i = factory.length - 1; i >= 0; i--) {
         await factory[i].destroy();
     }
-    return 1;
 }
 exports.factoryClear = factoryClear;
