@@ -43,9 +43,9 @@ Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 
 //Kpionelev和Kpitwolev建立1：N关系
-Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
+//Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
 //Kpitwolev和Losscategory建立1：N关系
-Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
+//Kpitwolev.hasM any(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
 
 // 同步模型到数据库中
 sequelize.sync();

@@ -20,7 +20,9 @@ module.exports = function(sequelize , DataTypes){
             collate:'utf8_general_ci'
         },
         pId: { //kpi二级父id
-            type: Sequelize.INTEGER
+            type: Sequelize.STRING(50),
+            charset:'utf8',
+            collate:'utf8_general_ci'
         },
         id: { //kpi第二级树状图id
             type: Sequelize.STRING(50),
