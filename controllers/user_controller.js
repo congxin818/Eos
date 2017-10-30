@@ -26,29 +26,46 @@ var existError = {
     status:'3',
     msg:'用户名已存在！'
 };
-
 /*
-    测试关联添加
- */
-exports.createUserGroup = function(req , res , next) {
-    if (req == '' || req == undefined) {
-        res.end(JSON.stringify(parameterError));
+    用户登录接口
+    */
+async function findAndCount(req , res , next){
+    if (req.query.page == undefined ||req.query.page == ''||req.query.page == null) {
+        res.end(parameterError);
         return;
     }
-    service.createUserGroup(req , res , next);
+    service.findAndCount(req , res , next).then(function(data){
+        res.end(JSON.stringify(data));
+    });
 }
+exports.findAndCount = findAndCount;
 
 /*
-    测试关联查询
- */
-exports.selectUserGroup = function(req , res , next) {
-    if (req == '' || req == undefined) {
-        res.end(JSON.stringify(parameterError));
+    用户登录接口
+    */
+async function userLogin(req , res , next) {
+    //如果没有post数据或者数据为空,直接返回
+    const userpsd = req.body.userPsd;
+    if (req.body.userName == undefined ||req.body.userName == ''
+        || req.body.userPsd == undefined || req.body.userPsd == '') {
+        res.end(parameterError);
         return;
     }
-    
-    service.selectUserGroup(req , res , next);
+
+    service.selectUserByName(req , res ,next).then(function(data) {
+        if (data == undefined || data == '') {
+            res.end(JSON.stringify(loginError));
+            return;
+        }
+        if (userpsd == data.userpsd) {
+            dataSuccess.data = data;
+            res.end(JSON.stringify(dataSuccess));  
+        }else{
+            res.end(JSON.stringify(loginError));
+        }
+    });
 }
+exports.userLogin = userLogin;
 
 /*
 	查找所有User
@@ -153,7 +170,7 @@ exports.deleteUserById = function(req , res , next) {
     }
     //先查找,再调用删除,最后返回json数据
     service.deleteUserById(req , res , next).then(function(data){
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
         if (data == null || data == undefined || data == '') {
             res.end(JSON.stringify(parameterError));
         }else{
@@ -165,7 +182,7 @@ exports.deleteUserById = function(req , res , next) {
 
 //根据userId跟新User
 exports.updateUserById = function(req , res , next) {
-	//如果没有post数据或者数据为空,直接返回
+	// //如果没有post数据或者数据为空,直接返回
     if (req.body.userId == undefined ||req.body.userId == ''
         ||req.body.userName == undefined ||req.body.userName == ''
         || req.body.userPsd == undefined || req.body.userPsd == ''

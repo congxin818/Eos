@@ -71,10 +71,8 @@ const namehasError = {
         // 对车间名字是否重复进行判断
         if(data == null||data == ''||data == undefined){
             //创建一条记录,创建成功后返回json数据
-            const p = await services.addWorkshopOne(req , res);
-            if(p == null||p == ''||p == undefined){
-                return parameterError;
-            }
+            const addData = await services.addWorkshopOne(req , res);
+            return addData
         }else{
            return namehasError;
        }
@@ -85,8 +83,9 @@ const namehasError = {
     */
     exports.deleteWorkshopById = async function(req , res) {
     //删除所指定车间
-    await services.deleteWorkshopById(req , res)
-    // 删除指定车间下的线体
+    const data = await services.deleteWorkshopById(req , res)
+/* // 删除指定车间下的线体
+
     req.query.pId = await req.query.id
     const selectData = await lineEtdService.selectLinebodyBypId(req , res);
     selectData.forEach(async selectDataDataOne => {
@@ -96,6 +95,9 @@ const namehasError = {
 
 
     return
+    */
+    return data;
+
 }
 
 /*

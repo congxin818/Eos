@@ -5,7 +5,9 @@
     */
 
 //引入数据库Message模块
-var Linebody = require('../models').Linebody;
+const Linebody = require('../models').Linebody;
+const Workshop = require('../models').Workshop;
+const errorUtil = require('../utils/errorUtil');
 
 /*
 	查找所有线体数据
@@ -36,31 +38,37 @@ var Linebody = require('../models').Linebody;
 /*
 	添加一条线体数据
     */
-    exports.addLinebodyOne = function(req , res) {
+    exports.addLinebodyOne = async function(req , res) {
         var linebody = {
             linebodyname: req.body.name,
             linebodybelong: req.body.pId
         };
-        var p = new Promise(function(resolve, reject) {
+        var workshopId = req.body.pId.slice(1,);
+        const workshop = await Workshop.findById(workshopId);
+        if (workshop == null || workshop == '') {
+            return ;
+        }
         //创建一条记录,创建成功后跳转回首页
-        Linebody.create(linebody).then(function(data){
-            resolve(data);
-        });
-    });
-        return p;
+        const data = await Linebody.create(linebody)
+        await workshop.addWorkshopLinebody(data);
+        return data;
     }
 
 /*
 	根据id删除一条线体数据
     */
     exports.deleteLinebodyById = async function(req , res) {
-
-        const data = await Linebody.findOne({
-            where:{
-                linebodyid:req.query.linebodyId
-            }
-        })
-        await data.destroy()
+        const linebody  = await Linebody.findById(req.query.linebodyId);
+        console.log('Linebody--->'+ JSON.stringify(linebody));
+        if (linebody == null || linebody == '') {
+            return errorUtil.noExistError;
+        }
+        const falg = await linebody.destroy();
+        console.log('falg--->' + JSON.stringify(falg));
+        if (falg == null || falg == '') {
+            return errorUtil.noExistError;
+        }
+        return falg;
     }
 
 /*
@@ -82,3 +90,12 @@ var Linebody = require('../models').Linebody;
     });
       return p;
   }
+
+async function  linebodyClear(){
+    const linebody = await Linebody.findAll({where:{ workshopWorkshopid:null}});
+    console.log(JSON.stringify(linebody.length));
+    for (var i = linebody.length - 1; i >= 0; i--) {
+        await linebody[i].destroy();
+    }
+}
+exports.linebodyClear = linebodyClear;

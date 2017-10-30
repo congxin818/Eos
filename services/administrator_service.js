@@ -10,7 +10,7 @@ var parameterError = {
 };
 
 //查找所有Administrator
-exports.selectList = function(req , res) {
+exports.selectList = function(req , res ,next) {
     var p = new Promise(function(resolve, reject) {
         Administrator.findAll().then(function(msg) {
             resolve(msg);
@@ -20,11 +20,11 @@ exports.selectList = function(req , res) {
 }
 
 //根据username查找一个Administrator
-exports.selectByUserName = function(req , res) {
+exports.selectByAdminName = function(req , res , next) {
     var p = new Promise(function(resolve , reject) {
         Administrator.findOne({
             where:{
-                username:req.body.username
+                adminname:req.body.adminName
             }
         }).then(function(data){
             resolve(data);
@@ -34,7 +34,7 @@ exports.selectByUserName = function(req , res) {
 }
 
 //添加一个Administrator
-exports.addOne = function(req , res) {
+exports.addOne = function(req , res , next) {
     var admin = {
         username: req.body.username,
         password: req.body.password
@@ -49,7 +49,7 @@ exports.addOne = function(req , res) {
 }
 
 //根据username删除Administrator
-exports.deleteByUserName = function(req , res) {
+exports.deleteByUserName = function(req , res, next) {
     var p = new Promise(function(resolve , reject) {
         //先查找,再调用删除,最后返回首页
         Administrator.findOne({
@@ -71,7 +71,7 @@ exports.deleteByUserName = function(req , res) {
 }
 
 //根据username跟新Administrator
-exports.updateByUserName = function(req , res) {
+exports.updateByUserName = function(req , res ,next) {
     var admin = {
         username: req.body.username,
         password: req.body.password

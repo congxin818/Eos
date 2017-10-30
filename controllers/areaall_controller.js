@@ -16,7 +16,6 @@ const wksServices = require('../services/workshop_service');
 const linbyServices = require('../services/linebody_service');
 
 const dataSuccess = {
-
     status: '0', 
     msg: '请求成功',
     data:'fas'
@@ -32,10 +31,19 @@ const namehasError = {
     msg: '集团已存在'
 };
 
+const addAreaError = {
+    status: '201', 
+    msg: '添加数据错误'
+};
+const updateAreaError = {
+    status: '301', 
+    msg: '更新数据错误'
+};
+
 /*
     查询所有集团和工厂
     */
-async function selectAreaAll(req , res){
+    async function selectAreaAll(req , res){
         if (req == '') {
             return parameterError
         }
@@ -80,7 +88,7 @@ async function selectAreaAll(req , res){
 
         return contGFData
     }
-exports.selectAreaAll = selectAreaAll;
+    exports.selectAreaAll = selectAreaAll;
 /*
     把区域的格式设置为树图格式
     */
@@ -103,7 +111,7 @@ exports.selectAreaAll = selectAreaAll;
     判断要更改的表（集团、工厂、车间、线体）
     调用相对应的update函数
     */
-    exports.updateAreafrist = async function(req , res){
+    exports.updateArea = async function(req , res){
         //如果没有post数据或者数据为空,直接返回
         if(req.body.id == null || req.body.id == '' || req.body.name == null 
           || req.body.name == ''||  req.body.pId == ''){
@@ -112,61 +120,111 @@ exports.selectAreaAll = selectAreaAll;
     if (req.body.pId == null){
         // 更改一个集团
         const updateReturn = await groupconler.updateGroupById(req , res);
-        return updateReturn
-    }   
-    var areaFlag = await req.body.pId.slice(0,1);
-    var areaId = req.body.id.slice(1,);
-    if(!isNaN(areaFlag)){
+        if(updateReturn == 1){
+           res.end(JSON.stringify(dataSuccess))
+       }else{
+           res.end(JSON.stringify(updateAreaError))
+       }
+   }   
+   var areaFlag = await req.body.pId.slice(0,1);
+   var areaId = req.body.id.slice(1,);
+   if(!isNaN(areaFlag)){
         // 更改一个工厂
         req.body.factoryId = areaId;
         const updateReturn = await factoryconler.updateFactoryById(req , res);
-        return updateReturn
-    }else{
-        if(areaFlag == 'f'){
+        if(updateReturn == 1){
+           res.end(JSON.stringify(dataSuccess))
+       }else{
+           res.end(JSON.stringify(updateAreaError))
+       }
+   }else{
+    if(areaFlag == 'f'){
             // 更改一个车间
             req.body.workshopId = areaId;
             const updateReturn = await workshopconler.updateWorkshopById(req , res);
-            return updateReturn
-        }else if(areaFlag == 'w'){
+            if(updateReturn == 1){
+               res.end(JSON.stringify(dataSuccess))
+           }else{
+               res.end(JSON.stringify(updateAreaError))
+           }
+       }else if(areaFlag == 'w'){
             // 更改一个车间           
             req.body.linebodyId = areaId;
             const updateReturn = await linebodyconler.updateLinebodyById(req , res);
-            return updateReturn
-        }
-    }
+            if(updateReturn == 1){
+               res.end(JSON.stringify(dataSuccess))
+           }else{
+               res.end(JSON.stringify(updateAreaError))
+           }
+       }
+   }
 }
 
 /*  
     判断要增加的表（集团、工厂、车间、线体）
     调用相对应的增加函数
     */
-    exports.addAreaOnefrist = async function(req , res){
+    exports.addAreaOne = async function(req , res){
     //如果没有post数据或者数据为空,直接返回
     if( req.body.name == null || req.body.name == ''||req.body.pId == ''){
-        return parameterError
-    }
-    if (req.body.pId == null){
+        res.end(JSON.stringify(parameterError));
+    }else{
+        if (req.body.pId == null){
         // 添加一个集团
-        const addReturn = await groupconler.addGroupOne(req , res);
-        return addReturn
+        const addData = await groupconler.addGroupOne(req , res);
+        // 增加的验证
+        if(addData.status=='101')
+            res.end(JSON.stringify(addData));
+        if(addData == null || addData == '')
+            res.end(JSON.stringify(addAreaError));
+        // 按格式显示
+        const addRetrun = await areaValSet(addData.groupid,addData.groupname,null,addData.checked);
+        res.end(JSON.stringify(addRetrun));
     }
     var areaFlag = await req.body.pId.slice(0,1);
     if(!isNaN(areaFlag)){  
         // 添加一个工厂
-        const addReturn = await factoryconler.addFactoryOne(req , res);
-        return addReturn     
+        const addData = await factoryconler.addFactoryOne(req , res);
+        // 增加的验证
+        if(addData.status=='101')
+            res.end(JSON.stringify(addData));
+        if(addData == null || addData == '')
+            res.end(JSON.stringify(addAreaError));
+        // 按格式显示
+        const addRetrun = await areaValSet(addData.factoryid,addData.factoryname,
+            addData.factorybelong,addData.checked);
+        res.end(JSON.stringify(addRetrun));   
     }else{
         if(areaFlag == 'f'){
             // 添加一个车间
-            const addReturn = await workshopconler.addWorkshopOne(req , res);
-            return addReturn
+            const addData = await workshopconler.addWorkshopOne(req , res);
+            // 增加的验证
+            if(addData.status=='101')
+                res.end(JSON.stringify(addData));
+            if(addData == null || addData == '')
+                res.end(JSON.stringify(addAreaError));
+            // 按格式显示
+            const addRetrun = await areaValSet(addData.workshopid,addData.workshopname,
+                addData.workshopbelong,addData.checked);
+            res.end(JSON.stringify(addRetrun));
         }else if(areaFlag == 'w'){
-            // 添加一个车间
-            const addReturn = await linebodyconler.addLinebodyOne(req , res);
-            return addReturn
-        }
-    }
+            // 添加一个线体
+            const addData = await linebodyconler.addLinebodyOne(req , res);
+            // 增加的验证
+            if(addData.status=='101')
+                res.end(JSON.stringify(addData));
+            if(addData == null || addData == '')
+                res.end(JSON.stringify(addAreaError));
+              // 按格式显示
+              const addRetrun = await areaValSet(addData.linebodyid,addData.linebodyname,
+                addData.linebodybelong,addData.checked);
+              res.end(JSON.stringify(addRetrun));
+          }
+      }
+  }
+
 }
+
 
 /*
     判断要删除的表（集团、工厂、车间、线体）
@@ -175,34 +233,36 @@ exports.selectAreaAll = selectAreaAll;
     exports.deleteArea = async function(req , res){
         //如果没有post数据或者数据为空,直接返回
         if(req.query.id == null || req.query.id == ''){
-            res.end(JSON.stringify(allData));
+            res.end(JSON.stringify(parameterError));
         }
+        var deleteReturn;
         var areaFlag = await req.query.id.slice(0,1);
         var areaId = req.query.id.slice(1,);
         if (!isNaN(areaFlag)){
             // 删除一个集团
             const deleteReturn = await groupconler.deleteGroupById(req , res);
-             res.end(JSON.stringify(dataSuccess));
         }   
         if(areaFlag == 'f'){
             // 删除一个工厂
             req.query.factoryId = areaId;
             const deleteReturn = await factoryconler.deleteFactoryById(req , res);
-            res.end(JSON.stringify(dataSuccess));
         }
         if(areaFlag == 'w'){
             // 删除一个车间
             req.query.workshopId = areaId;
             const deleteReturn = await workshopconler.deleteWorkshopById(req , res);
-            res.end(JSON.stringify(dataSuccess));
         }
         if(areaFlag == 'l'){
             // 删除一个线体           
             req.query.linebodyId = areaId;
-            const deleteReturn = await linebodyconler.deleteLinebodyById(req , res);
-            res.end(JSON.stringify(dataSuccess));
+            const deleteReturn = await linebodyconler.deleteLinebodyById(req , res);       
         }
+        if(deleteReturn == null||deleteReturn == ''){
+            res.end(JSON.stringify(dataSuccess));
+        }else{            
             res.end(JSON.stringify(parameterError));
+        }
+
     }
 
 /*
@@ -211,31 +271,6 @@ exports.selectAreaAll = selectAreaAll;
     exports.showAreaAll =  async function(req , res){
         const allData =  await exports.selectAreaAll(req , res);
         res.end(JSON.stringify(allData));
-    }
-
-/*
-    添加一个区域并重新刷新整个树图 合并
-    */
-    exports.addAreaOne = async function(req , res){
-        const addReturn = await exports.addAreaOnefrist(req , res);
-        if(addReturn== undefined ||addReturn == ''||addReturn == null){
-            const allData = await exports.selectAreaAll(req , res);
-            res.end(JSON.stringify(allData));
-        }
-        res.end(JSON.stringify(addReturn));
-        
-    }
-/*
-    更改一个区域并重新刷新整个树图 合并
-    */
-    exports.updateArea = async function(req , res){
-        const updateReturn = await exports.updateAreafrist(req , res);
-        if(updateReturn== 1 ){
-            const allData = await exports.selectAreaAll(req , res);
-            res.end(JSON.stringify(allData));
-        }
-        res.end(JSON.stringify(updateReturn));
-        
     }
 
 
