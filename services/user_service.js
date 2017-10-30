@@ -363,6 +363,7 @@ exports.findAndCount = findAndCount;
         return dataSuccess
     }
     catch (err) {
+         console.log('error---->' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
             return existError
         }
@@ -428,12 +429,10 @@ async function updateUserById(req , res , next) {
     const jsonString = req.body.validArea;
     // console.log('validArea->'+jsonString);
     // console.log('menuids_str->'+menuids_str);
-
     let groupIds = await stringUtil.getIds(jsonString , '');
     let factoryIds = await stringUtil.getIds(jsonString , 'f');
     let workshopIds = await stringUtil.getIds(jsonString , 'w');
     let linebodyIds = await stringUtil.getIds(jsonString , 'l');
-    
     //console.log('yuzhizhe01->'+groupIds.length);
     // console.log('yuzhizhe02->'+factoryIds.length);
     // console.log('yuzhizhe03->'+workshopIds.length);
@@ -503,6 +502,7 @@ async function updateUserById(req , res , next) {
         return dataSuccess;
     }
     catch (err) {
+        console.log('error---->' + err);
         return serviceError;
     }
 }
