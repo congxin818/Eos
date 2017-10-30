@@ -280,9 +280,9 @@ exports.findAndCount = findAndCount;
         };
         let menuids = new Array();
 
-        const menuids_str = req.body.validMenu;
+    const menuids_str = req.body.validMenu;
 
-        const jsonString = req.body.validArea;
+    const jsonString = req.body.validArea;
     //console.log('validArea->'+jsonString);
     //console.log('menuids_str->'+menuids_str);
     
@@ -290,15 +290,15 @@ exports.findAndCount = findAndCount;
     let factoryIds = [];
     let workshopIds = [];
     let linebodyIds = [];
-    if (jsonString != null || jsonString == '') {
+    if (jsonString != null || jsonString != '') {
         groupIds = await stringUtil.getIds(jsonString , '');
         factoryIds = await stringUtil.getIds(jsonString , 'f');
         workshopIds = await stringUtil.getIds(jsonString , 'w');
         linebodyIds = await stringUtil.getIds(jsonString , 'l');
     }
     console.log('yuzhizhe01->'+groupIds.length);
-     console.log('yuzhizhe02->'+factoryIds.length);
-     console.log('yuzhizhe03->'+workshopIds.length);
+    console.log('yuzhizhe02->'+factoryIds.length);
+    console.log('yuzhizhe03->'+workshopIds.length);
     console.log('yuzhizhe04->'+linebodyIds.length);
     
     if (menuids_str != null || menuids_str != '') {
