@@ -5,11 +5,10 @@
     */
 
 //引入数据库Message模块
-var Linebody = require('../models').Linebody;
-var errorUtil = require('../utils/errorUtil');
-var factory_service = require('../services/factory_service');
-var workshop_service = require('../services/workshop_service');
-var linebody_service = require('../services/linebody_service');
+const Linebody = require('../models').Linebody;
+const Workshop = require('../models').Workshop;
+const errorUtil = require('../utils/errorUtil');
+
 /*
 	查找所有线体数据
     */
@@ -39,18 +38,20 @@ var linebody_service = require('../services/linebody_service');
 /*
 	添加一条线体数据
     */
-    exports.addLinebodyOne = function(req , res) {
+    exports.addLinebodyOne = async function(req , res) {
         var linebody = {
             linebodyname: req.body.name,
             linebodybelong: req.body.pId
         };
-        var p = new Promise(function(resolve, reject) {
+        var workshopId = req.body.pId.slice(1,);
+        const workshop = await Workshop.findById(workshopId);
+        if (workshop == null || workshop == '') {
+            return ;
+        }
         //创建一条记录,创建成功后跳转回首页
-        Linebody.create(linebody).then(function(data){
-            resolve(data);
-        });
-    });
-        return p;
+        const data = await Linebody.create(linebody)
+        await workshop.addWorkshopLinebody(data);
+        return data;
     }
 
 /*
@@ -59,6 +60,7 @@ var linebody_service = require('../services/linebody_service');
     exports.deleteLinebodyById = async function(req , res) {
         const linebody  = await Linebody.findById(req.query.linebodyId);
         console.log('linebody--->'+ JSON.stringify(linebody));
+
         if (linebody == null || linebody == '') {
             return errorUtil.noExistError;
         }

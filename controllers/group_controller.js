@@ -61,12 +61,12 @@ const namehasError = {
     exports.addGroupOne = async function(req , res) {
     const data = await nameEtdService.selectGroupByName(req , res)
             // 对集团名字是否成功进行判断
+            console.log('---------------data-->'+data)
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                const p = await services.addGroupOne(req , res)
-                if(p == null||p == ''||p == undefined){
-                    return parameterError;
-                }
+                console.log('---------------data-->'+data)
+                const addData = await services.addGroupOne(req , res)
+                return addData 
             }else{
              return namehasError;
          }
@@ -82,7 +82,7 @@ const namehasError = {
     exports.deleteGroupById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
     const data = await services.deleteGroupById(req , res);
-    res.end(JSON.stringify(data));
+    return data
 }
 
 /*

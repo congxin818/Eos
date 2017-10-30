@@ -5,7 +5,9 @@
     */
 
 //引入数据库Message模块
-var Workshop = require('../models').Workshop;
+const Workshop = require('../models').Workshop;
+var Factory = require('../models').Factory;
+const linebody_service = require('../services/linebody_service');
 
 /*
 	查找所有车间数据
@@ -36,18 +38,20 @@ var Workshop = require('../models').Workshop;
 /*
 	添加一条车间数据
     */
-    exports.addWorkshopOne = function(req , res) {
+    exports.addWorkshopOne = async function(req , res) {
         var workshop = {
             workshopname: req.body.name,
             workshopbelong: req.body.pId
         };
-        var p = new Promise(function(resolve, reject) {
+        var factoryId = req.body.pId.slice(1,);
+        const factory = await Factory.findById(factoryId);
+        if (factory == null || factory == '') {
+            return ;
+        }
         //创建一条记录,创建成功后跳转回首页
-        Workshop.create(workshop).then(function(data){
-            resolve(data);
-        });
-    });
-        return p;
+        const data = await Workshop.create(workshop)
+        await factory.addFactoryWorkshop(data);     
+        return data;
     }
 
 /*

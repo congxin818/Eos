@@ -21,6 +21,10 @@ var parameterError = {
     status: '1', 
     msg: '参数错误'
 };
+var namehasError = {
+   status: '101', 
+   msg: '工厂已存在'
+}
 
 /*
 	展示所有工厂
@@ -67,27 +71,18 @@ var parameterError = {
       // 对工厂名字是否重复进行判断
       if(data == null||data == ''||data == undefined){
         //创建一条记录,创建成功后返回json数据
-        const p = await services.addFactoryOne(req , res)
-        if(p == null||p == ''||p == undefined){
-            return parameterError;
-        }
-    }else{
-     var namehasError = {
-         status: '101', 
-         msg: '工厂已存在'
-     }
-     return namehasError;
- }
+        const addData = await services.addFactoryOne(req , res)
+        return addData;
+    }
+    return namehasError;
 }
-
 /*
 	根据id删除工厂
     */
     exports.deleteFactoryById = async function(req , res) {
     //先查找,再调用删除,最后返回json数据
     const data = await services.deleteFactoryById(req , res)
-    
-    res.end(JSON.stringify(data));
+    return data;
 }
 
 /*
