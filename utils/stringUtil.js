@@ -9,16 +9,16 @@
  	let groupIds = new Array();
  	//console.log('stringJson->'+string);
  	if (string == undefined || string == '' || string == null) {
- 		return null;
+ 		return groupIds;
  	}
  	let groupIdsJson = JSON.parse(string);
  	if (groupIdsJson == undefined || groupIdsJson == '' || string == null) {
- 		return null;
+ 		return groupIds;
  	}
  	let allIds = await exports.jsonToArray(groupIdsJson);
  	//console.log('allIds->'+allIds.length);
  	if (allIds == undefined || allIds == '' || allIds == null) {
- 		return null;
+ 		return groupIds;
  	}
  	if (falg == undefined || falg == null || falg == '') {
  		for (var i = allIds.length - 1; i >= 0; i--) {
