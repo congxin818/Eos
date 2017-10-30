@@ -75,7 +75,7 @@ async function selectAreaAll(req , res){
                 linebodyDataOne.linebodybelong,linebodyDataOne.checked);
             treeShowLinbyData.push(data4)
         })
-        var contGFData = treeShowGroupData.concat(treeShowFacData)
+        var contGFData = await treeShowGroupData.concat(treeShowFacData)
         .concat(treeShowWosData).concat(treeShowLinbyData)
 
         return contGFData
@@ -172,37 +172,37 @@ exports.selectAreaAll = selectAreaAll;
     判断要删除的表（集团、工厂、车间、线体）
     调用相对应的update函数
     */
-    exports.deleteAreafrist = async function(req , res){
+    exports.deleteArea = async function(req , res){
         //如果没有post数据或者数据为空,直接返回
         if(req.query.id == null || req.query.id == ''){
-            return parameterError
+            res.end(JSON.stringify(allData));
         }
         var areaFlag = await req.query.id.slice(0,1);
         var areaId = req.query.id.slice(1,);
         if (!isNaN(areaFlag)){
             // 删除一个集团
             const deleteReturn = await groupconler.deleteGroupById(req , res);
-            return deleteReturn
+             res.end(JSON.stringify(dataSuccess));
         }   
         if(areaFlag == 'f'){
             // 删除一个工厂
             req.query.factoryId = areaId;
             const deleteReturn = await factoryconler.deleteFactoryById(req , res);
-            return deleteReturn
+            res.end(JSON.stringify(dataSuccess));
         }
         if(areaFlag == 'w'){
             // 删除一个车间
             req.query.workshopId = areaId;
             const deleteReturn = await workshopconler.deleteWorkshopById(req , res);
-            return deleteReturn
+            res.end(JSON.stringify(dataSuccess));
         }
         if(areaFlag == 'l'){
             // 删除一个线体           
             req.query.linebodyId = areaId;
             const deleteReturn = await linebodyconler.deleteLinebodyById(req , res);
-            return deleteReturn
+            res.end(JSON.stringify(dataSuccess));
         }
-
+            res.end(JSON.stringify(parameterError));
     }
 
 /*
@@ -238,22 +238,4 @@ exports.selectAreaAll = selectAreaAll;
         
     }
 
-/*
-    删除一个区域并重新刷新整个树图 合并
-    */
-    exports.deleteArea = async function(req , res){
-        const deleteReturn = await exports.deleteAreafrist(req , res);
 
-        if(deleteReturn== undefined ||deleteReturn == ''||deleteReturn == null ){
-            const allData = await exports.selectAreaAll(req , res);
-            res.end(JSON.stringify(allData));
-        }
-        res.end(JSON.stringify(deleteReturn));
-        
-    }
-
-    exports.text123 = async function(req , res){
-       await wksServices.deleteWorkshopById(req , res);
-       const allData = await exports.selectAreaAll(req , res);
-       res.end(JSON.stringify(allData));
-    }
