@@ -14,7 +14,7 @@ module.exports = function(sequelize , DataTypes){
             autoIncrement:true,
             primaryKey: true
         },
-        lossname: { //kpi第二级名字
+        name: { //kpi第二级名字
             type: Sequelize.STRING(50),
             charset:'utf8',
             collate:'utf8_general_ci'
