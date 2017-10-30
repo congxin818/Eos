@@ -285,10 +285,17 @@ exports.findAndCount = findAndCount;
         const jsonString = req.body.validArea;
     //console.log('validArea->'+jsonString);
     //console.log('menuids_str->'+menuids_str);
-        let groupIds = await stringUtil.getIds(jsonString , '');
-        let factoryIds = await stringUtil.getIds(jsonString , 'f');
-        let workshopIds = await stringUtil.getIds(jsonString , 'w');
-        let linebodyIds = await stringUtil.getIds(jsonString , 'l');
+    
+    let groupIds = [];
+    let factoryIds = [];
+    let workshopIds = [];
+    let linebodyIds = [];
+    if (jsonString != null || jsonString == '') {
+        groupIds = await stringUtil.getIds(jsonString , '');
+        factoryIds = await stringUtil.getIds(jsonString , 'f');
+        workshopIds = await stringUtil.getIds(jsonString , 'w');
+        linebodyIds = await stringUtil.getIds(jsonString , 'l');
+    }
     //console.log('yuzhizhe01->'+groupIds.length);
     // console.log('yuzhizhe02->'+factoryIds.length);
     // console.log('yuzhizhe03->'+workshopIds.length);
