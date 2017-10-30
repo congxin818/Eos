@@ -16,7 +16,12 @@ async function selectLossAll(req , res , next){
 	}
 	let kpiData = await kpiall_controller.selectKPIAll(req , res);
 	let lossData = await service.selectLossAll();
-	const data= kpiData.concat(lossData);
-	res.end(JSON.stringify(data));
+	if (lossData == undefined || lossData == null || lossData == '') {
+        return kpiData;
+    }else{
+        const data= kpiData.concat(lossData);
+		res.end(JSON.stringify(data));
+    }
+	
 }
 exports.selectLossAll = selectLossAll;

@@ -34,9 +34,12 @@ var namehasError = {
         //把一级目录和二级目录一起展示出来
         const oneLevData = await onelevServices.selectOneLevAll(req , res)
         const twoLevData = await twolevServices.selectTwoLevAll(req , res)
-        var contGFData = oneLevData.concat(twoLevData);
-        return contGFData
-
+        if (twoLevData == undefined || twoLevData == null || twoLevData == '') {
+            return contGFData;
+        }else{
+            var contGFData = oneLevData.concat(twoLevData);
+            return contGFData
+        }
     }
 
 /*
