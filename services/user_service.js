@@ -286,10 +286,10 @@ exports.findAndCount = findAndCount;
     //console.log('validArea->'+jsonString);
     //console.log('menuids_str->'+menuids_str);
     
-    let groupIds = [];
-    let factoryIds = [];
-    let workshopIds = [];
-    let linebodyIds = [];
+    let groupIds = new Array();
+    let factoryIds = new Array();
+    let workshopIds = new Array();
+    let linebodyIds = new Array();
     if (jsonString != null || jsonString != '') {
         groupIds = await stringUtil.getIds(jsonString , '');
         factoryIds = await stringUtil.getIds(jsonString , 'f');
