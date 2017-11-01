@@ -47,12 +47,17 @@ async function addLossOne(req , res , next){
 		// if (kpiTwoId == undefined || kpiTwoId == null || kpiTwoId == '') {
 		// 	res.end(JSON.stringify(errorUtil.parameterError));
 		// }
-		const data = await service.addLossOne(lossname , pid);
-		if (data == undefined || data == null || data == '') {
-			res.end(JSON.stringify(errorUtil.serviceError));
-		}
-		dataSuccess.data = data;
-		res.end(JSON.stringify(dataSuccess));
+		const loss = await service.selectLossByName(lossname , pid);
+		if (loss == undefined || loss == null || loss == '') {
+			const data = await service.addLossOne(lossname , pid);
+			if (data == undefined || data == null || data == '') {
+				res.end(JSON.stringify(errorUtil.serviceError));
+			}
+			dataSuccess.data = data;
+			res.end(JSON.stringify(dataSuccess));
+			}else{
+				res.end(JSON.stringify(errorUtil.existError));
+			}
 	}else{
 		await kpiall_controller.addKPItwoLev(req , res);
 	}

@@ -37,6 +37,24 @@ async function selectLossById(id){
 exports.selectLossById = selectLossById;
 
 /*
+    根据Name查询一个loss
+ */
+async function selectLossByName(lossName , newpId){
+    if (lossName == '' || lossName == undefined || lossName == null
+        ||newpId == '' || newpId == undefined || newpId == null)
+    {
+        return ;
+    }
+    const loss = await Losscategory.findOne({where:{name:lossName,pId:newpId}});
+    if (loss == '' || loss == undefined || loss == null)
+    {
+        return ;
+    }
+    return loss;
+}
+exports.selectLossByName = selectLossByName;
+
+/*
 	根据ID删除一个loss
  */
 async function deleteLossById(lossId){
