@@ -20,8 +20,8 @@ const parameterError = {
     msg: '参数错误'
 };
 const namehasError = {
-   status: '101', 
-   msg: '线体已存在'
+ status: '101', 
+ msg: '线体已存在'
 }
 /*
 	展示所有线体
@@ -71,9 +71,9 @@ const namehasError = {
             const addData = await services.addLinebodyOne(req , res);
             return addData
         }else{
-           return namehasError;
-       }
-   }
+         return namehasError;
+     }
+ }
 
 /*
 	根据id删除线体
@@ -89,6 +89,12 @@ const namehasError = {
     */
     exports.updateLinebodyById = async function(req , res) {
     //更新一条记录,更新成功后跳转回首页
-    const data = await services.updateLinebodyById(req , res)
-    return data;
-}
+    const data = await nameEtdService.selectLinebodyByName(req , res)
+        // 对线体名字是否重复进行判断
+        if(data == null||data == ''||data == undefined){
+            const data = await services.updateLinebodyById(req , res)
+            return data;
+        }else{
+         return namehasError;
+     } 
+ }

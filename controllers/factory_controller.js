@@ -90,6 +90,11 @@ var namehasError = {
     */
     exports.updateFactoryById = async function(req , res) {
     //更新一条记录,更新成功后跳转回首页
-    const data = await services.updateFactoryById(req , res)
-    return data;
+    const data = await nameEtdService.selectFactoryByName(req , res)
+      // 对工厂名字是否重复进行判断
+      if(data == null||data == ''||data == undefined){
+        const data = await services.updateFactoryById(req , res)
+        return data;
+    }
+    return namehasError;
 }

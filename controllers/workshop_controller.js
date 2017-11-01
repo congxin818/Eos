@@ -84,18 +84,6 @@ const namehasError = {
     exports.deleteWorkshopById = async function(req , res) {
     //删除所指定车间
     const data = await services.deleteWorkshopById(req , res)
-/* // 删除指定车间下的线体
-
-    req.query.pId = await req.query.id
-    const selectData = await lineEtdService.selectLinebodyBypId(req , res);
-    selectData.forEach(async selectDataDataOne => {
-        req.query.linebodyId = await selectDataDataOne.linebodyid;
-        await linebodyService.deleteLinebodyById(req , res)
-    })
-
-
-    return
-    */
     return data;
 
 }
@@ -104,7 +92,13 @@ const namehasError = {
 	根据id更新车间
     */
     exports.updateWorkshopById = async function(req , res) {
-    //更新一条记录,更新成功后跳转回首页
-    const data = await services.updateWorkshopById(req , res)
-    return data;
-}
+    //更新一条记录,更新成功后跳转回首页  
+    const data = await nameEtdService.selectWorkshopByName(req , res)
+        // 对车间名字是否重复进行判断
+        if(data == null||data == ''||data == undefined){
+           const data = await services.updateWorkshopById(req , res)
+           return data;
+       }else{
+           return namehasError;
+       }
+   }

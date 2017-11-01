@@ -59,22 +59,20 @@ const namehasError = {
 	添加一个集团
     */
     exports.addGroupOne = async function(req , res) {
-    const data = await nameEtdService.selectGroupByName(req , res)
+        const data = await nameEtdService.selectGroupByName(req , res)
             // 对集团名字是否成功进行判断
-            console.log('---------------data-->'+data)
             if(data == null||data == ''||data == undefined){
                 //创建一条记录,创建成功后返回json数据
-                console.log('---------------data-->'+data)
                 const addData = await services.addGroupOne(req , res)
                 return addData 
             }else{
-             return namehasError;
-         }
+               return namehasError;
+           }
 
        }
 
 
- 
+
 
 /*
 	根据id删除集团
@@ -89,7 +87,13 @@ const namehasError = {
 	根据id更新集团
     */
     exports.updateGroupById = async function(req , res) {
-    //更新一条记录,更新成功后跳转回首页
-    const data = await services.updateGroupById(req , res)
-    return data;
-}
+        //更新一条记录,更新成功后跳转回首页 
+        const data = await nameEtdService.selectGroupByName(req , res)
+            // 对集团名字是否成功进行判断
+            if(data == null||data == ''||data == undefined){
+             const data = await services.updateGroupById(req , res)
+             return data;
+         }else{
+           return namehasError;
+       }  
+   }
