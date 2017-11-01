@@ -16,11 +16,11 @@ const loginError = {
 
 const existError = {
     status:'3',
-    msg:'用户名已存在'
+    msg:'已存在'
 };
 const noExistError = {
     status:'4',
-    msg:'用户名不存在'
+    msg:'不存在'
 };
 const serviceError = {
     status:'-2',

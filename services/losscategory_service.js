@@ -108,15 +108,16 @@ exports.addLossOne = addLossOne;
 /*
 	更新
  */
-async function updateLossById(lossId,lossName){
+async function updateLossById(lossId,lossName,newpId){
 	if (lossId == '' || lossId == undefined || lossId == null
 		|| lossName == '' || lossName == undefined || lossName == null)
     {
-        return 0;
+        return ;
     }
     let loss = {
     	lossid:lossId,
-    	lossname:lossName
+    	name:lossName,
+        pId:newpId
     };
     const falg = await Losscategory.update(loss,{where:{lossid:lossId}});
     return falg;

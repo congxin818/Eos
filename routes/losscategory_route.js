@@ -31,3 +31,11 @@ router.get('/deleteLossById', function(req, res, next) {
     controller.deleteLossById(req , res , next);
 });
 module.exports = router;
+
+/*
+	根据ID更改loss
+ */
+router.post('/updateLossById', function(req, res, next) {
+    controller.updateLossById(req , res , next);
+});
+module.exports = router;
