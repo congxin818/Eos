@@ -114,50 +114,64 @@ const updateAreaError = {
     exports.updateArea = async function(req , res){
         //如果没有post数据或者数据为空,直接返回
         if(req.body.id == null || req.body.id == '' || req.body.name == null 
-          || req.body.name == ''||  req.body.pId == ''){
+          || req.body.name == ''){
             return parameterError
     }
-    if (req.body.pId == null){
+    var areaFlag = await req.body.id.slice(0,1);
+    var areaId = req.body.id.slice(1,);
+    if (!isNaN(areaFlag)){
         // 更改一个集团
         const updateReturn = await groupconler.updateGroupById(req , res);
+        // 验证更改的名字是否重复
+        if(updateReturn.status=='101')
+            res.end(JSON.stringify(updateReturn));
         if(updateReturn == 1){
-           res.end(JSON.stringify(dataSuccess))
-       }else{
-           res.end(JSON.stringify(updateAreaError))
-       }
-   }   
-   var areaFlag = await req.body.pId.slice(0,1);
-   var areaId = req.body.id.slice(1,);
-   if(!isNaN(areaFlag)){
+         res.end(JSON.stringify(dataSuccess))
+     }else{
+         res.end(JSON.stringify(updateAreaError))
+     }
+ }   
+ 
+ if(areaFlag == 'f'){
         // 更改一个工厂
         req.body.factoryId = areaId;
         const updateReturn = await factoryconler.updateFactoryById(req , res);
+        // 验证更改的名字是否重复
+        if(updateReturn.status=='101')
+            res.end(JSON.stringify(updateReturn));
         if(updateReturn == 1){
-           res.end(JSON.stringify(dataSuccess))
-       }else{
-           res.end(JSON.stringify(updateAreaError))
-       }
-   }else{
-    if(areaFlag == 'f'){
-            // 更改一个车间
-            req.body.workshopId = areaId;
-            const updateReturn = await workshopconler.updateWorkshopById(req , res);
-            if(updateReturn == 1){
-               res.end(JSON.stringify(dataSuccess))
-           }else{
-               res.end(JSON.stringify(updateAreaError))
-           }
-       }else if(areaFlag == 'w'){
-            // 更改一个车间           
-            req.body.linebodyId = areaId;
-            const updateReturn = await linebodyconler.updateLinebodyById(req , res);
-            if(updateReturn == 1){
-               res.end(JSON.stringify(dataSuccess))
-           }else{
-               res.end(JSON.stringify(updateAreaError))
-           }
-       }
-   }
+         res.end(JSON.stringify(dataSuccess))
+     }else{
+         res.end(JSON.stringify(updateAreaError))
+     }
+ }
+ if(areaFlag == 'w'){
+        // 更改一个车间
+        req.body.workshopId = areaId;
+        const updateReturn = await workshopconler.updateWorkshopById(req , res);
+        // 验证更改的名字是否重复
+        if(updateReturn.status=='101')
+            res.end(JSON.stringify(updateReturn));
+        console.log('data-------------->' +  updateReturn)
+        if(updateReturn == '1'){
+         res.end(JSON.stringify(dataSuccess))
+     }else{
+         res.end(JSON.stringify(updateAreaError))
+     }
+ } 
+ if(areaFlag == 'l'){
+        // 更改一个线体           
+        req.body.linebodyId = areaId;
+        const updateReturn = await linebodyconler.updateLinebodyById(req , res);
+        // 验证更改的名字是否重复
+        if(updateReturn.status=='101')
+            res.end(JSON.stringify(updateReturn));
+        if(updateReturn == 1){
+         res.end(JSON.stringify(dataSuccess))
+     }else{
+         res.end(JSON.stringify(updateAreaError))
+     }
+ }
 }
 
 /*  
