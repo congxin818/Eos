@@ -10,7 +10,7 @@ var Validmenu = sequelize.import('./validmenu.js');
 var Kpionelev = sequelize.import('./kpionelev.js');
 var Kpitwolev = sequelize.import('./kpitwolev.js');
 
-var UserKpitwolev = sequelize.import('./userKpitwolev.js');
+//var UserKpitwolev = sequelize.import('./userKpitwolev.js');
 
 var Losscategory = sequelize.import('./losscategory.js');
 
@@ -37,8 +37,8 @@ User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 
 //user和Validmenu之间N:M关系
-User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
-Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
+//User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
+//Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Group和Factory建立1：N关系
@@ -66,4 +66,4 @@ exports.Validmenu = Validmenu;
 exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;
 exports.Losscategory = Losscategory;
-exports.UserKpitwolev = UserKpitwolev;
+//exports.UserKpitwolev = UserKpitwolev;
