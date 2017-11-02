@@ -6,8 +6,8 @@
 
 //引入数据库Message模块
 var Kpitwolev = require('../models').Kpitwolev;
-
-
+var losscategory_service = require('../services/losscategory_service');
+var errorUtil = require('../utils/errorUtil');
 /*
     显示二级目录
     */
@@ -45,21 +45,21 @@ var Kpitwolev = require('../models').Kpitwolev;
 /*
 	根据KPI二级目录id删除一条KPI二级目录数据
     */
-    exports.deleteTwoLevById = function(req , res) {
-        var p = new Promise(function(resolve , reject) {
-        //先查找,再调用删除,最后返回首页
-        Kpitwolev.findOne({
-            where:{
-                kpitwoid:req.query.kpitwoid
-            }
-        }).then(function(data){
-        	data.destroy().then(function(data){
-                resolve(data);
-            });     
-        });
-    });
-        return p;
+    exports.deleteTwoLevById = async function(req , res) {
+    //先查找,再调用删除,最后返回首页
+    const kpiTwo = await Kpitwolev.findById(req.query.kpitwoid);
+    //console.log('factory--->'+ JSON.stringify(kpiTwo));
+    if (kpiTwo == null || kpiTwo == '' || kpiTwo == undefined) {
+        return errorUtil.noExistError;
     }
+    const falg = await kpiTwo.destroy();
+    //console.log('falg--->' + JSON.stringify(falg));
+    if (falg == null || falg == '' || falg == undefined) {
+        return errorUtil.noExistError;
+    }
+    await losscategory_service.lossClear();
+    return falg;
+}
 
     /*
     根据id更新KPI二级目录数据

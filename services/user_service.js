@@ -46,7 +46,7 @@ var serviceError = {
     分页查找
     */
 async function findAndCount (req ,res , next){
-    const pageSize  = 5;
+    const pageSize  = 10;
     let page;
     if(req.query.page != null && req.query.page != ""){
         page = parseInt(req.query.page);

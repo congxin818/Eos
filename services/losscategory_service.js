@@ -142,3 +142,14 @@ async function updateLossById(lossId,lossName,newpId){
 }
 exports.updateLossById = updateLossById;
 
+/*
+    根据关联清理数据库
+ */
+async function lossClear(){
+    const loss = await Losscategory.findAll({where:{ kpitwolevKpitwoid:null}});
+    //console.log(JSON.stringify(workshop.length));
+    for (var i = loss.length - 1; i >= 0; i--) {
+        await loss[i].destroy();
+    }
+}
+exports.lossClear = lossClear;
