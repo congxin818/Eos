@@ -11,9 +11,13 @@ let Factory = require('../models').Factory;
 let Workshop = require('../models').Workshop;
 let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
+var Kpitwolev = require('../models').Kpitwolev;
+
 var stringUtil = require('../utils/stringUtil');
 var errorUtil = require('../utils/errorUtil');
+
 let areaAll_controller = require('../controllers/areaall_controller');
+
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -516,3 +520,30 @@ async function updateUserPsdById(userId , userNewPsd) {
     return falg;
 }
 exports.updateUserPsdById = updateUserPsdById;
+
+/*
+    修改用户关联的KPI二级目录的顺序
+ */
+async function updateUserKpiTwolveById(userId ,kpiTwolevId , newOrder){
+    if (userId == undefined ||userId == null || userId == ''
+        ||newOrder == undefined ||newOrder == null || newOrder == '') {
+        return ;
+    }
+    const user = await User.findById(userId);
+    const kpitwo = await Kpitwolev.findById(kpiTwolevId);
+    if (user == undefined || user == null || user == ''
+        ||kpitwo == undefined || kpitwo == null || kpitwo == '') {
+        return;
+    }
+    const falg = await user.hasUserKpitwolev(kpitwo);
+    if (falg == false ||falg == undefined || falg == null || falg == '') {
+        return ;
+    }else{
+        var order = {
+            order:newOrder
+        }
+        const value = await user.setUserKpitwolevs(kpitwo , {'order':newOrder});
+        return value;
+    }
+}
+exports.updateUserKpiTwolveById = updateUserKpiTwolveById;

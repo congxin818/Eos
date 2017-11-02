@@ -33,7 +33,7 @@ exports.selectList = function(req , res ,next) {
 exports.selectByUserName = function(req , res, next) {
 	//如果没有username或者username为空,直接返回
     if (req.body.username == undefined || req.body.username == '') {
-        res.end(JOSN.stringify(parameterError));
+        res.end(JSON.stringify(parameterError));
         return;
     }
     service.selectByUserName(req , res , next).then(function(data){
@@ -48,7 +48,7 @@ exports.addOne = function(req , res, next) {
 	//如果没有post数据或者数据为空,直接返回
     if (req.body.username == undefined ||req.body.username == ''
         || req.body.password == undefined || req.body.password == '') {
-        res.end(parameterError);
+        res.end(JSON.stringify(parameterError));
         return;
     }
     //创建一条记录,创建成功后返回json数据
@@ -63,7 +63,7 @@ exports.addOne = function(req , res, next) {
 exports.deleteByUserName = function(req , res ,next) {
 	//如果没有username字段,返回404
     if (req.query.username == undefined ||req.query.username == '') {
-        res.end(parameterError);
+        res.end(JSON.stringify(parameterError));
         return;
     }
     //先查找,再调用删除,最后返回json数据
@@ -79,7 +79,7 @@ exports.updateByUserName = function(req , res ,next) {
 	//如果没有post数据或者数据为空,直接返回
     if (req.body.username == undefined ||req.body.username == ''
         || req.body.password == undefined || req.body.password == '') {
-        res.end(parameterError);
+        res.end(JSON.stringify(parameterError));
         return;
     }
 
@@ -98,7 +98,7 @@ exports.adminLogin = function(req , res ,next) {
     const adminPsd = req.body.adminPsd;
     if (req.body.adminName == undefined ||req.body.adminName == ''
         || req.body.adminPsd == undefined || req.body.adminPsd == '') {
-        res.end(parameterError);
+        res.end(JSON.stringify(parameterError));
         return;
     }
 

@@ -23,23 +23,18 @@ var errorUtil = require('../utils/errorUtil');
 /*
 	添加一条KPI二级目录数据
     */
-    exports.addTwoLevOne = function(req , res) {
-        var twoLev = {
+    exports.addTwoLevOne =async function(req , res) {
+        
+        const twoLev = {
             name: req.body.name,
             pId: req.body.pId
         };
-        var p = new Promise(function(resolve, reject) {
         //创建一条记录,创建成功后跳转回首页
-        Kpitwolev.create(twoLev).then(function(data){          
+        const data = await Kpitwolev.create(twoLev)         
             // id:data.kpitwoid
-             var kpitwoUpdate={id:'t'+ data.kpitwoid};
-             Kpitwolev.update(kpitwoUpdate,{where:{
-                 kpitwoid:data.kpitwoid
-           }});
-            resolve(data);
-        });
-     });
-        return p;
+        var kpitwoUpdate={id:'t'+ data.kpitwoid};
+        await Kpitwolev.update(kpitwoUpdate, {where:{ kpitwoid:data.kpitwoid}})
+        return data
     }
 
 /*

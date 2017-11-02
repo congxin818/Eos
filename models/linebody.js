@@ -27,7 +27,23 @@ module.exports = function(sequelize , DataTypes){
         checked:{
             type:Sequelize.BOOLEAN,
             defaultValue: false
+        },
+        target:{
+            type:Sequelize.INTEGER
+        },
+        starttime:{
+            type:Sequelize.DATE
+        },
+        endtime:{
+            type:Sequelize.DATE
+        },
+        vision:{
+            type:Sequelize.INTEGER
+        },
+        ideal:{
+            type:Sequelize.INTEGER
         }
+
     });
 }
 //Linebody.sync();

@@ -53,3 +53,8 @@ router.post('/updateUserPsdById', function(req, res, next) {
 });
 module.exports = router;
 
+//更新用户关联二级目录顺序
+router.post('/updateUserKpiTwolveById', function(req, res, next) {
+    controller.updateUserKpiTwolveById(req , res , next);
+});
+module.exports = router;
