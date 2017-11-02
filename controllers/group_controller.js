@@ -31,7 +31,7 @@ const namehasError = {
     */
     exports.selectGroupAll = function(req , res) {
         if (req == '') {
-            res.end(JOSN.stringify(parameterError));
+            res.end(JSON.stringify(parameterError));
             return;
         }
         services.selectGroupAll(req , res).then(function(data){

@@ -16,13 +16,14 @@ const dataSuccess = {
     data:'fas'
 };
 
-const parameterError = {
+var parameterError = {
     status: '1', 
     msg: '参数错误'
 };
+
 const namehasError = {
- status: '101', 
- msg: '线体已存在'
+   status: '101', 
+   msg: '线体已存在'
 }
 
 const showLinbodyInf = {
@@ -45,9 +46,8 @@ const showLinbodyInf = {
     */
     exports.selectLinebodyById = async function(req , res) {
 	//如果没有id或者id为空,直接返回
-
-    if (req.body.id == undefined || req.body.id == '') {
-        res.end(JOSN.stringify(parameterError));
+    if (req.body.id == null || req.body.id == '') {
+        res.end(JSON.stringify(parameterError));
     }
     req.body.linebodyId = req.body.id.substring(1,);
     const data = await services.selectLinebodyById(req , res)
@@ -77,9 +77,9 @@ const showLinbodyInf = {
             const addData = await services.addLinebodyOne(req , res);
             return addData
         }else{
-         return namehasError;
-     }
- }
+           return namehasError;
+       }
+   }
 
 /*
 	根据id删除线体
@@ -101,16 +101,16 @@ const showLinbodyInf = {
             const data = await services.updateLinebodyById(req , res)
             return data;
         }else{
-         return namehasError;
-     } 
- }
+           return namehasError;
+       } 
+   }
 
  /*
     编辑线体详细信息
     */ 
     exports.updateLinebodyInfById = async function(req , res) {
-       if (req.body.id == undefined || req.body.id == '') {
-        res.end(JOSN.stringify(parameterError));
+     if (req.body.id == undefined || req.body.id == '') {
+        res.end(JSON.stringify(parameterError));
     }
     req.body.linebodyId = req.body.id.substring(1,);
     if(req.body != null||req.body != ''){
