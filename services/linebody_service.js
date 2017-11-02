@@ -59,13 +59,11 @@ const errorUtil = require('../utils/errorUtil');
     */
     exports.deleteLinebodyById = async function(req , res) {
         const linebody  = await Linebody.findById(req.query.linebodyId);
-        console.log('linebody--->'+ JSON.stringify(linebody));
 
         if (linebody == null || linebody == '') {
             return errorUtil.noExistError;
         }
         const falg = await linebody.destroy();
-        console.log('falg--->' + JSON.stringify(falg));
         if (falg == null || falg == '') {
             return errorUtil.noExistError;
         }
@@ -92,11 +90,44 @@ const errorUtil = require('../utils/errorUtil');
       return p;
   }
 
-async function  linebodyClear(){
-    const linebody = await Linebody.findAll({where:{ workshopWorkshopid:null}});
-    console.log(JSON.stringify(linebody.length));
-    for (var i = linebody.length - 1; i >= 0; i--) {
-        await linebody[i].destroy();
+/*
+    根据id更新线体详细数据
+    */
+    exports.updateLinebodyInfById = async function(req , res) {
+        // string 转化为Data格式
+        
+        const targetStrattime = new Date(req.body.targetStrattime)
+        const targetEndtime = new Date(req.body.targetEndtime)
+        const visionStrattime = new Date(req.body.visionStrattime)
+        const visionEndtime = new Date(req.body.visionEndtime)
+        const idealStrattime = new Date(req.body.idealStrattime)
+        const idealEndtime = new Date(req.body.idealEndtime)
+
+        var linebody = {
+            targetvalue: req.body.targetValue,
+            targetstrattime: targetStrattime,
+            targetendtime: targetEndtime,
+            visionvalue: req.body.visionValue,
+            visionstrattime: visionStrattime,
+            visionendtime: visionEndtime,
+            idealvalue: req.body.idealValue,
+            idealstrattime: idealStrattime,
+            idealendtime: idealEndtime
+      }
+        //更新一条记录,创建成功后跳转回首页
+        const data = await Linebody.update(linebody,{
+            where:{
+                linebodyid:req.body.linebodyId
+            }
+        })
+        return data;
     }
-}
-exports.linebodyClear = linebodyClear;
+
+    async function  linebodyClear(){
+        const linebody = await Linebody.findAll({where:{ workshopWorkshopid:null}});
+        console.log(JSON.stringify(linebody.length));
+        for (var i = linebody.length - 1; i >= 0; i--) {
+            await linebody[i].destroy();
+        }
+    }
+    exports.linebodyClear = linebodyClear;

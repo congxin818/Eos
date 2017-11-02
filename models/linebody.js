@@ -27,6 +27,33 @@ module.exports = function(sequelize , DataTypes){
         checked:{
             type:Sequelize.BOOLEAN,
             defaultValue: false
+        },
+        targetvalue:{
+            type: Sequelize.FLOAT,
+        },
+        targetstrattime:{
+            type: Sequelize.DATE,
+        },
+        targetendtime:{
+            type: Sequelize.DATE,
+        },
+        visionvalue:{
+            type: Sequelize.FLOAT,
+        },
+        visionstrattime:{
+            type: Sequelize.DATE,
+        },
+        visionendtime:{
+            type: Sequelize.DATE,
+        },
+        idealvalue:{
+            type: Sequelize.FLOAT,
+        },
+        idealstrattime:{
+            type: Sequelize.DATE,
+        },
+        idealendtime:{
+            type: Sequelize.DATE,
         }
     });
 }
