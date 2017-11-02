@@ -12,6 +12,7 @@ let Workshop = require('../models').Workshop;
 let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
 var stringUtil = require('../utils/stringUtil');
+var errorUtil = require('../utils/errorUtil');
 let areaAll_controller = require('../controllers/areaall_controller');
 var dataSuccess = {
     status: '0', 
@@ -19,47 +20,24 @@ var dataSuccess = {
     data:'fas'
 };
 
-var parameterError = {
-    status: '1', 
-    msg: '请求缺少必要参数或参数错误'
-};
-
-var loginError = {
-    status:'2',
-    msg:'用户名或密码验证失败'
-};
-
-const existError = {
-    status:'3',
-    msg:'用户名已存在'
-};
-const noExistError = {
-    status:'4',
-    msg:'用户名不存在'
-};
-var serviceError = {
-    status:'-2',
-    msg:'服务器错误'
-};
-
 /*
     分页查找
     */
-async function findAndCount (req ,res , next){
-    const pageSize  = 10;
-    let page;
-    if(req.query.page != null && req.query.page != ""){
-        page = parseInt(req.query.page);
-    }
-    const data = await User.findAndCountAll({
+    async function findAndCount (req ,res , next){
+        const pageSize  = 10;
+        let page;
+        if(req.query.page != null && req.query.page != ""){
+            page = parseInt(req.query.page);
+        }
+        const data = await User.findAndCountAll({
             where:'',//为空，获取全部，也可以自己添加条件
             offset:(page - 1) * pageSize,//开始的数据索引，比如当page=2 时offset=10 ，而pagesize我们定义为10，则现在为索引为10，也就是从第11条开始返回数据条目
             limit:pageSize//每页限制返回的数据条数
         });
-    dataSuccess.data = data;
-    return dataSuccess;
-}
-exports.findAndCount = findAndCount;
+        dataSuccess.data = data;
+        return dataSuccess;
+    }
+    exports.findAndCount = findAndCount;
 /*
 	查找所有User
     */
@@ -168,7 +146,7 @@ exports.findAndCount = findAndCount;
                     }catch (err) {
                         console.log ('error ------>')
                         console.log (err)
-                        return serviceError;
+                        return errorUtil.serviceError;
                     }
 
                 }
@@ -191,7 +169,7 @@ exports.findAndCount = findAndCount;
                     }catch (err) {
                         console.log ('error ------>')
                         console.log (err)
-                        return serviceError;
+                        return errorUtil.serviceError;
                     }
 
                 }
@@ -214,7 +192,7 @@ exports.findAndCount = findAndCount;
                     }catch (err) {
                         console.log ('error ------>')
                         console.log (err)
-                        return serviceError;
+                        return errorUtil.serviceError;
                     }
 
                 }
@@ -237,7 +215,7 @@ exports.findAndCount = findAndCount;
                     }catch (err) {
                         console.log ('error ------>')
                         console.log (err)
-                        return serviceError;
+                        return errorUtil.serviceError;
                     }
 
                 }
@@ -270,7 +248,7 @@ exports.findAndCount = findAndCount;
 /*
 	添加一个User
     */
-    const addUserOne = async (req , res , next) => {
+    async function addUserOne(req , res , next){
         let user = {
             username: req.body.userName,
             userpsd: req.body.userPsd,
@@ -280,9 +258,9 @@ exports.findAndCount = findAndCount;
         };
         let menuids = new Array();
 
-    const menuids_str = req.body.validMenu;
+        const menuids_str = req.body.validMenu;
 
-    const jsonString = req.body.validArea;
+        const jsonString = req.body.validArea;
     //console.log('validArea->'+jsonString);
     //console.log('menuids_str->'+menuids_str);
     
@@ -370,10 +348,10 @@ exports.findAndCount = findAndCount;
     catch (err) {
         console.log('yuzhizhe_error------>' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
-            return existError
+            return errorUtil.existError
         }
         else {
-            return serviceError
+            return errorUtil.serviceError
         }
     }
 }
@@ -389,7 +367,7 @@ exports.addUserOne = addUserOne;
         }
         const falg = await User.destroy({where:{userid:req.query.userId}});
         if (falg == null && falg != 1) {
-            return noExistError;
+            return errorUtil.noExistError;
         }
         await user.setUserValidmenus([]);
         await user.setUserGroups([]);
@@ -413,13 +391,13 @@ async function updateUserById(req , res , next) {
     };
     const user = await User.findById(req.body.userId);
     if (user == undefined || user == null || user == '') {
-        return noExistError;
+        return errorUtil.noExistError;
     }
 
     const falg = await User.update(newUser,{where:{userid:req.body.userId}});
     
     if (falg == null && falg != 1) {
-        return noExistError;
+        return errorUtil.noExistError;
     }
     // console.log(falg);
     // console.log(JSON.stringify(falg));
@@ -514,7 +492,27 @@ async function updateUserById(req , res , next) {
     }
     catch (err) {
         console.log('yuzhizhe_error---->' + err);
-        return serviceError;
+        return errorUtil.serviceError;
     }
 }
 exports.updateUserById = updateUserById;
+
+//根据userId跟新User
+async function updateUserPsdById(userId , userNewPsd) {
+    if (userId == undefined ||userId == null || userId == ''
+        ||userNewPsd == undefined ||userNewPsd == null || userNewPsd == '') {
+        return ;
+    }
+    var newUser = {
+        userid:userId,
+        userpsd:userNewPsd
+    };
+    const user = await User.findById(userId);
+    if (user == undefined || user == null || user == '') {
+        return errorUtil.noExistError;
+    }
+
+    const falg = await User.update(newUser,{where:{userid:userId}});
+    return falg;
+}
+exports.updateUserPsdById = updateUserPsdById;

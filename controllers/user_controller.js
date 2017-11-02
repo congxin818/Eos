@@ -5,6 +5,8 @@
  */
 
 var service = require('../services/user_service');
+var User = require('../models').User;//引入数据库User模块
+var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
     status: '0', 
@@ -197,3 +199,38 @@ exports.updateUserById = function(req , res , next) {
         res.end(JSON.stringify(data));
     });
 }
+
+async function updateUserPsdById(req , res , next){
+    if (req == undefined ||　req == null || req == ''
+        ||res == undefined || res == null || res == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+    }
+    const userId = req.body.userId;
+    const userPsd = req.body.userPsd;
+    const userNewPsd = req.body.userNewPsd;
+    if (userId == undefined ||userId == null || userId == ''
+        ||userPsd == undefined || userPsd == null || userPsd == ''
+        ||userNewPsd == undefined || userNewPsd == null || userNewPsd == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+    }
+    const user = await User.findById(userId);
+    if (user == undefined || user == null || user == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+    }
+    const userOldPsd = user.userpsd;
+    if (userOldPsd == undefined || userOldPsd == null || userOldPsd == '') {
+        res.end(JSON.stringify(errorUtil.serviceError));
+    }
+    if (userOldPsd == userPsd) {
+        const falg = await service.updateUserPsdById(userId , userNewPsd);
+        if (falg == undefined || falg == '' || falg == null && falg != 1) {
+            res.end(JSON.stringify(errorUtil.serviceError));
+        }else{
+            dataSuccess.data = falg;
+            res.end(JSON.stringify(dataSuccess));
+        }
+    }else{
+        res.end(JSON.stringify(loginError));
+    }
+}
+exports.updateUserPsdById = updateUserPsdById;

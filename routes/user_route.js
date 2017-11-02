@@ -47,4 +47,9 @@ router.post('/userLogin' , function(req , res , next){
 	controller.userLogin(req , res , next);
 });
 
+//更新用户密码
+router.post('/updateUserPsdById', function(req, res, next) {
+    controller.updateUserPsdById(req , res , next);
+});
 module.exports = router;
+
