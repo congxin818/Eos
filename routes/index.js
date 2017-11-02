@@ -2,7 +2,6 @@
 var router = express.Router();
 // 增加url 依赖
 var urllib = require('url');
-var dd_tongji = require('../controllers/dd_tongji.js'); //引入自定义模块
 
 // 初始数据
 var dataSuccess = {
