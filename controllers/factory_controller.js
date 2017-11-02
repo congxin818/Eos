@@ -53,7 +53,7 @@ var namehasError = {
     exports.selectFactoryById = function(req , res) {
 	//如果没有id或者id为空,直接返回
     if (req.body.factoryId == undefined || req.body.factoryId == '') {
-        res.end(JOSN.stringify(parameterError));
+        res.end(JSON.stringify(parameterError));
         return;
     }
     services.selectFactoryById(req , res).then(function(data){

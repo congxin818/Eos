@@ -28,20 +28,32 @@ module.exports = function(sequelize , DataTypes){
             type:Sequelize.BOOLEAN,
             defaultValue: false
         },
-        target:{
-            type:Sequelize.INTEGER
+        targetvalue:{
+            type: Sequelize.FLOAT,
         },
-        starttime:{
-            type:Sequelize.DATE
+        targetstrattime:{
+            type: Sequelize.DATE,
         },
-        endtime:{
-            type:Sequelize.DATE
+        targetendtime:{
+            type: Sequelize.DATE,
         },
-        vision:{
-            type:Sequelize.INTEGER
+        visionvalue:{
+            type: Sequelize.FLOAT,
         },
-        ideal:{
-            type:Sequelize.INTEGER
+        visionstrattime:{
+            type: Sequelize.DATE,
+        },
+        visionendtime:{
+            type: Sequelize.DATE,
+        },
+        idealvalue:{
+            type: Sequelize.FLOAT,
+        },
+        idealstrattime:{
+            type: Sequelize.DATE,
+        },
+        idealendtime:{
+            type: Sequelize.DATE,
         }
 
     });
