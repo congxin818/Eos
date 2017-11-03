@@ -10,7 +10,7 @@ var Validmenu = sequelize.import('./validmenu.js');
 var Kpionelev = sequelize.import('./kpionelev.js');
 var Kpitwolev = sequelize.import('./kpitwolev.js');
 
-var UserKpitwolev = sequelize.import('./userKpitwolev.js');
+var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 
 var Losscategory = sequelize.import('./losscategory.js');
 
