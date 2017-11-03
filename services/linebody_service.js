@@ -105,14 +105,14 @@ const errorUtil = require('../utils/errorUtil');
     exports.updateLinebodyInfById = async function(req , res) {
         // string 转化为Data格式
         
-        console.log('data格式前-------------->' + req.body.targetStrattime)
+        //console.log('data格式前-------------->' + req.body.targetStrattime)
         const targetStrattime = new Date(req.body.targetStrattime)
         const targetEndtime = new Date(req.body.targetEndtime)
         const visionStrattime = new Date(req.body.visionStrattime)
         const visionEndtime = new Date(req.body.visionEndtime)
         const idealStrattime = new Date(req.body.idealStrattime)
         const idealEndtime = new Date(req.body.idealEndtime)
-        console.log('data格式后-------------->' + targetStrattime)
+        //console.log('data格式后-------------->' + targetStrattime)
 
         var linebody = {
             targetvalue: req.body.targetValue,
