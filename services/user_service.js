@@ -347,8 +347,12 @@ var dataSuccess = {
             }
             values.forEach (async value => await data.setUserLinebodys (value));
         }
+        const kpitwoAll = await Kpitwolev.findAll();
+        if (kpitwoAll.length > 0) {
+            kpitwoAll.forEach (async value => await data.setUserKpitwolevs (value));
+        }
         dataSuccess.data = data;
-        return dataSuccess
+        return dataSuccess;
     }
     catch (err) {
         console.log('yuzhizhe_error------>' + err);
