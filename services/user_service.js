@@ -353,7 +353,7 @@ var dataSuccess = {
             kpitwoAll.forEach (async value => {
                 i ++
                 console.log (`i ====================================> ${i}`)
-                await data.addUserKpitwolevs (value,{'sequence':i});
+                await data.addKpitwolev (value,{'sequence':i});
             });
         }
         dataSuccess.data = data;
