@@ -222,16 +222,16 @@ var dataSuccess = {
                         console.log (err)
                         return errorUtil.serviceError;
                     }
-
                 }
             }
         }
-        const validmenu = await user.getUserValidmenus ()
-
+        const validmenu = await user.getUserValidmenus ();
+        const tier2 = await user.getUserKpitwolevs();
         var extraData = {
             user: user,
             validmenu: validmenu,
-            validarea:allData
+            validarea:allData,
+            tier2:tier2
         };
         //console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
         return extraData
