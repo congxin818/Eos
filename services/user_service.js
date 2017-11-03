@@ -348,18 +348,25 @@ var dataSuccess = {
             values.forEach (async value => await data.setUserLinebodys (value));
         }
         const kpitwoAll = await Kpitwolev.findAll();
+        
         if (kpitwoAll.length > 0) {
             let i = 0
 
-            for (value in kpitwoAll)
-            {
+            // for (value in kpitwoAll)
+            // {
+            //     i ++
+            //     console.log (`i ====================================> ${i}`)
+            //     console.log (JSON.stringify (value, null, 4))
+            //     await data.addUserKpitwolevs (value,{'sequence':i});
+            //     await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
+            // }
+            values.forEach (async value => {
                 i ++
                 console.log (`i ====================================> ${i}`)
-                await data.addUserKpitwolevs (value,{'sequence':i});
-                console.log('data.userId------->'+ JSON.stringify(data.userid));
-                console.log('value.kpitwolevKpitwoid------->'+ JSON.stringify(value.kpitwoid));
-                await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
-            }
+                console.log (JSON.stringify (value, null, 4))
+                await data.addUserKpitwolevs (value,{through:{sequence:i}});
+                //await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
+            });
         }
         dataSuccess.data = data;
         return dataSuccess;
