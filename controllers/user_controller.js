@@ -122,7 +122,7 @@ exports.selectUserById = function(req , res , next) {
     }
 	//如果没有username或者username为空,直接返回
     if (req.body.userId == undefined || req.body.userId == '') {
-        res.end(JOSN.stringify(parameterError));
+        res.end(JSON.stringify(parameterError));
         return;
     }
     service.selectUserById(req , res , next).then(function(data){
@@ -184,7 +184,7 @@ exports.deleteUserById = function(req , res , next) {
 
 //根据userId跟新User
 exports.updateUserById = function(req , res , next) {
-	// //如果没有post数据或者数据为空,直接返回
+	//如果没有post数据或者数据为空,直接返回
     if (req.body.userId == undefined ||req.body.userId == ''
         ||req.body.userName == undefined ||req.body.userName == ''
         || req.body.userPsd == undefined || req.body.userPsd == ''
@@ -199,7 +199,9 @@ exports.updateUserById = function(req , res , next) {
         res.end(JSON.stringify(data));
     });
 }
-
+/*
+    根据ID修改用户密码
+ */
 async function updateUserPsdById(req , res , next){
     if (req == undefined ||　req == null || req == ''
         ||res == undefined || res == null || res == '') {
@@ -234,3 +236,40 @@ async function updateUserPsdById(req , res , next){
     }
 }
 exports.updateUserPsdById = updateUserPsdById;
+
+/*
+    根据ID修改用户密码
+ */
+async function updateUserKpiTwolveById(req , res , next){
+    if (req == undefined ||　req == null || req == ''
+        ||res == undefined || res == null || res == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+    }
+    const userId = req.body.userId;
+    const changeId = req.body.changeId;
+    const changedId = req.body.changedId;
+    const changeOrder = req.body.changeOrder;
+    const changedOrder = req.body.changedOrder;
+    if (userId == undefined || userId == null || userId ==''
+        ||changeId == undefined || changeId == null || changeId ==''
+        ||changedId == undefined || changedId == null || changedId ==''
+        ||changeOrder == undefined || changeOrder == null || changeOrder ==''
+        ||changedOrder == undefined || changedOrder == null || changedOrder =='') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+    }
+    const changeFalg = await service.updateUserKpiTwolveById(userId , changeId , changedOrder);
+    //console.log('changeFalg----->' + changeFalg);
+    if (changeFalg != 1) {
+         res.end(JSON.stringify(changeFalg));
+    }else{
+        const changedFalg = await service.updateUserKpiTwolveById(userId , changedId , changeOrder);
+        if (changedFalg != 1) {
+            res.end(JSON.stringify(changedFalg));
+        }else{
+            dataSuccess.data = changedFalg;
+            res.end(JSON.stringify(dataSuccess));
+        }
+    }
+    //console.log('changedFalg----->' + changedFalg);
+}
+exports.updateUserKpiTwolveById = updateUserKpiTwolveById;

@@ -1,5 +1,6 @@
 var sequelize = require('../mysql').sequelize();
 var User = sequelize.import('./user.js');
+
 var Group = sequelize.import('./group.js');
 var Factory = sequelize.import('./factory.js');
 var Workshop = sequelize.import('./workshop.js');
@@ -8,6 +9,8 @@ var Validmenu = sequelize.import('./validmenu.js');
 
 var Kpionelev = sequelize.import('./kpionelev.js');
 var Kpitwolev = sequelize.import('./kpitwolev.js');
+
+var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 
 var Losscategory = sequelize.import('./losscategory.js');
 
@@ -29,10 +32,13 @@ Workshop.belongsToMany(User,{through: 'userWorkshops', as:'UserWorkshops'});
 User.belongsToMany(Linebody,{through: 'userLinebodys', as:'UserLinebodys'});
 Linebody.belongsToMany(User,{through: 'userLinebodys', as:'UserLinebodys'});
 
-
 //user和Validmenu之间N:M关系
 User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
+
+//user和Validmenu之间N:M关系
+User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
+Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Group和Factory建立1：N关系
@@ -41,6 +47,7 @@ Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
 Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 //Workshop和Linebody建立1：N关系
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
+
 
 //Kpionelev和Kpitwolev建立1：N关系
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
@@ -59,3 +66,4 @@ exports.Validmenu = Validmenu;
 exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;
 exports.Losscategory = Losscategory;
+exports.UserKpitwolev = UserKpitwolev;

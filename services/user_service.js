@@ -11,9 +11,14 @@ let Factory = require('../models').Factory;
 let Workshop = require('../models').Workshop;
 let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
+var Kpitwolev = require('../models').Kpitwolev;
+
 var stringUtil = require('../utils/stringUtil');
 var errorUtil = require('../utils/errorUtil');
+
 let areaAll_controller = require('../controllers/areaall_controller');
+let userkpitwolev_service = require('../services/userkpitwolev_service.js');
+
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -217,16 +222,16 @@ var dataSuccess = {
                         console.log (err)
                         return errorUtil.serviceError;
                     }
-
                 }
             }
         }
-        const validmenu = await user.getUserValidmenus ()
-
+        const validmenu = await user.getUserValidmenus ();
+        const tier2 = await user.getUserKpitwolevs();
         var extraData = {
             user: user,
             validmenu: validmenu,
-            validarea:allData
+            validarea:allData,
+            tier2:tier2
         };
         //console.log('yuzhizhe01--------->'+ JSON.stringify(allData));
         return extraData
@@ -342,8 +347,22 @@ var dataSuccess = {
             }
             values.forEach (async value => await data.setUserLinebodys (value));
         }
+        const kpitwoAll = await Kpitwolev.findAll();
+        if (kpitwoAll.length > 0) {
+            let i = 0
+
+            for (value in kpitwoAll)
+            {
+                i ++
+                console.log (`i ====================================> ${i}`)
+                await data.addUserKpitwolevs (value,{'sequence':i});
+                console.log('data.userId------->'+ JSON.stringify(data.userid));
+                console.log('value.kpitwolevKpitwoid------->'+ JSON.stringify(value.kpitwoid));
+                await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
+            }
+        }
         dataSuccess.data = data;
-        return dataSuccess
+        return dataSuccess;
     }
     catch (err) {
         console.log('yuzhizhe_error------>' + err);
@@ -516,3 +535,41 @@ async function updateUserPsdById(userId , userNewPsd) {
     return falg;
 }
 exports.updateUserPsdById = updateUserPsdById;
+
+/*
+    修改用户关联的KPI二级目录的顺序
+ */
+async function updateUserKpiTwolveById(userId ,kpiTwolevId , newOrder){
+    if (userId == undefined ||userId == null || userId == ''
+        ||newOrder == undefined ||newOrder == null || newOrder == '') {
+        return errorUtil.parameterError;
+    }
+    const user = await User.findById(userId);
+    //console.log ('user ' + JSON.stringify (user, null, 4) + '\n\n\n\n\n\n')
+
+    const kpitwo = await Kpitwolev.findById(kpiTwolevId);
+    //console.log ('kpitwo' + JSON.stringify (kpitwo, null, 4) + '\n\n\n\n\n\n')
+    if (user == undefined || user == null || user == ''
+        ||kpitwo == undefined || kpitwo == null || kpitwo == '') {
+        return errorUtil.noExistError;
+    }
+
+    const falg = await user.hasUserKpitwolevs(kpitwo);
+    //console.log ('falg' + JSON.stringify (falg, null, 4) + '\n\n\n\n\n\n')
+
+    if (falg == false ||falg == undefined || falg == null || falg == '') {
+        return errorUtil.noExistError;
+    }
+    try {
+        //const intNewOrder = parseInt (newOrder)
+        //console.log (typeof intNewOrder)
+        //console.log('userId--->' + userId + '\n' +'kpiTwolevId--->' + kpiTwolevId + '\n'+'newOrder--->' + newOrder + '\n');
+        const value = await userkpitwolev_service.updateSequenceById(userId , kpiTwolevId , newOrder);
+        //console.log ('value ' + JSON.stringify (value, null, 4) + '\n\n\n\n\n\n')
+        return value;
+    }
+    catch (err) {
+        console.log (`error --> ${err}`)
+    }
+}
+exports.updateUserKpiTwolveById = updateUserKpiTwolveById;

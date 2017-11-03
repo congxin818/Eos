@@ -55,6 +55,7 @@ module.exports = function(sequelize , DataTypes){
         idealendtime:{
             type: Sequelize.DATE,
         }
+
     });
 }
 //Linebody.sync();
