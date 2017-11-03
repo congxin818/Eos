@@ -37,8 +37,8 @@ User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 
 //user和Validmenu之间N:M关系
-User.belongsToMany(Kpitwolev,{through: UserKpitwolev});
-Kpitwolev.belongsToMany(User,{through: UserKpitwolev});
+User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
+Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Group和Factory建立1：N关系
