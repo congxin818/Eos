@@ -360,7 +360,7 @@ var dataSuccess = {
             //     await data.addUserKpitwolevs (value,{'sequence':i});
             //     await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
             // }
-            values.forEach (async value => {
+            kpitwoAll.forEach (async value => {
                 i ++
                 console.log (`i ====================================> ${i}`)
                 console.log (JSON.stringify (value, null, 4))
