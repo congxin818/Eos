@@ -349,7 +349,12 @@ var dataSuccess = {
         }
         const kpitwoAll = await Kpitwolev.findAll();
         if (kpitwoAll.length > 0) {
-            kpitwoAll.forEach (async value => await data.setUserKpitwolevs (value));
+            let i = 0
+            kpitwoAll.forEach (async value => {
+                i ++
+                console.log (`i ====================================> ${i}`)
+                await data.setUserKpitwolevs (value,{'sequence': i})
+            });
         }
         dataSuccess.data = data;
         return dataSuccess;
