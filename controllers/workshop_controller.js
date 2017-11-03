@@ -22,8 +22,8 @@ const parameterError = {
     msg: '参数错误'
 };
 const namehasError = {
-   status: '101', 
-   msg: '车间已存在'
+ status: '101', 
+ msg: '车间已存在'
 };
 
 /*
@@ -72,11 +72,14 @@ const namehasError = {
         if(data == null||data == ''||data == undefined){
             //创建一条记录,创建成功后返回json数据
             const addData = await services.addWorkshopOne(req , res);
+            if(addData == null||addData == ''){
+                return parameterError
+            }
             return addData
         }else{
-           return namehasError;
-       }
-   }
+         return namehasError;
+     }
+ }
 
 /*
 	根据id删除车间
@@ -96,9 +99,9 @@ const namehasError = {
     const data = await nameEtdService.selectWorkshopByName(req , res)
         // 对车间名字是否重复进行判断
         if(data == null||data == ''||data == undefined){
-           const data = await services.updateWorkshopById(req , res)
-           return data;
-       }else{
-           return namehasError;
-       }
-   }
+         const data = await services.updateWorkshopById(req , res)
+         return data;
+     }else{
+         return namehasError;
+     }
+ }

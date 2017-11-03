@@ -200,7 +200,7 @@ const updateAreaError = {
         // 添加一个工厂
         const addData = await factoryconler.addFactoryOne(req , res);
         // 增加的验证
-        if(addData.status=='101')
+        if(addData.status=='101'||addData.status=='1')
             res.end(JSON.stringify(addData));
         if(addData == null || addData == '')
             res.end(JSON.stringify(addAreaError));
@@ -213,7 +213,7 @@ const updateAreaError = {
             // 添加一个车间
             const addData = await workshopconler.addWorkshopOne(req , res);
             // 增加的验证
-            if(addData.status=='101')
+            if(addData.status=='101'||addData.status=='1')
                 res.end(JSON.stringify(addData));
             if(addData == null || addData == '')
                 res.end(JSON.stringify(addAreaError));
@@ -225,7 +225,7 @@ const updateAreaError = {
             // 添加一个线体
             const addData = await linebodyconler.addLinebodyOne(req , res);
             // 增加的验证
-            if(addData.status=='101')
+            if(addData.status=='101'||addData.status=='1')
                 res.end(JSON.stringify(addData));
             if(addData == null || addData == '')
                 res.end(JSON.stringify(addAreaError));
