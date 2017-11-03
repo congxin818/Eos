@@ -258,8 +258,18 @@ async function updateUserKpiTwolveById(req , res , next){
         res.end(JSON.stringify(errorUtil.parameterError));
     }
     const changeFalg = await service.updateUserKpiTwolveById(userId , changeId , changedOrder);
-    console.log('changeFalg----->' + changeFalg);
-    const changedFalg = await service.updateUserKpiTwolveById(userId , changedId , changeOrder);
-    console.log('changedFalg----->' + changedFalg);
+    //console.log('changeFalg----->' + changeFalg);
+    if (changeFalg != 1) {
+         res.end(JSON.stringify(changeFalg));
+    }else{
+        const changedFalg = await service.updateUserKpiTwolveById(userId , changedId , changeOrder);
+        if (changedFalg != 1) {
+            res.end(JSON.stringify(changedFalg));
+        }else{
+            dataSuccess.data = changedFalg;
+            res.end(JSON.stringify(dataSuccess));
+        }
+    }
+    //console.log('changedFalg----->' + changedFalg);
 }
 exports.updateUserKpiTwolveById = updateUserKpiTwolveById;

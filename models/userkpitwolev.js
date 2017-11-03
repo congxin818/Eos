@@ -14,7 +14,7 @@ var sequelize = require('../mysql').sequelize();
             autoIncrement:true,
             primaryKey: true
         },
-        order:{
+        sequence:{
             type:Sequelize.INTEGER
         }
     });

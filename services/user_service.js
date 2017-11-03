@@ -17,6 +17,7 @@ var stringUtil = require('../utils/stringUtil');
 var errorUtil = require('../utils/errorUtil');
 
 let areaAll_controller = require('../controllers/areaall_controller');
+let userkpitwolev_service = require('../services/userkpitwolev_service.js');
 
 var dataSuccess = {
     status: '0', 
@@ -527,23 +528,34 @@ exports.updateUserPsdById = updateUserPsdById;
 async function updateUserKpiTwolveById(userId ,kpiTwolevId , newOrder){
     if (userId == undefined ||userId == null || userId == ''
         ||newOrder == undefined ||newOrder == null || newOrder == '') {
-        return ;
+        return errorUtil.parameterError;
     }
     const user = await User.findById(userId);
+    //console.log ('user ' + JSON.stringify (user, null, 4) + '\n\n\n\n\n\n')
+
     const kpitwo = await Kpitwolev.findById(kpiTwolevId);
+    //console.log ('kpitwo' + JSON.stringify (kpitwo, null, 4) + '\n\n\n\n\n\n')
     if (user == undefined || user == null || user == ''
         ||kpitwo == undefined || kpitwo == null || kpitwo == '') {
-        return;
+        return errorUtil.noExistError;
     }
-    const falg = await user.hasUserKpitwolev(kpitwo);
+
+    const falg = await user.hasUserKpitwolevs(kpitwo);
+    //console.log ('falg' + JSON.stringify (falg, null, 4) + '\n\n\n\n\n\n')
+
     if (falg == false ||falg == undefined || falg == null || falg == '') {
-        return ;
-    }else{
-        var order = {
-            order:newOrder
-        }
-        const value = await user.setUserKpitwolevs(kpitwo , {'order':newOrder});
+        return errorUtil.noExistError;
+    }
+    try {
+        //const intNewOrder = parseInt (newOrder)
+        //console.log (typeof intNewOrder)
+        //console.log('userId--->' + userId + '\n' +'kpiTwolevId--->' + kpiTwolevId + '\n'+'newOrder--->' + newOrder + '\n');
+        const value = await userkpitwolev_service.updateSequenceById(userId , kpiTwolevId , newOrder);
+        //console.log ('value ' + JSON.stringify (value, null, 4) + '\n\n\n\n\n\n')
         return value;
+    }
+    catch (err) {
+        console.log (`error --> ${err}`)
     }
 }
 exports.updateUserKpiTwolveById = updateUserKpiTwolveById;
