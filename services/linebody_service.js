@@ -41,7 +41,16 @@ const errorUtil = require('../utils/errorUtil');
     exports.addLinebodyOne = async function(req , res) {
         var linebody = {
             linebodyname: req.body.name,
-            linebodybelong: req.body.pId
+            linebodybelong: req.body.pId,
+            targetvalue: req.body.targetValue,
+            targetstrattime: req.body.targetStrattime,
+            targetendtime: req.body.targetEndtime,
+            visionvalue: req.body.visionValue,
+            visionstrattime:req.body.visionStrattime,
+            visionendtime: req.body.visionEndtime,
+            idealvalue: req.body.idealValue,
+            idealstrattime: req.body.idealStrattime,
+            idealendtime: req.body.idealEndtime
         };
         var workshopId = req.body.pId.slice(1,);
         const workshop = await Workshop.findById(workshopId);

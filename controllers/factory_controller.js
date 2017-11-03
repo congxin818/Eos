@@ -22,8 +22,8 @@ var parameterError = {
     msg: '参数错误'
 };
 var namehasError = {
-   status: '101', 
-   msg: '工厂已存在'
+ status: '101', 
+ msg: '工厂已存在'
 }
 
 /*
@@ -72,6 +72,9 @@ var namehasError = {
       if(data == null||data == ''||data == undefined){
         //创建一条记录,创建成功后返回json数据
         const addData = await services.addFactoryOne(req , res)
+        if(addData == null||addData == ''){
+            return parameterError
+        }
         return addData;
     }
     return namehasError;
