@@ -107,6 +107,7 @@ const showLinbodyInf = {
 	根据id更新线体
     */
     exports.updateLinebodyById = async function(req , res) {
+    console.log()
     //更新一条记录,更新成功后跳转回首页
     const data = await nameEtdService.selectLinebodyByName(req , res)
         // 对线体名字是否重复进行判断

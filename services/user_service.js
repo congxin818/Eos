@@ -354,6 +354,7 @@ var dataSuccess = {
                 i ++
                 console.log (`i ====================================> ${i}`)
                 await data.addUserKpitwolevs (value,{'sequence':i});
+                await userkpitwolev_service.updateSequenceById(data.userId , value.kpitwolevKpitwoid , i);
             });
         }
         dataSuccess.data = data;
