@@ -17,6 +17,7 @@ var areaAllSet = require('./routes/areaall_route'); //区域设置
 var validmenuSet = require('./routes/validmenu_route'); //有效菜单
 var kpiSet = require('./routes/kpiall_route'); //KPI设置
 var losscategory = require('./routes/losscategory_route'); //KPI设置
+var impobject = require('./routes/impobject_route'); //improvement object
 
 var app = express();
 
@@ -50,6 +51,7 @@ app.use('/areaAllSet' , areaAllSet);//在app中注册区域设置接口
 app.use('/validmenuSet' , validmenuSet);//在app中注册有效菜单设置接口
 app.use('/KPISet' , kpiSet);//在app中注册KPI设置接口
 app.use('/losscategory' , losscategory);
+app.use('/impobject' , impobject);
 
 // 404 错误
 var errorData_404 = {

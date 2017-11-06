@@ -24,7 +24,7 @@ var errorUtil = require('../utils/errorUtil');
 	添加一条KPI二级目录数据
     */
     exports.addTwoLevOne =async function(req , res) {
-        
+
         const twoLev = {
             name: req.body.name,
             pId: req.body.pId
@@ -32,10 +32,10 @@ var errorUtil = require('../utils/errorUtil');
         //创建一条记录,创建成功后跳转回首页
         const data = await Kpitwolev.create(twoLev)         
             // id:data.kpitwoid
-        var kpitwoUpdate={id:'t'+ data.kpitwoid};
-        await Kpitwolev.update(kpitwoUpdate, {where:{ kpitwoid:data.kpitwoid}})
-        return data
-    }
+            var kpitwoUpdate={id:'t'+ data.kpitwoid};
+            await Kpitwolev.update(kpitwoUpdate, {where:{ kpitwoid:data.kpitwoid}})
+            return data
+        }
 
 /*
 	根据KPI二级目录id删除一条KPI二级目录数据
@@ -60,10 +60,10 @@ var errorUtil = require('../utils/errorUtil');
     根据id更新KPI二级目录数据
     */
     exports.updateTwoLevById = function(req , res) {
-       var twoLev = {
-          name: req.body.name
-      };
-      var p = new Promise(function(resolve , reject) {
+     var twoLev = {
+      name: req.body.name
+  };
+  var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页
         const kpitwoid = req.body.id.slice(1,);
         Kpitwolev.update(twoLev,{
@@ -74,23 +74,20 @@ var errorUtil = require('../utils/errorUtil');
             resolve(data);
         });
     });
-      return p;
-  }
+  return p;
+}
 
 
 /*
     根据二级目录名字查找一条KPI二级目录数据
     */
-    exports.selectTwoLevByName = function(req , res) {
-        var p = new Promise(function(resolve , reject) {
-            Kpitwolev.findOne({
-                where:{
-                    name:req.body.name,
-                    pId:req.body.pId
-                }
-            }).then(function(data){
-                resolve(data);
-            });
-        });
-        return p;
-    }
+    exports.selectTwoLevByName = async function(name , pId) {
+
+      const data = await  Kpitwolev.findOne({
+        where:{
+            name:name,
+            pId:pId
+        }
+    })
+      return data;
+  }
