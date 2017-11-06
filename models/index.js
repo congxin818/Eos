@@ -13,6 +13,7 @@ var Kpitwolev = sequelize.import('./kpitwolev.js');
 var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 
 var Losscategory = sequelize.import('./losscategory.js');
+var Lossstatus = sequelize.import('./lossstatus.js');
 
 
 
@@ -47,6 +48,8 @@ Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
 Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 //Workshop和Linebody建立1：N关系
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
+//Losscategory和Lossstatus建立1：N关系
+Losscategory.hasMany(Lossstatus, {as:'LosscategoryLossstatus' ,constraints:true});
 
 
 //Kpionelev和Kpitwolev建立1：N关系
@@ -67,3 +70,4 @@ exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;
 exports.Losscategory = Losscategory;
 exports.UserKpitwolev = UserKpitwolev;
+exports.Lossstatus = Lossstatus;

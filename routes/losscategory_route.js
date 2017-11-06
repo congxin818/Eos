@@ -38,9 +38,17 @@ router.post('/updateLossById', function(req, res, next) {
 });
 
 /*
-	根据ID更改loss
+	text
  */
 router.get('/selectImpobjectT', function(req, res, next) {
     testcontroller.selectImpobjectT(req , res , next);
 });
+
+/*
+	text
+ */
+router.get('/showImpItempool', function(req, res, next) {
+    testcontroller.showImpItempool(req , res , next);
+});
+
 module.exports = router;
