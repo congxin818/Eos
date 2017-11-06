@@ -257,17 +257,17 @@ async function updateUserKpiTwolveById(req , res , next){
         ||changedOrder == undefined || changedOrder == null || changedOrder =='') {
         res.end(JSON.stringify(errorUtil.parameterError));
     }
-    console.log('userId----->' + JSON.stringify(userId));
-    console.log('changeId----->' + JSON.stringify(changeId));
-    console.log('changedOrder----->' + JSON.stringify(changedOrder));
+    // console.log('userId----->' + JSON.stringify(userId));
+    // console.log('changeId----->' + JSON.stringify(changeId));
+    // console.log('changedOrder----->' + JSON.stringify(changedOrder));
     const changeFalg = await service.updateUserKpiTwolveById(userId , changeId , changedOrder);
-    console.log('changeFalg----->' + JSON.stringify(changeFalg));
+    //console.log('changeFalg----->' + JSON.stringify(changeFalg));
     if (changeFalg != 1) {
          res.end(JSON.stringify(changeFalg));
     }else{
-        console.log('userId----->' + JSON.stringify(userId));
-        console.log('changeId----->' + JSON.stringify(changedId));
-        console.log('changedOrder----->' + JSON.stringify(changeOrder));
+        // console.log('userId----->' + JSON.stringify(userId));
+        // console.log('changeId----->' + JSON.stringify(changedId));
+        // console.log('changedOrder----->' + JSON.stringify(changeOrder));
         const changedFalg = await service.updateUserKpiTwolveById(userId , changedId , changeOrder);
         if (changedFalg != 1) {
             res.end(JSON.stringify(changedFalg));
