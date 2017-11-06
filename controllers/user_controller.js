@@ -238,7 +238,7 @@ async function updateUserPsdById(req , res , next){
 exports.updateUserPsdById = updateUserPsdById;
 
 /*
-    根据ID修改用户密码
+    根据ID修改用户tier2顺序
  */
 async function updateUserKpiTwolveById(req , res , next){
     if (req == undefined ||　req == null || req == ''
@@ -258,7 +258,7 @@ async function updateUserKpiTwolveById(req , res , next){
         res.end(JSON.stringify(errorUtil.parameterError));
     }
     const changeFalg = await service.updateUserKpiTwolveById(userId , changeId , changedOrder);
-    //console.log('changeFalg----->' + changeFalg);
+    console.log('changeFalg----->' + JSON.stringify(changeFalg));
     if (changeFalg != 1) {
          res.end(JSON.stringify(changeFalg));
     }else{
