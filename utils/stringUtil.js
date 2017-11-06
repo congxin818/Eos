@@ -44,7 +44,7 @@
  }
  exports.getIds = getIds;
 
-
+/*json字符串转数组*/
  async function jsonToArray(data){
  	if (data == undefined || data == '') {
  		return null;
@@ -59,3 +59,5 @@
  	return arr;    
  }
  exports.jsonToArray = jsonToArray;
+
+

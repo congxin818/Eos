@@ -12,6 +12,7 @@ let Workshop = require('../models').Workshop;
 let Linebody = require('../models').Linebody;
 var Validmenu = require('../models').Validmenu;
 var Kpitwolev = require('../models').Kpitwolev;
+var UserKpitwolev = require('../models').UserKpitwolev;
 
 var stringUtil = require('../utils/stringUtil');
 var errorUtil = require('../utils/errorUtil');
@@ -226,7 +227,10 @@ var dataSuccess = {
             }
         }
         const validmenu = await user.getUserValidmenus ();
-        const tier2 = await user.getUserKpitwolevs();
+        let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
+        tier2.sort ((a, b) => { return a.userKpitwolev.sequence - b.userKpitwolev.sequence});
+        //const value = await stringUtil.bubbleSort(tier2);
+
         var extraData = {
             user: user,
             validmenu: validmenu,
@@ -350,22 +354,12 @@ var dataSuccess = {
         const kpitwoAll = await Kpitwolev.findAll();
         
         if (kpitwoAll.length > 0) {
-            let i = 0
-
-            // for (value in kpitwoAll)
-            // {
-            //     i ++
-            //     console.log (`i ====================================> ${i}`)
-            //     console.log (JSON.stringify (value, null, 4))
-            //     await data.addUserKpitwolevs (value,{'sequence':i});
-            //     await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
-            // }
+            let i = 0;
             kpitwoAll.forEach (async value => {
                 i ++
-                console.log (`i ====================================> ${i}`)
-                console.log (JSON.stringify (value, null, 4))
+                //console.log (`i ====================================> ${i}`)
+                //console.log (JSON.stringify (value, null, 4));
                 await data.addUserKpitwolevs (value,{through:{sequence:i}});
-                //await userkpitwolev_service.updateSequenceById(data.userid , value.kpitwoid , i);
             });
         }
         dataSuccess.data = data;
