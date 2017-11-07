@@ -14,6 +14,7 @@ var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 
 var Losscategory = sequelize.import('./losscategory.js');
 var Lossstatus = sequelize.import('./lossstatus.js');
+var Tier4 = sequelize.import('./tier4.js');
 
 
 
@@ -56,6 +57,8 @@ Losscategory.hasMany(Lossstatus, {as:'LosscategoryLossstatus' ,constraints:true}
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
 //Kpitwolev和Losscategory建立1：N关系
 Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
+//Tier4和Losscategory建立1：N关系
+Losscategory.hasMany(Tier4, {as:'KpitwolevLosscategory' , constraints:true});
 // 同步模型到数据库中
 sequelize.sync();
 
@@ -71,3 +74,4 @@ exports.Kpitwolev = Kpitwolev;
 exports.Losscategory = Losscategory;
 exports.UserKpitwolev = UserKpitwolev;
 exports.Lossstatus = Lossstatus;
+exports.Tier4 = Tier4;
