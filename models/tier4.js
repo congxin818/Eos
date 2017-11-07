@@ -7,7 +7,7 @@
     var sequelize = require('../mysql').sequelize();
 
     module.exports = function(sequelize , DataTypes){
-    	return sequelize.define('losscategory' , {
+    	return sequelize.define('tier4' , {
 	   	id:{ //kpi第二级id
 	   		type:Sequelize.INTEGER,
 	   		autoIncrement:true,
