@@ -17,7 +17,6 @@ var Lossstatus = sequelize.import('./lossstatus.js');
 var Tier4 = sequelize.import('./tier4.js');
 
 
-
 //user和group之间N:M关系
 User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
 Group.belongsToMany(User,{through: 'userGroups', as:'UserGroups'});
@@ -38,9 +37,16 @@ Linebody.belongsToMany(User,{through: 'userLinebodys', as:'UserLinebodys'});
 User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
 Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 
-//user和Validmenu之间N:M关系
+//user和Kpitwolev之间N:M关系
 User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
 Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
+
+
+
+//Linebody和Kpitwolev建立1：N关系
+Linebody.hasMany(Kpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
+//Linebody和Losscategory建立1：N关系
+Linebody.hasMany(Losscategory, {as:'LinebodyLosscategory' , constraints:true});
 
 
 //Group和Factory建立1：N关系
