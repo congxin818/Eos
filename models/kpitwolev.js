@@ -6,7 +6,6 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../mysql').sequelize();
 
-
 module.exports = function(sequelize , DataTypes){
 ///var Factory = sequelize.define('factory' , {
     return sequelize.define('kpitwolev' , {
