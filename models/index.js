@@ -66,9 +66,12 @@ Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
 Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
 //Tier4和Losscategory建立1：N关系
 Losscategory.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
-//Tier4和Losscategory建立1：N关系
+//Linebody和Losscategory建立1：N关系
 Linebody.hasMany(Losstier4, {as:'LinebodyLosstier4' , constraints:true});
-
+//Tier4和Losscategory建立1：N关系
+Linebody.hasMany(Kpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
+//Tier4和Losscategory建立1：N关系
+Linebody.hasMany(Losscategory, {as:'LinebodyLosscategory' , constraints:true});
 // 同步模型到数据库中
 sequelize.sync();
 
