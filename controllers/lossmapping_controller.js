@@ -103,7 +103,7 @@ async function selectLossMappingByLinebodyId(userId , linebodyId) {
 }
 exports.selectLossMappingByLinebodyId = selectLossMappingByLinebodyId;
 
-async function baseSelectLossMappingByLinebodyId(userId , linebodyId){
+async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	if (linebodyId == undefined || linebodyId == null || linebodyId == ''
 		||userId == undefined || userId == null || userId == '') {
 		return ;
@@ -131,10 +131,108 @@ async function baseSelectLossMappingByLinebodyId(userId , linebodyId){
 			}
 		}
 	}
+
 	kpitwos.sort ((a, b) => a.order - b.order);
-	console.log(JSON.stringify(kpitwos , null , 4));
+
+	// const size = kpitwos.length
+	// const sum = kpitwos.map (a => a.value * a.kpitwoid).reduce ((pre, cur) => pre + cur)
+
+	// console.log ('sum ->' + sum)
+	// const weight_sum = kpitwos.map (a => a.kpitwoid).reduce ((pre, cur) => pre + cur)
+
+	// console.log ('weight_sum -> ' + weight_sum)
+
+	// console.log ('average -> ' + sum / weight_sum)
+
+	// console.log(JSON.stringify(kpitwos , null , 4));
 	return kpitwos;
 }
-exports.baseSelectLossMappingByLinebodyId = baseSelectLossMappingByLinebodyId;
+exports.baseSelectKpitwoByLinebodyId = baseSelectKpitwoByLinebodyId;
+
+/*
+	根据用户ID查询所有与该用户相关联的线体（linebody）的KPItwo数据
+ */
+async function selectAllLinebodyByUserId(userId){
+	if (userId == undefined || userId == null || userId == '') {
+		return ;
+	}
+	const user = await User.findById(userId);
+	//console.log(JSON.stringify(linebody , null , 4));
+	//console.log(JSON.stringify(user , null , 4));
+	if (user == undefined || user == null || user == '') {
+		return ;
+	}
+	const linebodys = await user.getUserLinebodys({'attributes': ['linebodyid', 'linebodyname']});
+	if (linebodys == undefined || linebodys == null || linebodys == '') {
+		return ;
+	}
+	let alldata = [];
+	for (var i = linebodys.length - 1; i >= 0; i--) {
+		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,linebodys[i].linebodyid);
+		alldata.push(kpitwos);
+	}
+	console.log(JSON.stringify(alldata , null , 4));
+
+	let resultMap = new Map ();
+
+	alldata.forEach (ele2 => {
+		ele2.forEach (ele => {
+			let mapEle = resultMap.get (ele.name)
+			if (!mapEle)
+			{
+				mapEle = new Array ()
+			}
+
+			mapEle.push (ele.value)
+			resultMap.set (ele.name, mapEle)
+		})
+	})
+	// 
+	///getResultMap (alldata, resultMap)
+
+	console.log (resultMap)
+	return alldata;
+}
+function getResultMap (alldata, resultMap) {
+
+	alldata.forEach (ele => {
+		if (ele instanceof Array) {
+			getResultMap (ele, resultMap)
+		}
+		else if (!ele) {
+			return
+		}
+
+		let mapEle = resultMap.get (ele.name)
+		if (!mapEle) {
+			mapEle = new Array ()
+		}
+
+		mapEle.push (ele.value)
+		resultMap.set (ele.name, mapEle)
+	})
+}
+
+exports.selectAllLinebodyByUserId = selectAllLinebodyByUserId;
+
+async function baseSelectLosscategoryByLinebodyId(userId , linebodyId){
+	if (linebodyId == undefined || linebodyId == null || linebodyId == ''
+		||userId == undefined || userId == null || userId == '') {
+		return ;
+	}
+	const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId , linebodyId);
+	if (kpitwos == undefined || kpitwos == null || kpitwos == '') {
+		return ;
+	}
+	let alldata = [];
+	for (var i = kpitwos.length - 1; i >= 0; i--) {
+		const losscategorys = await kpitwos[i].getKpitwolevLosscategory({'attributes': ['name', 'lossid' , 'id' , 'value']});
+		alldata.push(losscategorys);
+	}
+	console.log(JSON.stringify(alldata , null , 4));
+	return alldata;
+
+}
+exports.baseSelectLosscategoryByLinebodyId = baseSelectLosscategoryByLinebodyId;
 
 
