@@ -9,18 +9,10 @@ var router = express.Router();
 var controller = require('../controllers/impobject_controller');
 
 
-
-/*
-	text
- */
-router.get('/selectImpobjectT', function(req, res, next) {
-    controller.selectImpobjectT(req , res , next);
-});
-
 /*
 	improvment展示项目池信息
  */
-router.get('/showImpItempool', function(req, res, next) {
+router.post('/showImpItempool', function(req, res, next) {
     controller.showImpItempool(req , res , next);
 });
 
@@ -38,4 +30,17 @@ router.post('/updateImpItemstatus', function(req, res, next) {
     controller.updateImpItemstatus(req , res , next);
 });
 
+/*
+	根据线体id展示现进行项目
+ */
+router.post('/showObjectnowBylinedyid', function(req, res, next) {
+    controller.showObjectnowBylinedyid(req , res , next);
+});
+
+/*
+	添加现进行项目
+ */
+router.post('/addObjectnowBylossid', function(req, res, next) {
+    controller.addObjectnowBylossid(req , res , next);
+});
 module.exports = router;

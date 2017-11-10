@@ -7,6 +7,7 @@
 //引入数据库Message模块
 const twolevServices = require('../services/kpitwolev_service');
 const lossstatusServices = require('../services/lossstatus_service');
+const impobjServices = require('../services/impobject_service');
 const Kpitwolev = require('../models').Kpitwolev;
 const Losscategory = require('../models').Losscategory;
 
@@ -36,8 +37,11 @@ const kpiTwoShow = {
     improvment展示项目池信息
     */ 
     exports.showImpItempool = async function(req , res) {
-        // 把loss二级目录名字查找出来
-        const KpitwolevNameList = await Kpitwolev.findAll();
+        if(req.body.linebodyId == null||req.body.linebodyId == ''){
+           res.end(JSON.stringify(parameterError))
+       }
+        // 根据线体id把loss二级目录名字查找出来
+        const KpitwolevNameList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var showNameList =[];
         var LosscategoryNameList = [];
         for(var i = 0;i < KpitwolevNameList.length; i++){
@@ -46,12 +50,10 @@ const kpiTwoShow = {
                 data:''
             }
             itempoolOutput.name = KpitwolevNameList[i].name
-            const data = await twolevServices.selectTwoLevByName(KpitwolevNameList[i].name ,
-               KpitwolevNameList[i].pId)
+            const twolevdata = await twolevServices.selectTwoLevByName(KpitwolevNameList[i].name ,
+             KpitwolevNameList[i].pId)
             // 把loss三级目录名字查找出来
-            LosscategoryNameList = await Losscategory.findAll({attributes: ['name'],
-                where:{pId: data.id},order: [['value', 'ASC']]})
-
+            LosscategoryNameList = await impobjServices.selectLossByKpitwo(twolevdata);
             itempoolOutput.data =  LosscategoryNameList
             await showNameList.push(itempoolOutput)
         }
@@ -61,7 +63,7 @@ const kpiTwoShow = {
     improvment编辑项目状态
     */
     exports.updateImpItemstatus = async function(req , res) {
-        if(req.body.lossId == null||req.body.id == ''){
+        if(req.body.lossId == null||req.body.lossId == ''){
             res.end(JSON.stringify(parameterError))
         }
         const updateData = await lossstatusServices.updateLostatusById(req , res)
@@ -84,17 +86,30 @@ const kpiTwoShow = {
         res.end(JSON.stringify(dataSuccess))
     }
 /*
-    test
-    */ 
-    exports.selectImpobjectT = async function(req , res) {
-
-        const data = await Losscategory.findAll({attributes: ['name']});
-        console.log(data)
-        textoutput.data = data
-        res.end(JSON.stringify(textoutput))
+    根据线体id展示现进行项目
+    */
+    exports.showObjectnowBylinedyid = async function(req , res) {
+        if(req.body.linebodyId == null||req.body.linebodyId == ''){
+           res.end(JSON.stringify(parameterError))
+       }
+       const lossidList = await impobjServices.selectLossidBylinedyid(req , res)
+       var objectnowList = [];
+       for(var i = 0;i < lossidList.length; i++){
+         const objectnow = await impobjServices.showObjectnowBylossid(lossidList[i].lossid)
+         if(objectnow.length > 0){
+            objectnowList = await objectnow.concat(objectnowList)
+        }
     }
-
-    const textoutput = { 
-        name:'OEE',
-        data:''
-    }
+    res.end(JSON.stringify(objectnowList))
+}
+/*
+    添加现进行项目
+    */
+    exports.addObjectnowBylossid = async function(req , res) {
+     if(req.body.lossId == null||req.body.lossId == ''){
+       res.end(JSON.stringify(parameterError))
+   }
+   const data = await impobjServices.addObjectnowBylossid(req , res)
+   dataSuccess.data = data 
+   res.end(JSON.stringify(dataSuccess))
+}
