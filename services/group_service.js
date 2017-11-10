@@ -55,12 +55,10 @@ var linebody_service = require('../services/linebody_service');
     */
     exports.deleteGroupById = async function (req , res) {
         const group  = await Group.findById(req.query.id);
-        console.log('group--->'+ JSON.stringify(group));
         if (group == null || group == '') {
             return errorUtil.noExistError;
         }
         const falg = await group.destroy();
-        console.log('falg--->' + JSON.stringify(falg));
         if (falg == null || falg == '') {
             return errorUtil.noExistError;
         }
