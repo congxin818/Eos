@@ -14,3 +14,10 @@ router.get('/linebody', async function(req, res, next) {
     res.end (JSON.stringify (alldata, null, 4))
 });
 module.exports = router;
+
+//test
+router.get('/linebodyKpitwo', async function(req, res, next) {
+	const alldata = await controller.baseSelectLossMappingByLinebodyId(213,6)
+    res.end (JSON.stringify (alldata, null, 4))
+});
+module.exports = router;

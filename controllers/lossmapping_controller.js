@@ -23,8 +23,8 @@ async function selectLossMappingByLinebodyId(userId , linebodyId) {
 	}
 	const user = await User.findById(userId);
 	const linebody = await Linebody.findById(linebodyId);
-	console.log(JSON.stringify(linebody , null , 4));
-	console.log(JSON.stringify(user , null , 4));
+	//console.log(JSON.stringify(linebody , null , 4));
+	//console.log(JSON.stringify(user , null , 4));
 	if (linebody == undefined || linebody == null || linebody == ''
 		||user == undefined || user == null || user == '') {
 		return ;
@@ -32,7 +32,7 @@ async function selectLossMappingByLinebodyId(userId , linebodyId) {
 
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
-	console.log(JSON.stringify(tier2 , null , 4));
+	//console.log(JSON.stringify(tier2 , null , 4));
 	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return ;
@@ -102,3 +102,39 @@ async function selectLossMappingByLinebodyId(userId , linebodyId) {
 	return dataSuccess;
 }
 exports.selectLossMappingByLinebodyId = selectLossMappingByLinebodyId;
+
+async function baseSelectLossMappingByLinebodyId(userId , linebodyId){
+	if (linebodyId == undefined || linebodyId == null || linebodyId == ''
+		||userId == undefined || userId == null || userId == '') {
+		return ;
+	}
+	const user = await User.findById(userId);
+	const linebody = await Linebody.findById(linebodyId);
+	//console.log(JSON.stringify(linebody , null , 4));
+	//console.log(JSON.stringify(user , null , 4));
+	if (linebody == undefined || linebody == null || linebody == ''
+		||user == undefined || user == null || user == '') {
+		return ;
+	}
+	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
+	const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
+	//console.log(JSON.stringify(kpitwos , null , 4));
+	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
+		||tier2 == undefined || tier2 == null || tier2 == '') {
+		return ;
+	}
+	for (var i = kpitwos.length - 1; i >= 0; i--) {
+		const kpitwoid = kpitwos[i].kpitwoid;
+		for (var m = tier2.length - 1; m >= 0; m--) {
+			if (kpitwoid == tier2[m].kpitwoid) {
+				kpitwos[i]['order'] = tier2[m].userKpitwolev.sequence;
+			}
+		}
+	}
+	kpitwos.sort ((a, b) => a.order - b.order);
+	console.log(JSON.stringify(kpitwos , null , 4));
+	return kpitwos;
+}
+exports.baseSelectLossMappingByLinebodyId = baseSelectLossMappingByLinebodyId;
+
+
