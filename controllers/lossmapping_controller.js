@@ -137,17 +137,17 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 
 	kpitwos.sort ((a, b) => a.order - b.order);
 
-	// const size = kpitwos.length
-	// const sum = kpitwos.map (a => a.value * a.kpitwoid).reduce ((pre, cur) => pre + cur)
+	const size = kpitwos.length
+	const sum = kpitwos.map (a => a.value * a.kpitwoid).reduce ((pre, cur) => pre + cur)
 
-	// console.log ('sum ->' + sum)
-	// const weight_sum = kpitwos.map (a => a.kpitwoid).reduce ((pre, cur) => pre + cur)
+	console.log ('sum ->' + sum)
+	const weight_sum = kpitwos.map (a => a.kpitwoid).reduce ((pre, cur) => pre + cur)
 
-	// console.log ('weight_sum -> ' + weight_sum)
+	console.log ('weight_sum -> ' + weight_sum)
 
-	// console.log ('average -> ' + sum / weight_sum)
+	console.log ('average -> ' + sum / weight_sum)
 
-	// console.log(JSON.stringify(kpitwos , null , 4));
+	console.log(JSON.stringify(kpitwos , null , 4));
 	return kpitwos;
 }
 exports.baseSelectKpitwoByLinebodyId = baseSelectKpitwoByLinebodyId;
@@ -259,9 +259,16 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,Ids[i]);
 		allKpitwo.push(kpitwos);
 	}
-	console.log(JSON.stringify(allKpitwo , null , 4));
+	//console.log(JSON.stringify(allKpitwo , null , 4));
 	return allKpitwo;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
+
+async function computeKpitwo(allKpitwo){
+	if (allKpitwo == undefined || allKpitwo == null || allKpitwo == '') {
+		return ;
+	}
+
+}
 
 
