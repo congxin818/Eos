@@ -45,9 +45,10 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Linebody和Kpitwolev建立1：N关系
-Linebody.hasMany(Kpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
+Linebody.belongsToMany(Kpitwolev, {through: 'linebodyKpitwolev',as:'LinebodyKpitwolev'});
+Kpitwolev.belongsToMany(Linebody, {through: 'linebodyKpitwolev',as:'LinebodyKpitwolev'});
 //Linebody和Losscategory建立1：N关系
-Linebody.hasMany(Losscategory, {as:'LinebodyLosscategory' , constraints:true});
+//Linebody.hasMany(Losscategory, {as:'LinebodyLosscategory' , constraints:true});
 
 
 //Group和Factory建立1：N关系
@@ -69,8 +70,9 @@ Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
 Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
 //Tier4和Losscategory建立1：N关系
 Losscategory.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
+
 //Linebody和Losscategory建立1：N关系
-Linebody.hasMany(Losstier4, {as:'LinebodyLosstier4' , constraints:true});
+//Linebody.hasMany(Losstier4, {as:'LinebodyLosstier4' , constraints:true});
 
 sequelize.sync();
 

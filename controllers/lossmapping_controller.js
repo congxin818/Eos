@@ -7,7 +7,9 @@
 var service = require('../services/user_service');
 var User = require('../models').User;//引入数据库User模块
 var Linebody = require('../models').Linebody;
+var Workshop = require('../models').Workshop;
 var errorUtil = require('../utils/errorUtil');
+
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -117,7 +119,8 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 		return ;
 	}
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
-	const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
+	//const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
+	const kpitwos = await linebody.getLinebodyKpitwolev();
 	//console.log(JSON.stringify(kpitwos , null , 4));
 	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
@@ -152,8 +155,9 @@ exports.baseSelectKpitwoByLinebodyId = baseSelectKpitwoByLinebodyId;
 /*
 	根据用户ID查询所有与该用户相关联的线体（linebody）的KPItwo数据
  */
-async function selectAllLinebodyByUserId(userId){
-	if (userId == undefined || userId == null || userId == '') {
+async function selectLossMappingByWordshopId(userId , wordshopId){
+	if (userId == undefined || userId == null || userId == ''
+		||wordshopId == undefined || wordshopId == null || wordshopId == '') {
 		return ;
 	}
 	const user = await User.findById(userId);
@@ -162,37 +166,41 @@ async function selectAllLinebodyByUserId(userId){
 	if (user == undefined || user == null || user == '') {
 		return ;
 	}
-	const linebodys = await user.getUserLinebodys({'attributes': ['linebodyid', 'linebodyname']});
-	if (linebodys == undefined || linebodys == null || linebodys == '') {
+	const wordshop = await Workshop.findById(wordshopId);
+	if (wordshop == undefined || wordshop == null || wordshop == '') {
 		return ;
 	}
+	const linebodys = await wordshop.getWorkshopLinebody();
 	let alldata = [];
 	for (var i = linebodys.length - 1; i >= 0; i--) {
 		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,linebodys[i].linebodyid);
 		alldata.push(kpitwos);
 	}
-	console.log(JSON.stringify(alldata , null , 4));
+	console.log(JSON.stringify('alldata ---->'+alldata , null , 4));
 
 	let resultMap = new Map ();
-
+	if (alldata == undefined || alldata == null || alldata == '') {
+		return ;
+	}
 	alldata.forEach (ele2 => {
 		ele2.forEach (ele => {
-			let mapEle = resultMap.get (ele.name)
+			let mapEle = resultMap.get (ele.kpitwoid)
 			if (!mapEle)
 			{
 				mapEle = new Array ()
 			}
 
 			mapEle.push (ele.value)
-			resultMap.set (ele.name, mapEle)
+			resultMap.set (ele.kpitwoid, mapEle)
 		})
 	})
-	// 
+	
 	//getResultMap (alldata, resultMap)
 
 	console.log (resultMap)
 	return alldata;
 }
+exports.selectLossMappingByWordshopId = selectLossMappingByWordshopId;
 
 function getResultMap (alldata, resultMap) {
 
@@ -214,8 +222,6 @@ function getResultMap (alldata, resultMap) {
 	})
 }
 
-exports.selectAllLinebodyByUserId = selectAllLinebodyByUserId;
-
 async function baseSelectLosscategoryByLinebodyId(userId , linebodyId){
 	if (linebodyId == undefined || linebodyId == null || linebodyId == ''
 		||userId == undefined || userId == null || userId == '') {
@@ -232,8 +238,15 @@ async function baseSelectLosscategoryByLinebodyId(userId , linebodyId){
 	}
 	console.log(JSON.stringify(alldata , null , 4));
 	return alldata;
-
 }
 exports.baseSelectLosscategoryByLinebodyId = baseSelectLosscategoryByLinebodyId;
+
+/**
+ * 	根据所有的线体ID查询KPItwo的数据
+ */
+async function selectLossMappingByLinebodyIds(userId , linebodyIds){
+
+}
+exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
 

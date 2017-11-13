@@ -31,7 +31,7 @@ module.exports = router;
 
 //test
 router.get('/allLinebody', async function(req, res, next) {
-	const alldata = await controller.selectAllLinebodyByUserId(213);
+	const alldata = await controller.selectLossMappingByWordshopId(213 , 47);
     res.end (JSON.stringify (alldata, null, 4));
 });
 module.exports = router;
