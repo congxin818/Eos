@@ -22,9 +22,9 @@ const parameterError = {
     msg: '参数错误'
 };
 
-const updateError = {
-    status: '115', 
-    msg: '更新失败'
+const addObjectError = {
+    status: '201', 
+    msg: '添加失败'
 };
 
 const kpiTwoShow = {
@@ -67,7 +67,7 @@ const kpiTwoShow = {
             res.end(JSON.stringify(parameterError))
         }
         const updateData = await lossstatusServices.updateLostatusById(req , res)
-        if(updateData == 1){
+        if(updateData.length == 1){
             res.end(JSON.stringify(dataSuccess))
         }else{
             res.end(JSON.stringify(updateError))
@@ -109,7 +109,13 @@ const kpiTwoShow = {
      if(req.body.lossId == null||req.body.lossId == ''){
        res.end(JSON.stringify(parameterError))
    }
+   // 判断该loss有没有被添加过
+   const objectnow = await impobjServices.showObjectnowBylossid(lossidList[i].lossid)
+   if(objectnow != null){
+        res.end(JSON.stringify(addObjectError))
+   }
+
    const data = await impobjServices.addObjectnowBylossid(req , res)
-   dataSuccess.data = data 
+   dataSuccess.data = data
    res.end(JSON.stringify(dataSuccess))
 }
