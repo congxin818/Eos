@@ -179,11 +179,13 @@ const updateAreaError = {
     调用相对应的增加函数
     */
     exports.addAreaOne = async function(req , res){
+        console.log('pId=================>' + req.body.pId)
     //如果没有post数据或者数据为空,直接返回
     if( req.body.name == null || req.body.name == ''||req.body.pId == ''){
         res.end(JSON.stringify(parameterError));
     }else{
         if (req.body.pId == null){
+        console.log('pId2=================>' + req.body.pId)
         // 添加一个集团
         const addData = await groupconler.addGroupOne(req , res);
         // 增加的验证
@@ -222,6 +224,7 @@ const updateAreaError = {
                 addData.workshopbelong,addData.checked);
             res.end(JSON.stringify(addRetrun));
         }else if(areaFlag == 'w'){
+            console.log('lineId=================>' + areaFlag)
             // 添加一个线体
             const addData = await linebodyconler.addLinebodyOne(req , res);
             // 增加的验证
