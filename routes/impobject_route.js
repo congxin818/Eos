@@ -43,4 +43,12 @@ router.post('/showObjectnowBylinedyid', function(req, res, next) {
 router.post('/addObjectnowBylossid', function(req, res, next) {
     controller.addObjectnowBylossid(req , res , next);
 });
+
+/*
+	删除现进行项目
+ */
+router.post('/deleteObjectnowBylossid', function(req, res, next) {
+    controller.deleteObjectnowBylossid(req , res , next);
+});
+
 module.exports = router;

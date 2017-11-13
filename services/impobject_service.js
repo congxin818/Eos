@@ -43,3 +43,14 @@ const lossServices = require('../services/losscategory_service');
         const data = await Losscategory.update(losscategory,{where:{lossid: lossid}});
         return data;
     }
+
+    /*
+    根据lossid把该项目添加到现进行项目
+    */
+    exports.deleteObjectnowBylossid = async function(lossid) {
+        const losscategory={
+            addobjectnow: 0
+        }
+        const data = await Losscategory.update(losscategory,{where:{lossid: lossid}});
+        return data;
+    }
