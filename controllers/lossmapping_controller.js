@@ -188,11 +188,12 @@ async function selectAllLinebodyByUserId(userId){
 		})
 	})
 	// 
-	///getResultMap (alldata, resultMap)
+	//getResultMap (alldata, resultMap)
 
 	console.log (resultMap)
 	return alldata;
 }
+
 function getResultMap (alldata, resultMap) {
 
 	alldata.forEach (ele => {
