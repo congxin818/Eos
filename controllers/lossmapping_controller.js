@@ -112,8 +112,8 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	}
 	const user = await User.findById(userId);
 	const linebody = await Linebody.findById(linebodyId);
-	//console.log(JSON.stringify(linebody , null , 4));
-	//console.log(JSON.stringify(user , null , 4));
+	console.log(JSON.stringify(linebody , null , 4));
+	console.log(JSON.stringify(user , null , 4));
 	if (linebody == undefined || linebody == null || linebody == ''
 		||user == undefined || user == null || user == '') {
 		return ;
@@ -121,7 +121,7 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	//const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
 	const kpitwos = await linebody.getLinebodyKpitwolev();
-	//console.log(JSON.stringify(kpitwos , null , 4));
+	console.log(JSON.stringify(kpitwos , null , 4));
 	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return ;
@@ -245,7 +245,22 @@ exports.baseSelectLosscategoryByLinebodyId = baseSelectLosscategoryByLinebodyId;
  * 	根据所有的线体ID查询KPItwo的数据
  */
 async function selectLossMappingByLinebodyIds(userId , linebodyIds){
-
+	if (linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
+		||userId == undefined || userId == null || userId == '') {
+		return ;
+	}
+	const Ids = await linebodyIds.split(",");
+	if (Ids == undefined || Ids == null || Ids == '') {
+		return ;
+	}
+	let allKpitwo = [];
+	for (var i = Ids.length - 1; i >= 0; i--) {
+		console.log(JSON.stringify(Ids[i]));
+		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,Ids[i]);
+		allKpitwo.push(kpitwos);
+	}
+	console.log(JSON.stringify(allKpitwo , null , 4));
+	return allKpitwo;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
