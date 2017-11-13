@@ -21,7 +21,7 @@
         value: { // kpi第四级树状图loss值
         	type: Sequelize.FLOAT
         },
-        duration:{ // 持续时间
+        duration:{ // loss持续时间
             type: Sequelize.FLOAT
         },
         classstarttime:{ // 班次开始时间

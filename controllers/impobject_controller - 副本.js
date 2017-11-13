@@ -97,28 +97,13 @@ const kpiTwoShow = {
        const lossidList = await impobjServices.selectObjectnowBylinebyid(req.body.linebodyId)
        res.end(JSON.stringify(lossidList))
    }
-
 /*
-    根据loss id增加现进行项目
+    根据线体id增加现进行项目
     */
     exports.addObjectnowBylossid = async function(req , res) {
-        if(req.body.lossIdList.length == 0){
+        if(req.body.linebodyId == null||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
        }
-       var lossIdList = req.body.lossIdList.split(",")
-       for(var i=0;i<lossIdList.length;i++){
-        const lossidList = await impobjServices.addObjectnowBylossid(lossIdList[i])
-       }
-       res.end(JSON.stringify(dataSuccess))
-   }
-
-/*
-    根据线体id删除现进行项目
-    */
-    exports.deleteObjectnowBylossid = async function(req , res) {
-        if(req.body.lossId == null||req.body.lossId == ''){
-           res.end(JSON.stringify(parameterError))
-       }
-       const lossidList = await impobjServices.deleteObjectnowBylossid(req.body.lossId)
+       const lossidList = await impobjServices.addObjectnowBylossid(req.body.linebodyId)
        res.end(JSON.stringify(dataSuccess))
    }

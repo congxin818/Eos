@@ -15,7 +15,6 @@ var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 var Losscategory = sequelize.import('./losscategory.js');
 var Lossstatus = sequelize.import('./lossstatus.js');
 var Losstier4 = sequelize.import('./losstier4.js');
-var Objectnow = sequelize.import('./objectnow.js');
 
 
 //user和group之间N:M关系
@@ -60,8 +59,6 @@ Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 
 //Losscategory和Lossstatus建立1：1关系
 Losscategory.hasOne(Lossstatus);
-//Losscategory和objectnow建立1：1关系
-Losscategory.hasOne(Objectnow);
 
 
 //Kpionelev和Kpitwolev建立1：N关系
@@ -89,4 +86,3 @@ exports.Losscategory = Losscategory;
 exports.UserKpitwolev = UserKpitwolev;
 exports.Lossstatus = Lossstatus;
 exports.Losstier4 = Losstier4;
-exports.Objectnow = Objectnow;
