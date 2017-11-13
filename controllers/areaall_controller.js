@@ -122,6 +122,7 @@ const updateAreaError = {
     if (!isNaN(areaFlag)){
         // 更改一个集团
         const updateReturn = await groupconler.updateGroupById(req , res);
+        console.log('data-------------->' +  updateReturn)
         // 验证更改的名字是否重复
         if(updateReturn.status=='101')
             res.end(JSON.stringify(updateReturn));
@@ -139,7 +140,7 @@ const updateAreaError = {
         // 验证更改的名字是否重复
         if(updateReturn.status=='101')
             res.end(JSON.stringify(updateReturn));
-        if(updateReturn == 1){
+        if(updateReturn.length == 1){
          res.end(JSON.stringify(dataSuccess))
      }else{
          res.end(JSON.stringify(updateAreaError))
@@ -152,7 +153,6 @@ const updateAreaError = {
         // 验证更改的名字是否重复
         if(updateReturn.status=='101')
             res.end(JSON.stringify(updateReturn));
-        console.log('data-------------->' +  updateReturn)
         if(updateReturn == '1'){
          res.end(JSON.stringify(dataSuccess))
      }else{

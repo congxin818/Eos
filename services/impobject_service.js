@@ -11,10 +11,17 @@ const Objectnow = require('../models').Objectnow;
 const lossServices = require('../services/losscategory_service');
 
 /*
-	根据线体id把loss二级目录名字查找出来
+	根据线体id把loss查找出来
     */
     exports.selectKpitwoBylinebyid = async function(req , res) {
         const data = await Kpitwolev.findAll({ where:{linebodyLinebodyid: req.body.linebodyId}});
+        return data;
+    }
+    /*
+    根据线体id把添加到现进行项目中的loss查找出来
+    */
+    exports.selectObjectnowBylinebyid = async function(linebodyid) {
+        const data = await Losscategory.findAll({ where:{linebodyLinebodyid: linebodyid,addobjectnow: true}});
         return data;
     }
 /*
@@ -26,31 +33,13 @@ const lossServices = require('../services/losscategory_service');
             where:{pId: twolevdata.id},order: [['value', 'ASC']]})
         return data;
     }
-  
-/*
-    根据线体id查找loss三级目录所有id
+ /*
+    根据lossid把该项目添加到现进行项目
     */
-    exports.selectLossidBylinedyid = async function(req , res) {
-        const data = await Losscategory.findAll({attributes: ['lossid'],
-            where:{linebodyLinebodyid: req.body.linebodyId}})
-        return data
-    }
-/*
-    根据loss三级id展示现进行项目
-    */
-    exports.showObjectnowBylossid = async function(lossid) {
-        const data = await Objectnow.findAll({where:{losscategoryLossid: lossid}})
-        return data
-    }
-/*
-    根据loss三级id添加现进行项目
-    */
-    exports.addObjectnowBylossid = async function(req , res) {
-        const losscategory = await lossServices.selectLossById(req.body.lossId)
-        var objectnow = Objectnow.build({
-            name: losscategory.name
-        })
-        // const data = await Objectnow.create(objectnow)
-        const data  = await losscategory.setObjectnow(objectnow)
-        return data
+    exports.addObjectnowBylossid = async function(lossid) {
+        const losscategory={
+            addobjectnow: 1
+        }
+        const data = await Losscategory.update(losscategory,{where:{lossid: lossid}});
+        return data;
     }

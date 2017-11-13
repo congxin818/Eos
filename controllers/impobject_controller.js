@@ -85,6 +85,8 @@ const kpiTwoShow = {
         dataSuccess.data = data 
         res.end(JSON.stringify(dataSuccess))
     }
+
+
 /*
     根据线体id展示现进行项目
     */
@@ -92,30 +94,16 @@ const kpiTwoShow = {
         if(req.body.linebodyId == null||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
        }
-       const lossidList = await impobjServices.selectLossidBylinedyid(req , res)
-       var objectnowList = [];
-       for(var i = 0;i < lossidList.length; i++){
-         const objectnow = await impobjServices.showObjectnowBylossid(lossidList[i].lossid)
-         if(objectnow.length > 0){
-            objectnowList = await objectnow.concat(objectnowList)
-        }
-    }
-    res.end(JSON.stringify(objectnowList))
-}
+       const lossidList = await impobjServices.selectObjectnowBylinebyid(req.body.linebodyId)
+       res.end(JSON.stringify(lossidList))
+   }
 /*
-    添加现进行项目
+    根据线体id增加现进行项目
     */
     exports.addObjectnowBylossid = async function(req , res) {
-     if(req.body.lossId == null||req.body.lossId == ''){
-       res.end(JSON.stringify(parameterError))
+        if(req.body.linebodyId == null||req.body.linebodyId == ''){
+           res.end(JSON.stringify(parameterError))
+       }
+       const lossidList = await impobjServices.addObjectnowBylossid(req.body.linebodyId)
+       res.end(JSON.stringify(lossidList))
    }
-   // 判断该loss有没有被添加过
-   const objectnow = await impobjServices.showObjectnowBylossid(lossidList[i].lossid)
-   if(objectnow != null){
-        res.end(JSON.stringify(addObjectError))
-   }
-
-   const data = await impobjServices.addObjectnowBylossid(req , res)
-   dataSuccess.data = data
-   res.end(JSON.stringify(dataSuccess))
-}

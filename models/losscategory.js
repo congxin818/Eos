@@ -32,6 +32,10 @@
         value: { //kpi第二级树状图id
             type: Sequelize.FLOAT
         },
+        addobjectnow: { //添加到现有项目那栏的标志 1：是现有项目 0：不是现有项目
+            type:Sequelize.BOOLEAN,
+            defaultValue: false
+        },
         isHidden:{
             type:Sequelize.BOOLEAN,
             defaultValue: false
