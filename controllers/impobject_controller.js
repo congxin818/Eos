@@ -41,19 +41,17 @@ const kpiTwoShow = {
            res.end(JSON.stringify(parameterError))
        }
         // 根据线体id把loss二级目录名字查找出来
-        const KpitwolevNameList = await impobjServices.selectKpitwoBylinebyid(req , res);
+        const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var showNameList =[];
         var LosscategoryNameList = [];
-        for(var i = 0;i < KpitwolevNameList.length; i++){
+        for(var i = 0;i < KpitwolevList.length; i++){
             var itempoolOutput = { 
                 name:'',
                 data:''
             }
-            itempoolOutput.name = KpitwolevNameList[i].name
-            const twolevdata = await twolevServices.selectTwoLevByName(KpitwolevNameList[i].name ,
-             KpitwolevNameList[i].pId)
+            itempoolOutput.name = KpitwolevList[i].name
             // 把loss三级目录名字查找出来
-            LosscategoryNameList = await impobjServices.selectLossByKpitwo(twolevdata);
+            LosscategoryNameList = await impobjServices.selectLossByKpitwo(KpitwolevList[i]);
             itempoolOutput.data =  LosscategoryNameList
             await showNameList.push(itempoolOutput)
         }
@@ -108,6 +106,9 @@ const kpiTwoShow = {
        var lossIdList = req.body.lossIdList.split(",")
        for(var i=0;i<lossIdList.length;i++){
         const lossidList = await impobjServices.addObjectnowBylossid(lossIdList[i])
+        if(lossidList != 1 ){
+            res.end(JSON.stringify(addObjectError))
+        }
        }
        res.end(JSON.stringify(dataSuccess))
    }

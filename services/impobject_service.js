@@ -30,7 +30,7 @@ const lossServices = require('../services/losscategory_service');
     */
     exports.selectLossByKpitwo = async function(twolevdata) {
         const data = await Losscategory.findAll({attributes: ['name','lossid'],
-            where:{pId: twolevdata.id},order: [['value', 'ASC']]})
+            where:{kpitwolevKpitwoid: twolevdata.kpitwoid},order: [['value', 'ASC']]})
         return data;
     }
  /*
