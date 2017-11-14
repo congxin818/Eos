@@ -112,8 +112,8 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	}
 	const user = await User.findById(userId);
 	const linebody = await Linebody.findById(linebodyId);
-	console.log(JSON.stringify(linebody , null , 4));
-	console.log(JSON.stringify(user , null , 4));
+	//console.log(JSON.stringify(linebody , null , 4));
+	//console.log(JSON.stringify(user , null , 4));
 	if (linebody == undefined || linebody == null || linebody == ''
 		||user == undefined || user == null || user == '') {
 		return ;
@@ -121,7 +121,7 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	//const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
 	const kpitwos = await linebody.getLinebodyKpitwolev();
-	console.log(JSON.stringify(kpitwos , null , 4));
+	//console.log(JSON.stringify(kpitwos , null , 4));
 	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return ;
@@ -137,17 +137,17 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 
 	kpitwos.sort ((a, b) => a.order - b.order);
 
-	const size = kpitwos.length
-	const sum = kpitwos.map (a => a.value * a.kpitwoid).reduce ((pre, cur) => pre + cur)
+	// const size = kpitwos.length
+	// const sum = kpitwos.map (a => a.value * a.kpitwoid).reduce ((pre, cur) => pre + cur)
 
-	console.log ('sum ->' + sum)
-	const weight_sum = kpitwos.map (a => a.kpitwoid).reduce ((pre, cur) => pre + cur)
+	// console.log ('sum ->' + sum)
+	// const weight_sum = kpitwos.map (a => a.kpitwoid).reduce ((pre, cur) => pre + cur)
 
-	console.log ('weight_sum -> ' + weight_sum)
+	// console.log ('weight_sum -> ' + weight_sum)
 
-	console.log ('average -> ' + sum / weight_sum)
+	// console.log ('average -> ' + sum / weight_sum)
 
-	console.log(JSON.stringify(kpitwos , null , 4));
+	//console.log(JSON.stringify(kpitwos , null , 4));
 	return kpitwos;
 }
 exports.baseSelectKpitwoByLinebodyId = baseSelectKpitwoByLinebodyId;
@@ -202,26 +202,6 @@ async function selectLossMappingByWordshopId(userId , wordshopId){
 }
 exports.selectLossMappingByWordshopId = selectLossMappingByWordshopId;
 
-function getResultMap (alldata, resultMap) {
-
-	alldata.forEach (ele => {
-		if (ele instanceof Array) {
-			getResultMap (ele, resultMap)
-		}
-		else if (!ele) {
-			return
-		}
-
-		let mapEle = resultMap.get (ele.name)
-		if (!mapEle) {
-			mapEle = new Array ()
-		}
-
-		mapEle.push (ele.value)
-		resultMap.set (ele.name, mapEle)
-	})
-}
-
 async function baseSelectLosscategoryByLinebodyId(userId , linebodyId){
 	if (linebodyId == undefined || linebodyId == null || linebodyId == ''
 		||userId == undefined || userId == null || userId == '') {
@@ -255,20 +235,82 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 	}
 	let allKpitwo = [];
 	for (var i = Ids.length - 1; i >= 0; i--) {
-		console.log(JSON.stringify(Ids[i]));
+		//console.log(JSON.stringify(Ids[i]));
 		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,Ids[i]);
-		allKpitwo.push(kpitwos);
+		if (kpitwos != undefined || kpitwos != null || kpitwos != '') {
+			allKpitwo.push(kpitwos);
+		}
 	}
 	//console.log(JSON.stringify(allKpitwo , null , 4));
+	await computeKpitwo(allKpitwo);
+	// let resultMap = new Map ();
+	// // allKpitwo.forEach (ele2 => {
+	// // 	ele2.forEach (ele => {
+	// // 		let mapEle = resultMap.get (ele.kpitwoid)
+	// // 		if (!mapEle)
+	// // 		{
+	// // 			mapEle = new Array ()
+	// // 		}
+	// // 		mapEle.push (ele.value)
+	// // 		resultMap.set (ele.kpitwoid, mapEle)
+	// // 	})
+	// // })
+	// // console.log(resultMap);
 	return allKpitwo;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
 async function computeKpitwo(allKpitwo){
+	//console.log(JSON.stringify(allKpitwo , null , 4));
 	if (allKpitwo == undefined || allKpitwo == null || allKpitwo == '') {
 		return ;
 	}
+	let resultMap = new Map ();
 
+	for (var i = allKpitwo.length - 1; i >= 0; i--) {
+		if (allKpitwo[i] == null || allKpitwo[i] == '') {
+			continue;
+		}
+		for (var j = allKpitwo[i].length - 1; j >= 0; j--) {
+			if (allKpitwo[i][j] == null || allKpitwo[i][j] == '') {
+				continue;
+			}
+			let mapEle = resultMap.get (allKpitwo[i][j].kpitwoid);
+			if (!mapEle)
+			{
+				mapEle = new Array ();
+			}
+			mapEle.push (allKpitwo[i][j].value);
+			resultMap.set (allKpitwo[i][j].kpitwoid, mapEle);
+		}
+	}
+	console.log(resultMap);
+	for(var [key, value] of resultMap) {
+		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
+		const length = value.length;
+		value = sum / length;
+		console.log("属性：" + key + ",值：" + value);
+	}
+	//return allKpitwo;
 }
 
+function getResultMap (alldata, resultMap) {
+
+	alldata.forEach (ele => {
+		if (ele instanceof Array) {
+			getResultMap (ele, resultMap)
+		}
+		else if (!ele) {
+			return
+		}
+
+		let mapEle = resultMap.get (ele.name)
+		if (!mapEle) {
+			mapEle = new Array ()
+		}
+
+		mapEle.push (ele.value)
+		resultMap.set (ele.name, mapEle)
+	})
+}
 
