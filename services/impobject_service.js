@@ -18,10 +18,10 @@ const lossServices = require('../services/losscategory_service');
         return data;
     }
     /*
-    根据线体id把添加到现进行项目中的loss查找出来
+    根据二级lossid把添加到现进行项目中的loss查找出来
     */
-    exports.selectObjectnowBylinebyid = async function(linebodyid) {
-        const data = await Losscategory.findAll({ where:{linebodyLinebodyid: linebodyid,addobjectnow: true}});
+    exports.selectObjectnowBytwolevid = async function(twolevid) {
+        const data = await Losscategory.findAll({ where:{kpitwolevKpitwoid: twolevid,addobjectnow: true}});
         return data;
     }
 /*

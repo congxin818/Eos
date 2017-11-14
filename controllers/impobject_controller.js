@@ -40,7 +40,7 @@ const kpiTwoShow = {
         if(req.body.linebodyId == null||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
        }
-        // 根据线体id把loss二级目录名字查找出来
+        // 根据线体id把loss二级目录查找出来
         const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var showNameList =[];
         var LosscategoryNameList = [];
@@ -92,8 +92,17 @@ const kpiTwoShow = {
         if(req.body.linebodyId == null||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
        }
-       const lossidList = await impobjServices.selectObjectnowBylinebyid(req.body.linebodyId)
-       res.end(JSON.stringify(lossidList))
+       // 根据线体id把loss二级目录查找出来
+        const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
+        var LosscategoryList = [];
+         for(var i = 0;i < KpitwolevList.length; i++){
+            // 把对应的loss三级查找出来
+            data = await impobjServices.selectObjectnowBytwolevid(KpitwolevList[i].kpitwoid);  
+            if(data.length > 0){
+                LosscategoryList = data.concat(LosscategoryList)
+            }
+        }
+       res.end(JSON.stringify(LosscategoryList))
    }
 
 /*
