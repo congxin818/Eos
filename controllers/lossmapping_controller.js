@@ -8,6 +8,7 @@ var service = require('../services/user_service');
 var User = require('../models').User;//引入数据库User模块
 var Linebody = require('../models').Linebody;
 var Workshop = require('../models').Workshop;
+var Kpitwolev = require('../models').Kpitwolev;
 var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
@@ -241,21 +242,23 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 			allKpitwo.push(kpitwos);
 		}
 	}
-	//console.log(JSON.stringify(allKpitwo , null , 4));
-	await computeKpitwo(allKpitwo);
-	// let resultMap = new Map ();
-	// // allKpitwo.forEach (ele2 => {
-	// // 	ele2.forEach (ele => {
-	// // 		let mapEle = resultMap.get (ele.kpitwoid)
-	// // 		if (!mapEle)
-	// // 		{
-	// // 			mapEle = new Array ()
-	// // 		}
-	// // 		mapEle.push (ele.value)
-	// // 		resultMap.set (ele.kpitwoid, mapEle)
-	// // 	})
-	// // })
-	// // console.log(resultMap);
+	console.log(JSON.stringify(allKpitwo , null , 4));
+	let resultKpitwos = [];
+	const kpitwoMap = await computeKpitwo(allKpitwo);
+	for(var [key, value] of kpitwoMap) {
+		let falg = {
+			id:key,
+			name:'',
+			value:value
+		};
+		const kpitwo = await Kpitwolev.findById(key);
+		falg.name = kpitwo.name;
+		resultKpitwos.push(falg);
+
+	}
+	//console.log(kpitwoMap);
+	//console.log(JSON.stringify(resultKpitwos , null , 4));
+	
 	return allKpitwo;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
@@ -285,13 +288,18 @@ async function computeKpitwo(allKpitwo){
 		}
 	}
 	console.log(resultMap);
+	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
 		const length = value.length;
-		value = sum / length;
-		console.log("属性：" + key + ",值：" + value);
+		if (length != 0) {
+			value = sum / length;
+		}
+		map.set(key , value);
+		//console.log("属性：" + key + ",值：" + value);
 	}
-	//return allKpitwo;
+	//console.log(map);
+	return map;
 }
 
 function getResultMap (alldata, resultMap) {

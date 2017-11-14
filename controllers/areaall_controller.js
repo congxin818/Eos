@@ -207,7 +207,7 @@ const updateAreaError = {
         if(addData == null || addData == '')
             res.end(JSON.stringify(addAreaError));
         // 按格式显示
-        const addRetrun = await areaValSet(addData.factoryid,addData.factoryname,
+        const addRetrun = await areaValSet('f'+addData.factoryid,addData.factoryname,
             addData.factorybelong,addData.checked);
         res.end(JSON.stringify(addRetrun));   
     }else{
@@ -220,7 +220,7 @@ const updateAreaError = {
             if(addData == null || addData == '')
                 res.end(JSON.stringify(addAreaError));
             // 按格式显示
-            const addRetrun = await areaValSet(addData.workshopid,addData.workshopname,
+            const addRetrun = await areaValSet('w'+addData.workshopid,addData.workshopname,
                 addData.workshopbelong,addData.checked);
             res.end(JSON.stringify(addRetrun));
         }else if(areaFlag == 'w'){
@@ -233,7 +233,7 @@ const updateAreaError = {
             if(addData == null || addData == '')
                 res.end(JSON.stringify(addAreaError));
               // 按格式显示
-              const addRetrun = await areaValSet(addData.linebodyid,addData.linebodyname,
+              const addRetrun = await areaValSet('l'+addData.linebodyid,addData.linebodyname,
                 addData.linebodybelong,addData.checked);
               res.end(JSON.stringify(addRetrun));
           }
