@@ -47,12 +47,12 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Linebody和Kpitwolev建立M：N关系
-Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolevs'});
-Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolevs'});
+Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
+Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
 
 //Linebody和Losscategory建立M：N关系
-Linebody.belongsToMany(Losscategory, {through: LinebodyLosscategory,as:'LinebodyLosscategorys'});
-Losscategory.belongsToMany(Linebody, {through: LinebodyLosscategory,as:'LinebodyLosscategorys'});
+Linebody.belongsToMany(Losscategory, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
+Losscategory.belongsToMany(Linebody, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
 
 //Linebody和Losscategory建立M：N关系
 Linebody.belongsToMany(Losstier4, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
