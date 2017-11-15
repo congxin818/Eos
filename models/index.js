@@ -12,10 +12,13 @@ var Kpitwolev = sequelize.import('./kpitwolev.js');
 
 var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 
-var Losscategory = sequelize.import('./losscategory.js');
+var Losscategory = sequelize.import('./losstier3.js');
 var Lossstatus = sequelize.import('./lossstatus.js');
 var Losstier4 = sequelize.import('./losstier4.js');
 
+var LinebodyKpitwolev = sequelize.import('./linebodykpitwolev.js');
+var LinebodyLosscategory = sequelize.import('./linebodylosscategory.js');
+var LinebodyLosstier4 = sequelize.import('./linebodylosstier4.js');
 
 //user和group之间N:M关系
 User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
@@ -43,12 +46,17 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 
-//Linebody和Kpitwolev建立1：N关系
-Linebody.belongsToMany(Kpitwolev, {through: 'linebodyKpitwolev',as:'LinebodyKpitwolev'});
-Kpitwolev.belongsToMany(Linebody, {through: 'linebodyKpitwolev',as:'LinebodyKpitwolev'});
-//Linebody和Losscategory建立1：N关系
-Linebody.hasMany(Losscategory, {as:'LinebodyLosscategory' , constraints:true});
+//Linebody和Kpitwolev建立M：N关系
+Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolevs'});
+Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolevs'});
 
+//Linebody和Losscategory建立M：N关系
+Linebody.belongsToMany(Losscategory, {through: LinebodyLosscategory,as:'LinebodyLosscategorys'});
+Losscategory.belongsToMany(Linebody, {through: LinebodyLosscategory,as:'LinebodyLosscategorys'});
+
+//Linebody和Losscategory建立M：N关系
+Linebody.belongsToMany(Losstier4, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
+Losstier4.belongsToMany(Linebody, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 
 //Group和Factory建立1：N关系
 Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
@@ -68,9 +76,6 @@ Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true})
 //Tier4和Losscategory建立1：N关系
 Losscategory.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
 
-//Linebody和Losscategory建立1：N关系
-Linebody.hasMany(Losstier4, {as:'LinebodyLosstier4' , constraints:true});
-
 sequelize.sync();
 
 
@@ -86,3 +91,6 @@ exports.Losscategory = Losscategory;
 exports.UserKpitwolev = UserKpitwolev;
 exports.Lossstatus = Lossstatus;
 exports.Losstier4 = Losstier4;
+exports.LinebodyKpitwolev = LinebodyKpitwolev;
+exports.LinebodyLosscategory = LinebodyLosscategory;
+exports.LinebodyLosstier4 = LinebodyLosstier4;

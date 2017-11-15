@@ -254,7 +254,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 		const kpitwo = await Kpitwolev.findById(key);
 		falg.name = kpitwo.name;
 		resultKpitwos.push(falg);
-
+		
 	}
 	//console.log(kpitwoMap);
 	//console.log(JSON.stringify(resultKpitwos , null , 4));

@@ -17,18 +17,6 @@
         	type: Sequelize.STRING(50),
         	charset:'utf8',
         	collate:'utf8_general_ci'
-        },
-        value: { // kpi第四级树状图loss值
-        	type: Sequelize.FLOAT
-        },
-        duration:{ // loss持续时间
-            type: Sequelize.FLOAT
-        },
-        classstarttime:{ // 班次开始时间
-            type: Sequelize.DATE
-        },
-        classendtime:{ // 班次结束时间
-            type: Sequelize.DATE
-        },
+        }
     });
     }

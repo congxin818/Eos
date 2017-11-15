@@ -8,7 +8,7 @@
 
 
     module.exports = function(sequelize , DataTypes){
-        return sequelize.define('losscategory' , {
+        return sequelize.define('losstier3' , {
 	   	lossid:{ //kpi第二级id
             type:Sequelize.INTEGER,
             autoIncrement:true,
@@ -28,9 +28,6 @@
             type: Sequelize.STRING(50),
             charset:'utf8',
             collate:'utf8_general_ci'
-        },
-        value: { //kpi第二级树状图id
-            type: Sequelize.FLOAT
         },
         addobjectnow: { //添加到现有项目那栏的标志 1：是现有项目 0：不是现有项目
             type:Sequelize.BOOLEAN,
