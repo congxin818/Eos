@@ -121,7 +121,7 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	}
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	//const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
-	const kpitwos = await linebody.getLinebodyKpitwolevs();
+	const kpitwos = await linebody.getLinebodyKpitwolev();
 	//console.log(JSON.stringify(kpitwos , null , 4));
 	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
