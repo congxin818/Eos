@@ -6,7 +6,7 @@
 
 var express = require('express');
 var router = express.Router();
-var controller = require('../controllers/losscategory_controller');
+var controller = require('../controllers/losstier3_controller');
 var testcontroller = require('../controllers/impobject_controller');
 
 /*

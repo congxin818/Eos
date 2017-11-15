@@ -8,7 +8,7 @@
 const Kpitwolev = require('../models').Kpitwolev;
 const Losscategory = require('../models').Losscategory;
 const Objectnow = require('../models').Objectnow;
-const lossServices = require('../services/losscategory_service');
+const lossServices = require('../services/losstier3_service');
 
 /*
 	根据线体id把loss查找出来

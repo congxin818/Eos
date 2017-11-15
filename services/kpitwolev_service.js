@@ -6,7 +6,7 @@
 
 //引入数据库Message模块
 var Kpitwolev = require('../models').Kpitwolev;
-var losscategory_service = require('../services/losscategory_service');
+var losstier3_service = require('../services/losstier3_service');
 var errorUtil = require('../utils/errorUtil');
 /*
     显示二级目录
@@ -52,7 +52,7 @@ var errorUtil = require('../utils/errorUtil');
     if (falg == null || falg == '' || falg == undefined) {
         return errorUtil.noExistError;
     }
-    await losscategory_service.lossClear();
+    await losstier3_service.lossClear();
     return falg;
 }
 

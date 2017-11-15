@@ -7,7 +7,7 @@ var Sequelize = require('sequelize');
 var sequelize = require('../mysql').sequelize();
 
  module.exports = function(sequelize , DataTypes){
-   return sequelize.define('linebodyLosscategory' , {
+   return sequelize.define('linebodylosstier3' , {
 	   id:{ //自增长id,主键,整形
             type:Sequelize.INTEGER,
             autoIncrement:true,

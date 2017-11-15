@@ -3,7 +3,7 @@
  	NOTE:loss表的controller层,
  	time:20171030
  */
-var service = require('../services/losscategory_service');
+var service = require('../services/losstier3_service');
 var errorUtil = require('../utils/errorUtil');
 var kpiall_controller = require('../controllers/kpiall_controller');
 var dataSuccess = {
