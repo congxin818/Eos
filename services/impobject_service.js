@@ -8,10 +8,10 @@
 const Kpitwolev = require('../models').Kpitwolev;
 const Losscategory = require('../models').Losscategory;
 const Objectnow = require('../models').Objectnow;
-const lossServices = require('../services/losscategory_service');
+const lossServices = require('../services/losstier3s_service');
 
 /*
-	根据线体id把loss查找出来
+	根据线体id把loss二级查找出来
     */
     exports.selectKpitwoBylinebyid = async function(req , res) {
         const data = await Kpitwolev.findAll({ where:{linebodyLinebodyid: req.body.linebodyId}});
@@ -37,10 +37,10 @@ const lossServices = require('../services/losscategory_service');
     根据lossid把该项目添加到现进行项目
     */
     exports.addObjectnowBylossid = async function(lossid) {
-        const losscategory={
+        const losstier3s={
             addobjectnow: 1
         }
-        const data = await Losscategory.update(losscategory,{where:{lossid: lossid}});
+        const data = await Losscategory.update(losstier3s,{where:{lossid: lossid}});
         return data;
     }
 
@@ -48,9 +48,9 @@ const lossServices = require('../services/losscategory_service');
     根据lossid把该项目添加到现进行项目
     */
     exports.deleteObjectnowBylossid = async function(lossid) {
-        const losscategory={
+        const losstier3s={
             addobjectnow: 0
         }
-        const data = await Losscategory.update(losscategory,{where:{lossid: lossid}});
+        const data = await Losscategory.update(losstier3s,{where:{lossid: lossid}});
         return data;
     }

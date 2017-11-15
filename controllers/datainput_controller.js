@@ -1,7 +1,7 @@
 /*
-    改进方案处理
+    数据输入处理
     创建人：THree
-    时间：2017/11/3
+    时间：2017/11/15
     */
 
 //引入数据库Message模块
@@ -34,13 +34,15 @@ const kpiTwoShow = {
 };
 
 /*
-    improvment展示项目池信息
+    添加本班次时间
     */ 
-    exports.showImpItempool = async function(req , res) {
-        if(req.body.linebodyId == null||req.body.linebodyId == ''){
-           res.end(JSON.stringify(parameterError))
-       }
-        // 根据线体id把loss二级目录名字查找出来
+    exports.addClasstime = async function(req , res) {
+        if(req.body.classStarttime == null||req.body.classStarttime == ''
+            ||req.body.classEndtime == null||req.body.classEndtime == ''
+            ||req.body.twolevName == null||req.body.twolevName == ''){
+         res.end(JSON.stringify(parameterError))
+ }
+        // 根据二级目录名字创建一条二级目录数据
         const KpitwolevNameList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var showNameList =[];
         var LosscategoryNameList = [];
@@ -51,7 +53,7 @@ const kpiTwoShow = {
             }
             itempoolOutput.name = KpitwolevNameList[i].name
             const twolevdata = await twolevServices.selectTwoLevByName(KpitwolevNameList[i].name ,
-             KpitwolevNameList[i].pId)
+               KpitwolevNameList[i].pId)
             // 把loss三级目录名字查找出来
             LosscategoryNameList = await impobjServices.selectLossByKpitwo(twolevdata);
             itempoolOutput.data =  LosscategoryNameList
@@ -92,18 +94,18 @@ const kpiTwoShow = {
     */
     exports.showObjectnowBylinedyid = async function(req , res) {
         if(req.body.linebodyId == null||req.body.linebodyId == ''){
-           res.end(JSON.stringify(parameterError))
-       }
-       const lossidList = await impobjServices.selectObjectnowBylinebyid(req.body.linebodyId)
-       res.end(JSON.stringify(lossidList))
-   }
+         res.end(JSON.stringify(parameterError))
+     }
+     const lossidList = await impobjServices.selectObjectnowBylinebyid(req.body.linebodyId)
+     res.end(JSON.stringify(lossidList))
+ }
 /*
     根据线体id增加现进行项目
     */
     exports.addObjectnowBylossid = async function(req , res) {
         if(req.body.linebodyId == null||req.body.linebodyId == ''){
-           res.end(JSON.stringify(parameterError))
-       }
-       const lossidList = await impobjServices.addObjectnowBylossid(req.body.linebodyId)
-       res.end(JSON.stringify(dataSuccess))
-   }
+         res.end(JSON.stringify(parameterError))
+     }
+     const lossidList = await impobjServices.addObjectnowBylossid(req.body.linebodyId)
+     res.end(JSON.stringify(dataSuccess))
+ }

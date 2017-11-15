@@ -43,7 +43,7 @@ const kpiTwoShow = {
         // 根据线体id把loss二级目录查找出来
         const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var showNameList =[];
-        var LosscategoryNameList = [];
+        var losstier3NameList = [];
         for(var i = 0;i < KpitwolevList.length; i++){
             var itempoolOutput = { 
                 name:'',
@@ -51,8 +51,8 @@ const kpiTwoShow = {
             }
             itempoolOutput.name = KpitwolevList[i].name
             // 把loss三级目录名字查找出来
-            LosscategoryNameList = await impobjServices.selectLossByKpitwo(KpitwolevList[i]);
-            itempoolOutput.data =  LosscategoryNameList
+            losstier3NameList = await impobjServices.selectLossByKpitwo(KpitwolevList[i]);
+            itempoolOutput.data =  losstier3NameList
             await showNameList.push(itempoolOutput)
         }
         res.end(JSON.stringify(showNameList))     
@@ -94,15 +94,15 @@ const kpiTwoShow = {
        }
        // 根据线体id把loss二级目录查找出来
         const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
-        var LosscategoryList = [];
+        var losstier3List = [];
          for(var i = 0;i < KpitwolevList.length; i++){
             // 把对应的loss三级查找出来
             data = await impobjServices.selectObjectnowBytwolevid(KpitwolevList[i].kpitwoid);  
             if(data.length > 0){
-                LosscategoryList = data.concat(LosscategoryList)
+                losstier3List = data.concat(losstier3List)
             }
         }
-       res.end(JSON.stringify(LosscategoryList))
+       res.end(JSON.stringify(losstier3List))
    }
 
 /*
