@@ -31,7 +31,7 @@ module.exports = router;
 
 //test
 router.get('/allLinebody', async function(req, res, next) {
-	const alldata = await controller.selectLossMappingByLinebodyIds(213 , "6,24");
+	const alldata = await controller.selectLossMappingByLinebodyIds(219 , "6,12,25");
     res.end (JSON.stringify (alldata, null, 4));
 });
 module.exports = router;

@@ -9,6 +9,7 @@ var User = require('../models').User;//引入数据库User模块
 var Linebody = require('../models').Linebody;
 var Workshop = require('../models').Workshop;
 var Kpitwolev = require('../models').Kpitwolev;
+var Losstier3 = require('../models').Losstier3;
 var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
@@ -121,7 +122,7 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 	}
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	//const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid' , 'id' , 'value']});
-	const kpitwos = await linebody.getLinebodyKpitwolev();
+	const kpitwos = await linebody.getLinebodyKpitwolev({'attributes': ['name', 'kpitwoid']});
 	//console.log(JSON.stringify(kpitwos , null , 4));
 	if (kpitwos == undefined || kpitwos == null || kpitwos == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
@@ -154,73 +155,21 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 exports.baseSelectKpitwoByLinebodyId = baseSelectKpitwoByLinebodyId;
 
 /*
-	根据用户ID查询所有与该用户相关联的线体（linebody）的KPItwo数据
+	根据线体ID查询losstier3的数据
  */
-async function selectLossMappingByWordshopId(userId , wordshopId){
-	if (userId == undefined || userId == null || userId == ''
-		||wordshopId == undefined || wordshopId == null || wordshopId == '') {
+async function baseSelectLosstier3ByLinebodyId(linebodyId){
+	if (linebodyId == undefined || linebodyId == null || linebodyId == '') {
 		return ;
 	}
-	const user = await User.findById(userId);
-	//console.log(JSON.stringify(linebody , null , 4));
-	//console.log(JSON.stringify(user , null , 4));
-	if (user == undefined || user == null || user == '') {
+	//const user = await User.findById(userId);
+	const linebody = await Linebody.findById(linebodyId);
+	if (linebody == undefined || linebody == null || linebody == '') {
 		return ;
 	}
-	const wordshop = await Workshop.findById(wordshopId);
-	if (wordshop == undefined || wordshop == null || wordshop == '') {
-		return ;
-	}
-	const linebodys = await wordshop.getWorkshopLinebody();
-	let alldata = [];
-	for (var i = linebodys.length - 1; i >= 0; i--) {
-		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,linebodys[i].linebodyid);
-		alldata.push(kpitwos);
-	}
-	console.log(JSON.stringify('alldata ---->'+alldata , null , 4));
-
-	let resultMap = new Map ();
-	if (alldata == undefined || alldata == null || alldata == '') {
-		return ;
-	}
-	alldata.forEach (ele2 => {
-		ele2.forEach (ele => {
-			let mapEle = resultMap.get (ele.kpitwoid)
-			if (!mapEle)
-			{
-				mapEle = new Array ()
-			}
-
-			mapEle.push (ele.value)
-			resultMap.set (ele.kpitwoid, mapEle)
-		})
-	})
-	
-	//getResultMap (alldata, resultMap)
-
-	console.log (resultMap)
-	return alldata;
+	const losstier3s = await linebody.getLinebodyLosstier3({'attributes': ['name', 'lossid']});
+	return losstier3s;
 }
-exports.selectLossMappingByWordshopId = selectLossMappingByWordshopId;
-
-async function baseSelectLosscategoryByLinebodyId(userId , linebodyId){
-	if (linebodyId == undefined || linebodyId == null || linebodyId == ''
-		||userId == undefined || userId == null || userId == '') {
-		return ;
-	}
-	const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId , linebodyId);
-	if (kpitwos == undefined || kpitwos == null || kpitwos == '') {
-		return ;
-	}
-	let alldata = [];
-	for (var i = kpitwos.length - 1; i >= 0; i--) {
-		const losscategorys = await kpitwos[i].getKpitwolevLosscategory({'attributes': ['name', 'lossid' , 'id' , 'value']});
-		alldata.push(losscategorys);
-	}
-	console.log(JSON.stringify(alldata , null , 4));
-	return alldata;
-}
-exports.baseSelectLosscategoryByLinebodyId = baseSelectLosscategoryByLinebodyId;
+exports.baseSelectLosstier3ByLinebodyId = baseSelectLosstier3ByLinebodyId;
 
 /**
  * 	根据所有的线体ID查询KPItwo的数据
@@ -230,39 +179,93 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 		||userId == undefined || userId == null || userId == '') {
 		return ;
 	}
+	const user = await User.findById(userId);
+	//console.log(JSON.stringify(user , null , 4));
+	if (user == undefined || user == null || user == '') {
+		return ;
+	}
 	const Ids = await linebodyIds.split(",");
-	if (Ids == undefined || Ids == null || Ids == '') {
+	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
+	if (Ids == undefined || Ids == null || Ids == ''
+		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return ;
 	}
 	let allKpitwo = [];
+	let allLosstier3 = [];
+	//let allLosstier4 = [];
 	for (var i = Ids.length - 1; i >= 0; i--) {
 		//console.log(JSON.stringify(Ids[i]));
 		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,Ids[i]);
-		if (kpitwos != undefined || kpitwos != null || kpitwos != '') {
+		if (kpitwos != undefined && kpitwos != null && kpitwos != '') {
 			allKpitwo.push(kpitwos);
 		}
+		const losstier3s = await this.baseSelectLosstier3ByLinebodyId(Ids[i]);
+		if (losstier3s != undefined && losstier3s != null && losstier3s != '') {
+			allLosstier3.push(losstier3s);
+		}
+		// const losstier4 = await this.baseSelectLosstier3ByLinebodyId(Ids[i]);
+		// if (losstier3s != undefined && losstier3s != null && losstier3s != '') {
+		// 	allLosstier3.push(losstier3s);
+		// }
 	}
-	console.log(JSON.stringify(allKpitwo , null , 4));
-	let resultKpitwos = [];
+	let alldata = [];
+	//console.log(JSON.stringify(allLosstier3 , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
+ 	const lossTier3Map = await computeLosstier3(allLosstier3);
 	for(var [key, value] of kpitwoMap) {
-		let falg = {
-			id:key,
-			name:'',
-			value:value
-		};
 		const kpitwo = await Kpitwolev.findById(key);
-		falg.name = kpitwo.name;
-		resultKpitwos.push(falg);
-		
+		let pushkpitwo = {
+			name:kpitwo.name,
+			value:value
+		};	
+		let orderStr;
+		for (var m = tier2.length - 1; m >= 0; m--) {
+			if (key == tier2[m].kpitwoid) {
+				orderStr = tier2[m].userKpitwolev.sequence;
+			}
+		}
+		let array = {
+			title:kpitwo.name,
+			order:orderStr,
+			data: new Array (),
+			link: new Array ()
+		};
+		let datas = new Array ();
+		let links = new Array ();
+		datas.push(pushkpitwo);
+		for(var [key1 , value1] of lossTier3Map) {
+			const losstier3 = await Losstier3.findById(key1);
+			console.log(JSON.stringify(losstier3.kpitwolevKpitwoid , null , 4));
+			console.log(JSON.stringify(key , null , 4));
+			if (losstier3.kpitwolevKpitwoid == key) {
+				let pushlosstier3 = {
+					name:losstier3.name,
+					value:value1
+				};
+				let link = {
+					source:kpitwo.name,
+					target:losstier3.name,
+					value:value1
+				};
+				datas.push(pushlosstier3);
+				links.push(link);
+			}
+		}
+		array.data = datas;
+		array.link = links;
+		alldata.push(array);
+		alldata.sort ((a, b) => a.order - b.order)
 	}
-	//console.log(kpitwoMap);
-	//console.log(JSON.stringify(resultKpitwos , null , 4));
+	//console.log(lossTier3Map);
+	//console.log(JSON.stringify(alldata , null , 4));
 	
-	return allKpitwo;
+	return alldata;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
+/*
+	计算KPItwo的每一项的平均数
+ */
 async function computeKpitwo(allKpitwo){
 	//console.log(JSON.stringify(allKpitwo , null , 4));
 	if (allKpitwo == undefined || allKpitwo == null || allKpitwo == '') {
@@ -283,11 +286,11 @@ async function computeKpitwo(allKpitwo){
 			{
 				mapEle = new Array ();
 			}
-			mapEle.push (allKpitwo[i][j].value);
+			mapEle.push (allKpitwo[i][j].linebodyKpitwolev.value);
 			resultMap.set (allKpitwo[i][j].kpitwoid, mapEle);
 		}
 	}
-	console.log(resultMap);
+	//console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -299,6 +302,48 @@ async function computeKpitwo(allKpitwo){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
+	return map;
+}
+
+/*
+	计算losstier3的每一项的平均数
+ */
+async function computeLosstier3(allLosstier3){
+	//console.log(JSON.stringify(allLosstier3 , null , 4));
+	if (allLosstier3 == undefined || allLosstier3 == null || allLosstier3 == '') {
+		return ;
+	}
+	let resultMap = new Map ();
+
+	for (var i = allLosstier3.length - 1; i >= 0; i--) {
+		if (allLosstier3[i] == null || allLosstier3[i] == '') {
+			continue;
+		}
+		for (var j = allLosstier3[i].length - 1; j >= 0; j--) {
+			if (allLosstier3[i][j] == null || allLosstier3[i][j] == '') {
+				continue;
+			}
+			let mapEle = resultMap.get (allLosstier3[i][j].lossid);
+			if (!mapEle)
+			{
+				mapEle = new Array ();
+			}
+			mapEle.push (allLosstier3[i][j].linebodylosstier3.value);
+			resultMap.set (allLosstier3[i][j].lossid, mapEle);
+		}
+	}
+	console.log('resultMap');
+	let map = new Map();
+	for(var [key, value] of resultMap) {
+		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
+		const length = value.length;
+		if (length != 0) {
+			value = sum / length;
+		}
+		map.set(key , value);
+		//console.log("属性：" + key + ",值：" + value);
+	}
+	console.log(map);
 	return map;
 }
 
