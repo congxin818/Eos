@@ -10,6 +10,7 @@ var Linebody = require('../models').Linebody;
 var Workshop = require('../models').Workshop;
 var Kpitwolev = require('../models').Kpitwolev;
 var Losstier3 = require('../models').Losstier3;
+var Losstier4 = require('../models').Losstier4;
 var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
@@ -171,6 +172,24 @@ async function baseSelectLosstier3ByLinebodyId(linebodyId){
 }
 exports.baseSelectLosstier3ByLinebodyId = baseSelectLosstier3ByLinebodyId;
 
+
+/*
+	根据线体ID查询losstier3的数据
+ */
+async function baseSelectLosstier4ByLinebodyId(linebodyId){
+	if (linebodyId == undefined || linebodyId == null || linebodyId == '') {
+		return ;
+	}
+	//const user = await User.findById(userId);
+	const linebody = await Linebody.findById(linebodyId);
+	if (linebody == undefined || linebody == null || linebody == '') {
+		return ;
+	}
+	const losstier4s = await linebody.getLinebodyLosstier4({'attributes': ['name', 'id']});
+	return losstier4s;
+}
+exports.baseSelectLosstier4ByLinebodyId = baseSelectLosstier4ByLinebodyId;
+
 /**
  * 	根据所有的线体ID查询KPItwo的数据
  */
@@ -192,7 +211,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 	}
 	let allKpitwo = [];
 	let allLosstier3 = [];
-	//let allLosstier4 = [];
+	let allLosstier4 = [];
 	for (var i = Ids.length - 1; i >= 0; i--) {
 		//console.log(JSON.stringify(Ids[i]));
 		const kpitwos = await this.baseSelectKpitwoByLinebodyId(userId,Ids[i]);
@@ -203,15 +222,17 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 		if (losstier3s != undefined && losstier3s != null && losstier3s != '') {
 			allLosstier3.push(losstier3s);
 		}
-		// const losstier4 = await this.baseSelectLosstier3ByLinebodyId(Ids[i]);
-		// if (losstier3s != undefined && losstier3s != null && losstier3s != '') {
-		// 	allLosstier3.push(losstier3s);
-		// }
+		const losstier4s = await this.baseSelectLosstier4ByLinebodyId(Ids[i]);
+		if (losstier4s != undefined && losstier4s != null && losstier4s != '') {
+			allLosstier4.push(losstier4s);
+		}
 	}
 	let alldata = [];
 	//console.log(JSON.stringify(allLosstier3 , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
  	const lossTier3Map = await computeLosstier3(allLosstier3);
+ 	const lossTier4Map = await computeLosstier4(allLosstier4);
+ 	
 	for(var [key, value] of kpitwoMap) {
 		const kpitwo = await Kpitwolev.findById(key);
 		let pushkpitwo = {
@@ -249,6 +270,25 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 				};
 				datas.push(pushlosstier3);
 				links.push(link);
+				for(var [key2 , value2] of lossTier4Map) {
+					const losstier4 = await Losstier4.findById(key2);
+					console.log(JSON.stringify(losstier4.losstier3Lossid , null , 4));
+					console.log(JSON.stringify(key , null , 4));
+					if (losstier4.losstier3Lossid == key1) {
+					let pushlosstier4 = {
+						name:losstier4.name,
+						value:value2
+					};
+					let link = {
+						source:losstier3.name,
+						target:losstier4.name,
+						value:value2
+					};
+					datas.push(pushlosstier4);
+					links.push(link);
+				
+					}
+				}
 			}
 		}
 		array.data = datas;
@@ -256,9 +296,8 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 		alldata.push(array);
 		alldata.sort ((a, b) => a.order - b.order)
 	}
-	//console.log(lossTier3Map);
-	//console.log(JSON.stringify(alldata , null , 4));
-	
+	//console.log(lossTier4Map);
+	console.log(JSON.stringify(alldata , null , 4));
 	return alldata;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
@@ -332,7 +371,7 @@ async function computeLosstier3(allLosstier3){
 			resultMap.set (allLosstier3[i][j].lossid, mapEle);
 		}
 	}
-	console.log('resultMap');
+	//console.log('resultMap');
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -343,7 +382,49 @@ async function computeLosstier3(allLosstier3){
 		map.set(key , value);
 		//console.log("属性：" + key + ",值：" + value);
 	}
-	console.log(map);
+	//console.log(map);
+	return map;
+}
+
+/*
+	计算losstier4的每一项的平均数
+ */
+async function computeLosstier4(allLosstier4){
+	//console.log(JSON.stringify(allLosstier3 , null , 4));
+	if (allLosstier4 == undefined || allLosstier4 == null || allLosstier4 == '') {
+		return ;
+	}
+	let resultMap = new Map ();
+
+	for (var i = allLosstier4.length - 1; i >= 0; i--) {
+		if (allLosstier4[i] == null || allLosstier4[i] == '') {
+			continue;
+		}
+		for (var j = allLosstier4[i].length - 1; j >= 0; j--) {
+			if (allLosstier4[i][j] == null || allLosstier4[i][j] == '') {
+				continue;
+			}
+			let mapEle = resultMap.get (allLosstier4[i][j].id);
+			if (!mapEle)
+			{
+				mapEle = new Array ();
+			}
+			mapEle.push (allLosstier4[i][j].linebodyLosstier4.value);
+			resultMap.set (allLosstier4[i][j].id, mapEle);
+		}
+	}
+	//console.log('resultMap');
+	let map = new Map();
+	for(var [key, value] of resultMap) {
+		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
+		const length = value.length;
+		if (length != 0) {
+			value = sum / length;
+		}
+		map.set(key , value);
+		//console.log("属性：" + key + ",值：" + value);
+	}
+	//console.log(map);
 	return map;
 }
 
