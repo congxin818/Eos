@@ -15,7 +15,7 @@ const loginError = {
 };
 
 const existError = {
-    status:'3',
+    status:'101',
     msg:'已存在'
 };
 const noExistError = {
