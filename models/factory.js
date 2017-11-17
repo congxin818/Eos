@@ -28,6 +28,10 @@ module.exports = function(sequelize , DataTypes){
         checked:{
             type:Sequelize.BOOLEAN,
             defaultValue: false
+        },
+        weight:{
+            type:Sequelize.INTEGER,
+            defaultValue: 1
         }
     },{
         indexes: [{

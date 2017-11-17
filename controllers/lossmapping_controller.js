@@ -193,8 +193,22 @@ async function baseSelectLosstier4ByLinebodyId(linebodyId){
 }
 exports.baseSelectLosstier4ByLinebodyId = baseSelectLosstier4ByLinebodyId;
 
+/*
+	处理（根据所有的线体ID查询LossMapping的数据）的请求
+ */
+async function selectAllByUserIdAndLinebodyIds(req , res ,next ){
+	console.log(JSON.stringify(req.body.UserId , null , 4));
+	console.log(JSON.stringify(req.body.linebodyIds , null , 4));
+	if (req.body.UserId == undefined || req.body.UserId == null || req.body.UserId == ''
+		||req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	const alldata = await this.selectLossMappingByLinebodyIds(req.body.UserId , req.body.linebodyIds);
+	res.end(JSON.stringify(alldata));
+}
+exports.selectAllByUserIdAndLinebodyIds = selectAllByUserIdAndLinebodyIds;
 /**
- * 	根据所有的线体ID查询KPItwo的数据
+ * 	根据所有的线体ID查询LossMapping的数据
  */
 async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 	if (linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
@@ -204,13 +218,13 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 	const user = await User.findById(userId);
 	//console.log(JSON.stringify(user , null , 4));
 	if (user == undefined || user == null || user == '') {
-		return ;
+		return errorUtil.noExistError;
 	}
 	const Ids = await linebodyIds.split(",");
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	if (Ids == undefined || Ids == null || Ids == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
-		return ;
+		return errorUtil.serviceError;
 	}
 	let allKpitwo = [];
 	let allLosstier3 = [];
@@ -301,7 +315,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 	}
 	//console.log(lossTier4Map);
 	//console.log(JSON.stringify(alldata , null , 4));
-	return allKpitwo;
+	return alldata;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
@@ -473,14 +487,22 @@ async function computeKpitwoBytime(allKpitwo , startTime , endTime){
 				continue;
 			}
 			const classstarttime = allKpitwo[i][j].linebodyKpitwolev.classstarttime;
-			if (true) {}
-			let mapEle = resultMap.get (allKpitwo[i][j].kpitwoid);
-			if (!mapEle)
-			{
-				mapEle = new Array ();
+			const classendtime = allKpitwo[i][j].linebodyKpitwolev.classendtime;
+			if (classstarttime == null || classstarttime == ''
+				||classendtime == null || classendtime == '') {
+				allKpitwo.splice(i , 1);//删除该元素
+				continue;
 			}
-			mapEle.push (allKpitwo[i][j].linebodyKpitwolev.value);
-			resultMap.set (allKpitwo[i][j].kpitwoid, mapEle);
+			let mStartTime = moment(classstarttime);
+			let mEndTime = moment(classendtime);
+			if (mStartTime.isAfter(mEndTime)) {
+				allKpitwo.splice(i , 1);//删除该元素
+				continue;
+			}else{
+				if (mEndTime.isAfter(mEndTime)) {
+
+				}
+			}
 		}
 	}
 }

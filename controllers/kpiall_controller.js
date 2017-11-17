@@ -62,7 +62,8 @@ const kpiTwoShow = {
                 kpiTwoShow.id = 't' + data.kpitwoid
                 kpiTwoShow.name = data.name
                 kpiTwoShow.pId = data.pId
-                res.end(JSON.stringify(kpiTwoShow)); 
+                dataSuccess.data = kpiTwoShow;
+                res.end(JSON.stringify(dataSuccess));
             }
                 res.end(JSON.stringify(parameterError)); 
         }else{

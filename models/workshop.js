@@ -8,7 +8,6 @@ var Sequelize = require('sequelize');
 var sequelize = require('../mysql').sequelize();
 
 module.exports = function(sequelize , DataTypes){
-//var Workshop = sequelize.define('workshop' , {
     return sequelize.define('workshop' , {
 	   workshopid:{ //自增长id,主键,整形
             type:Sequelize.INTEGER,
@@ -28,9 +27,10 @@ module.exports = function(sequelize , DataTypes){
         checked:{
             type:Sequelize.BOOLEAN,
             defaultValue: false
+        },
+        weight:{
+            type:Sequelize.INTEGER,
+            defaultValue: 1
         }
     });
 }
-//Workshop.sync();
-
-//module.exports = Workshop;

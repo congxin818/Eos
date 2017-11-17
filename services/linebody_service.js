@@ -51,6 +51,8 @@ const errorUtil = require('../utils/errorUtil');
             idealvalue: req.body.idealValue,
             idealstrattime: req.body.idealStrattime,
             idealendtime: req.body.idealEndtime
+            // ,
+            // weight:req.body.weight
         };
         var workshopId = req.body.pId.slice(1,);
         const workshop = await Workshop.findById(workshopId);
@@ -84,7 +86,9 @@ const errorUtil = require('../utils/errorUtil');
     */
     exports.updateLinebodyById = function(req , res) {
        var linebody = {
-          linebodyname: req.body.name
+        linebodyname: req.body.name
+        // ,
+        // weight:req.body.weight
       };
       var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页
