@@ -51,7 +51,7 @@ const kpiTwoShow = {
             }
             itempoolOutput.name = KpitwolevList[i].name
             // 把loss三级目录名字查找出来
-            losstier3NameList = await impobjServices.selectLossByKpitwo(req.body.linebodyId,KpitwolevList[i]);
+            losstier3NameList = await impobjServices.selectLossByKpitwo(req.body.linebodyId,KpitwolevList[i].kpitwoid);
             itempoolOutput.data =  losstier3NameList
             await showNameList.push(itempoolOutput)
         }

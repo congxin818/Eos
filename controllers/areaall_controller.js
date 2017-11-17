@@ -22,7 +22,7 @@ const dataSuccess = {
 };
 
 const parameterError = {
-    status: '1', 0
+    status: '1',
     msg: '参数错误'
 };
 

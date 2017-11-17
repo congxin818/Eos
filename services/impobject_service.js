@@ -39,7 +39,7 @@ const sequelize = require('../mysql').sequelize();
     exports.selectLossByKpitwo = async function(linebodyid,kpitwoid) {
         linebody = await Linebody.findOne({ where:{linebodyid:linebodyid }})
 
-        let  tier3 = await linebody.getLinebodyLosstier3({'attributes': ['name', 'lossid']});
+        let  tier3 = await linebody.getLinebodyLosstier3({'attributes': ['name', 'lossid'],where:{kpitwolevKpitwoid:kpitwoid}});
         tier3.sort ((a, b) => {return a.linebodylosstier3.value - b.linebodylosstier3.value});
         return tier3;
     }
