@@ -60,12 +60,10 @@ var linebody_service = require('../services/linebody_service');
     exports.deleteFactoryById = async function(req , res) {
         //先查找,再调用删除,最后返回首页
         const factory  = await Factory.findById(req.query.factoryId);
-        console.log('factory--->'+ JSON.stringify(factory));
         if (factory == null || factory == '') {
             return errorUtil.noExistError;
         }
         const falg = await factory.destroy();
-        console.log('falg--->' + JSON.stringify(falg));
         if (falg == null || falg == '') {
             return errorUtil.noExistError;
         }

@@ -7,7 +7,7 @@
 //引入数据库Message模块
 const twolevServices = require('../services/kpitwolev_service');
 const lossstatusServices = require('../services/lossstatus_service');
-const impobjServices = require('../services/impobject_service');
+const datainputServices = require('../services/datainput_service');
 const Kpitwolev = require('../models').Kpitwolev;
 const Losscategory = require('../models').Losscategory;
 
@@ -39,52 +39,27 @@ const kpiTwoShow = {
     exports.addClasstime = async function(req , res) {
         if(req.body.classStarttime == null||req.body.classStarttime == ''
             ||req.body.classEndtime == null||req.body.classEndtime == ''
-            ||req.body.twolevName == null||req.body.twolevName == ''){
+            ||req.body.twolevName == null||req.body.twolevName == ''
+            ||req.body.linebodyId == null||req.body.linebodyId == ''){
          res.end(JSON.stringify(parameterError))
  }
         // 根据二级目录名字创建一条二级目录数据
-        const KpitwolevNameList = await impobjServices.selectKpitwoBylinebyid(req , res);
-        var showNameList =[];
-        var LosscategoryNameList = [];
-        for(var i = 0;i < KpitwolevNameList.length; i++){
-            var itempoolOutput = { 
-                name:'',
-                data:''
-            }
-            itempoolOutput.name = KpitwolevNameList[i].name
-            const twolevdata = await twolevServices.selectTwoLevByName(KpitwolevNameList[i].name ,
-               KpitwolevNameList[i].pId)
-            // 把loss三级目录名字查找出来
-            LosscategoryNameList = await impobjServices.selectLossByKpitwo(twolevdata);
-            itempoolOutput.data =  LosscategoryNameList
-            await showNameList.push(itempoolOutput)
-        }
-        res.end(JSON.stringify(showNameList))     
-    }
-/*
-    improvment编辑项目状态
-    */
-    exports.updateImpItemstatus = async function(req , res) {
-        if(req.body.lossId == null||req.body.lossId == ''){
-            res.end(JSON.stringify(parameterError))
-        }
-        const updateData = await lossstatusServices.updateLostatusById(req , res)
-        if(updateData.length == 1){
-            res.end(JSON.stringify(dataSuccess))
-        }else{
-            res.end(JSON.stringify(updateError))
-        }     
+        const KpitwolevNameList = await datainputServices.addKpitwolevByname(req);
+        res.end(JSON.stringify(dataSuccess))     
     }
 
+
 /*
-    improvment展示项目状态
+    datainput 添加loss展示三级和对应四级的结构
     */
-    exports.showImpItemstatus = async function(req , res) {
-        if(req.body.lossId == null||req.body.lossId == ''){
+    exports.showLosstier3 = async function(req , res) {
+        if(req.body.twolevName == null||req.body.twolevName == ''){
             res.end(JSON.stringify(parameterError))
         }
-        const data = await lossstatusServices.selectLostatusById(req.body.lossId)
-        dataSuccess.data = data 
+        // 找到对应的三级目录结构
+        const twolevdata = await datainputServices.selectTwoLevByName(req.body.twolevName)
+        const losstier3 = await datainputServices.selectLosstier3BytwoId(twolevdata.kpitwoid);
+        dataSuccess.data = losstier3 
         res.end(JSON.stringify(dataSuccess))
     }
 

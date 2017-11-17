@@ -5,7 +5,6 @@
     */
 
 //引入数据库Message模块
-var Group = require('../models/group');
 const groupconler = require('./group_controller');
 const factoryconler = require('./factory_controller');
 const workshopconler = require('./workshop_controller');
@@ -14,6 +13,7 @@ const services = require('../services/group_service');
 const facServices = require('../services/factory_service');
 const wksServices = require('../services/workshop_service');
 const linbyServices = require('../services/linebody_service');
+const errorUtil = require('../utils/errorUtil');
 
 const dataSuccess = {
     status: '0', 
@@ -22,7 +22,7 @@ const dataSuccess = {
 };
 
 const parameterError = {
-    status: '1', 
+    status: '1', 0
     msg: '参数错误'
 };
 
@@ -122,7 +122,6 @@ const updateAreaError = {
     if (!isNaN(areaFlag)){
         // 更改一个集团
         const updateReturn = await groupconler.updateGroupById(req , res);
-        console.log('data-------------->' +  updateReturn)
         // 验证更改的名字是否重复
         if(updateReturn.status=='101')
             res.end(JSON.stringify(updateReturn));
@@ -179,13 +178,11 @@ const updateAreaError = {
     调用相对应的增加函数
     */
     exports.addAreaOne = async function(req , res){
-        console.log('pId=================>' + req.body.pId)
     //如果没有post数据或者数据为空,直接返回
     if( req.body.name == null || req.body.name == ''||req.body.pId == ''){
         res.end(JSON.stringify(parameterError));
     }else{
         if (req.body.pId == null){
-        console.log('pId2=================>' + req.body.pId)
         // 添加一个集团
         const addData = await groupconler.addGroupOne(req , res);
         // 增加的验证
@@ -224,7 +221,6 @@ const updateAreaError = {
                 addData.workshopbelong,addData.checked);
             res.end(JSON.stringify(addRetrun));
         }else if(areaFlag == 'w'){
-            console.log('lineId=================>' + areaFlag)
             // 添加一个线体
             const addData = await linebodyconler.addLinebodyOne(req , res);
             // 增加的验证
@@ -257,27 +253,29 @@ const updateAreaError = {
         var areaId = req.query.id.slice(1,);
         if (!isNaN(areaFlag)){
             // 删除一个集团
-            const deleteReturn = await groupconler.deleteGroupById(req , res);
+             deleteReturn = await groupconler.deleteGroupById(req , res);
         }   
-        if(areaFlag == 'f'){
+        else if(areaFlag == 'f'){
             // 删除一个工厂
             req.query.factoryId = areaId;
-            const deleteReturn = await factoryconler.deleteFactoryById(req , res);
+             deleteReturn = await factoryconler.deleteFactoryById(req , res);
         }
-        if(areaFlag == 'w'){
+        else if(areaFlag == 'w'){
             // 删除一个车间
             req.query.workshopId = areaId;
-            const deleteReturn = await workshopconler.deleteWorkshopById(req , res);
+             deleteReturn = await workshopconler.deleteWorkshopById(req , res);
         }
-        if(areaFlag == 'l'){
+        else if(areaFlag == 'l'){
             // 删除一个线体           
             req.query.linebodyId = areaId;
-            const deleteReturn = await linebodyconler.deleteLinebodyById(req , res);       
+             deleteReturn = await linebodyconler.deleteLinebodyById(req , res);       
+        }else {
+            deleteReturn = errorUtil.noExistError
         }
-        if(deleteReturn == null||deleteReturn == ''){
+        if(deleteReturn == ''||deleteReturn == null||deleteReturn == undefined){
             res.end(JSON.stringify(dataSuccess));
         }else{            
-            res.end(JSON.stringify(parameterError));
+            res.end(JSON.stringify(deleteReturn));
         }
 
     }

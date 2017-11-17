@@ -12,12 +12,12 @@ var Kpitwolev = sequelize.import('./kpitwolev.js');
 
 var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 
-var Losscategory = sequelize.import('./losstier3.js');
+var Losstier3 = sequelize.import('./losstier3.js');
 var Lossstatus = sequelize.import('./lossstatus.js');
 var Losstier4 = sequelize.import('./losstier4.js');
 
 var LinebodyKpitwolev = sequelize.import('./linebodykpitwolev.js');
-var LinebodyLosscategory = sequelize.import('./linebodylosscategory.js');
+var LinebodyLosstier3 = sequelize.import('./linebodylosstier3.js');
 var LinebodyLosstier4 = sequelize.import('./linebodylosstier4.js');
 
 //user和group之间N:M关系
@@ -47,14 +47,14 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Linebody和Kpitwolev建立M：N关系
-Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolevs'});
-Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolevs'});
+Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
+Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
 
-//Linebody和Losscategory建立M：N关系
-Linebody.belongsToMany(Losscategory, {through: LinebodyLosscategory,as:'LinebodyLosscategorys'});
-Losscategory.belongsToMany(Linebody, {through: LinebodyLosscategory,as:'LinebodyLosscategorys'});
+//Linebody和Loss三级建立M：N关系
+Linebody.belongsToMany(Losstier3, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
+Losstier3.belongsToMany(Linebody, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
 
-//Linebody和Losscategory建立M：N关系
+//Linebody和Loss4级建立M：N关系
 Linebody.belongsToMany(Losstier4, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 Losstier4.belongsToMany(Linebody, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 
@@ -66,15 +66,15 @@ Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 
 //Losscategory和Lossstatus建立1：1关系
-Losscategory.hasOne(Lossstatus);
+Losstier3.hasOne(Lossstatus);
 
 
 //Kpionelev和Kpitwolev建立1：N关系
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
 //Kpitwolev和Losscategory建立1：N关系
-Kpitwolev.hasMany(Losscategory, {as:'KpitwolevLosscategory' , constraints:true});
+Kpitwolev.hasMany(Losstier3, {as:'KpitwolevLosscategory' , constraints:true});
 //Tier4和Losscategory建立1：N关系
-Losscategory.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
+Losstier3.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
 
 sequelize.sync();
 
@@ -87,10 +87,10 @@ exports.Linebody = Linebody;
 exports.Validmenu = Validmenu;
 exports.Kpionelev = Kpionelev;
 exports.Kpitwolev = Kpitwolev;
-exports.Losscategory = Losscategory;
+exports.Losstier3 = Losstier3;
 exports.UserKpitwolev = UserKpitwolev;
 exports.Lossstatus = Lossstatus;
 exports.Losstier4 = Losstier4;
 exports.LinebodyKpitwolev = LinebodyKpitwolev;
-exports.LinebodyLosscategory = LinebodyLosscategory;
+exports.LinebodyLosstier3 = LinebodyLosstier3;
 exports.LinebodyLosstier4 = LinebodyLosstier4;
