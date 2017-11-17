@@ -11,12 +11,20 @@ const LinebodyLosstier3 = require('../models').LinebodyLosstier3;
 const Linebody = require('../models').Linebody;
 const lossServices = require('../services/losstier3_service');
 const sequelize = require('../mysql').sequelize();
+const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
 
 /*
-	根据线体id把loss二级查找出来
+	根据线体id把loss二级id查找出来
     */
-    exports.selectKpitwoBylinebyid = async function(req , res) {
-        const data = await Kpitwolev.findAll();
+    exports.selectKpitwoBylinebyid = async function(linebodyid) {
+        const data = await LinebodyKpitwolev.findAll({where:{linebodyLinebodyid:linebodyid}});
+        return data;
+    }
+    /*
+    根据loss二级id把loss二级目录查找出来
+    */
+    exports.selectKpitwoNameByid = async function(twolevid) {
+        const data = await Kpitwolev.findById(twolevid)
         return data;
     }
     /*

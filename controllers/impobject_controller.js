@@ -40,18 +40,20 @@ const kpiTwoShow = {
         if(req.body.linebodyId == null||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
        }
-        // 根据线体id把loss二级目录查找出来
-        const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
+        // 根据线体id把loss二级目录id查找出来
+        const kpitwolevdataList = await impobjServices.selectKpitwoBylinebyid(req.body.linebodyId );
         var showNameList =[];
         var losstier3NameList = [];
-        for(var i = 0;i < KpitwolevList.length; i++){
+        for(var i = 0;i < kpitwolevdataList.length; i++){
             var itempoolOutput = { 
                 name:'',
                 data:''
             }
-            itempoolOutput.name = KpitwolevList[i].name
+            const kpitwolev = await impobjServices.selectKpitwoNameByid(kpitwolevdataList[i].kpitwolevKpitwoid)
+            itempoolOutput.name = kpitwolev.name
             // 把loss三级目录名字查找出来
-            losstier3NameList = await impobjServices.selectLossByKpitwo(req.body.linebodyId,KpitwolevList[i].kpitwoid);
+            losstier3NameList = await impobjServices.selectLossByKpitwo(req.body.linebodyId,
+                kpitwolevdataList[i].kpitwolevKpitwoid)
             itempoolOutput.data =  losstier3NameList
             await showNameList.push(itempoolOutput)
         }
