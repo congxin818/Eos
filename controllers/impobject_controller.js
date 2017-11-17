@@ -118,7 +118,7 @@ const kpiTwoShow = {
        for(var i=0;i<lossIdList.length;i++){
         const lossidList = await impobjServices.addObjectnowBylossid(lossIdList[i])
         console.log(JSON.stringify(lossidList , null , 4));
-        if(lossidList != 1 ){
+        if(lossidList == null ){
             res.end(JSON.stringify(addObjectError))
         }
        }
