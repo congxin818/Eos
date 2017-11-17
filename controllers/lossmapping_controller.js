@@ -197,9 +197,7 @@ exports.baseSelectLosstier4ByLinebodyId = baseSelectLosstier4ByLinebodyId;
 	处理（根据所有的线体ID查询LossMapping的数据）的请求
  */
 async function selectAllByUserIdAndLinebodyIds(req , res ,next ){
-	console.log(JSON.stringify(req.body.UserId , null , 4));
-	console.log(JSON.stringify(req.body.linebodyIds , null , 4));
-	if (req.body.UserId == undefined || req.body.UserId == null || req.body.UserId == ''
+	if (req.body.userId == undefined || req.body.userId == null || req.body.userId == ''
 		||req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
