@@ -197,11 +197,13 @@ exports.baseSelectLosstier4ByLinebodyId = baseSelectLosstier4ByLinebodyId;
 	处理（根据所有的线体ID查询LossMapping的数据）的请求
  */
 async function selectAllByUserIdAndLinebodyIds(req , res ,next ){
+	// console.log(JSON.stringify(req.body.userId , null , 4));
+	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
 	if (req.body.userId == undefined || req.body.userId == null || req.body.userId == ''
 		||req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
-	const alldata = await this.selectLossMappingByLinebodyIds(req.body.UserId , req.body.linebodyIds);
+	const alldata = await this.selectLossMappingByLinebodyIds(req.body.userId , req.body.linebodyIds);
 	res.end(JSON.stringify(alldata));
 }
 exports.selectAllByUserIdAndLinebodyIds = selectAllByUserIdAndLinebodyIds;
@@ -209,9 +211,11 @@ exports.selectAllByUserIdAndLinebodyIds = selectAllByUserIdAndLinebodyIds;
  * 	根据所有的线体ID查询LossMapping的数据
  */
 async function selectLossMappingByLinebodyIds(userId , linebodyIds){
+	// console.log(JSON.stringify(userId , null , 4));
+	// console.log(JSON.stringify(linebodyIds , null , 4));
 	if (linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
 		||userId == undefined || userId == null || userId == '') {
-		return ;
+		return errorUtil.parameterError;
 	}
 	const user = await User.findById(userId);
 	//console.log(JSON.stringify(user , null , 4));
@@ -494,15 +498,18 @@ async function computeKpitwoBytime(allKpitwo , startTime , endTime){
 			}
 			let mStartTime = moment(classstarttime);
 			let mEndTime = moment(classendtime);
-			if (mStartTime.isAfter(endTime)) {
+			if (mStartTime.isAfter(endTime) || mEndTime.isBefore(startTime)) {
 				allKpitwo.splice(i , 1);//删除该元素
 				continue;
 			}else{
-				if (mEndTime.isBefore(startTime)) {
-					allKpitwo.splice(i , 1);//删除该元素
-					continue;
+				if (mStartTime.isBetween(startTime , endTime) && mEndTime.isBetween(startTime , endTime)) {
+
 				}else{
-					if (mStartTime) {}
+					if (mStartTime.isBefore(startTime)) {
+
+					}else{
+
+					}
 
 				}
 			}
