@@ -494,11 +494,15 @@ async function computeKpitwoBytime(allKpitwo , startTime , endTime){
 			}
 			let mStartTime = moment(classstarttime);
 			let mEndTime = moment(classendtime);
-			if (mStartTime.isAfter(mEndTime)) {
+			if (mStartTime.isAfter(endTime)) {
 				allKpitwo.splice(i , 1);//删除该元素
 				continue;
 			}else{
-				if (mEndTime.isAfter(mEndTime)) {
+				if (mEndTime.isBefore(startTime)) {
+					allKpitwo.splice(i , 1);//删除该元素
+					continue;
+				}else{
+					if (mStartTime) {}
 
 				}
 			}
