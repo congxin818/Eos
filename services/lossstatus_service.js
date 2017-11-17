@@ -11,7 +11,7 @@ var Lossstatus = require('../models').Lossstatus;
  */
 async function selectLostatusById(lossid){
     const lossstatusdata = await Lossstatus.findAll({
-        where:{losscategoryLossid:lossid}
+        where:{losstier3Lossid:lossid}
     });
     return lossstatusdata;
 }
@@ -36,7 +36,7 @@ async function updateLostatusById(req , res){
         target:req.body.target,
         actualvalue:req.body.actualValue
     };
-    const updataReturn = await Lossstatus.update(lossstatus,{where:{losscategoryLossid:req.body.lossId}});
+    const updataReturn = await Lossstatus.update(lossstatus,{where:{losstier3Lossid:req.body.lossId}});
     return updataReturn;
 }
 exports.updateLostatusById = updateLostatusById;
@@ -45,7 +45,7 @@ exports.updateLostatusById = updateLostatusById;
     根据关联清理数据库
  */
 async function lossClear(){
-    const loss = await Lossstatus.findAll({where:{ losscategoryLossid:null}});
+    const loss = await Lossstatus.findAll({where:{losstier3Lossid:null}});
     //console.log(JSON.stringify(workshop.length));
     for (var i = loss.length - 1; i >= 0; i--) {
         await loss[i].destroy();

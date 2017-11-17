@@ -9,7 +9,7 @@ const twolevServices = require('../services/kpitwolev_service');
 const lossstatusServices = require('../services/lossstatus_service');
 const impobjServices = require('../services/impobject_service');
 const Kpitwolev = require('../models').Kpitwolev;
-const Losscategory = require('../models').Losscategory;
+const Losstier3 = require('../models').Losstier3;
 
 var dataSuccess = {
     status: '0', 
@@ -43,7 +43,7 @@ const kpiTwoShow = {
         // 根据线体id把loss二级目录查找出来
         const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var showNameList =[];
-        var LosscategoryNameList = [];
+        var losstier3NameList = [];
         for(var i = 0;i < KpitwolevList.length; i++){
             var itempoolOutput = { 
                 name:'',
@@ -51,8 +51,8 @@ const kpiTwoShow = {
             }
             itempoolOutput.name = KpitwolevList[i].name
             // 把loss三级目录名字查找出来
-            LosscategoryNameList = await impobjServices.selectLossByKpitwo(KpitwolevList[i]);
-            itempoolOutput.data =  LosscategoryNameList
+            losstier3NameList = await impobjServices.selectLossByKpitwo(req.body.linebodyId,KpitwolevList[i]);
+            itempoolOutput.data =  losstier3NameList
             await showNameList.push(itempoolOutput)
         }
         res.end(JSON.stringify(showNameList))     
@@ -94,22 +94,24 @@ const kpiTwoShow = {
        }
        // 根据线体id把loss二级目录查找出来
         const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
-        var LosscategoryList = [];
+        var losstier3List = [];
          for(var i = 0;i < KpitwolevList.length; i++){
             // 把对应的loss三级查找出来
-            data = await impobjServices.selectObjectnowBytwolevid(KpitwolevList[i].kpitwoid);  
+            data = await impobjServices.selectObjectnowBytwolevid(req.body.linebodyId,
+                KpitwolevList[i].kpitwoid);
             if(data.length > 0){
-                LosscategoryList = data.concat(LosscategoryList)
+                losstier3List = data.concat(losstier3List)
             }
         }
-       res.end(JSON.stringify(LosscategoryList))
+       res.end(JSON.stringify(losstier3List))
    }
 
 /*
     根据loss id增加现进行项目
     */
     exports.addObjectnowBylossid = async function(req , res) {
-        if(req.body.lossIdList.length == 0){
+        if(req.body.lossIdList == null||req.body.lossIdList.length == 0
+            ||req.body.lossIdList == ''){
            res.end(JSON.stringify(parameterError))
        }
        var lossIdList = req.body.lossIdList.split(",")

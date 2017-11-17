@@ -8,6 +8,8 @@ var express = require('express');
 var router = express.Router();
 var controller = require('../controllers/impobject_controller');
 
+var testcontroller = require('../controllers/datainput_controller');
+
 
 /*
 	improvment展示项目池信息
@@ -51,4 +53,12 @@ router.post('/deleteObjectnowBylossid', function(req, res, next) {
     controller.deleteObjectnowBylossid(req , res , next);
 });
 
+
+
+/*
+	删除现进行项目
+ */
+router.post('/addClasstime', function(req, res, next) {
+    testcontroller.addClasstime(req , res , next);
+});
 module.exports = router;

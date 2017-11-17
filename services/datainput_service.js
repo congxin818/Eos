@@ -7,31 +7,46 @@
 //引入数据库Message模块
 const Kpitwolev = require('../models').Kpitwolev;
 const Losstier3 = require('../models').Losstier3;
-const LinebodyLosstier3 = require('../models').LinebodyLosstier3;
+const Losstier4 = require('../models').Losstier4;
 const Linebody = require('../models').Linebody;
 const lossServices = require('../services/losstier3_service');
 const sequelize = require('../mysql').sequelize();
 
 /*
-	根据线体id把loss二级查找出来
+	根据二级目录名字创建一条二级目录数据
     */
-    exports.selectKpitwoBylinebyid = async function(req , res) {
-        const data = await Kpitwolev.findAll();
-        return data;
+    exports.addKpitwolevByname = async function(req) {
+        const kpitwolevdata = {
+            classstarttime: req.body.classStarttime,
+            classendtime: req.body.classEndtime
+        }
+        const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
+        const linebody = await Linebody.findById(req.body.linebodyId)
+       // await linebody.addLinebodyKpitwolev(kpitwolev)
+        await linebody.addLinebodyKpitwolev (kpitwolev,{through:kpitwolevdata});
+        return
     }
-    /*
-    根据二级lossid把添加到现进行项目中的loss查找出来
+/*
+    根据二级目录名字找到对应二级目录
     */
-    exports.selectObjectnowBytwolevid = async function(linebodyid,twolevid) {
-        /*linebody = await Linebody.findOne({ where:{linebodyid:linebodyid }})
-        tier3 = await linebody.getLinebodyLosstier3({'attributes': ['name', 'lossid'],
-         where:{kpitwolevKpitwoid:twolevid}})*/
+    exports.selectTwoLevByName = async function(twolevName) {
+        const kpitwolevdata = await Kpitwolev.findOne({where:{name:twolevName}})
+        return kpitwolevdata;
+    }
+/*
+    根据二级目录id找到对应三级目录结构
+    */
+    exports.selectLosstier3BytwoId = async function(twolevid) {
+        const losstier3data = await Losstier3.findOne({'attributes': ['name'],where:{kpitwolevKpitwoid:twolevid}})
+        return losstier3data;
+    }
 
-        result = await sequelize.query(
-            'SELECT losstier3.name, losstier3.lossid,linebodylosstier3.addobjectnow FROM losstier3s AS losstier3 INNER JOIN linebodylosstier3s AS linebodylosstier3 ON losstier3.lossid = linebodylosstier3.losstier3Lossid AND linebodylosstier3.linebodyLinebodyid = :linebodyLinebodyid WHERE (losstier3.kpitwolevKpitwoid = :kpitwolevKpitwoid AND linebodylosstier3.addobjectnow = :addobjectnow);',
-            { replacements: { linebodyLinebodyid: linebodyid, kpitwolevKpitwoid:twolevid,addobjectnow:true }, type: sequelize.QueryTypes.SELECT }
-            );
-        return result;
+/*
+    根据三级目录id找到对应四级目录结构
+    */
+    exports.selectLosstier4Byloss4Id = async function(loss3id) {
+        const losstier4data = await Losstier4.findOne({'attributes': ['name'],where:{losstier3Lossid:loss3id}})
+        return losstier4data;
     }
 /*
     把二级目录对应的loss三级目录按value查找出来

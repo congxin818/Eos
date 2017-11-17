@@ -50,11 +50,11 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
 Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
 
-//Linebody和Losscategory建立M：N关系
+//Linebody和Loss三级建立M：N关系
 Linebody.belongsToMany(Losstier3, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
 Losstier3.belongsToMany(Linebody, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
 
-//Linebody和Losscategory建立M：N关系
+//Linebody和Loss4级建立M：N关系
 Linebody.belongsToMany(Losstier4, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 Losstier4.belongsToMany(Linebody, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 

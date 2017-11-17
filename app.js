@@ -19,6 +19,7 @@ var kpiSet = require('./routes/kpiall_route'); //KPI设置
 var losstier3 = require('./routes/losstier3_route'); //KPI设置
 var impobject = require('./routes/impobject_route'); //improvement object
 var lossmapping = require('./routes/lossmapping_route'); //lossmapping
+var datainput = require('./routes/datainput_route'); //datainput
 
 var app = express();
 
@@ -54,6 +55,7 @@ app.use('/KPISet' , kpiSet);//在app中注册KPI设置接口
 app.use('/losscategory' , losstier3);
 app.use('/impobject' , impobject);
 app.use('/lossmapping' , lossmapping);
+app.use('/datainput' , datainput);
 
 // 404 错误
 var errorData_404 = {

@@ -21,6 +21,10 @@ var sequelize = require('../mysql').sequelize();
         },
         endtime:{
             type:Sequelize.DATE
+        },
+        addobjectnow:{
+            type:Sequelize.BOOLEAN,
+            defaultValue: false
         }
     });
 }
