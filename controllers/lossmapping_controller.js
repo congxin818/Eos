@@ -315,7 +315,8 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds){
 	}
 	//console.log(lossTier4Map);
 	//console.log(JSON.stringify(alldata , null , 4));
-	return alldata;
+	dataSuccess.data = alldata;
+	return dataSuccess;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
