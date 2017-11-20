@@ -58,6 +58,11 @@ Losstier3.belongsToMany(Linebody, {through: LinebodyLosstier3,as:'LinebodyLossti
 Linebody.belongsToMany(Losstier4, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 Losstier4.belongsToMany(Linebody, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
 
+//LinebodyKpitwolev和LinebodyLosstier3建立1：N关系
+LinebodyKpitwolev.hasMany(LinebodyLosstier3, {as:'KpitwolevLosstier3Data' , constraints:true});
+//LinebodyKpitwolev和LinebodyLosstier3建立1：N关系
+LinebodyLosstier3.hasMany(LinebodyLosstier4, {as:'Losstier3Losstier4Data' , constraints:true});
+
 //Group和Factory建立1：N关系
 Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
 //Group和Workshop建立1：N关系
