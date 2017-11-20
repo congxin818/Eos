@@ -14,11 +14,11 @@ var sequelize = require('../mysql').sequelize();
             autoIncrement:true,
             primaryKey: true
         },
-        // 状态
+        // 项目状态
         status:{
             type:Sequelize.INTEGER
         },
-        // 项目编号
+        // 改进项目编号
          projectnumber:{
             type:Sequelize.INTEGER
         },
@@ -26,26 +26,11 @@ var sequelize = require('../mysql').sequelize();
          projectname:{
             type: Sequelize.STRING(50)
         },
-        // 所属区域
+        // 针对的损失类别
          areablong:{
             type: Sequelize.STRING(50)
         },
-        // 项目方法
-         projectmethod:{
-            type: Sequelize.STRING(50)
-        },
-        // 项目负责人
-         projectmanager:{
-            type: Sequelize.STRING(50)
-        },
-        // 团队成员
-         teammember:{
-            type: Sequelize.STRING(50)
-        },
-        // 计划开始
-         planstart:{
-            type: Sequelize.STRING(50)
-        },
+      
         // 实际开始
          actualstart:{
             type: Sequelize.STRING(50)
@@ -54,15 +39,11 @@ var sequelize = require('../mysql').sequelize();
          planend:{
             type: Sequelize.STRING(50)
         },
-        // 实际结束
-         actualend:{
-            type: Sequelize.STRING(50)
-        },
         // 目标
          target:{
             type: Sequelize.FLOAT
         },
-        // 当前值
+        // 当前值（起点）
          actualvalue:{
             type: Sequelize.FLOAT
         }

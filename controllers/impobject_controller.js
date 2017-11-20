@@ -119,7 +119,7 @@ const kpiTwoShow = {
        var lossIdList = req.body.lossIdList.split(",")
        for(var i=0;i<lossIdList.length;i++){
         const lossidList = await impobjServices.addObjectnowBylossid(lossIdList[i])
-        if(lossidList != 1 ){
+        if(lossidList == null||lossidList == ''){
             res.end(JSON.stringify(addObjectError))
         }
        }
