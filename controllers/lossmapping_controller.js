@@ -11,6 +11,9 @@ var Workshop = require('../models').Workshop;
 var Kpitwolev = require('../models').Kpitwolev;
 var Losstier3 = require('../models').Losstier3;
 var Losstier4 = require('../models').Losstier4;
+var LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
+var LinebodyLosstier3 = require('../models').LinebodyLosstier3;
+var LinebodyLosstier4 = require('../models').LinebodyLosstier4;
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 var dataSuccess = {
@@ -132,14 +135,14 @@ async function baseSelectKpitwoByLinebodyId(userId , linebodyId){
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return ;
 	}
-	for (var i = kpitwos.length - 1; i >= 0; i--) {
-		const kpitwoid = kpitwos[i].kpitwoid;
-		for (var m = tier2.length - 1; m >= 0; m--) {
-			if (kpitwoid == tier2[m].kpitwoid) {
-				kpitwos[i]['order'] = tier2[m].userKpitwolev.sequence;
-			}
-		}
-	}
+	// for (var i = kpitwos.length - 1; i >= 0; i--) {
+	// 	const kpitwoid = kpitwos[i].kpitwoid;
+	// 	for (var m = tier2.length - 1; m >= 0; m--) {
+	// 		if (kpitwoid == tier2[m].kpitwoid) {
+	// 			kpitwos[i]['order'] = tier2[m].userKpitwolev.sequence;
+	// 		}
+	// 	}
+	// }
 
 	//kpitwos.sort ((a, b) => a.order - b.order);
 
@@ -161,19 +164,19 @@ exports.baseSelectKpitwoByLinebodyId = baseSelectKpitwoByLinebodyId;
 /*
 	根据线体ID查询losstier3的数据
  */
-async function baseSelectLosstier3ByLinebodyId(linebodyId){
-	if (linebodyId == undefined || linebodyId == null || linebodyId == '') {
+async function baseSelectLosstier3ByLinebodyKpitwoId(linebodyKpitwoId){
+	if (linebodyKpitwoId == undefined || linebodyKpitwoId == null || linebodyKpitwoId == '') {
 		return ;
 	}
 	//const user = await User.findById(userId);
-	const linebody = await Linebody.findById(linebodyId);
-	if (linebody == undefined || linebody == null || linebody == '') {
+	const linebodyKpitwolev = await LinebodyKpitwolev.findById(linebodyKpitwoId);
+	if (linebodyKpitwolev == undefined || linebodyKpitwolev == null || linebodyKpitwolev == '') {
 		return ;
 	}
-	const losstier3s = await linebody.getLinebodyLosstier3({'attributes': ['name', 'lossid']});
+	const linebodyLosstier3s = await linebodyKpitwolev.getLinebodyLosstier3({'attributes': ['name', 'lossid']});
 	return losstier3s;
 }
-exports.baseSelectLosstier3ByLinebodyId = baseSelectLosstier3ByLinebodyId;
+exports.baseSelectLosstier3ByLinebodyKpitwoId = baseSelectLosstier3ByLinebodyKpitwoId;
 
 
 /*
@@ -197,8 +200,8 @@ exports.baseSelectLosstier4ByLinebodyId = baseSelectLosstier4ByLinebodyId;
 	处理（根据所有的线体ID查询LossMapping的数据）的请求
  */
 async function selectAllByUserIdAndLinebodyIds(req , res ,next ){
-	// console.log(JSON.stringify(req.body.userId , null , 4));
-	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
+	 console.log(JSON.stringify(req.body.userId , null , 4));
+	 console.log(JSON.stringify(req.body.linebodyIds , null , 4));
 	if (req.body.userId == undefined || req.body.userId == null || req.body.userId == ''
 		||req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == ''
 		||req.body.endTime == undefined || req.body.endTime == null || req.body.endTime == ''
@@ -213,8 +216,8 @@ exports.selectAllByUserIdAndLinebodyIds = selectAllByUserIdAndLinebodyIds;
  * 	根据所有的线体ID查询LossMapping的数据
  */
 async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime , endTime){
-	// console.log(JSON.stringify(userId , null , 4));
-	// console.log(JSON.stringify(linebodyIds , null , 4));
+	//console.log(JSON.stringify(userId , null , 4));
+	//console.log(JSON.stringify(linebodyIds , null , 4));
 	if (linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
 		||userId == undefined || userId == null || userId == ''
 		||startTime == undefined || startTime == null || startTime == ''
@@ -228,6 +231,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	}
 	const Ids = await linebodyIds.split(",");
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
+	//console.log(JSON.stringify(tier2 , null , 4));
 	if (Ids == undefined || Ids == null || Ids == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return errorUtil.serviceError;
@@ -241,96 +245,100 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		if (kpitwos != undefined && kpitwos != null && kpitwos != '') {
 			allKpitwo.push(kpitwos);
 		}
-		const losstier3s = await this.baseSelectLosstier3ByLinebodyId(Ids[i]);
-		if (losstier3s != undefined && losstier3s != null && losstier3s != '') {
-			allLosstier3.push(losstier3s);
-		}
-		const losstier4s = await this.baseSelectLosstier4ByLinebodyId(Ids[i]);
-		if (losstier4s != undefined && losstier4s != null && losstier4s != '') {
-			allLosstier4.push(losstier4s);
-		}
+		// const losstier4s = await this.baseSelectLosstier4ByLinebodyId(Ids[i]);
+		// if (losstier4s != undefined && losstier4s != null && losstier4s != '') {
+		// 	allLosstier4.push(losstier4s);
+		// }
 	}
 	let alldata = [];
-	//console.log(JSON.stringify(allLosstier3 , null , 4));
+	console.log(JSON.stringify(allKpitwo , null , 4));
 	const kpitwoTime = await computeKpitwoBytime(allKpitwo , startTime , endTime);
-	//console.log(JSON.stringify(allKpitwo.length , null , 4));
+	console.log(JSON.stringify('allKpitwo.length---------->'+allKpitwo.length , null , 4));
+	console.log(JSON.stringify(allKpitwo , null , 4));
 	if (kpitwoTime == undefined || kpitwoTime == null || kpitwoTime == '') {
 		return errorUtil.parameterError;
 	}
 	if (allKpitwo.length == 0) {
 		return errorUtil.noExistError;
 	}
-	const kpitwoMap = await computeKpitwo(allKpitwo);
- 	const lossTier3Map = await computeLosstier3(allLosstier3);
- 	const lossTier4Map = await computeLosstier4(allLosstier4);
- 	
-	for(var [key, value] of kpitwoMap) {
-		const kpitwo = await Kpitwolev.findById(key);
-		let pushkpitwo = {
-			name:kpitwo.name,
-			value:value
-		};	
-		let orderStr;
-		for (var m = tier2.length - 1; m >= 0; m--) {
-			if (key == tier2[m].kpitwoid) {
-				orderStr = tier2[m].userKpitwolev.sequence;
-			}
+	for (var i = allKpitwo.length - 1; i >= 0; i--) {
+		const losstier3s = await this.baseSelectLosstier3ByLinebodyKpitwoId(allKpitwo[i].id);
+		if (losstier3s != undefined && losstier3s != null && losstier3s != '') {
+			allLosstier3.push(losstier3s);
 		}
-		let array = {
-			title:kpitwo.name,
-			order:orderStr,
-			data: new Array (),
-			link: new Array ()
-		};
-		let datas = new Array ();
-		let links = new Array ();
-		datas.push(pushkpitwo);
-		for(var [key1 , value1] of lossTier3Map) {
-			const losstier3 = await Losstier3.findById(key1);
-			//console.log(JSON.stringify(losstier3.kpitwolevKpitwoid , null , 4));
-			//console.log(JSON.stringify(key , null , 4));
-			if (losstier3.kpitwolevKpitwoid == key) {
-				let pushlosstier3 = {
-					name:losstier3.name,
-					value:value1
-				};
-				let link = {
-					source:kpitwo.name,
-					target:losstier3.name,
-					value:value1
-				};
-				datas.push(pushlosstier3);
-				links.push(link);
-				for(var [key2 , value2] of lossTier4Map) {
-					const losstier4 = await Losstier4.findById(key2);
-					//console.log(JSON.stringify(losstier4.losstier3Lossid , null , 4));
-					//console.log(JSON.stringify(key , null , 4));
-					if (losstier4.losstier3Lossid == key1) {
-					let pushlosstier4 = {
-						name:losstier4.name,
-						value:value2
-					};
-					let link = {
-						source:losstier3.name,
-						target:losstier4.name,
-						value:value2
-					};
-					datas.push(pushlosstier4);
-					links.push(link);
-				
-					}
-				}
-			}
-		}
-		array.data = datas;
-		array.link = links;
-		alldata.push(array);
-		alldata.sort ((a, b) => a.order - b.order)
 	}
+	console.log(JSON.stringify(allLosstier3 , null , 4));
+	// const kpitwoMap = await computeKpitwo(allKpitwo);
+ // 	const lossTier3Map = await computeLosstier3(allLosstier3);
+ // 	const lossTier4Map = await computeLosstier4(allLosstier4);
+ 	
+	// for(var [key, value] of kpitwoMap) {
+	// 	const kpitwo = await Kpitwolev.findById(key);
+	// 	let pushkpitwo = {
+	// 		name:kpitwo.name,
+	// 		value:value
+	// 	};	
+	// 	let orderStr;
+	// 	for (var m = tier2.length - 1; m >= 0; m--) {
+	// 		if (key == tier2[m].kpitwoid) {
+	// 			orderStr = tier2[m].userKpitwolev.sequence;
+	// 		}
+	// 	}
+	// 	let array = {
+	// 		title:kpitwo.name,
+	// 		order:orderStr,
+	// 		data: new Array (),
+	// 		link: new Array ()
+	// 	};
+	// 	let datas = new Array ();
+	// 	let links = new Array ();
+	// 	datas.push(pushkpitwo);
+	// 	for(var [key1 , value1] of lossTier3Map) {
+	// 		const losstier3 = await Losstier3.findById(key1);
+	// 		//console.log(JSON.stringify(losstier3.kpitwolevKpitwoid , null , 4));
+	// 		//console.log(JSON.stringify(key , null , 4));
+	// 		if (losstier3.kpitwolevKpitwoid == key) {
+	// 			let pushlosstier3 = {
+	// 				name:losstier3.name,
+	// 				value:value1
+	// 			};
+	// 			let link = {
+	// 				source:kpitwo.name,
+	// 				target:losstier3.name,
+	// 				value:value1
+	// 			};
+	// 			datas.push(pushlosstier3);
+	// 			links.push(link);
+	// 			for(var [key2 , value2] of lossTier4Map) {
+	// 				const losstier4 = await Losstier4.findById(key2);
+	// 				//console.log(JSON.stringify(losstier4.losstier3Lossid , null , 4));
+	// 				//console.log(JSON.stringify(key , null , 4));
+	// 				if (losstier4.losstier3Lossid == key1) {
+	// 				let pushlosstier4 = {
+	// 					name:losstier4.name,
+	// 					value:value2
+	// 				};
+	// 				let link = {
+	// 					source:losstier3.name,
+	// 					target:losstier4.name,
+	// 					value:value2
+	// 				};
+	// 				datas.push(pushlosstier4);
+	// 				links.push(link);
+				
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	array.data = datas;
+	// 	array.link = links;
+	// 	alldata.push(array);
+	// 	alldata.sort ((a, b) => a.order - b.order)
+	// }
 	//console.log(lossTier4Map);
 	//console.log(JSON.stringify(allKpitwo , null , 4));
 	dataSuccess.data = alldata;
-	return dataSuccess;
+	return allLosstier3;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
@@ -515,18 +523,27 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);
 				continue;
 			}
-			const classstarttime = allKpitwo[i][j].linebodyKpitwolev.classstarttime;
-			const classendtime = allKpitwo[i][j].linebodyKpitwolev.classendtime;
+			const classstarttime = allKpitwo[i][j].classstarttime;
+			const classendtime = allKpitwo[i][j].classendtime;
 			if (classstarttime == null || classstarttime == ''
 				||classendtime == null || classendtime == '') {
-				allKpitwo.splice(i , 1);//删除该元素
+				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}
 			const mStartTime = moment(classstarttime);
 			const mEndTime = moment(classendtime);
 			const mTime = mEndTime.diff(mStartTime);//单位是毫秒
+			
 			if (mStartTime.isAfter(endTime) || mEndTime.isBefore(startTime)) {
-				allKpitwo.splice(i , 1);//删除该元素
+				// console.log(JSON.stringify(startTime , null , 4));
+				// console.log(JSON.stringify(endTime , null , 4));
+				// console.log('\n');
+				// console.log(JSON.stringify(mStartTime , null , 4));
+				// console.log(JSON.stringify(mEndTime , null , 4));
+				// console.log('\n\n\n\n\n');
+				// console.log('==================');
+				// console.log('========>'+allKpitwo[i][j].id);
+				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}else{
 				if (mStartTime.isBetween(startTime , endTime) && mEndTime.isBetween(startTime , endTime)) {
