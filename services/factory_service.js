@@ -43,6 +43,8 @@ var linebody_service = require('../services/linebody_service');
         var factory = {
             factoryname: req.body.name,
             factorybelong: req.body.pId
+            // ,
+            // weight:req.body.weight
         };
         const group = await Group.findById(req.body.pId);
         if (group == null || group == '') {
@@ -64,6 +66,7 @@ var linebody_service = require('../services/linebody_service');
             return errorUtil.noExistError;
         }
         const falg = await factory.destroy();
+        console.log('---------'+falg )
         if (falg == null || falg == '') {
             return errorUtil.noExistError;
         }
@@ -78,6 +81,8 @@ var linebody_service = require('../services/linebody_service');
     exports.updateFactoryById = function(req , res) {
      var factory = {
         factoryname: req.body.name
+        // ,
+        // weight:req.body.weight
     };
     var p = new Promise(function(resolve , reject) {
         //更新一条记录,创建成功后跳转回首页

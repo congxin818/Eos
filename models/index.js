@@ -47,16 +47,21 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
 
 //Linebody和Kpitwolev建立M：N关系
-Linebody.belongsToMany(Kpitwolev, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
-Kpitwolev.belongsToMany(Linebody, {through: LinebodyKpitwolev,as:'LinebodyKpitwolev'});
+Linebody.hasMany(LinebodyKpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
+Kpitwolev.hasMany(LinebodyKpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
 
 //Linebody和Loss三级建立M：N关系
-Linebody.belongsToMany(Losstier3, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
-Losstier3.belongsToMany(Linebody, {through: LinebodyLosstier3,as:'LinebodyLosstier3'});
+Linebody.hasMany(LinebodyLosstier3, {as:'LinebodyLosstier3' , constraints:true});
+Losstier3.hasMany(LinebodyLosstier3, {as:'LinebodyLosstier3' , constraints:true});
 
 //Linebody和Loss4级建立M：N关系
-Linebody.belongsToMany(Losstier4, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
-Losstier4.belongsToMany(Linebody, {through: LinebodyLosstier4,as:'LinebodyLosstier4'});
+Linebody.hasMany(LinebodyLosstier4, {as:'LinebodyLosstier4', constraints:true});
+Losstier4.hasMany(LinebodyLosstier4, {as:'LinebodyLosstier4', constraints:true});
+
+//LinebodyKpitwolev和LinebodyLosstier3建立1：N关系
+LinebodyKpitwolev.hasMany(LinebodyLosstier3, {as:'KpitwolevLosstier3Data' , constraints:true});
+//LinebodyKpitwolev和LinebodyLosstier3建立1：N关系
+LinebodyLosstier3.hasMany(LinebodyLosstier4, {as:'Losstier3Losstier4Data' , constraints:true});
 
 //Group和Factory建立1：N关系
 Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
@@ -65,9 +70,10 @@ Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 //Workshop和Linebody建立1：N关系
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 
-//Losscategory和Lossstatus建立1：1关系
+//Linebody和Lossstatus建立1：N关系
+Linebody.hasMany(Lossstatus, {as:'LinebodyLossstatus' ,constraints:true});
+//Losstier3和Lossstatus建立1：1关系
 Losstier3.hasOne(Lossstatus);
-
 
 //Kpionelev和Kpitwolev建立1：N关系
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});

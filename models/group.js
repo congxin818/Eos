@@ -22,12 +22,13 @@ module.exports = function(sequelize , DataTypes){
     checked:{
         type:Sequelize.BOOLEAN,
         defaultValue: false
+    },
+    weight:{
+        type:Sequelize.INTEGER,
+        defaultValue: 1
     }
 },{
     charset: 'utf8',
     collate: 'utf8_general_ci'
   });
 }
-//Group.sync();
-
-//module.exports = Group;

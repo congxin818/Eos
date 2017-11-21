@@ -4,37 +4,46 @@
 	时间：2017/10/30
  */
 
-var Lossstatus = require('../models').Lossstatus;
+ var Lossstatus = require('../models').Lossstatus;
+
+
+/*
+    根据线体id查询lossstatus的名字集合
+ */
+ async function selectLostatusBylineid(linebodyid){
+    const lostatusNameList = await Lossstatus.findAll({'attributes': ['projectname'],
+        where:{linebodyLinebodyid:linebodyid}
+    });
+    return lostatusNameList
+}
+exports.selectLostatusBylineid = selectLostatusBylineid;
 
 /*
 	根据loss三级目录id查询一个loss status
  */
-async function selectLostatusById(lossid){
-    const lossstatusdata = await Lossstatus.findAll({
-        where:{losstier3Lossid:lossid}
+ async function selectLostatusById(losstier3id,linebodyid){
+    const lossstatus = await Lossstatus.findAll({
+        where:{losstier3Lossid:losstier3id,linebodyLinebodyid:linebodyid}
     });
-    return lossstatusdata;
+    return lossstatus
 }
 exports.selectLostatusById = selectLostatusById;
 
 /*
 	更新
  */
-async function updateLostatusById(req , res){
+ async function updateLostatusById(req , res){
     const lossstatus = {
-    	status:req.body.status,
         projectnumber:req.body.projectNumber,
         projectname:req.body.projectName,
-        areablong:req.body.areaBlong,
-        projectmethod:req.body.projectMethod,
-        projectmanager:req.body.projectManager,
-        teammember:req.body.teamMember,
-        planstart:req.body.planStart,
-        actualstart:req.body.actualStart,
-        planend:req.body.planEnd,
-        actualend:req.body.actualEnd,
+        losscategory:req.body.losscategory,
+        status:req.body.status,
+        startperformance :req.body.startperformance,
         target:req.body.target,
-        actualvalue:req.body.actualValue
+        performance :req.body.performance,
+        objectstarttime:req.body.projectMethod,
+        planendtime:req.body.projectManager,
+        stage:req.body.stage
     };
     const updataReturn = await Lossstatus.update(lossstatus,{where:{losstier3Lossid:req.body.lossId}});
     return updataReturn;
@@ -43,9 +52,9 @@ exports.updateLostatusById = updateLostatusById;
 
 /*
     根据关联清理数据库
- */
-async function lossClear(){
-    const loss = await Lossstatus.findAll({where:{losstier3Lossid:null}});
+    */
+    async function lossClear(){
+        const loss = await Lossstatus.findAll({where:{losstier3Lossid:null}});
     //console.log(JSON.stringify(workshop.length));
     for (var i = loss.length - 1; i >= 0; i--) {
         await loss[i].destroy();

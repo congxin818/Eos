@@ -13,25 +13,21 @@ router.get('/linebody', async function(req, res, next) {
 	const alldata = await controller.selectLossMappingByLinebodyId(213,6);
     res.end (JSON.stringify (alldata, null, 4));
 });
-module.exports = router;
 
 //test
 router.get('/linebodyKpitwo', async function(req, res, next) {
 	const alldata = await controller.baseSelectKpitwoByLinebodyId(213,6);
     res.end (JSON.stringify (alldata, null, 4));
 });
-module.exports = router;
 
 //test
 router.get('/linebodyLoss', async function(req, res, next) {
 	const alldata = await controller.baseSelectLosscategoryByLinebodyId(213,6);
     res.end (JSON.stringify (alldata, null, 4));
 });
-module.exports = router;
 
 //test
-router.get('/allLinebody', async function(req, res, next) {
-	const alldata = await controller.selectLossMappingByLinebodyIds(213 , "6,24");
-    res.end (JSON.stringify (alldata, null, 4));
+router.post('/selectAllByUserIdAndLinebodyIds', async function(req, res, next) {
+	controller.selectAllByUserIdAndLinebodyIds(req , res , next);
 });
 module.exports = router;

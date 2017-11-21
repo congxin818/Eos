@@ -68,7 +68,6 @@ const namehasError = {
             }else{
                return namehasError;
            }
-
        }
 
 

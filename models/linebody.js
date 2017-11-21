@@ -54,6 +54,10 @@ module.exports = function(sequelize , DataTypes){
         },
         idealendtime:{
             type: Sequelize.DATE,
+        },
+        weight:{
+            type:Sequelize.INTEGER,
+            defaultValue: 1
         }
 
     });

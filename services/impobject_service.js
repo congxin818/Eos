@@ -14,18 +14,20 @@ const sequelize = require('../mysql').sequelize();
 const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
 
 /*
-	根据线体id把loss二级id查找出来
+	把loss二级结构查找出来
     */
-    exports.selectKpitwoBylinebyid = async function(linebodyid) {
-        const data = await LinebodyKpitwolev.findAll({where:{linebodyLinebodyid:linebodyid}});
+    exports.selectKpitwoAll = async function() {
+        const data = await Kpitwolev.findAll();
         return data;
     }
-    /*
-    根据loss二级id把loss二级目录查找出来
+
+/*
+    根据loss二级查询loss三级结构名字
     */
-    exports.selectKpitwoNameByid = async function(twolevid) {
-        const data = await Kpitwolev.findById(twolevid)
-        return data;
+    exports.selectLosstier3Bytwoid = async function (twoid){
+        const losstier3 = await Losstier3.findAll({'attributes': ['name'],
+            where:{kpitwolevKpitwoid:twoid}})
+        return losstier3
     }
     /*
     根据二级lossid把添加到现进行项目中的loss查找出来
@@ -33,7 +35,7 @@ const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
     exports.selectObjectnowBytwolevid = async function(linebodyid,twolevid) {
         /*linebody = await Linebody.findOne({ where:{linebodyid:linebodyid }})
         tier3 = await linebody.getLinebodyLosstier3({'attributes': ['name', 'lossid'],
-         where:{kpitwolevKpitwoid:twolevid}})*/
+        where:{kpitwolevKpitwoid:twolevid}})*/
 
         result = await sequelize.query(
             'SELECT losstier3.name, losstier3.lossid,linebodylosstier3.addobjectnow FROM losstier3s AS losstier3 INNER JOIN linebodylosstier3s AS linebodylosstier3 ON losstier3.lossid = linebodylosstier3.losstier3Lossid AND linebodylosstier3.linebodyLinebodyid = :linebodyLinebodyid WHERE (losstier3.kpitwolevKpitwoid = :kpitwolevKpitwoid AND linebodylosstier3.addobjectnow = :addobjectnow);',
@@ -53,9 +55,9 @@ const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
     }
 
  /*
-    根据lossid把该项目添加到现进行项目
+    根据lossid增加一条lossstatus数据
     */
-    exports.addObjectnowBylossid = async function(lossid) {
+    exports.addObjectnowBylossid = async function(linebodyid,lossid) {
         const linebodyLosstier3={
             addobjectnow: true
         }

@@ -5,7 +5,6 @@
 */
 
 //引入数据库Message模块
-//var Group = require('../models/group');
 var Group = require('../models').Group;
 /*
 	根据集团名字查找一条集团数据

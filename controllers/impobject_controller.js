@@ -41,19 +41,17 @@ const kpiTwoShow = {
            res.end(JSON.stringify(parameterError))
        }
         // 根据线体id把loss二级目录id查找出来
-        const kpitwolevdataList = await impobjServices.selectKpitwoBylinebyid(req.body.linebodyId );
+        const kpitwolev = await impobjServices.selectKpitwoAll(req.body.linebodyId);
         var showNameList =[];
         var losstier3NameList = [];
-        for(var i = 0;i < kpitwolevdataList.length; i++){
+        for(var i = 0;i < kpitwolev.length; i++){
             var itempoolOutput = { 
                 name:'',
                 data:''
             }
-            const kpitwolev = await impobjServices.selectKpitwoNameByid(kpitwolevdataList[i].kpitwolevKpitwoid)
-            itempoolOutput.name = kpitwolev.name
+            itempoolOutput.name = kpitwolev[i].name
             // 把loss三级目录名字查找出来
-            losstier3NameList = await impobjServices.selectLossByKpitwo(req.body.linebodyId,
-                kpitwolevdataList[i].kpitwolevKpitwoid)
+            losstier3NameList = await impobjServices.selectLosstier3Bytwoid(kpitwolev[i].kpitwoid)
             itempoolOutput.data =  losstier3NameList
             await showNameList.push(itempoolOutput)
         }
@@ -78,10 +76,11 @@ const kpiTwoShow = {
     improvment展示项目状态
     */
     exports.showImpItemstatus = async function(req , res) {
-        if(req.body.lossId == null||req.body.lossId == ''){
+        if(req.body.lossId == null||req.body.lossId == ''||
+            req.body.linebodyId == null||req.body.linebodyId == ''){
             res.end(JSON.stringify(parameterError))
         }
-        const data = await lossstatusServices.selectLostatusById(req.body.lossId)
+        const data = await lossstatusServices.selectLostatusById(req.body.lossId,req.body.linebodyId)
         dataSuccess.data = data 
         res.end(JSON.stringify(dataSuccess))
     }
@@ -95,7 +94,7 @@ const kpiTwoShow = {
            res.end(JSON.stringify(parameterError))
        }
        // 根据线体id把loss二级目录查找出来
-        const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
+       /* const KpitwolevList = await impobjServices.selectKpitwoBylinebyid(req , res);
         var losstier3List = [];
          for(var i = 0;i < KpitwolevList.length; i++){
             // 把对应的loss三级查找出来
@@ -106,6 +105,11 @@ const kpiTwoShow = {
             }
         }
        res.end(JSON.stringify(losstier3List))
+       */
+       // 根据线体id把loss状态表中所有项目名字查找出来
+        const lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
+        dataSuccess.data = lostatusNameList
+        res.end(JSON.stringify(dataSuccess)) 
    }
 
 /*

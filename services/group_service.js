@@ -44,6 +44,8 @@ var linebody_service = require('../services/linebody_service');
     exports.addGroupOne = async function(req , res) {
         var group = {
             groupname: req.body.name
+            // ,
+            // weight:req.body.weight
         };
         //创建一条记录,创建成功后跳转回首页
         const data = await Group.create(group)
@@ -74,6 +76,8 @@ var linebody_service = require('../services/linebody_service');
     exports.updateGroupById = async function(req , res) {
         var group = {
             groupname: req.body.name
+            // ,
+            // weight:req.body.weight
         };   
         //更新一条记录,创建成功后跳转回首页
         const data = await Group.update(group,{

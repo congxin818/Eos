@@ -22,7 +22,7 @@ const dataSuccess = {
 };
 
 const parameterError = {
-    status: '1',
+    status: '1', 
     msg: '参数错误'
 };
 
@@ -274,8 +274,11 @@ const updateAreaError = {
         }
         if(deleteReturn == ''||deleteReturn == null||deleteReturn == undefined){
             res.end(JSON.stringify(dataSuccess));
-        }else{            
+        }else if(deleteReturn.status == 4){            
             res.end(JSON.stringify(deleteReturn));
+        }else{
+            dataSuccess.data = deleteReturn
+            res.end(JSON.stringify(dataSuccess));
         }
 
     }

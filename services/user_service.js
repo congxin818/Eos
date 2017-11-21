@@ -383,10 +383,10 @@ exports.addUserOne = addUserOne;
     async function deleteUserById(req , res , next) {
         const user = await User.findById(req.query.userId);
         if (user == undefined || user == null || user == '') {
-            return noExistError;
+            return errorUtil.noExistError;
         }
         const falg = await User.destroy({where:{userid:req.query.userId}});
-        if (falg == null && falg != 1) {
+        if (falg == null || falg != 1) {
             return errorUtil.noExistError;
         }
         await user.setUserValidmenus([]);
@@ -416,7 +416,7 @@ async function updateUserById(req , res , next) {
 
     const falg = await User.update(newUser,{where:{userid:req.body.userId}});
     
-    if (falg == null && falg != 1) {
+    if (falg == null || falg != 1) {
         return errorUtil.noExistError;
     }
     // console.log(falg);

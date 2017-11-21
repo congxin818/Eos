@@ -4,13 +4,13 @@
 	时间：2017/10/30
  */
 
-var Losscategory = require('../models').Losscategory;
+var Losstier3 = require('../models').Losstier3;
 var Kpitwolev = require('../models').Kpitwolev;
 /*
 	查询所有
  */
 async function selectLossAll(){
-	const allLoss = await Losscategory.findAll();
+	const allLoss = await Losstier3.findAll();
 	if (allLoss == '' || allLoss == undefined || allLoss == null)
     {
         return ;
@@ -27,7 +27,7 @@ async function selectLossById(id){
     {
         return ;
     }
-    const loss = await Losscategory.findById(id);
+    const loss = await Losstier3.findById(id);
     if (loss == '' || loss == undefined || loss == null)
     {
         return ;
@@ -45,7 +45,7 @@ async function selectLossByName(lossName , newpId){
     {
         return ;
     }
-    const loss = await Losscategory.findOne({where:{name:lossName,pId:newpId}});
+    const loss = await Losstier3.findOne({where:{name:lossName,pId:newpId}});
     if (loss == '' || loss == undefined || loss == null)
     {
         return ;
@@ -62,7 +62,7 @@ async function deleteLossById(lossId){
     {
         return ;
     }
-    const loss = await Losscategory.findById(lossId);
+    const loss = await Losstier3.findById(lossId);
     if (loss == '' || loss == undefined || loss == null)
     {
         return ;
@@ -99,7 +99,7 @@ async function addLossOne(lossName , newpId){
     }
     //console.log('yuzhizhe_2---->' + kpiTwo);
     try{
-    	let data = await Losscategory.create(loss);
+    	let data = await Losstier3.create(loss);
     	if (data == '' || data == undefined || data == null)
     	{
         	return ;
@@ -109,7 +109,7 @@ async function addLossOne(lossName , newpId){
         const newLoss = {
             id:'l' + lossId
         }
-        const falg = await Losscategory.update(newLoss,{where:{lossid:lossId}});
+        const falg = await Losstier3.update(newLoss,{where:{lossid:lossId}});
         if (falg == undefined || falg == null || falg == ''||falg != 1) {
             return;
         }
@@ -137,7 +137,7 @@ async function updateLossById(lossId,lossName,newpId){
     	name:lossName,
         pId:newpId
     };
-    const falg = await Losscategory.update(loss,{where:{lossid:lossId}});
+    const falg = await Losstier3.update(loss,{where:{lossid:lossId}});
     return falg;
 }
 exports.updateLossById = updateLossById;
@@ -146,7 +146,7 @@ exports.updateLossById = updateLossById;
     根据关联清理数据库
  */
 async function lossClear(){
-    const loss = await Losscategory.findAll({where:{ kpitwolevKpitwoid:null}});
+    const loss = await Losstier3.findAll({where:{ kpitwolevKpitwoid:null}});
     //console.log(JSON.stringify(workshop.length));
     for (var i = loss.length - 1; i >= 0; i--) {
         await loss[i].destroy();
