@@ -22,4 +22,18 @@ router.post('/showLosstier3', function(req, res, next) {
     controller.showLosstier3(req , res , next);
 });
 
+/*
+	展示添加loss中四级目录结构
+ */
+router.post('/showLosstier4', function(req, res, next) {
+    controller.showLosstier4(req , res , next);
+});
+
+/*
+	添加四级loss发生的时间及持续时间
+ */
+router.post('/addLosstier4time', function(req, res, next) {
+    controller.addLosstier4time(req , res , next);
+});
+
 module.exports = router;

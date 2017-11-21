@@ -66,6 +66,7 @@ var linebody_service = require('../services/linebody_service');
             return errorUtil.noExistError;
         }
         const falg = await factory.destroy();
+        console.log('---------'+falg )
         if (falg == null || falg == '') {
             return errorUtil.noExistError;
         }

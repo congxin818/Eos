@@ -70,9 +70,10 @@ Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
 //Workshop和Linebody建立1：N关系
 Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 
-//Losscategory和Lossstatus建立1：1关系
+//Linebody和Lossstatus建立1：N关系
+Linebody.hasMany(Lossstatus, {as:'LinebodyLossstatus' ,constraints:true});
+//Losstier3和Lossstatus建立1：1关系
 Losstier3.hasOne(Lossstatus);
-
 
 //Kpionelev和Kpitwolev建立1：N关系
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
