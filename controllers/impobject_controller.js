@@ -117,12 +117,13 @@ const kpiTwoShow = {
     */
     exports.addObjectnowBylossid = async function(req , res) {
         if(req.body.lossIdList == null||req.body.lossIdList.length == 0
-            ||req.body.lossIdList == ''){
+            ||req.body.lossIdList == ''||req.body.linebodyId == null
+            ||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
        }
        var lossIdList = req.body.lossIdList.split(",")
        for(var i=0;i<lossIdList.length;i++){
-        const lossidList = await impobjServices.addObjectnowBylossid(lossIdList[i])
+        const lossidList = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
         if(lossidList == null||lossidList == ''){
             res.end(JSON.stringify(addObjectError))
         }
