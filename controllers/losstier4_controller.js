@@ -1,13 +1,11 @@
-
 /*
  	auther:Android,
- 	NOTE:loss表的controller层,
- 	time:20171030
+ 	NOTE:losstier4表的controller层,
+ 	time:20171122
  */
-var service = require('../services/losstier3_service');
-var losstier4_service = require('../services/losstier4_service');
+var service = require('../services/losstier4_service');
 var errorUtil = require('../utils/errorUtil');
-var kpiall_controller = require('../controllers/kpiall_controller');
+var losstier3_controller = require('../controllers/losstier3_controller');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -16,37 +14,24 @@ var dataSuccess = {
 /*
 	查询所有
  */
-async function selectLossAll(req , res , next){
+async function selectLosstier4All(req , res , next){
 	if (req == null || res == null ) {
 		return errorUtil.parameterError;
 	}
-	let kpiData = await kpiall_controller.selectKPIAll(req , res);
-	let lossData = await service.selectLossAll();
-	let losstier4Data = await losstier4_service.selectLosstier4All();
-	if (kpiData == undefined || kpiData == null || kpiData == '') {
-		res.end(JSON.stringify(errorUtil.noExistError));
-	}
-	if (lossData == undefined || lossData == null || lossData == '') {
-		dataSuccess.data  = kpiData;
-        res.end(JSON.stringify(kpiData));
+	let losstier4Data = await service.selectLossAll();
+	if (losstier4Data == undefined || losstier4Data == null || losstier4Data == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
     }else{
-        const data= kpiData.concat(lossData);
-        if (losstier4Data == undefined || losstier4Data == null || losstier4Data == '') {
-        	dataSuccess.data  = data;
-        	res.end(JSON.stringify(data));
-        }else{
-        	const value= data.concat(losstier4Data);
-        	dataSuccess.data  = value;
-        	res.end(JSON.stringify(dataSuccess));
-        }
+       
+		res.end(JSON.stringify(losstier4Data));
     }
 }
-exports.selectLossAll = selectLossAll;
+exports.selectLosstier4All = selectLosstier4All;
 
 /*
 	添加子目录
  */
-async function addLossOne(req , res , next){
+async function addLosstier4One(req , res , next){
 	if (req == null || res == null ) {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
@@ -76,12 +61,12 @@ async function addLossOne(req , res , next){
 		await kpiall_controller.addKPItwoLev(req , res);
 	}
 }
-exports.addLossOne = addLossOne;
+exports.addLosstier4One = addLosstier4One;
 
 /*
 	根据ID删除
  */
-async function deleteLossById(req , res , next){
+async function deleteLosstier4ById(req , res , next){
 	if (req == null || res == null 
 		||req.query.id == undefined || req.query.id == null || req.query.id == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
@@ -105,12 +90,12 @@ async function deleteLossById(req , res , next){
 		}
 	}
 }
-exports.deleteLossById = deleteLossById;
+exports.deleteLosstier4ById = deleteLosstier4ById;
 
 /*
 	根据ID跟新
  */
-async function updateLossById(req , res , next){
+async function updateLosstier4ById(req , res , next){
 	if (req == null || res == null ) {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
@@ -141,4 +126,4 @@ async function updateLossById(req , res , next){
 		await kpiall_controller.updateKPItwoLev(req , res);
 	}
 }
-exports.updateLossById = updateLossById;
+exports.updateLosstier4ById = updateLosstier4ById;

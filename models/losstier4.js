@@ -8,7 +8,7 @@
 
     module.exports = function(sequelize , DataTypes){
     	return sequelize.define('losstier4' , {
-	   	id:{ // kpi第四级id
+	   	tier4id:{ // kpi第四级id
 	   		type:Sequelize.INTEGER,
 	   		autoIncrement:true,
 	   		primaryKey: true
@@ -17,6 +17,16 @@
         	type: Sequelize.STRING(50),
         	charset:'utf8',
         	collate:'utf8_general_ci'
+        },
+        pId: { //losstier3级父id
+            type: Sequelize.STRING(50),
+            charset:'utf8',
+            collate:'utf8_general_ci'
+        },
+        id: {
+            type: Sequelize.STRING(50),
+            charset:'utf8',
+            collate:'utf8_general_ci'
         }
     });
     }
