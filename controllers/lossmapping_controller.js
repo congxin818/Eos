@@ -274,14 +274,16 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 			}
 		}
 	}
-	console.log(JSON.stringify(allKpitwo , null , 4));
+	//console.log(JSON.stringify(allKpitwo , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
+	
  	const lossTier3Map = await computeLosstier3(allLosstier3);
+
  	const lossTier4Map = await computeLosstier4(allLosstier4);
- 	// console.log('-=============');
- 	// console.log(kpitwoMap);
- 	// console.log(lossTier3Map);
- 	// console.log(lossTier4Map);
+ 	console.log('-=============');
+ 	console.log(kpitwoMap);
+ 	console.log(lossTier3Map);
+ 	console.log(lossTier4Map);
 	for(var [key, value] of kpitwoMap) {
 		const kpitwo = await Kpitwolev.findById(key);
 		let pushkpitwo = {
@@ -467,13 +469,13 @@ async function computeLosstier4(allLosstier4){
 			if (allLosstier4[i][j] == null || allLosstier4[i][j] == '') {
 				continue;
 			}
-			let mapEle = resultMap.get (allLosstier4[i][j].losstier4Id);
+			let mapEle = resultMap.get (allLosstier4[i][j].losstier4Tier4id);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
 			}
 			mapEle.push (allLosstier4[i][j].value);
-			resultMap.set (allLosstier4[i][j].losstier4Id, mapEle);
+			resultMap.set (allLosstier4[i][j].losstier4Tier4id, mapEle);
 		}
 	}
 	//console.log('resultMap');
@@ -557,14 +559,14 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}else{
-				console.log(JSON.stringify(startTime , null , 4));
-				console.log(JSON.stringify(endTime , null , 4));
-				console.log('\n');
-				console.log(JSON.stringify(mStartTime , null , 4));
-				console.log(JSON.stringify(mEndTime , null , 4));
-				console.log('\n\n\n\n\n');
-				console.log('==================');
-				console.log('========>'+allKpitwo[i][j].id);
+				// console.log(JSON.stringify(startTime , null , 4));
+				// console.log(JSON.stringify(endTime , null , 4));
+				// console.log('\n');
+				// console.log(JSON.stringify(mStartTime , null , 4));
+				// console.log(JSON.stringify(mEndTime , null , 4));
+				// console.log('\n\n\n\n\n');
+				// console.log('==================');
+				// console.log('========>'+allKpitwo[i][j].id);
 				if ((!mStartTime.isBefore(startTime)) && (!mEndTime.isAfter(endTime))) {
 					allKpitwo[i][j]['falg'] = 1;
 				}else{
