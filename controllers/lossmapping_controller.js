@@ -274,17 +274,20 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 			}
 		}
 	}
-	console.log(JSON.stringify(allLosstier4 , null , 4));
+	console.log(JSON.stringify(allKpitwo , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
  	const lossTier3Map = await computeLosstier3(allLosstier3);
  	const lossTier4Map = await computeLosstier4(allLosstier4);
- 	
+ 	console.log('-=============');
+ 	// console.log(kpitwoMap);
+ 	// console.log(lossTier3Map);
+ 	// console.log(lossTier4Map);
 	for(var [key, value] of kpitwoMap) {
 		const kpitwo = await Kpitwolev.findById(key);
 		let pushkpitwo = {
 			name:kpitwo.name,
 			value:value
-		};	
+		};
 		let orderStr;
 		for (var m = tier2.length - 1; m >= 0; m--) {
 			if (key == tier2[m].kpitwoid) {
@@ -345,7 +348,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	//console.log(lossTier4Map);
 	//console.log(JSON.stringify(allKpitwo , null , 4));
 	dataSuccess.data = alldata;
-	return allLosstier4;
+	return dataSuccess;
 }
 exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 
@@ -367,8 +370,8 @@ async function computeKpitwo(allKpitwo){
 			if (allKpitwo[i][j] == null || allKpitwo[i][j] == '') {
 				continue;
 			}
-			let mapEle = resultMap.get (allKpitwo[i][j].kpitwoid);
-			let mapFalgEle = falgMap.get(allKpitwo[i][j].kpitwoid);
+			let mapEle = resultMap.get (allKpitwo[i][j].kpitwolevKpitwoid);
+			let mapFalgEle = falgMap.get(allKpitwo[i][j].kpitwolevKpitwoid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
@@ -377,13 +380,13 @@ async function computeKpitwo(allKpitwo){
 			{
 				mapFalgEle = new Array ();
 			}
-			mapEle.push (allKpitwo[i][j].linebodyKpitwolev.value);
+			mapEle.push (allKpitwo[i][j].value);
 			mapFalgEle.push (allKpitwo[i][j].falg);
-			resultMap.set (allKpitwo[i][j].kpitwoid , mapEle);
-			falgMap.set(allKpitwo[i][j].kpitwoid , mapFalgEle);
+			resultMap.set (allKpitwo[i][j].kpitwolevKpitwoid , mapEle);
+			falgMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapFalgEle);
 		}
 	}
-	//console.log(resultMap);
+	console.log(falgMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -421,13 +424,13 @@ async function computeLosstier3(allLosstier3){
 			if (allLosstier3[i][j] == null || allLosstier3[i][j] == '') {
 				continue;
 			}
-			let mapEle = resultMap.get (allLosstier3[i][j].lossid);
+			let mapEle = resultMap.get (allLosstier3[i][j].losstier3Lossid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
 			}
-			mapEle.push (allLosstier3[i][j].linebodylosstier3.value);
-			resultMap.set (allLosstier3[i][j].lossid, mapEle);
+			mapEle.push (allLosstier3[i][j].value);
+			resultMap.set (allLosstier3[i][j].losstier3Lossid, mapEle);
 		}
 	}
 	//console.log('resultMap');
@@ -463,13 +466,13 @@ async function computeLosstier4(allLosstier4){
 			if (allLosstier4[i][j] == null || allLosstier4[i][j] == '') {
 				continue;
 			}
-			let mapEle = resultMap.get (allLosstier4[i][j].id);
+			let mapEle = resultMap.get (allLosstier4[i][j].losstier4Id);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
 			}
-			mapEle.push (allLosstier4[i][j].linebodyLosstier4.value);
-			resultMap.set (allLosstier4[i][j].id, mapEle);
+			mapEle.push (allLosstier4[i][j].value);
+			resultMap.set (allLosstier4[i][j].losstier4Id, mapEle);
 		}
 	}
 	//console.log('resultMap');
