@@ -37,11 +37,9 @@ const kpiTwoShow = {
     improvment展示项目池信息
     */ 
     exports.showImpItempool = async function(req , res) {
-        if(req.body.linebodyId == null||req.body.linebodyId == ''){
-           res.end(JSON.stringify(parameterError))
-       }
-        // 根据线体id把loss二级目录id查找出来
-        const kpitwolev = await impobjServices.selectKpitwoAll(req.body.linebodyId);
+
+        // 把loss二级目录id查找出来
+        const kpitwolev = await impobjServices.selectKpitwoAll();
         var showNameList =[];
         var losstier3NameList = [];
         for(var i = 0;i < kpitwolev.length; i++){
