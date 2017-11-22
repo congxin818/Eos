@@ -59,28 +59,17 @@ const Lossstatus = require('../models').Lossstatus;
     根据lossid增加一条lossstatus数据
     */
     exports.addObjectnowBylossid = async function(linebodyid,lossid) {
-        
+
         const linebody = await Linebody.findById(linebodyid)
         const losstier3 = await Losstier3.findById(lossid)
         const lostatusdata={
             projectname: losstier3.name,
             losscategory: losstier3.name
         }
-       var addReturn =  await losstier3.createLossstatus(lostatusdata)
-        const lossstatus = await Lossstatus.findOne({where:{losstier3Lossid:lossid}})
+        var lossstatus =  await losstier3.createLossstatus(lostatusdata)
         // 缺少验证！！！+++
         addReturn = await linebody.addLinebodyLossstatus(lossstatus)
-         
+
         return addReturn;
     }
 
-    /*
-    根据lossid把该项目添加到现进行项目
-    */
-    exports.deleteObjectnowBylossid = async function(lossid) {
-        const losstier3={
-            addobjectnow: false
-        }
-        const data = await LinebodyLosstier3.update(losstier3,{where:{losstier3Lossid: lossid}});
-        return data;
-    }

@@ -138,6 +138,6 @@ const kpiTwoShow = {
         if(req.body.lossId == null||req.body.lossId == ''){
            res.end(JSON.stringify(parameterError))
        }
-       const lossidList = await impobjServices.deleteObjectnowBylossid(req.body.lossId)
+       const lossidList = await lossstatusServices.deleteObjectnowBylossid(req.body.linebodyId,req.body.lossId)
        res.end(JSON.stringify(dataSuccess))
    }
