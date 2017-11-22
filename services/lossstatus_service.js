@@ -11,7 +11,7 @@
     根据线体id查询lossstatus的名字集合
     */
     async function selectLostatusBylineid(linebodyid){
-        const lostatusNameList = await Lossstatus.findAll({'attributes': ['projectname'],
+        const lostatusNameList = await Lossstatus.findAll({'attributes': ['projectname','losstier3Lossid'],
             where:{linebodyLinebodyid:linebodyid}
         });
         return lostatusNameList
