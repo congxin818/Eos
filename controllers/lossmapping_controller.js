@@ -278,7 +278,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	const kpitwoMap = await computeKpitwo(allKpitwo);
  	const lossTier3Map = await computeLosstier3(allLosstier3);
  	const lossTier4Map = await computeLosstier4(allLosstier4);
- 	console.log('-=============');
+ 	// console.log('-=============');
  	// console.log(kpitwoMap);
  	// console.log(lossTier3Map);
  	// console.log(lossTier4Map);
@@ -307,7 +307,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 			const losstier3 = await Losstier3.findById(key1);
 			//console.log(JSON.stringify(losstier3.kpitwolevKpitwoid , null , 4));
 			//console.log(JSON.stringify(key , null , 4));
-			if (losstier3.linebodyKpitwolevId == key) {
+			if (losstier3.kpitwolevKpitwoid == key) {
 				let pushlosstier3 = {
 					name:losstier3.name,
 					value:value1
@@ -323,7 +323,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 					const losstier4 = await Losstier4.findById(key2);
 					//console.log(JSON.stringify(losstier4.losstier3Lossid , null , 4));
 					//console.log(JSON.stringify(key , null , 4));
-					if (losstier4.linebodylosstier3Id == key1) {
+					if (losstier4.losstier3Lossid == key1) {
 					let pushlosstier4 = {
 						name:losstier4.name,
 						value:value2
@@ -390,12 +390,13 @@ async function computeKpitwo(allKpitwo){
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		let falg_sum = 0 ;
-		for(var [key1, value1] of falgMap) {
-			if (key == key1) {
-				falg_sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-			}
-		}
+		//let falg_sum = 0 ;
+		let falg_sum = value.length;
+		// for(var [key1, value1] of falgMap) {
+		// 	if (key == key1) {
+		// 		falg_sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
+		// 	}
+		// }
 		if (falg_sum != 0) {
 			value = sum / falg_sum;
 		}
@@ -556,7 +557,15 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}else{
-				if (mStartTime.isBetween(startTime , endTime) && mEndTime.isBetween(startTime , endTime)) {
+				console.log(JSON.stringify(startTime , null , 4));
+				console.log(JSON.stringify(endTime , null , 4));
+				console.log('\n');
+				console.log(JSON.stringify(mStartTime , null , 4));
+				console.log(JSON.stringify(mEndTime , null , 4));
+				console.log('\n\n\n\n\n');
+				console.log('==================');
+				console.log('========>'+allKpitwo[i][j].id);
+				if ((!mStartTime.isBefore(startTime)) && (!mEndTime.isAfter(endTime))) {
 					allKpitwo[i][j]['falg'] = 1;
 				}else{
 					if (mStartTime.isBefore(startTime)) {
