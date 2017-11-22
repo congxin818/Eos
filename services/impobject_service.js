@@ -12,6 +12,7 @@ const Linebody = require('../models').Linebody;
 const lossServices = require('../services/losstier3_service');
 const sequelize = require('../mysql').sequelize();
 const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
+const Lossstatus = require('../models').Lossstatus;
 
 /*
 	把loss二级结构查找出来
@@ -25,7 +26,7 @@ const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
     根据loss二级查询loss三级结构名字
     */
     exports.selectLosstier3Bytwoid = async function (twoid){
-        const losstier3 = await Losstier3.findAll({'attributes': ['name'],
+        const losstier3 = await Losstier3.findAll({'attributes': ['name','lossid'],
             where:{kpitwolevKpitwoid:twoid}})
         return losstier3
     }
@@ -58,11 +59,19 @@ const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
     根据lossid增加一条lossstatus数据
     */
     exports.addObjectnowBylossid = async function(linebodyid,lossid) {
-        const linebodyLosstier3={
-            addobjectnow: true
+        
+        const linebody = await Linebody.findById(linebodyid)
+        const losstier3 = await Losstier3.findById(lossid)
+        const lostatusdata={
+            projectname: losstier3.name,
+            losscategory: losstier3.name
         }
-        const data = await LinebodyLosstier3.update(linebodyLosstier3,{where:{losstier3Lossid: lossid}});
-        return data;
+       var addReturn =  await losstier3.createLossstatus(lostatusdata)
+        const lossstatus = await Lossstatus.findOne({where:{losstier3Lossid:lossid}})
+        // 缺少验证！！！+++
+        addReturn = await linebody.addLinebodyLossstatus(lossstatus)
+         
+        return addReturn;
     }
 
     /*
