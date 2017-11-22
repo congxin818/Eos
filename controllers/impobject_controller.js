@@ -77,11 +77,11 @@ const kpiTwoShow = {
         if(req.body.lossId == null||req.body.lossId == ''||
             req.body.linebodyId == null||req.body.linebodyId == ''){
             res.end(JSON.stringify(parameterError))
-        }
-        const data = await lossstatusServices.selectLostatusById(req.body.lossId,req.body.linebodyId)
-        dataSuccess.data = data 
-        res.end(JSON.stringify(dataSuccess))
     }
+    const data = await lossstatusServices.selectLostatusById(req.body.lossId,req.body.linebodyId)
+    dataSuccess.data = data 
+    res.end(JSON.stringify(dataSuccess))
+}
 
 
 /*
@@ -105,9 +105,9 @@ const kpiTwoShow = {
        res.end(JSON.stringify(losstier3List))
        */
        // 根据线体id把loss状态表中所有项目名字查找出来
-        const lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
-        dataSuccess.data = lostatusNameList
-        res.end(JSON.stringify(dataSuccess)) 
+       const lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
+       dataSuccess.data = lostatusNameList
+       res.end(JSON.stringify(dataSuccess)) 
    }
 
 /*
@@ -118,16 +118,19 @@ const kpiTwoShow = {
             ||req.body.lossIdList == ''||req.body.linebodyId == null
             ||req.body.linebodyId == ''){
            res.end(JSON.stringify(parameterError))
-       }
-       var lossIdList = req.body.lossIdList.split(",")
-       for(var i=0;i<lossIdList.length;i++){
-        const lossidList = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
-        if(lossidList == null||lossidList == ''){
-            res.end(JSON.stringify(addObjectError))
-        }
-       }
-       res.end(JSON.stringify(dataSuccess))
    }
+   var lossIdList = req.body.lossIdList.split(",")
+   for(var i=0;i<lossIdList.length;i++){
+    const addReturn = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
+    if(addReturn == null||addReturn == ''){
+        res.end(JSON.stringify(addObjectError))
+    }
+    if(addReturn.status == 101){
+     res.end(JSON.stringify(addReturn))
+ }
+}
+res.end(JSON.stringify(dataSuccess))
+}
 
 /*
     根据线体id删除现进行项目
