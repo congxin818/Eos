@@ -30,19 +30,19 @@
 exports.selectLostatusById = selectLostatusById;
 
 /*
-	更新
+	更新数据
  */
  async function updateLostatusById(req , res){
     const lossstatus = {
-        projectnumber:req.body.projectNumber,
-        projectname:req.body.projectName,
+        projectnumber:req.body.projectnumber,
+        projectname:req.body.projectname,
         losscategory:req.body.losscategory,
         status:req.body.status,
         startperformance :req.body.startperformance,
         target:req.body.target,
         performance :req.body.performance,
-        objectstarttime:req.body.projectMethod,
-        planendtime:req.body.projectManager,
+        objectstarttime:req.body.objectstarttime,
+        planendtime:req.body.planendtime,
         stage:req.body.stage
     };
     const updataReturn = await Lossstatus.update(lossstatus,{
