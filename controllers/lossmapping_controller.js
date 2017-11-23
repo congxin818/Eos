@@ -459,7 +459,7 @@ async function computeLosstier3(allLosstier3){
 			}
 			const linebody = await Linebody.findById(allLosstier3[i][j].linebodyLinebodyid,{'attributes': ['weight']});
 			let mapEle = resultMap.get (allLosstier3[i][j].losstier3Lossid);
-			let mapWeightEle = weightMap.get(allLosstier3[i][j].kpitwolevKpitwoid);
+			let mapWeightEle = weightMap.get(allLosstier3[i][j].losstier3Lossid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
@@ -471,7 +471,7 @@ async function computeLosstier3(allLosstier3){
 			mapEle.push (allLosstier3[i][j].value * linebody.weight);
 			mapWeightEle.push (linebody.weight);
 			resultMap.set (allLosstier3[i][j].losstier3Lossid, mapEle);
-			weightMap.set(allLosstier3[i][j].kpitwolevKpitwoid , mapWeightEle);
+			weightMap.set(allLosstier3[i][j].losstier3Lossid , mapWeightEle);
 		}
 	}
 	//console.log('resultMap');
@@ -518,7 +518,7 @@ async function computeLosstier4(allLosstier4){
 			}
 			const linebody = await Linebody.findById(allLosstier4[i][j].linebodyLinebodyid,{'attributes': ['weight']});
 			let mapEle = resultMap.get (allLosstier4[i][j].losstier4Tier4id);
-			let mapWeightEle = weightMap.get(allLosstier4[i][j].kpitwolevKpitwoid);
+			let mapWeightEle = weightMap.get(allLosstier4[i][j].losstier4Tier4id);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
@@ -530,7 +530,7 @@ async function computeLosstier4(allLosstier4){
 			mapEle.push (allLosstier4[i][j].value);
 			resultMap.set (allLosstier4[i][j].losstier4Tier4id, mapEle);
 			mapWeightEle.push (linebody.weight);
-			weightMap.set(allLosstier4[i][j].kpitwolevKpitwoid , mapWeightEle);
+			weightMap.set(allLosstier4[i][j].losstier4Tier4id , mapWeightEle);
 		}
 	}
 	//console.log('resultMap');
