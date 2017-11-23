@@ -490,7 +490,7 @@ async function computeLosstier3(allLosstier3){
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
-		console.log("属性：" + key + ",值：" + value);
+		//console.log("属性：" + key + ",值：" + value);
 		map.set(key , new Number(value).toFixed(4));
 		
 	}
