@@ -216,8 +216,8 @@ exports.selectAllByUserIdAndLinebodyIds = selectAllByUserIdAndLinebodyIds;
  * 	根据所有的线体ID查询LossMapping的数据
  */
 async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime , endTime){
-	//console.log(JSON.stringify(userId , null , 4));
-	//console.log(JSON.stringify(linebodyIds , null , 4));
+	//console.log(JSON.stringify(startTime , null , 4));
+	//console.log(JSON.stringify(endTime , null , 4));
 	if (linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
 		||userId == undefined || userId == null || userId == ''
 		||startTime == undefined || startTime == null || startTime == ''
@@ -247,10 +247,10 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		}
 	}
 	let alldata = [];
-	// console.log(JSON.stringify(allKpitwo , null , 4));
+	//console.log('-----fadsfadfad--->'+JSON.stringify(allKpitwo , null , 4));
 	const kpitwoTime = await computeKpitwoBytime(allKpitwo , startTime , endTime);
 	// console.log(JSON.stringify('allKpitwo.length---------->'+allKpitwo.length , null , 4));
-	// console.log(JSON.stringify(allKpitwo , null , 4));
+	console.log('-------->'+JSON.stringify(allKpitwo , null , 4));
 	if (kpitwoTime == undefined || kpitwoTime == null || kpitwoTime == '') {
 		return errorUtil.parameterError;
 	}
@@ -274,16 +274,17 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 			}
 		}
 	}
+	console.log('-=============');
 	//console.log(JSON.stringify(allKpitwo , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
 	
  	const lossTier3Map = await computeLosstier3(allLosstier3);
 
  	const lossTier4Map = await computeLosstier4(allLosstier4);
- 	console.log('-=============');
- 	console.log(kpitwoMap);
- 	console.log(lossTier3Map);
- 	console.log(lossTier4Map);
+ 	
+ 	// console.log(kpitwoMap);
+ 	// console.log(lossTier3Map);
+ 	// console.log(lossTier4Map);
 	for(var [key, value] of kpitwoMap) {
 		const kpitwo = await Kpitwolev.findById(key);
 		let pushkpitwo = {
@@ -363,7 +364,7 @@ async function computeKpitwo(allKpitwo){
 		return ;
 	}
 	let resultMap = new Map ();
- 	let falgMap = new Map();
+ 	let weightMap = new Map();
 	for (var i = allKpitwo.length - 1; i >= 0; i--) {
 		if (allKpitwo[i] == null || allKpitwo[i] == '') {
 			continue;
@@ -372,8 +373,11 @@ async function computeKpitwo(allKpitwo){
 			if (allKpitwo[i][j] == null || allKpitwo[i][j] == '') {
 				continue;
 			}
+			const linebody = await Linebody.findById(allKpitwo[i][j].linebodyLinebodyid,{'attributes': ['weight']});
+			//console.log('------>'+JSON.stringify(linebody.weight , null , 4));
+			//weight_sum += linebody.weight;
 			let mapEle = resultMap.get (allKpitwo[i][j].kpitwolevKpitwoid);
-			let mapFalgEle = falgMap.get(allKpitwo[i][j].kpitwolevKpitwoid);
+			let mapFalgEle = weightMap.get(allKpitwo[i][j].kpitwolevKpitwoid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
@@ -382,25 +386,28 @@ async function computeKpitwo(allKpitwo){
 			{
 				mapFalgEle = new Array ();
 			}
-			mapEle.push (allKpitwo[i][j].value);
-			mapFalgEle.push (allKpitwo[i][j].falg);
+			mapEle.push (allKpitwo[i][j].value * linebody.weight);
+			mapFalgEle.push (linebody.weight);
 			resultMap.set (allKpitwo[i][j].kpitwolevKpitwoid , mapEle);
-			falgMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapFalgEle);
+			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapFalgEle);
 		}
 	}
-	console.log(falgMap);
+	//console.log(weightMap);
+	//console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		//let falg_sum = 0 ;
-		let falg_sum = value.length;
-		// for(var [key1, value1] of falgMap) {
-		// 	if (key == key1) {
-		// 		falg_sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		// 	}
-		// }
-		if (falg_sum != 0) {
-			value = sum / falg_sum;
+		let weight_sum = 0 ;
+		//let weight_sum = value.length;
+		for(var [key1, value1] of weightMap) {
+			if (key == key1) {
+				weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			}
+		}
+		//console.log(JSON.stringify(sum , null , 4));
+		//console.log(JSON.stringify(weight_sum , null , 4));
+		if (weight_sum != 0) {
+			value = sum / weight_sum;
 		}
 		map.set(key , value);
 		//console.log("属性：" + key + ",值：" + value);
@@ -525,7 +532,8 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 	}
 	const startTime = moment(startTimeValue);
 	const endTime = moment(endTimeValue);
-	
+	console.log('==========>startTimeValue'+startTimeValue);
+	console.log('==========>endTimeValue'+endTimeValue);
 	for (var i = allKpitwo.length - 1; i >= 0; i--) {
 		if (allKpitwo[i] == null || allKpitwo[i] == '') {
 			allKpitwo.splice(i , 1);//删除该元素
@@ -543,6 +551,8 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}
+			console.log('==========>classstarttime'+classstarttime);
+			console.log('==========>classendtime'+classendtime);
 			const mStartTime = moment(classstarttime);
 			const mEndTime = moment(classendtime);
 			const mTime = mEndTime.diff(mStartTime);//单位是毫秒
@@ -559,14 +569,14 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}else{
-				// console.log(JSON.stringify(startTime , null , 4));
-				// console.log(JSON.stringify(endTime , null , 4));
-				// console.log('\n');
-				// console.log(JSON.stringify(mStartTime , null , 4));
-				// console.log(JSON.stringify(mEndTime , null , 4));
-				// console.log('\n\n\n\n\n');
-				// console.log('==================');
-				// console.log('========>'+allKpitwo[i][j].id);
+				console.log(JSON.stringify(startTime , null , 4));
+				console.log(JSON.stringify(endTime , null , 4));
+				console.log('\n');
+				console.log(JSON.stringify(mStartTime , null , 4));
+				console.log(JSON.stringify(mEndTime , null , 4));
+				console.log('\n\n\n\n\n');
+				console.log('==================');
+				console.log('========>'+allKpitwo[i][j].id);
 				if ((!mStartTime.isBefore(startTime)) && (!mEndTime.isAfter(endTime))) {
 					allKpitwo[i][j]['falg'] = 1;
 				}else{
