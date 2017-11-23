@@ -527,7 +527,7 @@ async function computeLosstier4(allLosstier4){
 			{
 				mapWeightEle = new Array ();
 			}
-			mapEle.push (allLosstier4[i][j].value);
+			mapEle.push (allLosstier4[i][j].value * linebody.weight);
 			resultMap.set (allLosstier4[i][j].losstier4Tier4id, mapEle);
 			mapWeightEle.push (linebody.weight);
 			weightMap.set(allLosstier4[i][j].losstier4Tier4id , mapWeightEle);
