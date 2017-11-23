@@ -272,7 +272,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	//console.log('-----fadsfadfad--->'+JSON.stringify(allKpitwo , null , 4));
 	const kpitwoTime = await computeKpitwoBytime(allKpitwo , startTime , endTime);
 	// console.log(JSON.stringify('allKpitwo.length---------->'+allKpitwo.length , null , 4));
-	console.log('-------->'+JSON.stringify(allKpitwo , null , 4));
+	//console.log('-------->'+JSON.stringify(allKpitwo , null , 4));
 	if (kpitwoTime == undefined || kpitwoTime == null || kpitwoTime == '') {
 		return errorUtil.parameterError;
 	}
@@ -296,12 +296,12 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 			}
 		}
 	}
-	console.log('-=============');
-	//console.log(JSON.stringify(allKpitwo , null , 4));
+	
+	//console.log('=============>'+JSON.stringify(allLosstier3 , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
 	
  	const lossTier3Map = await computeLosstier3(allLosstier3);
-
+console.log('-=============');
  	const lossTier4Map = await computeLosstier4(allLosstier4);
  	
  	// console.log(kpitwoMap);
@@ -399,19 +399,19 @@ async function computeKpitwo(allKpitwo){
 			//console.log('------>'+JSON.stringify(linebody.weight , null , 4));
 			//weight_sum += linebody.weight;
 			let mapEle = resultMap.get (allKpitwo[i][j].kpitwolevKpitwoid);
-			let mapFalgEle = weightMap.get(allKpitwo[i][j].kpitwolevKpitwoid);
+			let mapWeightEle = weightMap.get(allKpitwo[i][j].kpitwolevKpitwoid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
 			}
-			if (!mapFalgEle)
+			if (!mapWeightEle)
 			{
-				mapFalgEle = new Array ();
+				mapWeightEle = new Array ();
 			}
 			mapEle.push (allKpitwo[i][j].value * linebody.weight);
-			mapFalgEle.push (linebody.weight);
+			mapWeightEle.push (linebody.weight);
 			resultMap.set (allKpitwo[i][j].kpitwolevKpitwoid , mapEle);
-			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapFalgEle);
+			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
 	//console.log(weightMap);
@@ -431,7 +431,7 @@ async function computeKpitwo(allKpitwo){
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
-		map.set(key , value);
+		map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
@@ -447,34 +447,52 @@ async function computeLosstier3(allLosstier3){
 		return ;
 	}
 	let resultMap = new Map ();
-
+	let weightMap = new Map();
 	for (var i = allLosstier3.length - 1; i >= 0; i--) {
 		if (allLosstier3[i] == null || allLosstier3[i] == '') {
 			continue;
 		}
+
 		for (var j = allLosstier3[i].length - 1; j >= 0; j--) {
 			if (allLosstier3[i][j] == null || allLosstier3[i][j] == '') {
 				continue;
 			}
+			const linebody = await Linebody.findById(allLosstier3[i][j].linebodyLinebodyid,{'attributes': ['weight']});
 			let mapEle = resultMap.get (allLosstier3[i][j].losstier3Lossid);
+			let mapWeightEle = weightMap.get(allLosstier3[i][j].kpitwolevKpitwoid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
 			}
-			mapEle.push (allLosstier3[i][j].value);
+			if (!mapWeightEle)
+			{
+				mapWeightEle = new Array ();
+			}
+			mapEle.push (allLosstier3[i][j].value * linebody.weight);
+			mapWeightEle.push (linebody.weight);
 			resultMap.set (allLosstier3[i][j].losstier3Lossid, mapEle);
+			weightMap.set(allLosstier3[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
 	//console.log('resultMap');
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		const length = value.length;
-		if (length != 0) {
-			value = sum / length;
+		let weight_sum = 0 ;
+		//let weight_sum = value.length;
+		for(var [key1, value1] of weightMap) {
+			if (key == key1) {
+				weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			}
 		}
-		map.set(key , value);
-		//console.log("属性：" + key + ",值：" + value);
+		//console.log(JSON.stringify(sum , null , 4));
+		//console.log(JSON.stringify(weight_sum , null , 4));
+		if (weight_sum != 0) {
+			value = sum / weight_sum;
+		}
+		console.log("属性：" + key + ",值：" + value);
+		map.set(key , new Number(value).toFixed(4));
+		
 	}
 	//console.log(map);
 	return map;
@@ -489,7 +507,7 @@ async function computeLosstier4(allLosstier4){
 		return ;
 	}
 	let resultMap = new Map ();
-
+	let weightMap = new Map();
 	for (var i = allLosstier4.length - 1; i >= 0; i--) {
 		if (allLosstier4[i] == null || allLosstier4[i] == '') {
 			continue;
@@ -498,24 +516,40 @@ async function computeLosstier4(allLosstier4){
 			if (allLosstier4[i][j] == null || allLosstier4[i][j] == '') {
 				continue;
 			}
+			const linebody = await Linebody.findById(allLosstier4[i][j].linebodyLinebodyid,{'attributes': ['weight']});
 			let mapEle = resultMap.get (allLosstier4[i][j].losstier4Tier4id);
+			let mapWeightEle = weightMap.get(allLosstier4[i][j].kpitwolevKpitwoid);
 			if (!mapEle)
 			{
 				mapEle = new Array ();
 			}
+			if (!mapWeightEle)
+			{
+				mapWeightEle = new Array ();
+			}
 			mapEle.push (allLosstier4[i][j].value);
 			resultMap.set (allLosstier4[i][j].losstier4Tier4id, mapEle);
+			mapWeightEle.push (linebody.weight);
+			weightMap.set(allLosstier4[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
 	//console.log('resultMap');
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		const length = value.length;
-		if (length != 0) {
-			value = sum / length;
+		let weight_sum = 0 ;
+		//let weight_sum = value.length;
+		for(var [key1, value1] of weightMap) {
+			if (key == key1) {
+				weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			}
 		}
-		map.set(key , value);
+		//console.log(JSON.stringify(sum , null , 4));
+		//console.log(JSON.stringify(weight_sum , null , 4));
+		if (weight_sum != 0) {
+			value = sum / weight_sum;
+		}
+		map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
