@@ -21,6 +21,28 @@ var dataSuccess = {
     msg: '请求成功',
     data:'fas'
 };
+
+
+Date.prototype.format = function(format) {
+  var o = {
+    "M+": this.getMonth() + 1,
+    "d+": this.getDate(),
+    "h+": this.getHours(),
+    "m+": this.getMinutes(),
+    "s+": this.getSeconds(),
+    "q+": Math.floor((this.getMonth() + 3) / 3),
+    "S": this.getMilliseconds()
+  }
+  if (/(y+)/.test(format)) {
+    format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+  }
+  for (var k in o) {
+    if (new RegExp("(" + k + ")").test(format)) {
+      format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+    }
+  }
+  return format;
+}
 /*
 	linebody级别为本次查询计算的最高级
  */
@@ -530,10 +552,15 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 		) {
 		return ;
 	}
-	const startTime = moment(startTimeValue);
-	const endTime = moment(endTimeValue);
-	console.log('==========>startTimeValue'+startTimeValue);
-	console.log('==========>endTimeValue'+endTimeValue);
+
+	// console.log('==========>startTimeValue'+startTimeValue);
+	// console.log('==========>endTimeValue'+endTimeValue);
+	// const startTime = moment(startTimeValue);
+	// const endTime = moment(endTimeValue);
+	const startTime = new Date(startTimeValue).getTime();
+	const endTime = new Date(endTimeValue).getTime();
+	// console.log('==========>startTime----'+startTime);
+	// console.log('==========>endTime----'+endTime);
 	for (var i = allKpitwo.length - 1; i >= 0; i--) {
 		if (allKpitwo[i] == null || allKpitwo[i] == '') {
 			allKpitwo.splice(i , 1);//删除该元素
@@ -551,13 +578,17 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}
-			console.log('==========>classstarttime'+classstarttime);
-			console.log('==========>classendtime'+classendtime);
-			const mStartTime = moment(classstarttime);
-			const mEndTime = moment(classendtime);
-			const mTime = mEndTime.diff(mStartTime);//单位是毫秒
+			//console.log('==========>classstarttime'+classstarttime.format('yyyy-MM-dd hh:mm:ss'));
+			//console.log('==========>classendtime'+classendtime.format('yyyy-MM-dd hh:mm:ss'));
+			// const mStartTime = moment(classstarttime);
+			// const mEndTime = moment(classendtime);
+
+			const mStartTime = new Date(classstarttime).getTime();
+			const mEndTime = new Date(classendtime).getTime();
+
+			const mTime = mEndTime - mStartTime;//单位是毫秒
 			
-			if (mStartTime.isAfter(endTime) || mEndTime.isBefore(startTime)) {
+			if (mStartTime > endTime || mEndTime < startTime) {
 				// console.log(JSON.stringify(startTime , null , 4));
 				// console.log(JSON.stringify(endTime , null , 4));
 				// console.log('\n');
@@ -569,22 +600,23 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);//删除该元素
 				continue;
 			}else{
-				console.log(JSON.stringify(startTime , null , 4));
-				console.log(JSON.stringify(endTime , null , 4));
-				console.log('\n');
-				console.log(JSON.stringify(mStartTime , null , 4));
-				console.log(JSON.stringify(mEndTime , null , 4));
-				console.log('\n\n\n\n\n');
-				console.log('==================');
-				console.log('========>'+allKpitwo[i][j].id);
-				if ((!mStartTime.isBefore(startTime)) && (!mEndTime.isAfter(endTime))) {
+				// console.log(JSON.stringify(startTime , null , 4));
+				// console.log(JSON.stringify(endTime , null , 4));
+				// console.log('\n');
+				// console.log(new Date('2017-10-01 00:00:00'));
+				// console.log(mStartTime);
+				// console.log(mEndTime);
+				// console.log('\n\n\n\n\n');
+				// console.log('==================');
+				// console.log('========>'+allKpitwo[i][j].id);
+				if (!(mStartTime < startTime) && !(mEndTime>endTime)) {
 					allKpitwo[i][j]['falg'] = 1;
 				}else{
-					if (mStartTime.isBefore(startTime)) {
-						const minTime = mEndTime.diff(startTime);//的时间段,单位为毫秒
+					if (mStartTime < startTime) {
+						const minTime = mEndTime-startTime;//的时间段,单位为毫秒
 						allKpitwo[i][j].falg = minTime / mTime;
 					}else{
-						const minTime = endTime.diff(mStartTime);//所在的时间段,单位为毫秒
+						const minTime = endTime-mStartTime;//所在的时间段,单位为毫秒
 						allKpitwo[i][j].falg = minTime / mTime;
 					}
 				}
@@ -597,3 +629,4 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 	//console.log(JSON.stringify(endTime , null , 4));
 	return endTime;
 }
+
