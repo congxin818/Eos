@@ -247,6 +247,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		return errorUtil.parameterError;
 	}
 	const user = await User.findById(userId);
+	let type = 0;
 	//console.log(JSON.stringify(user , null , 4));
 	if (user == undefined || user == null || user == '') {
 		return errorUtil.noExistError;
@@ -257,6 +258,9 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	if (Ids == undefined || Ids == null || Ids == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return errorUtil.serviceError;
+	}
+	if (Ids.length == 1) {
+		type = 1;
 	}
 	let allKpitwo = [];
 	let allLosstier3 = [];
@@ -300,9 +304,9 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	//console.log('=============>'+JSON.stringify(allLosstier3 , null , 4));
 	const kpitwoMap = await computeKpitwo(allKpitwo);
 	
- 	const lossTier3Map = await computeLosstier3(allLosstier3);
+ 	const lossTier3Map = await computeLosstier3(allLosstier3 , type);
 	//console.log('-=============');
- 	const lossTier4Map = await computeLosstier4(allLosstier4);
+ 	const lossTier4Map = await computeLosstier4(allLosstier4 , type);
  	
  	// console.log(kpitwoMap);
  	// console.log(lossTier3Map);
@@ -442,7 +446,7 @@ async function computeKpitwo(allKpitwo){
 /*
 	计算losstier3的每一项的平均数
  */
-async function computeLosstier3(allLosstier3){
+async function computeLosstier3(allLosstier3 , type){
 	//console.log(JSON.stringify(allLosstier3 , null , 4));
 	if (allLosstier3 == undefined || allLosstier3 == null || allLosstier3 == '') {
 		return ;
@@ -483,10 +487,18 @@ async function computeLosstier3(allLosstier3){
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
 		let weight_sum = 0 ;
 		//let weight_sum = value.length;
-		for(var [key1, value1] of weightMap) {
+		if (type == 1) {
+			for(var [key1, value1] of weightMap) {
 			//if (key == key1) {
 				weight_sum += await value1.map(a => a).reduce ((pre, cur) => pre + cur);
 			//}
+			}
+		}else{
+			for(var [key1, value1] of weightMap) {
+				if (key == key1) {
+					weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+				}
+			}
 		}
 		//console.log(JSON.stringify(sum , null , 4));
 		//console.log(JSON.stringify(weight_sum , null , 4));
@@ -504,7 +516,7 @@ async function computeLosstier3(allLosstier3){
 /*
 	计算losstier4的每一项的平均数
  */
-async function computeLosstier4(allLosstier4){
+async function computeLosstier4(allLosstier4 , type){
 	//console.log(JSON.stringify(allLosstier3 , null , 4));
 	if (allLosstier4 == undefined || allLosstier4 == null || allLosstier4 == '') {
 		return ;
@@ -543,12 +555,21 @@ async function computeLosstier4(allLosstier4){
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
 		let weight_sum = 0 ;
-		//let weight_sum = value.length;
-		for(var [key1, value1] of weightMap) {
+		if (type == 1) {
+			for(var [key1, value1] of weightMap) {
 			//if (key == key1) {
 				weight_sum += await value1.map(a => a).reduce ((pre, cur) => pre + cur);
 			//}
+			}
+		}else{
+			for(var [key1, value1] of weightMap) {
+				if (key == key1) {
+					weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+				}
+			}
 		}
+		//let weight_sum = value.length;
+		
 		console.log(JSON.stringify(sum , null , 4));
 		console.log(JSON.stringify(weight_sum , null , 4));
 		if (weight_sum != 0) {
