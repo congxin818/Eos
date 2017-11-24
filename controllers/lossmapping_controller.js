@@ -414,8 +414,8 @@ async function computeKpitwo(allKpitwo){
 			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
-	//console.log(weightMap);
-	//console.log(resultMap);
+	console.log(weightMap);
+	console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
