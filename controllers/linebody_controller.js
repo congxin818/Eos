@@ -39,6 +39,7 @@ const showLinbodyInf = {
     idealvalue:'',
     idealstrattime:'',
     idealendtime:'',
+    weight:''
 }
 
 /*
@@ -62,7 +63,7 @@ const showLinbodyInf = {
         showLinbodyInf.idealvalue = data.idealvalue
         showLinbodyInf.idealstrattime = moment(data.idealstrattime).format('YYYY-MM-DD');
         showLinbodyInf.idealendtime = moment(data.idealendtime).format('YYYY-MM-DD');
-
+        showLinbodyInf.weight = data.weight;
         res.end(JSON.stringify(showLinbodyInf));
     }
 
