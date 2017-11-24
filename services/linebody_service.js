@@ -8,7 +8,11 @@
 const Linebody = require('../models').Linebody;
 const Workshop = require('../models').Workshop;
 const errorUtil = require('../utils/errorUtil');
-
+var dataSuccess = {
+    status: '0', 
+    msg: '请求成功',
+    data:'fas'
+};
 /*
 	查找所有线体数据
     */
