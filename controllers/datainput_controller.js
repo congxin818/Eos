@@ -46,7 +46,8 @@ const kpiTwoShow = {
            res.end(JSON.stringify(parameterError))
    }
         // 根据二级目录名字创建一条二级目录数据
-        const KpitwolevNameList = await datainputServices.addKpitwolevByname(req);
+        const kpitwolev = await datainputServices.addKpitwolevByname(req);
+        dataSuccess.data = kpitwolev
         res.end(JSON.stringify(dataSuccess))     
     }
 
@@ -66,6 +67,21 @@ const kpiTwoShow = {
     }
 
 /*
+    三级下拉框结束，添加一条三级loss数据
+    */
+    exports.addLosstier3data = async function(req , res) {
+        if(req.body.twolevDataid == null||req.body.twolevDataid == ''
+            ||req.body.losstier3Id == null||req.body.losstier3Id == ''
+            ||req.body.linebodyId == null||req.body.linebodyId == ''){
+            res.end(JSON.stringify(parameterError))
+    }
+    const addReturn = await datainputServices.addLosstier3data(req.body.twolevDataid,
+        req.body.losstier3Id,req.body.linebodyId)
+    dataSuccess.data = addReturn
+    res.end(JSON.stringify(dataSuccess))
+}
+
+/*
     datainput 添加loss中展示四级目录结构结构
     */
     exports.showLosstier4 = async function(req , res) {
@@ -78,22 +94,36 @@ const kpiTwoShow = {
         dataSuccess.data = losstier4Name
         res.end(JSON.stringify(dataSuccess))
     }
+/*
+    四级下拉框结束，添加一条四级loss数据
+    */
+    exports.addLosstier4data = async function(req , res) {
+        if(req.body.losstier3Dataid == null||req.body.losstier3Dataid == ''
+            ||req.body.losstier4Id == null||req.body.losstier4Id == ''
+            ||req.body.linebodyId == null||req.body.linebodyId == ''){
+            res.end(JSON.stringify(parameterError))
+    }
+    const addReturn = await datainputServices.addLosstier4data(req.body.losstier3Dataid,
+        req.body.losstier4Id,req.body.linebodyId)
+    dataSuccess.data = addReturn
+    res.end(JSON.stringify(dataSuccess))
+}
 
 /*
-    添加四级loss发生的时间及持续时间
+    添加四级loss发生的开始时间和结束时间
     */
     exports.addLosstier4time = async function(req , res) {
         //根据四级loss名字找出四级loss对应的结构id=>losstier4Id
-        if(req.body.tier4Name == null||req.body.tier4Name == ''
-            ||req.body.linebodyId == null||req.body.linebodyId == ''
+        if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == ''
             ||req.body.starttime == null||req.body.starttime == ''
             ||req.body.endtime == null||req.body.endtime == ''){
             res.end(JSON.stringify(parameterError))
-        }
+    }
         // 找到对应四级目录结构
-        const losstier4 = await datainputServices.selectLosstier4Bytier4name(req.body.tier4Name)
-        const addReturn = await datainputServices.addLosstier4data(req,losstier4)
+        const addReturn = await datainputServices.addLosstier4datatime(req , res)
         if(addReturn == 1){
+            const showReturn = await datainputServices.selectLosstier4DataByid(req.body.losstier4Dataid)
+            dataSuccess.data = showReturn
             res.end(JSON.stringify(dataSuccess))
         }
         res.end(JSON.stringify(addObjectError))

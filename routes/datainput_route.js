@@ -36,4 +36,18 @@ router.post('/addLosstier4time', function(req, res, next) {
     controller.addLosstier4time(req , res , next);
 });
 
+/*
+	三级下拉框结束，添加一条三级loss数据
+ */
+router.post('/addLosstier3data', function(req, res, next) {
+    controller.addLosstier3data(req , res , next);
+});
+
+/*
+	四级下拉框结束，添加一条四级loss数据
+ */
+router.post('/addLosstier4data', function(req, res, next) {
+    controller.addLosstier4data(req , res , next);
+});
+
 module.exports = router;
