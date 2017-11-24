@@ -176,8 +176,8 @@ exports.deleteUserById = function(req , res , next) {
         if (data == null || data == undefined || data == '') {
             res.end(JSON.stringify(errorUtil.parameterError));
         }else{
-            //dataSuccess.data = data;
-            res.end(JSON.stringify(data));
+            dataSuccess.data = data;
+            res.end(JSON.stringify(dataSuccess));
         }
     });
 }
@@ -185,21 +185,26 @@ exports.deleteUserById = function(req , res , next) {
 /*
     根据所有的userIds批量删除用户
  */
-async function massDeleteUserByUserIds(userIds){
-    if (userIds == undefined || userIds == null || userIds == '') {
+async function massDeleteUserByUserIds(req , res , next){
+    if (req.body.userIds == undefined || req.body.userIds == null || req.body.userIds == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
-    const Ids = userIds.split(',');
+    const Ids = req.body.userIds.split(',');
     if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
+    let allData = new Array();
     for (var i = Ids.length - 1; i >= 0; i--) {
-        await service.deleteUserById(Ids[i]);
+        const userData = await service.deleteUserById(Ids[i]);
+        allData.push(userData);
     }
+    dataSuccess.data = allData;
+    res.end(JSON.stringify(dataSuccess));
 }
 exports.massDeleteUserByUserIds = massDeleteUserByUserIds;
+
 //根据userId跟新User
 exports.updateUserById = function(req , res , next) {
 	//如果没有post数据或者数据为空,直接返回

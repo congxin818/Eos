@@ -373,8 +373,8 @@ exports.addUserOne = addUserOne;
         await user.setUserWorkshops([]);
         await user.setUserLinebodys([]);
         await user.setUserKpitwolevs([]);
-        dataSuccess.data = falg;
-        return dataSuccess;
+        //dataSuccess.data = user;
+        return user;
     }
     exports.deleteUserById = deleteUserById;
 
