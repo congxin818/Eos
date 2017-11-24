@@ -161,7 +161,7 @@ async function updateLinebodyWeightById(linebodyId , weight){
     }
     const falg = await Linebody.update(linebody , {
         where:{
-                linebodyid:req.body.linebodyId
+                linebodyid:linebodyId
             }
     });
     if (falg == undefined || falg == null || falg == '' || falg != 1) {
