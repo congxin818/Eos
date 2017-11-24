@@ -13,6 +13,23 @@ const sequelize = require('../mysql').sequelize();
 const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
 const LinebodyLosstier3 = require('../models').LinebodyLosstier3;
 const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
+const UserKpitwolev = require('../models').UserKpitwolev;
+
+/*
+    根据用户设置的顺序查找二级结构
+    */
+    exports.selectKpitwolevidByuser = async function(userId) {      
+        return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
+           where:{userUserid: userId},order: [['sequence','ASC']]})
+    }
+
+/*
+    二级loss结构id找到二级目录的名字
+    */
+    exports.selectKpitwolevNameByid = async function(kpitwoid) {
+        return await Kpitwolev.findById(kpitwoid)
+    }
+
 /*
 	根据二级目录名字创建一条二级目录数据
     */
@@ -26,7 +43,6 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
         }
         const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
         const linebody = await Linebody.findById(req.body.linebodyId)
-       // await linebody.addLinebodyKpitwolev(kpitwolev)
        // 添加数据
        var linebodyKpitwolev =  await kpitwolev.createLinebodyKpitwolev(kpitwolevdata)
        await linebody.addLinebodyKpitwolev(linebodyKpitwolev)
@@ -162,12 +178,37 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
     }
 
 /*
-    根据twolevDataid,losstier3Id,linebodyId查找一个3级data是否存在
+    验证添加的这个二级loss数据是否重复
+    */
+    exports.selectKpitwolevDataBy = async function(req , res) {
+        const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
+        return await LinebodyKpitwolev.findOne({where:{
+            classstarttime: req.body.classStarttime,
+            classendtime: req.body.classEndtime,
+            linebodyLinebodyid: req.body.linebodyId,
+            kpitwolevKpitwoid: kpitwolev.kpitwoid
+        }})
+    }
+
+/*
+    验证添加的这个四级loss数据是否重复
     */
     exports.selectLosstier3By = async function(twolevDataid,losstier3Id,linebodyId) {
         return await LinebodyLosstier3.findOne({where:{
             linebodyLinebodyid: linebodyId,
             losstier3Lossid: losstier3Id,
             linebodyKpitwolevId: twolevDataid
+        }})
+    }
+/*
+    验证添加的这个四级loss数据是否重复
+    */
+    exports.selectLosstier4DataBy = async function(req , res) {
+        return await LinebodyLosstier4.findOne({where:{
+            starttime: req.body.starttime,
+            endtime: req.body.endtime,
+            linebodyLinebodyid: req.body.linebodyId,
+            losstier4Tier4id: req.body.losstier4Id,
+            linebodylosstier3Id: req.body.losstier3Dataid
         }})
     }
