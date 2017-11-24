@@ -37,7 +37,7 @@ router.get('/deleteUserById', function(req, res, next) {
     controller.deleteUserById(req , res , next);
 });
 
-//删除一个用户
+//批量删除用户
 router.post('/massDeleteUserByUserIds', function(req, res, next) {
     controller.massDeleteUserByUserIds(req , res , next);
 });
