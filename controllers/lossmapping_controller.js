@@ -414,6 +414,7 @@ async function computeKpitwo(allKpitwo){
 			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
+	console.log('yuzhizhe01');
 	console.log(weightMap);
 	console.log(resultMap);
 	let map = new Map();
@@ -474,7 +475,9 @@ async function computeLosstier3(allLosstier3){
 			weightMap.set(allLosstier3[i][j].losstier3Lossid , mapWeightEle);
 		}
 	}
-	//console.log('resultMap');
+	console.log('yuzhizhe02');
+	console.log(weightMap);
+	console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -533,19 +536,21 @@ async function computeLosstier4(allLosstier4){
 			weightMap.set(allLosstier4[i][j].losstier4Tier4id , mapWeightEle);
 		}
 	}
-	//console.log('resultMap');
+	console.log('yuzhizhe03');
+	console.log(weightMap);
+	console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
 		let weight_sum = 0 ;
 		//let weight_sum = value.length;
 		for(var [key1, value1] of weightMap) {
-			if (key == key1) {
-				weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
-			}
+			//if (key == key1) {
+				weight_sum += await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			//}
 		}
-		//console.log(JSON.stringify(sum , null , 4));
-		//console.log(JSON.stringify(weight_sum , null , 4));
+		console.log(JSON.stringify(sum , null , 4));
+		console.log(JSON.stringify(weight_sum , null , 4));
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
