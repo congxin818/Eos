@@ -9,6 +9,13 @@ var router = express.Router();
 var controller = require('../controllers/datainput_controller');
 
 /*
+	查找二级loss结构
+ */
+router.post('/showKpitwolev', function(req, res, next) {
+    controller.showKpitwolev(req , res , next);
+});
+
+/*
 	增加开班时间
  */
 router.post('/addClasstime', function(req, res, next) {
@@ -22,12 +29,6 @@ router.post('/showLosstier3', function(req, res, next) {
     controller.showLosstier3(req , res , next);
 });
 
-/*
-	展示添加loss中四级目录结构
- */
-router.post('/showLosstier4', function(req, res, next) {
-    controller.showLosstier4(req , res , next);
-});
 
 /*
 	添加四级loss发生的时间及持续时间
@@ -48,6 +49,13 @@ router.post('/addLosstier3data', function(req, res, next) {
  */
 router.post('/addLosstier4data', function(req, res, next) {
     controller.addLosstier4data(req , res , next);
+});
+
+/*
+	点击确定，添加几条loss数据
+ */
+router.post('/addLosstier4time2', function(req, res, next) {
+    controller.addLosstier4time2(req , res , next);
 });
 
 module.exports = router;
