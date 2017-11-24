@@ -45,9 +45,14 @@ const showLosstier34 = {
        const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
        console.log('-----'+JSON.stringify(kpitwolevidList,null,4))
        var showList = []
+
        for(var i = 0; i < kpitwolevidList.length ; i++){
           var kpitwolev =  await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
-          showList.push(kpitwolev.name)
+          let value = {
+            kpitwolev.name : new Array();
+          }
+          //showList.push(kpitwolev.name)
+          showList.push(value);
       }
       dataSuccess.data = showList
       res.end(JSON.stringify(dataSuccess))
