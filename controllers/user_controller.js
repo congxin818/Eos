@@ -167,14 +167,14 @@ exports.addUserOne = addUserOne;
 exports.deleteUserById = function(req , res , next) {
 	//如果没有username字段,返回404
     if (req.query.userId == undefined ||req.query.userId == '') {
-        res.end(JSON.stringify(parameterError));
+        res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    service.deleteUserById(req , res , next).then(function(data){
+    service.deleteUserById(req.query.userId).then(function(data){
         //console.log(JSON.stringify(data));
         if (data == null || data == undefined || data == '') {
-            res.end(JSON.stringify(parameterError));
+            res.end(JSON.stringify(errorUtil.parameterError));
         }else{
             //dataSuccess.data = data;
             res.end(JSON.stringify(data));
@@ -182,6 +182,24 @@ exports.deleteUserById = function(req , res , next) {
     });
 }
 
+/*
+    根据所有的userIds批量删除用户
+ */
+async function massDeleteUserByUserIds(userIds){
+    if (userIds == undefined || userIds == null || userIds == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    const Ids = userIds.split(',');
+    if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    for (var i = Ids.length - 1; i >= 0; i--) {
+        await service.deleteUserById(Ids[i]);
+    }
+}
+exports.massDeleteUserByUserIds = massDeleteUserByUserIds;
 //根据userId跟新User
 exports.updateUserById = function(req , res , next) {
 	//如果没有post数据或者数据为空,直接返回

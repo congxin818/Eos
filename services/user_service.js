@@ -55,31 +55,6 @@ var dataSuccess = {
         {
             return;
         }
-        // for(j = 0,len=users.length; j < len; j++) {
-        //     var extraData = {
-        //         user:'',
-        //         group:'group',
-        //         factory:'factory',
-        //         workshop:'workshop',
-        //         linebody:'linebody',
-        //         validmenu:'validmenu'
-        //     };
-
-        //     const group = await users[j].getUserGroups ();
-        //     const factory = await users[j].getUserFactorys ();
-        //     const workshop = await users[j].getUserWorkshops ();
-        //     const linebody = await users[j].getUserLinebodys ();
-        //     const validmenu = await users[j].getUserValidmenus ();
-
-        //     extraData.user = users[j];
-        //     extraData.group = group;
-        //     extraData.factory = factory;
-        //     extraData.workshop = workshop;
-        //     extraData.linebody = linebody;
-        //     extraData.validmenu = validmenu;
-
-        //     array.push(extraData);
-        // }
         return users;
     }
     exports.selectUserAll = selectUserAll;
@@ -380,12 +355,15 @@ exports.addUserOne = addUserOne;
 /*
 	根据userId删除User
     */
-    async function deleteUserById(req , res , next) {
-        const user = await User.findById(req.query.userId);
+    async function deleteUserById(userId) {
+        if (userId == undefined || userId == null || userId == '') {
+            return errorUtil.parameterError;
+        }
+        const user = await User.findById(userId);
         if (user == undefined || user == null || user == '') {
             return errorUtil.noExistError;
         }
-        const falg = await User.destroy({where:{userid:req.query.userId}});
+        const falg = await User.destroy({where:{userid:userId}});
         if (falg == null || falg != 1) {
             return errorUtil.noExistError;
         }
@@ -394,6 +372,7 @@ exports.addUserOne = addUserOne;
         await user.setUserFactorys([]);
         await user.setUserWorkshops([]);
         await user.setUserLinebodys([]);
+        await user.setUserKpitwolevs([]);
         dataSuccess.data = falg;
         return dataSuccess;
     }

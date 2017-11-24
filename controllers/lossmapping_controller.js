@@ -301,7 +301,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	const kpitwoMap = await computeKpitwo(allKpitwo);
 	
  	const lossTier3Map = await computeLosstier3(allLosstier3);
-console.log('-=============');
+	//console.log('-=============');
  	const lossTier4Map = await computeLosstier4(allLosstier4);
  	
  	// console.log(kpitwoMap);
