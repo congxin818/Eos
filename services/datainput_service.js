@@ -57,7 +57,7 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
     根据三级目录id找到对应四级目录结构
     */
     exports.selectLosstier4Bytier3Id = async function(tier3id) {
-        const losstier4data = await Losstier4.findAll({'attributes': ['tier4id','name'],where:{losstier3Lossid:tier3id}})
+        const losstier4data = await Losstier4.findAll({'attributes': ['tier4id','name','losstier3Lossid'],where:{losstier3Lossid:tier3id}})
         return losstier4data;
     }
 
@@ -72,7 +72,6 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
     根据二级loss数据创建一条三级loss数据
     */
     exports.addLosstier3data = async function(twolevDataid,losstier3Id,linebodyId) {
-
         var losstier3data = {}
         const twolevData = await LinebodyKpitwolev.findById(twolevDataid)
         const losstier3 = await Losstier3.findById(losstier3Id)
@@ -108,7 +107,9 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
     }
     const addReturn = await LinebodyLosstier4.update(losstier4data,{where:{id:req.body.losstier4Dataid}});
 
-    exports.addLosstier4datavalue(starttime , endtime ,req.body.losstier4Dataid)
+    await exports.addLosstier4datavalue(starttime , endtime ,req.body.losstier4Dataid)
+    await exports.addLosstier3datavalue(req.body.losstier4Dataid)
+    await exports.addLosstier2datavalue(req.body.losstier4Dataid)
 
     return addReturn
 }
@@ -139,8 +140,34 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
     添加三级数据value值
     */
     exports.addLosstier3datavalue = async function(losstier4Dataid) {
+        //把这个四级value的值加到对应的三级目录上
         const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
         const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
-        var losstier3data = {value: losstier3Data.value + losstier4Data.value}
-        await LinebodyLosstier3.update(losstier3Data,{where:{id:losstier4Data.linebodylosstier3Id}})
+        losstier3DataValue = losstier3Data.value + losstier4Data.value
+        var losstier3data = {value: losstier3DataValue}
+        await LinebodyLosstier3.update(losstier3data,{where:{id:losstier4Data.linebodylosstier3Id}})
+    }
+
+/*
+    添加二级数据value值
+    */
+    exports.addLosstier2datavalue = async function(losstier4Dataid) {
+        //把这个三级value的值加到对应的三级目录上
+        const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
+        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
+        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
+        kpitwolevDataValue = kpitwolevData.value + losstier3Data.value
+        var kpitwolevdata = {value: kpitwolevDataValue}
+        await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
+    }
+
+/*
+    根据twolevDataid,losstier3Id,linebodyId查找一个3级data是否存在
+    */
+    exports.selectLosstier3By = async function(twolevDataid,losstier3Id,linebodyId) {
+        return await LinebodyLosstier3.findOne({where:{
+            linebodyLinebodyid: linebodyId,
+            losstier3Lossid: losstier3Id,
+            linebodyKpitwolevId: twolevDataid
+        }})
     }

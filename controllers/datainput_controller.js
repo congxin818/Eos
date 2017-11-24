@@ -29,12 +29,11 @@ const addObjectError = {
     msg: '添加失败'
 };
 
-const kpiTwoShow = {
-    id: 'fas', 
-    name: 'fas',
-    pId:'fas'
-};
 
+const showLosstier34 = {
+    losstier3:'' ,
+    losstier4:''
+}
 /*
     添加本班次时间
     */ 
@@ -43,8 +42,8 @@ const kpiTwoShow = {
             ||req.body.classEndtime == null||req.body.classEndtime == ''
             ||req.body.twolevName == null||req.body.twolevName == ''
             ||req.body.linebodyId == null||req.body.linebodyId == ''){
-           res.end(JSON.stringify(parameterError))
-   }
+         res.end(JSON.stringify(parameterError))
+ }
         // 根据二级目录名字创建一条二级目录数据
         const kpitwolev = await datainputServices.addKpitwolevByname(req);
         dataSuccess.data = kpitwolev
@@ -61,9 +60,14 @@ const kpiTwoShow = {
         }
         // 找到对应的三级目录结构
         const twolevdata = await datainputServices.selectTwoLevByName(req.body.twolevName)
-        const losstier3Name = await datainputServices.selectLosstier3BytwoId(twolevdata.kpitwoid)
-        dataSuccess.data = losstier3Name
-        res.end(JSON.stringify(dataSuccess))
+        const losstier3DataList = await datainputServices.selectLosstier3BytwoId(twolevdata.kpitwoid)
+        for(var i=0 ;i<losstier3DataList.length ;i++){
+            const losstier4NameList = await datainputServices.selectLosstier4Bytier3Id(losstier3DataList[i].lossid)
+           showLosstier34.losstier4 = losstier4NameList
+        }
+        showLosstier34.losstier3 = losstier3DataList
+        dataSuccess.data = showLosstier34
+        res.end(JSON.stringify(dataSuccess))     
     }
 
 /*
@@ -75,10 +79,15 @@ const kpiTwoShow = {
             ||req.body.linebodyId == null||req.body.linebodyId == ''){
             res.end(JSON.stringify(parameterError))
     }
-    const addReturn = await datainputServices.addLosstier3data(req.body.twolevDataid,
+    var losstier3Data = await datainputServices.selectLosstier3By(req.body.twolevDataid,
         req.body.losstier3Id,req.body.linebodyId)
-    dataSuccess.data = addReturn
-    res.end(JSON.stringify(dataSuccess))
+    if(losstier3Data == null){
+       losstier3Data = await datainputServices.addLosstier3data(req.body.twolevDataid,
+        req.body.losstier3Id,req.body.linebodyId)
+       dataSuccess.data = losstier3Data
+   }
+   dataSuccess.data = losstier3Data
+   res.end(JSON.stringify(dataSuccess))
 }
 
 /*
