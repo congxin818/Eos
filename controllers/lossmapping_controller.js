@@ -484,9 +484,9 @@ async function computeLosstier3(allLosstier3){
 		let weight_sum = 0 ;
 		//let weight_sum = value.length;
 		for(var [key1, value1] of weightMap) {
-			if (key == key1) {
-				weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
-			}
+			//if (key == key1) {
+				weight_sum += await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			//}
 		}
 		//console.log(JSON.stringify(sum , null , 4));
 		//console.log(JSON.stringify(weight_sum , null , 4));
