@@ -137,3 +137,12 @@ const showLinbodyInf = {
     }
     res.end(JSON.stringify(parameterError));
 }
+
+/*
+    根据id更新线体权重
+    */
+async function updateLinebodyWeightById(req , res , next){
+    const data = await services.updateLinebodyWeightById(req.body.linebodyId , req.body.weight);
+    res.end(JSON.stringify(data));
+}
+exports.updateLinebodyWeightById = updateLinebodyWeightById;

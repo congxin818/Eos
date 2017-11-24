@@ -16,4 +16,11 @@ router.post('/selectLinebodyById', function(req, res, next) {
 router.post('/updateLinebodyInfById', function(req, res, next) {
     controller.updateLinebodyInfById(req , res);
 });
+
+/*
+	根据id更新线体权重
+*/
+router.post('/updateLinebodyWeightById', function(req, res, next) {
+    controller.updateLinebodyWeightById(req , res , next);
+});
 module.exports = router;

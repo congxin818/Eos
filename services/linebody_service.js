@@ -143,3 +143,31 @@ const errorUtil = require('../utils/errorUtil');
         }
     }
     exports.linebodyClear = linebodyClear;
+
+/*
+    根据id更新线体权重
+    */
+async function updateLinebodyWeightById(linebodyId , weight){
+    if (linebodyId == undefined || linebodyId == null || linebodyId == ''
+        || weight == undefined || weight == null || weight == '') {
+        return errorUtil.parameterError;
+    }
+    var linebody = {
+        weight:weight
+    };
+    const value = await Linebody.findById(linebodyId);
+    if (value == undefined || value == null || value == '') {
+        return errorUtil.noExistError;
+    }
+    const falg = await Linebody.update(linebody , {
+        where:{
+                linebodyid:req.body.linebodyId
+            }
+    });
+    if (falg == undefined || falg == null || falg == '' || falg != 1) {
+        return errorUtil.serviceError;
+    }
+    dataSuccess.data = falg;
+    return dataSuccess;
+}
+exports.updateLinebodyWeightById = updateLinebodyWeightById;
