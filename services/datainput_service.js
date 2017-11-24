@@ -57,7 +57,7 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
     根据三级目录id找到对应四级目录结构
     */
     exports.selectLosstier4Bytier3Id = async function(tier3id) {
-        const losstier4data = await Losstier4.findAll({'attributes': ['id','name'],where:{losstier3Lossid:tier3id}})
+        const losstier4data = await Losstier4.findAll({'attributes': ['tier4id','name'],where:{losstier3Lossid:tier3id}})
         return losstier4data;
     }
 
@@ -124,16 +124,23 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
         const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
         const classstarttime = kpitwolevData.classstarttime
         const classendtime = kpitwolevData.classendtime
-        console.log('-------------' + classstarttime)
-        const classDuration = classendtime.getTime() - classstarttime.getTime() 
+        const classDuration = classendtime.getTime() - classstarttime.getTime()
         const tier4value = (duration/classDuration).toFixed(4)
-        console.log('3------------->' + tier4value)
         var losstier4data = {value: tier4value}
         await LinebodyLosstier4.update(losstier4data,{where:{id:losstier4Dataid}})
     }
-    /*
-        根据四级数据id查到这个四级数据
+/*
+    根据四级数据id查到这个四级数据
     */
- exports.selectLosstier4DataByid = async function(losstier4Dataid) {
-    return LinebodyLosstier4.findById(losstier4Dataid)
- }
+    exports.selectLosstier4DataByid = async function(losstier4Dataid) {
+        return LinebodyLosstier4.findById(losstier4Dataid)
+    }
+/*
+    添加三级数据value值
+    */
+    exports.addLosstier3datavalue = async function(losstier4Dataid) {
+        const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
+        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
+        var losstier3data = {value: losstier3Data.value + losstier4Data.value}
+        await LinebodyLosstier3.update(losstier3Data,{where:{id:losstier4Data.linebodylosstier3Id}})
+    }
