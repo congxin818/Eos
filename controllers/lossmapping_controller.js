@@ -253,14 +253,21 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		return errorUtil.noExistError;
 	}
 	const Ids = await linebodyIds.split(",");
+	let weight_sum = 0;
 	let  tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
 	//console.log(JSON.stringify(tier2 , null , 4));
 	if (Ids == undefined || Ids == null || Ids == ''
 		||tier2 == undefined || tier2 == null || tier2 == '') {
 		return errorUtil.serviceError;
 	}
-	if (Ids.length == 1) {
-		type = 1;
+	for (var i = Ids.length - 1; i >= 0; i--) {
+		const linebody = await Linebody.findById(Ids[i],{'attributes': ['weight']});
+		if (linebody != undefined && linebody != null && linebody != '') {
+			weight_sum += linebody.weight;
+		}
+	}
+	if (weight_sum == 0) {
+		return errorUtil.serviceError;
 	}
 	let allKpitwo = [];
 	let allLosstier3 = [];
@@ -384,7 +391,7 @@ exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 /*
 	计算KPItwo的每一项的平均数
  */
-async function computeKpitwo(allKpitwo){
+async function computeKpitwo(allKpitwo , weight_sum){
 	//console.log(JSON.stringify(allKpitwo , null , 4));
 	if (allKpitwo == undefined || allKpitwo == null || allKpitwo == '') {
 		return ;
@@ -424,13 +431,13 @@ async function computeKpitwo(allKpitwo){
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		let weight_sum = 0 ;
-		//let weight_sum = value.length;
-		for(var [key1, value1] of weightMap) {
-			if (key == key1) {
-				weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
-			}
-		}
+		// let weight_sum = 0 ;
+		// //let weight_sum = value.length;
+		// for(var [key1, value1] of weightMap) {
+		// 	if (key == key1) {
+		// 		weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+		// 	}
+		// }
 		//console.log(JSON.stringify(sum , null , 4));
 		//console.log(JSON.stringify(weight_sum , null , 4));
 		if (weight_sum != 0) {
@@ -446,7 +453,7 @@ async function computeKpitwo(allKpitwo){
 /*
 	计算losstier3的每一项的平均数
  */
-async function computeLosstier3(allLosstier3 , type){
+async function computeLosstier3(allLosstier3 , weight_sum){
 	//console.log(JSON.stringify(allLosstier3 , null , 4));
 	if (allLosstier3 == undefined || allLosstier3 == null || allLosstier3 == '') {
 		return ;
@@ -485,7 +492,7 @@ async function computeLosstier3(allLosstier3 , type){
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		let weight_sum = 0 ;
+		//let weight_sum = 0 ;
 		//let weight_sum = value.length;
 		// if (type == 1) {
 		// 	for(var [key1, value1] of weightMap) {
@@ -494,11 +501,11 @@ async function computeLosstier3(allLosstier3 , type){
 		// 	//}
 		// 	}
 		// }else{
-			for(var [key1, value1] of weightMap) {
-				if (key == key1) {
-					weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
-				}
-			}
+			// for(var [key1, value1] of weightMap) {
+			// 	if (key == key1) {
+			// 		weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			// 	}
+			// }
 		//}
 		//console.log(JSON.stringify(sum , null , 4));
 		//console.log(JSON.stringify(weight_sum , null , 4));
@@ -516,7 +523,7 @@ async function computeLosstier3(allLosstier3 , type){
 /*
 	计算losstier4的每一项的平均数
  */
-async function computeLosstier4(allLosstier4 , type){
+async function computeLosstier4(allLosstier4 , weight_sum){
 	//console.log(JSON.stringify(allLosstier3 , null , 4));
 	if (allLosstier4 == undefined || allLosstier4 == null || allLosstier4 == '') {
 		return ;
@@ -562,11 +569,11 @@ async function computeLosstier4(allLosstier4 , type){
 		// 	//}
 		// 	}
 		// }else{
-			for(var [key1, value1] of weightMap) {
-				if (key == key1) {
-					weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
-				}
-			}
+			// for(var [key1, value1] of weightMap) {
+			// 	if (key == key1) {
+			// 		weight_sum = await value1.map(a => a).reduce ((pre, cur) => pre + cur);
+			// 	}
+			// }
 		//}
 		//let weight_sum = value.length;
 		
@@ -689,4 +696,7 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 	//console.log(JSON.stringify(endTime , null , 4));
 	return endTime;
 }
+
+
+
 
