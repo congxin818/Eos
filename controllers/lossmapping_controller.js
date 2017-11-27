@@ -392,7 +392,7 @@ exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 	计算KPItwo的每一项的平均数
  */
 async function computeKpitwo(allKpitwo , weight_sum){
-	//console.log(JSON.stringify(allKpitwo , null , 4));
+	console.log(JSON.stringify('allKpitwo----->'+ weight_sum , null , 4));
 	if (allKpitwo == undefined || allKpitwo == null || allKpitwo == '') {
 		return ;
 	}
@@ -454,7 +454,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 	计算losstier3的每一项的平均数
  */
 async function computeLosstier3(allLosstier3 , weight_sum){
-	//console.log(JSON.stringify(allLosstier3 , null , 4));
+	console.log(JSON.stringify('allLosstier3----->'+ weight_sum , null , 4));
 	if (allLosstier3 == undefined || allLosstier3 == null || allLosstier3 == '') {
 		return ;
 	}
@@ -524,7 +524,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 	计算losstier4的每一项的平均数
  */
 async function computeLosstier4(allLosstier4 , weight_sum){
-	//console.log(JSON.stringify(allLosstier3 , null , 4));
+	console.log(JSON.stringify('allLosstier4----->'+ weight_sum , null , 4));
 	if (allLosstier4 == undefined || allLosstier4 == null || allLosstier4 == '') {
 		return ;
 	}
