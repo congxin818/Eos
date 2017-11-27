@@ -443,7 +443,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
-		map.set(key , new Number(value));
+		map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
@@ -513,7 +513,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 			value = sum / weight_sum;
 		}
 		//console.log("属性：" + key + ",值：" + value);
-		map.set(key , new Number(value));
+		map.set(key , new Number(value).toFixed(4));
 		
 	}
 	//console.log(map);
@@ -582,7 +582,7 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
-		map.set(key , new Number(value));
+		map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
