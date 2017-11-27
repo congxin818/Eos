@@ -309,11 +309,11 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	}
 	
 	//console.log('=============>'+JSON.stringify(allLosstier3 , null , 4));
-	const kpitwoMap = await computeKpitwo(allKpitwo);
+	const kpitwoMap = await computeKpitwo(allKpitwo , weight_sum);
 	
- 	const lossTier3Map = await computeLosstier3(allLosstier3 , type);
+ 	const lossTier3Map = await computeLosstier3(allLosstier3 ,  weight_sum);
 	//console.log('-=============');
- 	const lossTier4Map = await computeLosstier4(allLosstier4 , type);
+ 	const lossTier4Map = await computeLosstier4(allLosstier4 , weight_sum);
  	
  	// console.log(kpitwoMap);
  	// console.log(lossTier3Map);
