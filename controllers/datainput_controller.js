@@ -73,85 +73,11 @@ const showLosstier34 = {
         res.end(JSON.stringify(dataSuccess))     
     }
 
-// /*
-//     添加本班次时间
-//     */ 
-//     exports.addClasstime = async function(req , res) {
-//         if(req.body.classStarttime == null||req.body.classStarttime == ''
-//             ||req.body.classEndtime == null||req.body.classEndtime == ''
-//             ||req.body.twolevName == null||req.body.twolevName == ''
-//             ||req.body.linebodyId == null||req.body.linebodyId == ''){
-//            res.end(JSON.stringify(parameterError))
-//    }
-//         // 根据二级目录名字创建一条二级目录数据
-//         const kpitwolev = await datainputServices.addKpitwolevByname(req);
-//         dataSuccess.data = kpitwolev
-//         res.end(JSON.stringify(dataSuccess))     
-//     }
-
-// /*
-//     三级下拉框结束，添加一条三级loss数据
-//     */
-//     exports.addLosstier3data = async function(req , res) {
-//         if(req.body.twolevDataid == null||req.body.twolevDataid == ''
-//             ||req.body.losstier3Id == null||req.body.losstier3Id == ''
-//             ||req.body.linebodyId == null||req.body.linebodyId == ''){
-//             res.end(JSON.stringify(parameterError))
-//     }
-//     // 验证这个3级loss有没有重复
-//     var losstier3Data = await datainputServices.selectLosstier3By(req.body.twolevDataid,
-//         req.body.losstier3Id,req.body.linebodyId)
-//     if(losstier3Data == null){
-//      losstier3Data = await datainputServices.addLosstier3data(req.body.twolevDataid,
-//         req.body.losstier3Id,req.body.linebodyId)
-//      dataSuccess.data = losstier3Data
-//  }
-//  dataSuccess.data = losstier3Data
-//  res.end(JSON.stringify(dataSuccess))
-// }
-
-// /*
-//     四级下拉框结束，添加一条四级loss数据
-//     */
-//     exports.addLosstier4data = async function(req , res) {
-//         if(req.body.losstier3Dataid == null||req.body.losstier3Dataid == ''
-//             ||req.body.losstier4Id == null||req.body.losstier4Id == ''
-//             ||req.body.linebodyId == null||req.body.linebodyId == ''){
-//             res.end(JSON.stringify(parameterError))
-//     }
-//     const addReturn = await datainputServices.addLosstier4data(req.body.losstier3Dataid,
-//         req.body.losstier4Id,req.body.linebodyId)
-//     dataSuccess.data = addReturn
-//     res.end(JSON.stringify(dataSuccess))
-// }
-
-// /*
-//     添加四级loss发生的开始时间和结束时间
-//     */
-//     exports.addLosstier4time = async function(req , res) {
-//         //根据四级loss名字找出四级loss对应的结构id=>losstier4Id
-//         if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == ''
-//             ||req.body.starttime == null||req.body.starttime == ''
-//             ||req.body.endtime == null||req.body.endtime == ''){
-//             res.end(JSON.stringify(parameterError))
-//     }
-
-//         // 找到对应四级目录结构
-//         const addReturn = await datainputServices.addLosstier4datatime(req , res)
-//         if(addReturn == 1){
-//             const showReturn = await datainputServices.selectLosstier4DataByid(req.body.losstier4Dataid)
-//             dataSuccess.data = showReturn
-//             res.end(JSON.stringify(dataSuccess))
-//         }
-//         res.end(JSON.stringify(addObjectError))
-//     }
-
 /*
     点击确定按钮，创建一条数据并添加时间
     */
     exports.addLosstier4time2 = async function(req , res) {
-       if(req.body.classStarttime == null||req.body.classStarttime == ''
-        ||req.body.classEndtime == null||req.body.classEndtime == ''
+       if(req.body.classinfId == null||req.body.classinfId == ''
         ||req.body.twolevName == null||req.body.twolevName == ''
         ||req.body.losstier3Id == null||req.body.losstier3Id == ''
         ||req.body.losstier4Id == null||req.body.losstier4Id == ''
@@ -162,7 +88,6 @@ const showLosstier34 = {
 
         // 验证这个2级loss有没有重复
         var kpitwolevData = await datainputServices.selectKpitwolevDataBy(req , res)
-        console.log('check2----------------->' + JSON.stringify(kpitwolevData,null,4))
         if(kpitwolevData == null){
          kpitwolevData = await datainputServices.addKpitwolevByname(req , res);
      }
@@ -196,3 +121,55 @@ const showLosstier34 = {
         res.end(JSON.stringify(errorUtil.existError))
     }
 }
+
+/*
+    增加产品信息
+    */
+    exports.addProduct = async function(req , res) {
+        if(req.body.productType == null||req.body.productType == ''
+            ||req.body.conformProduct == null||req.body.conformProduct == ''
+            ||req.body.normalCycletime == null||req.body.normalCycletime == ''
+            ||req.body.classinfId == null||req.body.classinfId == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+            // 增加一条产品信息数据
+            const addReturn = await datainputServices.addProduct(req , res)
+            dataSuccess.data = addReturn
+            res.end(JSON.stringify(dataSuccess))
+        }   
+    }
+
+/*
+    更改产品信息
+    */
+    exports.updateProduct = async function(req , res) {
+        if(req.body.productType == null||req.body.productType == ''
+            ||req.body.conformProduct == null||req.body.conformProduct == ''
+            ||req.body.normalCycletime == null||req.body.normalCycletime == ''
+            ||req.body.productId == null||req.body.productId == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+            // 增加一条产品信息数据
+            const updateReturn = await datainputServices.updateProduct(req , res)
+            dataSuccess.data = updateReturn
+            res.end(JSON.stringify(dataSuccess))
+        }
+
+    }
+
+/*
+    增加开班详细信息
+    */
+    exports.addClassinf = async function(req , res) {
+        if(req.body.classStarttime == null||req.body.classStarttime == ''
+            ||req.body.classEndtime == null||req.body.classEndtime == ''
+            ||req.body.shouldAttendance == null||req.body.shouldAttendance == ''
+            ||req.body.actualAttendance == null||req.body.actualAttendance == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+            // 增加一条产品信息数据
+            const addReturn = await datainputServices.addClassinf(req , res)
+            dataSuccess.data = addReturn
+            res.end(JSON.stringify(dataSuccess))
+        }  
+    }
