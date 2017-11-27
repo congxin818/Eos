@@ -561,7 +561,7 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
-		let weight_sum = 0 ;
+		//let weight_sum = 0 ;
 		// if (type == 1) {
 		// 	for(var [key1, value1] of weightMap) {
 		// 	//if (key == key1) {
