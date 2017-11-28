@@ -14,6 +14,7 @@ var Losstier4 = require('../models').Losstier4;
 var LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
 var LinebodyLosstier3 = require('../models').LinebodyLosstier3;
 var LinebodyLosstier4 = require('../models').LinebodyLosstier4;
+var Classinformation = require('../models').Classinformation;
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 var dataSuccess = {
@@ -638,8 +639,18 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				allKpitwo[i].splice(j , 1);
 				continue;
 			}
-			const classstarttime = allKpitwo[i][j].classstarttime;
-			const classendtime = allKpitwo[i][j].classendtime;
+			const classInfId = allKpitwo[i][j].classinformationClassinfid;
+			if (classInfId == undefined || classInfId == null || classInfId == '') {
+				allKpitwo[i].splice(j , 1);
+				continue;
+			}
+			const classInf = await Classinformation.findById(classInfId);
+			if (classInf == undefined || classInf == null || classInf == '') {
+				allKpitwo[i].splice(j , 1);
+				continue;
+			}
+			const classstarttime = classInf.classstarttime;
+			const classendtime = classInf.classendtime;
 			if (classstarttime == null || classstarttime == ''
 				||classendtime == null || classendtime == '') {
 				allKpitwo[i].splice(j , 1);//删除该元素
