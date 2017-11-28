@@ -20,6 +20,9 @@ var LinebodyKpitwolev = sequelize.import('./linebodykpitwolev.js');
 var LinebodyLosstier3 = sequelize.import('./linebodylosstier3.js');
 var LinebodyLosstier4 = sequelize.import('./linebodylosstier4.js');
 
+var Classinformation = sequelize.import('./classinformation.js');
+var Product = sequelize.import('./product.js');
+
 //user和group之间N:M关系
 User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
 Group.belongsToMany(User,{through: 'userGroups', as:'UserGroups'});
@@ -82,6 +85,11 @@ Kpitwolev.hasMany(Losstier3, {as:'KpitwolevLosscategory' , constraints:true});
 //Tier4和Losscategory建立1：N关系
 Losstier3.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
 
+//班次表和LinebodyKpitwolev建立1：N关系
+Classinformation.hasMany(LinebodyKpitwolev, {as:'ClassinfKpitwolevData' , constraints:true});
+//班次表和产品表建立1：N关系
+Classinformation.hasMany(Product, {as:'ClassinfProduct' , constraints:true});
+
 sequelize.sync();
 
 
@@ -100,3 +108,5 @@ exports.Losstier4 = Losstier4;
 exports.LinebodyKpitwolev = LinebodyKpitwolev;
 exports.LinebodyLosstier3 = LinebodyLosstier3;
 exports.LinebodyLosstier4 = LinebodyLosstier4;
+exports.Classinformation = Classinformation;
+exports.Product = Product;

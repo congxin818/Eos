@@ -14,6 +14,8 @@ const LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
 const LinebodyLosstier3 = require('../models').LinebodyLosstier3;
 const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
 const UserKpitwolev = require('../models').UserKpitwolev;
+const Classinformation = require('../models').Classinformation;
+const Product = require('../models').Product;
 
 /*
     根据用户设置的顺序查找二级结构
@@ -35,19 +37,17 @@ const UserKpitwolev = require('../models').UserKpitwolev;
     */
     exports.addKpitwolevByname = async function(req) {
 
-        const classStarttime = new Date(req.body.classStarttime)
-        const classEndtime = new Date(req.body.classEndtime)
-        const kpitwolevdata = {
-            classstarttime: classStarttime,
-            classendtime: classEndtime
-        }
+        const kpitwolevdata = {}
         const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
         const linebody = await Linebody.findById(req.body.linebodyId)
-       // 添加数据
-       var linebodyKpitwolev =  await kpitwolev.createLinebodyKpitwolev(kpitwolevdata)
-       await linebody.addLinebodyKpitwolev(linebodyKpitwolev)
-       return linebodyKpitwolev
-   }
+        const classinformation = await Classinformation.findById(req.body.classinfId)    
+        // 添加数据
+        var linebodyKpitwolev =  await kpitwolev.createLinebodyKpitwolev(kpitwolevdata)
+        await classinformation.addClassinfKpitwolevData(linebodyKpitwolev)
+        await linebody.addLinebodyKpitwolev(linebodyKpitwolev)
+        return linebodyKpitwolev
+    }
+
 /*
     根据二级目录名字找到对应二级目录
     */
@@ -55,6 +55,7 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         const kpitwolevdata = await Kpitwolev.findOne({where:{name:twolevName}})
         return kpitwolevdata;
     }
+
 /*
     根据二级目录id找到对应三级目录结构
     */
@@ -62,13 +63,7 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         const losstier3data = await Losstier3.findAll({'attributes': ['lossid','name'],where:{kpitwolevKpitwoid:twolevid}})
         return losstier3data;
     }
-    /*
-    根据三级目录名字找到对应三级目录
-    */
-    exports.selectLosstier3ByName = async function(tier3Name) {
-        const losstier3data = await Losstier3.findOne({where:{name:tier3Name}})
-        return losstier3data;
-    }
+
 /*
     根据三级目录id找到对应四级目录结构
     */
@@ -77,13 +72,6 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         return losstier4data;
     }
 
-/*
-    根据四级目录名字找到对应四级目录结构
-    */
-    exports.selectLosstier4Bytier4name = async function(tier4Name) {
-        const losstier4data = await Losstier4.findAll({where:{name:tier4Name}})
-        return losstier4data;
-    }
 /*
     根据二级loss数据创建一条三级loss数据
     */
@@ -97,7 +85,8 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         await linebody.addLinebodyLosstier3(losstier3data)
         return losstier3data
     }
-    /*
+
+/*
     根据三级loss数据创建一条四级loss数据
     */
     exports.addLosstier4data = async function(losstier3Dataid,losstier4Id,linebodyId) {
@@ -111,6 +100,7 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         await linebody.addLinebodyLosstier4(losstier4data)
         return losstier4data
     }
+
 /*
     添加四级loss数据的开始时间和结束时间
     */
@@ -129,6 +119,7 @@ const UserKpitwolev = require('../models').UserKpitwolev;
 
     return addReturn
 }
+
 /*
     添加四级数据value值
     */
@@ -139,19 +130,22 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
         const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
         const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
-        const classstarttime = kpitwolevData.classstarttime
-        const classendtime = kpitwolevData.classendtime
+        const classinformation = await Classinformation.findById(kpitwolevData.classinformationClassinfid)
+        const classstarttime = classinformation.classstarttime
+        const classendtime = classinformation.classendtime
         const classDuration = classendtime.getTime() - classstarttime.getTime()
         const tier4value = (duration/classDuration).toFixed(4)
         var losstier4data = {value: tier4value}
         await LinebodyLosstier4.update(losstier4data,{where:{id:losstier4Dataid}})
     }
+
 /*
     根据四级数据id查到这个四级数据
     */
     exports.selectLosstier4DataByid = async function(losstier4Dataid) {
         return LinebodyLosstier4.findById(losstier4Dataid)
     }
+
 /*
     添加三级数据value值
     */
@@ -183,15 +177,14 @@ const UserKpitwolev = require('../models').UserKpitwolev;
     exports.selectKpitwolevDataBy = async function(req , res) {
         const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
         return await LinebodyKpitwolev.findOne({where:{
-            classstarttime: req.body.classStarttime,
-            classendtime: req.body.classEndtime,
+            classinformationClassinfid: req.body.classinfId,
             linebodyLinebodyid: req.body.linebodyId,
             kpitwolevKpitwoid: kpitwolev.kpitwoid
         }})
     }
 
 /*
-    验证添加的这个四级loss数据是否重复
+    验证添加的这个三级loss数据是否重复
     */
     exports.selectLosstier3By = async function(twolevDataid,losstier3Id,linebodyId) {
         return await LinebodyLosstier3.findOne({where:{
@@ -211,4 +204,49 @@ const UserKpitwolev = require('../models').UserKpitwolev;
             losstier4Tier4id: req.body.losstier4Id,
             linebodylosstier3Id: req.body.losstier3Dataid
         }})
+    }
+
+
+/*
+    添加产品信息数据
+    */
+    exports.addProduct = async function(req , res) {
+
+        var productdata = {
+            producttype : req.body.productType,
+            conformproduct : req.body.conformProduct,
+            normalcycletime : req.body.normalCycletime
+        }
+        const classinformation = await Classinformation.findById(req.body.classinfId)     
+        productdata =  await classinformation.createClassinfProduct(productdata)
+        return productdata
+    }
+
+/*
+    更改产品信息数据
+    */
+    exports.updateProduct = async function(req , res) {
+
+        var productdata = {
+            producttype : req.body.productType,
+            conformproduct : req.body.conformProduct,
+            normalcycletime : req.body.normalCycletime
+        }   
+        const updateReturn =  await Product.update(productdata,
+            {where:{productid:req.body.productId}})
+        return updateReturn
+    }
+
+/*
+    添加开班时间详细信息数据
+    */
+    exports.addClassinf = async function(req , res) {
+        var classinforData = {
+            classstarttime : req.body.classStarttime,
+            classendtime : req.body.classEndtime,
+            shouldattendance : req.body.shouldAttendance,
+            actualattendance : req.body.actualAttendance
+        }
+        classinforData =  await Classinformation.create(classinforData)
+        return classinforData
     }
