@@ -1,0 +1,257 @@
+/*
+ 	auther:Android,
+ 	NOTE:lossmapping表的controller层,
+ 	time:20171108
+ */
+
+
+var User = require('../models').User;//引入数据库User模块
+var Linebody = require('../models').Linebody;
+var Workshop = require('../models').Workshop;
+var Kpitwolev = require('../models').Kpitwolev;
+var Losstier3 = require('../models').Losstier3;
+var Losstier4 = require('../models').Losstier4;
+var LinebodyKpitwolev = require('../models').LinebodyKpitwolev;
+var LinebodyLosstier3 = require('../models').LinebodyLosstier3;
+var LinebodyLosstier4 = require('../models').LinebodyLosstier4;
+var Classinformation = require('../models').Classinformation;
+var errorUtil = require('../utils/errorUtil');
+
+var dataSuccess = {
+    status: '0', 
+    msg: '请求成功',
+    data:'fas'
+};
+
+/*
+	项目状态分布（上）接口
+ */
+async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
+	// console.log(JSON.stringify(req.body.time , null , 4));
+	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
+	if (req.body.time == undefined || req.body.time == null || req.body.time == ''
+		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	const Ids = await req.body.linebodyIds.split(",");
+	if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
+		res.end(JSON.stringify(errorUtil.serviceError));
+	}
+	const allData = await this.selectOEEByLinebodyIds(req.body.time , req.body.linebodyIds);
+	res.end(JSON.stringify(allData , null , 4));
+}
+exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLinebodyIds;
+
+/*
+	查询OEE根据linebodyIds
+ */
+async function selectOEEByLinebodyIds(time , linebodyIds){
+	if (time == undefined || time == null || time == ''
+		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == '') {
+		return errorUtil.parameterError;
+	}
+	const Ids = await linebodyIds.split(",");
+	if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
+		return errorUtil.serviceError;
+	}
+	let allLossStatus = new Array();
+	for (var i = Ids.length - 1; i >= 0; i--) {
+		//const linebody = await Linebody.findById(Ids[i],{'attributes': ['linebodyid']});
+		const linebody = await Linebody.findById(Ids[i]);
+		if (linebody != undefined && linebody != null && linebody != '') {
+			const lossStatus = await linebody.getLinebodyLossstatus();
+			if (lossStatus != undefined && lossStatus != null && lossStatus != '') {
+				allLossStatus.push(lossStatus);
+			}
+		}
+	}
+	const falg = await this.computeLossStatusBytime(allLossStatus , time);
+	if (falg == null || falg == '') {
+		return errorUtil.serviceError;
+	}
+	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length);
+	//console.log(JSON.stringify(allLossStatus , null , 4));
+	dataSuccess.data = allData;
+	return dataSuccess;
+}
+exports.selectOEEByLinebodyIds = selectOEEByLinebodyIds;
+
+/*
+	根据时间过滤
+ */
+async function computeLossStatusBytime(allLossStatus , time){
+	if (time == undefined || time == null || time == ''
+		|| allLossStatus == undefined || allLossStatus == null || allLossStatus == '') {
+		return ;
+	}
+	const Time = new Date(time).getTime();
+	for (var i = allLossStatus.length - 1; i >= 0; i--) {
+		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
+			const projectStartTime = allLossStatus[i][j].objectstarttime;
+			const projectEndTime = allLossStatus[i][j].planendtime;
+			if (projectStartTime == null || projectStartTime == ''
+				||projectEndTime == null || projectEndTime == '') {
+				allLossStatus[i].splice(j , 1);//删除该元素
+				continue;
+			}
+			// console.log('==========>projectStartTime--->'+JSON.stringify(projectStartTime));
+			// console.log('==========>projectEndTime--->'+JSON.stringify(projectEndTime));
+			// const mStartTime = moment(classstarttime);
+			// const mEndTime = moment(classendtime);
+
+			const mStartTime = new Date(projectStartTime).getTime();
+			const mEndTime = new Date(projectEndTime).getTime();
+			// console.log('==========>mStartTime--->'+mStartTime);
+			// console.log('==========>Time--->'+Time);
+			// console.log('==========>projectEndTime--->'+mEndTime);
+			//console.log('\n\n\n');
+			if (Time < mStartTime || Time > mEndTime) {
+				allLossStatus[i].splice(j , 1);//删除该元素
+				continue;
+			}
+		}
+	}
+	return 1;
+}
+exports.computeLossStatusBytime = computeLossStatusBytime;
+
+/*
+	得到设备损失数组
+ */
+async function selectAllDataByAllLossStatus(allLossStatus , Size){
+	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == '') {
+		return ;
+	}
+	let OEE = {
+		key:'设备损失',
+		value: new Array()
+	};
+	let Safety = {
+		key:'人力损失',
+		value: new Array()
+	};
+	let Defect = {
+		key:'物料损失',
+		value: new Array()
+	};
+	OEE.value.push(Size * 4);
+	Safety.value.push(Size * 3);
+	Defect.value.push(Size * 3);
+	let OEE_began = 0;
+	let OEE_run = 0;
+	let OEE_delay = 0;
+	let OEE_follow = 0;
+	let OEE_close = 0;
+	let Safety_began = 0;
+	let Safety_run = 0;
+	let Safety_delay = 0;
+	let Safety_follow = 0;
+	let Safety_close = 0;
+	let Defect_began = 0;
+	let Defect_run = 0;
+	let Defect_delay = 0;
+	let Defect_follow = 0;
+	let Defect_close = 0;
+	for (var i = allLossStatus.length - 1; i >= 0; i--) {
+		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
+			const losstier3 = await Losstier3.findById(allLossStatus[i][j].losstier3Lossid);
+			if (losstier3 == null || losstier3 == ''|| losstier3 == undefined) {
+				continue ;
+			}
+			// console.log('==========>projectStartTime--->'+JSON.stringify(projectStartTime));
+			// console.log('==========>projectEndTime--->'+JSON.stringify(projectEndTime));
+			// const mStartTime = moment(classstarttime);
+			// const mEndTime = moment(classendtime);
+			const kpitwo = await Kpitwolev.findById(losstier3.kpitwolevKpitwoid);
+			if (kpitwo == null || kpitwo == ''|| kpitwo == undefined) {
+				continue ;
+			}
+			if (kpitwo.name == 'OEE') {
+				const status = allLossStatus[i][j].status;
+				if (status == 1) {
+					OEE_began += 1;
+				}else if(status == 2){
+					OEE_run += 1;
+				}else if(status == 3){
+					OEE_delay += 1;
+				}else if(status == 4){
+					OEE_follow += 1;
+				}else if(status == 5){
+					OEE_close += 1;
+				}else{
+					continue ;
+				}
+
+			}else if(kpitwo.name == 'Safety'){
+				const status = allLossStatus[i][j].status;
+				if (status == 1) {
+					Safety_began += 1;
+				}else if(status == 2){
+					Safety_run += 1;
+				}else if(status == 3){
+					Safety_delay += 1;
+				}else if(status == 4){
+					Safety_follow += 1;
+				}else if(status == 5){
+					Safety_close += 1;
+				}else{
+					continue ;
+				}
+			}else{
+				const status = allLossStatus[i][j].status;
+				if (status == 1) {
+					Defect_began += 1;
+				}else if(status == 2){
+					Defect_run += 1;
+				}else if(status == 3){
+					Defect_delay += 1;
+				}else if(status == 4){
+					Defect_follow += 1;
+				}else if(status == 5){
+					Defect_close += 1;
+				}else{
+					continue ;
+				}
+			}
+		}
+	}
+	await OEE.value.push(OEE_began);
+	await OEE.value.push(OEE_run);
+	await OEE.value.push(OEE_delay);
+	await OEE.value.push(OEE_follow);
+	await OEE.value.push(OEE_close);
+
+	await Safety.value.push(Safety_began);
+	await Safety.value.push(Safety_run);
+	await Safety.value.push(Safety_delay);
+	await Safety.value.push(Safety_follow);
+	await Safety.value.push(Safety_close);
+
+	await Defect.value.push(Defect_began);
+	await Defect.value.push(Defect_run);
+	await Defect.value.push(Defect_delay);
+	await Defect.value.push(Defect_follow);
+	await Defect.value.push(Defect_close);
+
+	let allStatusData = new Array();
+	await allStatusData.push(OEE);
+	await allStatusData.push(Safety);
+	await allStatusData.push(Defect);
+
+	let otherData = {
+		projectNumber:Size * 10,
+		beganNumber:OEE_began + Safety_began + Defect_began,
+		runNumber:OEE_run + Safety_run + Defect_run,
+		delayNumber:OEE_delay + Safety_delay + Defect_delay,
+		followNumber:OEE_follow + Safety_follow + Defect_follow,
+		closeNumber:OEE_close + Safety_close + Defect_close
+	};
+
+	let allData = {
+		status:allStatusData,
+		other:otherData
+	};
+	return allData;
+}
+exports.selectAllDataByAllLossStatus = selectAllDataByAllLossStatus
+

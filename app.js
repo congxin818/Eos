@@ -20,6 +20,7 @@ var losstier3 = require('./routes/losstier3_route'); //KPI设置
 var impobject = require('./routes/impobject_route'); //improvement object
 var lossmapping = require('./routes/lossmapping_route'); //lossmapping
 var datainput = require('./routes/datainput_route'); //datainput
+var summary = require('./routes/summary_route'); //summary
 
 var app = express();
 
@@ -56,6 +57,7 @@ app.use('/losscategory' , losstier3);
 app.use('/impobject' , impobject);
 app.use('/lossmapping' , lossmapping);
 app.use('/datainput' , datainput);
+app.use('/summary' , summary);
 
 // 404 错误
 var errorData_404 = {

@@ -45,11 +45,11 @@
         },
         // 项目开始日期
         objectstarttime:{
-            type: Sequelize.STRING(50)
+            type:Sequelize.DATE
         },
         // 项目预期结束日期
         planendtime:{
-            type: Sequelize.STRING(50)
+            type:Sequelize.DATE
         },
         // 项目阶段
         stage:{
