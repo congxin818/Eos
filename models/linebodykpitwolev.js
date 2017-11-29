@@ -16,12 +16,6 @@ var sequelize = require('../mysql').sequelize();
         value:{
             type:Sequelize.FLOAT
         },
-        classstarttime:{
-            type:Sequelize.DATE
-        },
-        classendtime:{
-            type:Sequelize.DATE
-        },
         starttime:{
             type:Sequelize.DATE
         },

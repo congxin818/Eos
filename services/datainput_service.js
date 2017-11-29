@@ -228,25 +228,55 @@ const Product = require('../models').Product;
     exports.updateProduct = async function(req , res) {
 
         var productdata = {
-            producttype : req.body.productType,
             conformproduct : req.body.conformProduct,
             normalcycletime : req.body.normalCycletime
         }   
-        const updateReturn =  await Product.update(productdata,
+        var updateReturn =  await Product.update(productdata,
             {where:{productid:req.body.productId}})
+        if(updateReturn == 1){
+            updateReturn = await Product.findById(req.body.productId)
+        }
         return updateReturn
     }
 
 /*
     添加开班时间详细信息数据
     */
-    exports.addClassinf = async function(req , res) {
+    exports.addClassinf = async function(classStarttime,classEndtime,
+        shouldAttendance,actualAttendance) {
         var classinforData = {
-            classstarttime : req.body.classStarttime,
-            classendtime : req.body.classEndtime,
-            shouldattendance : req.body.shouldAttendance,
-            actualattendance : req.body.actualAttendance
+            classstarttime : classStarttime,
+            classendtime : classEndtime,
+            shouldattendance : shouldAttendance,
+            actualattendance : actualAttendance
         }
         classinforData =  await Classinformation.create(classinforData)
         return classinforData
+    }
+
+/*
+    根据classid找到开班数据
+    */
+    exports.classinforSelectById = async function(classinfId) {
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
+
+/*
+    根据四级的id找到二级三级名字
+    */
+    exports.showNameByloss4dataId = async function(losstier4Dataid,showAddloss4After) {
+
+        const losstier4Data = await LinebodyLosstier4.findById(losstier4Dataid)
+        showAddloss4After.losstier4Dataid = losstier4Dataid
+        showAddloss4After.starttime = losstier4Data.starttime
+        showAddloss4After.endtime = losstier4Data.endtime
+        const losstier4 = await Losstier4.findById(losstier4Data.losstier4Tier4id)
+        showAddloss4After.losstier4name = losstier4.name
+        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
+        const losstier3 = await Losstier3.findById(losstier3Data.losstier3Lossid)
+        showAddloss4After.losstier3name = losstier3.name
+        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
+        const kpitwolev = await Kpitwolev.findById(kpitwolevData.kpitwolevKpitwoid)
+        showAddloss4After.losstier2name = kpitwolev.name
+        return showAddloss4After
     }

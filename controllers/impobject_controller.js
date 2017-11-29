@@ -37,19 +37,23 @@ const kpiTwoShow = {
     improvment展示项目池信息
     */ 
     exports.showImpItempool = async function(req , res) {
+        if(req.body.userId == null||req.body.userId == ''){
+            res.end(JSON.stringify(parameterError))
+        }
 
         // 把loss二级目录id查找出来
-        const kpitwolev = await impobjServices.selectKpitwoAll();
+        const kpitwolevidList = await impobjServices.selectKpitwolevidByuser(req.body.userId)
         var showNameList =[];
         var losstier3NameList = [];
-        for(var i = 0;i < kpitwolev.length; i++){
-            var itempoolOutput = { 
-                name:'',
-                data:''
-            }
-            itempoolOutput.name = kpitwolev[i].name
+        for(var i = 0; i < kpitwolevidList.length ; i++){
+          var kpitwolev =  await impobjServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
+          var itempoolOutput = { 
+            name:'',
+            data:''
+        }
+        itempoolOutput.name = kpitwolev.name
             // 把loss三级目录名字查找出来
-            losstier3NameList = await impobjServices.selectLosstier3Bytwoid(kpitwolev[i].kpitwoid)
+            losstier3NameList = await impobjServices.selectLosstier3Bytwoid(kpitwolev.kpitwoid)
             itempoolOutput.data =  losstier3NameList
             await showNameList.push(itempoolOutput)
         }
