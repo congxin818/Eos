@@ -11,7 +11,24 @@ const Losstier3 = require('../models').Losstier3;
 const Linebody = require('../models').Linebody;
 const Lossstatus = require('../models').Lossstatus;
 const errorUtil = require('../utils/errorUtil');
+const UserKpitwolev = require('../models').UserKpitwolev;
 
+
+/*
+    根据用户设置的顺序查找二级结构
+    */
+    exports.selectKpitwolevidByuser = async function(userId) {      
+        return  await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
+           where:{userUserid: userId},order: [['sequence','ASC']]})
+    }
+
+/*
+    二级loss结构id找到二级目录的名字
+    */
+    exports.selectKpitwolevNameByid = async function(kpitwoid) {
+        return await Kpitwolev.findById(kpitwoid)
+    }
+    
 /*
 	把loss二级结构查找出来
     */
