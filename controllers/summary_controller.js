@@ -30,14 +30,15 @@ async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
 	// console.log(JSON.stringify(req.body.time , null , 4));
 	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
 	if (req.body.time == undefined || req.body.time == null || req.body.time == ''
-		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
+		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == ''
+		|| req.body.type == undefined || req.body.type == null || req.body.type == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const Ids = await req.body.linebodyIds.split(",");
 	if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
 		res.end(JSON.stringify(errorUtil.serviceError));
 	}
-	const allData = await this.selectOEEByLinebodyIds(req.body.time , req.body.linebodyIds);
+	const allData = await this.selectOEEByLinebodyIds(req.body.time , req.body.linebodyIds , req.body.type);
 	res.end(JSON.stringify(allData , null , 4));
 }
 exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLinebodyIds;
@@ -45,9 +46,10 @@ exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLine
 /*
 	查询OEE根据linebodyIds
  */
-async function selectOEEByLinebodyIds(time , linebodyIds){
+async function selectOEEByLinebodyIds(time , linebodyIds , type){
 	if (time == undefined || time == null || time == ''
-		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == '') {
+		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
+		|| type == undefined || type == null || type == '') {
 		return errorUtil.parameterError;
 	}
 	const Ids = await linebodyIds.split(",");
@@ -69,7 +71,7 @@ async function selectOEEByLinebodyIds(time , linebodyIds){
 	if (falg == null || falg == '') {
 		return errorUtil.serviceError;
 	}
-	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length);
+	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length , type);
 	//console.log(JSON.stringify(allLossStatus , null , 4));
 	dataSuccess.data = allData;
 	return dataSuccess;
@@ -118,8 +120,10 @@ exports.computeLossStatusBytime = computeLossStatusBytime;
 /*
 	得到设备损失数组
  */
-async function selectAllDataByAllLossStatus(allLossStatus , Size){
-	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == '') {
+async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
+	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == ''
+		|| Size == undefined || Size == null || Size == ''
+		|| Type == undefined || Type == null || Type == '') {
 		return ;
 	}
 	let OEE = {
@@ -249,7 +253,8 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 
 	let allData = {
 		status:allStatusData,
-		other:otherData
+		other:otherData,
+		type:Type
 	};
 	return allData;
 }
