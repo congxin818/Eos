@@ -114,6 +114,10 @@ async function computeLossStatusBytime(allLossStatus , time){
 				continue;
 			}
 		}
+		if (allLossStatus[i].length == 0 || allLossStatus[i] == undefined || allLossStatus[i] == null ) {
+			allLossStatus.splice(i , 1);//删除该元素
+			continue;
+		}
 	}
 	return 1;
 }
