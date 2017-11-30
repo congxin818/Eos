@@ -138,6 +138,7 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 		key:'物料损失',
 		value: new Array()
 	};
+
 	OEE.value.push(Size * 4);
 	Safety.value.push(Size * 3);
 	Defect.value.push(Size * 3);
@@ -146,16 +147,27 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 	let OEE_delay = 0;
 	let OEE_follow = 0;
 	let OEE_close = 0;
+
 	let Safety_began = 0;
 	let Safety_run = 0;
 	let Safety_delay = 0;
 	let Safety_follow = 0;
 	let Safety_close = 0;
+
 	let Defect_began = 0;
 	let Defect_run = 0;
 	let Defect_delay = 0;
 	let Defect_follow = 0;
 	let Defect_close = 0;
+
+	let Identify_problem = 0;//1.明确问题,代表码：a
+	let Grasp_status = 0;//2.把握现状,代表码：b
+	let Set_goals = 0;//3.设定目标,代表码：c
+	let Analysis_cause = 0;//4.分析原因,代表码：d
+	let Countermeasures_plan = 0;//5.	对策计划,代表码：e
+	let Countermeasures_ = 0;//6.	对策落实,代表码：f
+	let Effect_confirmation = 0;//7.	效果确认,代表码：g
+	let Consolidation_results = 0;//8.	成果巩固,代表码：h
 	for (var i = allLossStatus.length - 1; i >= 0; i--) {
 		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
 			const losstier3 = await Losstier3.findById(allLossStatus[i][j].losstier3Lossid);
@@ -172,10 +184,28 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 			}
 			if (kpitwo.name == 'OEE') {
 				const status = allLossStatus[i][j].status;
+				const stage = allLossStatus[i][j].stage;
 				if (status == 1) {
 					OEE_began += 1;
 				}else if(status == 2){
 					OEE_run += 1;
+					if (stage == 'a') {
+						Identify_problem += 1;
+					}else if(stage == 'b'){
+						Grasp_status += 1;
+					}else if(stage == 'c'){
+						Set_goals += 1;
+					}else if(stage == 'd'){
+						Analysis_cause += 1;
+					}else if(stage == 'e'){
+						Countermeasures_plan += 1;
+					}else if(stage == 'f'){
+						Countermeasures_ += 1;
+					}else if(stage == 'g'){
+						Effect_confirmation += 1;
+					}else if(stage == 'h'){
+						Consolidation_results += 1;
+					}
 				}else if(status == 3){
 					OEE_delay += 1;
 				}else if(status == 4){
@@ -192,6 +222,23 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 					Safety_began += 1;
 				}else if(status == 2){
 					Safety_run += 1;
+					if (stage == 'a') {
+						Identify_problem += 1;
+					}else if(stage == 'b'){
+						Grasp_status += 1;
+					}else if(stage == 'c'){
+						Set_goals += 1;
+					}else if(stage == 'd'){
+						Analysis_cause += 1;
+					}else if(stage == 'e'){
+						Countermeasures_plan += 1;
+					}else if(stage == 'f'){
+						Countermeasures_ += 1;
+					}else if(stage == 'g'){
+						Effect_confirmation += 1;
+					}else if(stage == 'h'){
+						Consolidation_results += 1;
+					}
 				}else if(status == 3){
 					Safety_delay += 1;
 				}else if(status == 4){
@@ -207,6 +254,23 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 					Defect_began += 1;
 				}else if(status == 2){
 					Defect_run += 1;
+					if (stage == 'a') {
+						Identify_problem += 1;
+					}else if(stage == 'b'){
+						Grasp_status += 1;
+					}else if(stage == 'c'){
+						Set_goals += 1;
+					}else if(stage == 'd'){
+						Analysis_cause += 1;
+					}else if(stage == 'e'){
+						Countermeasures_plan += 1;
+					}else if(stage == 'f'){
+						Countermeasures_ += 1;
+					}else if(stage == 'g'){
+						Effect_confirmation += 1;
+					}else if(stage == 'h'){
+						Consolidation_results += 1;
+					}
 				}else if(status == 3){
 					Defect_delay += 1;
 				}else if(status == 4){
@@ -242,7 +306,7 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 	await allStatusData.push(Safety);
 	await allStatusData.push(Defect);
 
-	let otherData = {
+	let statusOtherData = {
 		projectNumber:Size * 10,
 		beganNumber:OEE_began + Safety_began + Defect_began,
 		runNumber:OEE_run + Safety_run + Defect_run,
@@ -251,10 +315,66 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 		closeNumber:OEE_close + Safety_close + Defect_close
 	};
 
+	let IdentifyProblem = {
+		key:'明确问题',
+		value:Identify_problem
+	};//1.明确问题,代表码：a
+	let GraspStatus = {
+		key:'把握现状',
+		value:Grasp_status
+	};//2.把握现状,代表码：b
+	let SetGoals = {
+		key:'设定目标',
+		value:Set_goals
+	};//3.设定目标,代表码：c
+	let AnalysisCause = {
+		key:'分析原因',
+		value:Analysis_cause
+	};//4.分析原因,代表码：d
+	let CountermeasuresPlan = {
+		key:'对策计划',
+		value:Countermeasures_plan
+	};//5.	对策计划,代表码：e
+	let Countermeasures = {
+		key:'对策落实',
+		value:Countermeasures_
+	};//6.	对策落实,代表码：f
+	let EffectConfirmation = {
+		key:'效果确认',
+		value:Effect_confirmation
+	};//7.	效果确认,代表码：g
+	let ConsolidationResults = {
+		key:'成果巩固',
+		value:Consolidation_results
+	};//8.	成果巩固,代表码：h
+
+	let allStageData = new Array();
+	await allStageData.push(ConsolidationResults);
+	await allStageData.push(EffectConfirmation);
+	await allStageData.push(Countermeasures);
+	await allStageData.push(CountermeasuresPlan);
+	await allStageData.push(AnalysisCause);
+	await allStageData.push(SetGoals);
+	await allStageData.push(GraspStatus);
+	await allStageData.push(IdentifyProblem);
+
+	let stageOtherData = {
+		IdentifyProblem:Identify_problem,
+		GraspStatus:Grasp_status,
+		SetGoals:Set_goals,
+		AnalysisCause:Analysis_cause,
+		CountermeasuresPlan:Countermeasures_plan,
+		Countermeasures:Countermeasures_,
+		EffectConfirmation:Effect_confirmation,
+		ConsolidationResults:Consolidation_results
+	};
+
 	let allData = {
 		status:allStatusData,
-		other:otherData,
-		type:Type
+		statusOther:statusOtherData,
+		type:Type,
+		stage:allStageData,
+		stageOther:stageOtherData
 	};
 	return allData;
 }
