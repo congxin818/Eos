@@ -719,7 +719,7 @@ async function mapSort(map) {
     	return ;
     }
     var keys = map.keySet(map);
-    console.log('keys------>' + keys);
+    console.log('keys------>' + JSON.stringify(keys , null , 4));
     for(var i=0; i < keys.length - 1; i++) {
         for( var j = i + 1; j < keys.length; j++) {
             if(map[keys[i]] > map[keys[j]]){//如果前面的数据比后面的大就交换
