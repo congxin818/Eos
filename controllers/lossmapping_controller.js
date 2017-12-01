@@ -448,6 +448,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
+	await this.mapSort(map);
 	return map;
 }
 
@@ -518,6 +519,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 		
 	}
 	//console.log(map);
+	await this.mapSort(map);
 	return map;
 }
 
@@ -587,6 +589,7 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
+	await this.mapSort(map);
 	return map;
 }
 
@@ -708,6 +711,34 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 	return endTime;
 }
 
+/*
+	map 排序
+ */
+async function mapSort(map) {
+    if (map == undefined || map == null || map == '') {
+    	return ;
+    }
+    var keys = map.keySet();
+    var result = [];
+    map["max"] = 999999999; // 存放每一次拍完序后的，该过程中产生的最大的元素。
+
+    for(var i=0; i<keys.length; i++) {
+        var temp = -1;
+        for( var k=0; k<keys.length; k++) {
+            // 和上次循环产生的最大值进行比较
+            if(map[keys[k]] >= map[ "max"]) {
+                continue;
+            }
+
+            if(temp < map[keys[k]]) {
+                temp = map[keys[k]];
+            }
+        }
+        result[i] = temp;
+        map[ "max"] = temp;
+    }
+
+}
 
 
 
