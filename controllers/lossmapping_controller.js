@@ -380,7 +380,11 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		array.data = datas;
 		array.link = links;
 		alldata.push(array);
-		alldata.sort ((a, b) => a.order - b.order)
+		alldata.sort ((a, b) => a.order - b.order);
+		alldata.sort((a) => a.data.sort((m, n) => m.value - n.value))
+		for (var i = alldata.length - 1; i >= 0; i--) {
+			alldata[i].data.sort((m, n) => m.value - n.value);
+		}
 	}
 	//console.log(lossTier4Map);
 	//console.log(JSON.stringify(allKpitwo , null , 4));
