@@ -32,6 +32,13 @@ router.post('/addLosstier4time2', function(req, res, next) {
 });
 
 /*
+	展示产品信息
+ */
+router.post('/showProduct', function(req, res, next) {
+    controller.showProduct(req , res , next);
+});
+
+/*
 	添加产品信息
  */
 router.post('/addProduct', function(req, res, next) {
@@ -43,6 +50,13 @@ router.post('/addProduct', function(req, res, next) {
  */
 router.post('/updateProduct', function(req, res, next) {
     controller.updateProduct(req , res , next);
+});
+
+/*
+	删除产品信息
+ */
+router.post('/deleteProduct', function(req, res, next) {
+    controller.deleteProduct(req , res , next);
 });
 
 

@@ -102,8 +102,8 @@ var showAddloss4After = {
         var addReturn = null
         for(var i = 0;i < classinfIdList.length;i++){
             var classinforData = await datainputServices.classinforSelectById(classinfIdList[i])
-           const starttimeday =  moment(req.body.starttime).dayOfYear()
-           const endtimeday =  moment(req.body.endtime).dayOfYear()
+            const starttimeday =  moment(req.body.starttime).dayOfYear()
+            const endtimeday =  moment(req.body.endtime).dayOfYear()
             if((moment(req.body.starttime).isAfter(classinforData.classstarttime)||
                 moment(req.body.starttime).isSame(classinforData.classstarttime))
                 && (moment(req.body.endtime).isBefore(classinforData.classendtime)
@@ -265,7 +265,34 @@ var showAddloss4After = {
         if(req.body.productIdList == null||req.body.productIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
+         var productIdList = req.body.productIdList.split(",")
+         for(var i = 0;i < productIdList.length;i++){
+                // 删除一条产品信息
+                const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
+                if (deleteReturn == null||deleteReturn == '' ){
+                    res.end(JSON.stringify(updateError))
+                }
+            }
+            res.end(JSON.stringify(dataSuccess))
+        }
+    }
 
+/*
+    展示产品信息
+    */
+    exports.showProduct = async function(req , res) {
+        if(req.body.classinfIdList == null||req.body.classinfIdList == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+         var classinfIdList = req.body.classinfIdList.split(",")
+         var showProduct =[];
+         for(var i = 0;i < classinfIdList.length;i++){
+                // 查找一条产品信息
+                const data = await datainputServices.selectProductById(classinfIdList[i])
+                showProduct.push(data)
+            }
+            dataSuccess.data = showProduct
+            res.end(JSON.stringify(dataSuccess))
         }
     }
 /*
