@@ -102,6 +102,8 @@ var showAddloss4After = {
         var addReturn = null
         for(var i = 0;i < classinfIdList.length;i++){
             var classinforData = await datainputServices.classinforSelectById(classinfIdList[i])
+           const starttimeday =  moment(req.body.starttime).dayOfYear()
+           const endtimeday =  moment(req.body.endtime).dayOfYear()
             if((moment(req.body.starttime).isAfter(classinforData.classstarttime)||
                 moment(req.body.starttime).isSame(classinforData.classstarttime))
                 && (moment(req.body.endtime).isBefore(classinforData.classendtime)
@@ -113,7 +115,8 @@ var showAddloss4After = {
             }
             if((moment(req.body.starttime).isAfter(classinforData.classstarttime)||
                 moment(req.body.starttime).isSame(classinforData.classstarttime))
-                && moment(req.body.endtime).isAfter(classinforData.classendtime)){
+                && moment(req.body.endtime).isAfter(classinforData.classendtime)&&
+                moment(req.body.starttime).isBefore(classinforData.classendtime)){
                 // loss四级时间横跨了这一天和下一天
                 const thisendtime = req.body.endtime //把req.body.endtime保存下来
                 // 这一天的添加loss四级时间
@@ -227,7 +230,7 @@ var showAddloss4After = {
                 const addReturn = await datainputServices.addProduct(req , res)
                 showData.push(addReturn)
             }
-            dataSuccess.data = addReturn
+            dataSuccess.data = showData
             res.end(JSON.stringify(dataSuccess))
         }   
     }
@@ -238,17 +241,33 @@ var showAddloss4After = {
     exports.updateProduct = async function(req , res) {
         if(req.body.conformProduct == null||req.body.conformProduct == ''
             ||req.body.normalCycletime == null||req.body.normalCycletime == ''
-            ||req.body.productId == null||req.body.productId == '')
+            ||req.body.productIdList == null||req.body.productIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
-            // 增加一条产品信息数据
-            const updateReturn = await datainputServices.updateProduct(req , res)
-            dataSuccess.data = updateReturn
+            var productIdList = req.body.productIdList.split(",")
+            for(var i = 0;i < productIdList.length;i++){
+                // 更改一条产品信息
+                req.body.productId = productIdList[i]
+                const updateReturn = await datainputServices.updateProduct(req , res)
+                if (updateReturn != 1 ){
+                    res.end(JSON.stringify(updateError))
+                }
+            }
             res.end(JSON.stringify(dataSuccess))
         }
 
     }
 
+/*
+    删除产品信息
+    */
+    exports.deleteProduct = async function(req , res) {
+        if(req.body.productIdList == null||req.body.productIdList == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+
+        }
+    }
 /*
     增加开班详细信息
     */

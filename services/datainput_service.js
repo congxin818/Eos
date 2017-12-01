@@ -22,7 +22,7 @@ const Product = require('../models').Product;
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-         where:{userUserid: userId},order: [['sequence','ASC']]})
+           where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -242,11 +242,8 @@ const Product = require('../models').Product;
             conformproduct : req.body.conformProduct,
             normalcycletime : req.body.normalCycletime
         }   
-        var updateReturn =  await Product.update(productdata,
+        const updateReturn =  await Product.update(productdata,
             {where:{productid:req.body.productId}})
-        if(updateReturn == 1){
-            updateReturn = await Product.findById(req.body.productId)
-        }
         return updateReturn
     }
 
@@ -269,8 +266,8 @@ const Product = require('../models').Product;
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-     return classinforData =  await Classinformation.findById(classinfId)
- }
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
 
 /*
     根据四级的id找到二级三级名字
