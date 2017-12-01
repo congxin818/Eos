@@ -444,7 +444,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
-		map.set(key , new Number(value).toFixed(4));
+		await map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
@@ -515,7 +515,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 			value = sum / weight_sum;
 		}
 		//console.log("属性：" + key + ",值：" + value);
-		map.set(key , new Number(value).toFixed(4));
+		await map.set(key , new Number(value).toFixed(4));
 		
 	}
 	//console.log(map);
@@ -580,12 +580,12 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		//}
 		//let weight_sum = value.length;
 		
-		console.log(JSON.stringify(sum , null , 4));
-		console.log(JSON.stringify(weight_sum , null , 4));
+		//console.log(JSON.stringify(sum , null , 4));
+		//console.log(JSON.stringify(weight_sum , null , 4));
 		if (weight_sum != 0) {
 			value = sum / weight_sum;
 		}
-		map.set(key , new Number(value).toFixed(4));
+		await map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
@@ -718,7 +718,7 @@ async function mapSort(map) {
     if (map == undefined || map == null || map == '') {
     	return ;
     }
-    var keys = map.keySet(map);
+    var keys = await map.keySet(map);
     console.log('keys------>' + JSON.stringify(keys , null , 4));
     for(var i=0; i < keys.length - 1; i++) {
         for( var j = i + 1; j < keys.length; j++) {
@@ -733,13 +733,10 @@ async function mapSort(map) {
 }
 
 Map.prototype.keySet = function(map) {
+	console.log('keys---keySet--->' + map);
 	var keyset = new Array();
 	var count = 0;
-	for (var key in map) {
-		// 跳过object的extend函数
-		if (key == 'extend') {
-			continue;
-		}
+	for (var [key , value] of map) {
 		keyset[count] = key;
 		count++;
 	}
