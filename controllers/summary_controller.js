@@ -67,12 +67,12 @@ async function selectOEEByLinebodyIds(time , linebodyIds , type){
 			}
 		}
 	}
-	console.log('yuzhizhe01----->'+JSON.stringify(allLossStatus , null , 4));
+	//console.log('yuzhizhe01----->'+JSON.stringify(allLossStatus , null , 4));
 	const falg = await this.computeLossStatusBytime(allLossStatus , time);
 	if (falg == null || falg == '') {
 		return errorUtil.serviceError;
 	}
-	console.log('yuzhizhe02----->'+JSON.stringify(allLossStatus , null , 4));
+	//console.log('yuzhizhe02----->'+JSON.stringify(allLossStatus , null , 4));
 	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length , type);
 	//console.log(JSON.stringify(allLossStatus , null , 4));
 	dataSuccess.data = allData;
