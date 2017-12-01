@@ -448,7 +448,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
-	await this.mapSort(map);
+	await mapSort(map);
 	return map;
 }
 
@@ -519,7 +519,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 		
 	}
 	//console.log(map);
-	await this.mapSort(map);
+	await mapSort(map);
 	return map;
 }
 
@@ -589,7 +589,7 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
-	await this.mapSort(map);
+	await mapSort(map);
 	return map;
 }
 
@@ -718,27 +718,32 @@ async function mapSort(map) {
     if (map == undefined || map == null || map == '') {
     	return ;
     }
-    var keys = map.keySet();
-    var result = [];
-    map["max"] = 999999999; // 存放每一次拍完序后的，该过程中产生的最大的元素。
-
-    for(var i=0; i<keys.length; i++) {
-        var temp = -1;
-        for( var k=0; k<keys.length; k++) {
-            // 和上次循环产生的最大值进行比较
-            if(map[keys[k]] >= map[ "max"]) {
-                continue;
-            }
-
-            if(temp < map[keys[k]]) {
-                temp = map[keys[k]];
+    var keys = map.keySet(map);
+    console.log('keys------>' + keys);
+    for(var i=0; i < keys.length - 1; i++) {
+        for( var j = i + 1; j < keys.length; j++) {
+            if(map[keys[i]] > map[keys[j]]){//如果前面的数据比后面的大就交换
+                var temp = map[keys[i]];
+                map[keys[i]] = map[keys[j]];
+                map[keys[j]] = temp; 
             }
         }
-        result[i] = temp;
-        map[ "max"] = temp;
     }
-
+    return 1;
 }
 
-
+Map.prototype.keySet = function(map) {
+	var keyset = new Array();
+	var count = 0;
+	for (var key in map) {
+		// 跳过object的extend函数
+		if (key == 'extend') {
+			continue;
+		}
+		keyset[count] = key;
+		count++;
+	}
+	return keyset;
+}
+ 
 
