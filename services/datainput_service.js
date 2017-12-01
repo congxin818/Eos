@@ -22,7 +22,7 @@ const Product = require('../models').Product;
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-           where:{userUserid: userId},order: [['sequence','ASC']]})
+         where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -216,7 +216,12 @@ const Product = require('../models').Product;
             linebodylosstier3Id: req.body.losstier3Dataid
         }})
     }
-
+/*
+    展示产品信息数据
+    */
+    exports.selectProductById = async function(classinfId) {
+        return  await Product.findAll({where:{classinformationClassinfid:classinfId}})  
+    }
 
 /*
     添加产品信息数据
@@ -234,14 +239,21 @@ const Product = require('../models').Product;
     }
 
 /*
+    删除产品信息数据
+    */
+    exports.deleteProduct = async function(productId) {
+
+      const productdata =  await Product.findById(productId)
+      const deleteReturn = await productdata.destroy()
+      console.log('-------------->'+JSON.stringify(deleteReturn,null,4))
+      return deleteReturn
+  }
+
+/*
     更改产品信息数据
     */
     exports.updateProduct = async function(req , res) {
 
-        var productdata = {
-            conformproduct : req.body.conformProduct,
-            normalcycletime : req.body.normalCycletime
-        }   
         const updateReturn =  await Product.update(productdata,
             {where:{productid:req.body.productId}})
         return updateReturn
@@ -266,8 +278,8 @@ const Product = require('../models').Product;
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-       return classinforData =  await Classinformation.findById(classinfId)
-   }
+     return classinforData =  await Classinformation.findById(classinfId)
+ }
 
 /*
     根据四级的id找到二级三级名字
