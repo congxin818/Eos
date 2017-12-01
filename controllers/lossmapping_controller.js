@@ -316,9 +316,9 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 	//console.log('-=============');
  	const lossTier4Map = await computeLosstier4(allLosstier4 , weight_sum);
  	
- 	// console.log(kpitwoMap);
- 	// console.log(lossTier3Map);
- 	// console.log(lossTier4Map);
+ 	console.log(kpitwoMap);
+ 	console.log(lossTier3Map);
+ 	console.log(lossTier4Map);
 	for(var [key, value] of kpitwoMap) {
 		const kpitwo = await Kpitwolev.findById(key);
 		let pushkpitwo = {

@@ -36,6 +36,7 @@ async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const Ids = await req.body.linebodyIds.split(",");
+	errorUtil.serviceError.type = req.body.type;
 	if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
 		res.end(JSON.stringify(errorUtil.serviceError));
 	}
