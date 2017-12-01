@@ -130,7 +130,7 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == ''
 		|| Size == undefined || Size == null || Size == ''
 		|| Type == undefined || Type == null || Type == '') {
-		return ;
+		return Type;
 	}
 	let OEE = {
 		key:'设备损失',
