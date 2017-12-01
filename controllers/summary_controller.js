@@ -29,6 +29,7 @@ var dataSuccess = {
 async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
 	// console.log(JSON.stringify(req.body.time , null , 4));
 	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
+	errorUtil.parameterError.type = req.body.type;
 	if (req.body.time == undefined || req.body.time == null || req.body.time == ''
 		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == ''
 		|| req.body.type == undefined || req.body.type == null || req.body.type == '') {
