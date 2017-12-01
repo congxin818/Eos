@@ -22,7 +22,7 @@ const Product = require('../models').Product;
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-           where:{userUserid: userId},order: [['sequence','ASC']]})
+         where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -152,9 +152,15 @@ const Product = require('../models').Product;
     exports.addLosstier3datavalue = async function(losstier4Dataid) {
         //把这个四级value的值加到对应的三级目录上
         const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
-        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
-        losstier3DataValue = losstier3Data.value + losstier4Data.value
-        var losstier3data = {value: losstier3DataValue}
+        const loss4DataList = await  LinebodyLosstier4.findAll({'attributes': ['value'],where:{
+            linebodylosstier3Id: losstier4Data.linebodylosstier3Id
+        }})
+        var loss4Datasum = []
+        for(var i = 0;i<loss4DataList.length;i++){
+            loss4Datasum.push(loss4DataList[i].value)
+        }
+        const sumloss4Datavalue = await loss4Datasum.reduce(function(pre,cur){return pre + cur})
+        var losstier3data = {value: sumloss4Datavalue}
         await LinebodyLosstier3.update(losstier3data,{where:{id:losstier4Data.linebodylosstier3Id}})
     }
 
@@ -162,13 +168,18 @@ const Product = require('../models').Product;
     添加二级数据value值
     */
     exports.addLosstier2datavalue = async function(losstier4Dataid) {
-        //把这个三级value的值加到对应的三级目录上
+        //把这个三级value的值加到对应的二级目录上
         const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
         const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
-        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
-        kpitwolevDataValue = kpitwolevData.value + losstier3Data.value
-        var kpitwolevdata = {value: kpitwolevDataValue}
-        await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
+        const loss3DataList = await  LinebodyLosstier3.findAll({'attributes': ['value'],where:{
+            linebodyKpitwolevId: losstier3Data.linebodyKpitwolevId}})
+        var loss3Datasum = []
+        for(var i = 0;i<loss3DataList.length;i++){
+            loss3Datasum.push(loss3DataList[i].value)
+        }
+        const sumloss3Datavalue = await loss3Datasum.reduce(function(pre,cur){return pre + cur})
+        var kpitwolevdata = {value: sumloss3Datavalue}
+        await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:losstier3Data.linebodyKpitwolevId}})
     }
 
 /*
@@ -258,8 +269,8 @@ const Product = require('../models').Product;
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-       return classinforData =  await Classinformation.findById(classinfId)
-   }
+     return classinforData =  await Classinformation.findById(classinfId)
+ }
 
 /*
     根据四级的id找到二级三级名字
@@ -280,3 +291,4 @@ const Product = require('../models').Product;
         showAddloss4After.losstier2name = kpitwolev.name
         return showAddloss4After
     }
+

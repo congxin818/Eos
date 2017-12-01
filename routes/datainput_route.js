@@ -53,4 +53,11 @@ router.post('/addClassinf', function(req, res, next) {
     controller.addClassinf(req , res , next);
 });
 
+/*
+	编辑添加loss后的三级四级项目时间
+ */
+router.post('/updateObjectimeAfteradd', function(req, res, next) {
+    controller.updateObjectimeAfteradd(req , res , next);
+});
+
 module.exports = router;

@@ -29,6 +29,10 @@ const addObjectError = {
     msg: '添加失败'
 };
 
+const updateError = {
+    status: '301', 
+    msg: '更新数据错误'
+};
 
 const showLosstier34 = {
     losstier3:'' ,
@@ -99,17 +103,20 @@ var showAddloss4After = {
         var addReturn = null
         for(var i = 0;i < classinfIdList.length;i++){
             var classinforData = await datainputServices.classinforSelectById(classinfIdList[i])
-            if(moment(req.body.starttime).isAfter(classinforData.classstarttime)
-                && moment(req.body.endtime).isBefore(classinforData.classendtime)){
+            if((moment(req.body.starttime).isAfter(classinforData.classstarttime)||
+                moment(req.body.starttime).isSame(classinforData.classstarttime))
+                && (moment(req.body.endtime).isBefore(classinforData.classendtime)
+                    ||moment(req.body.endtime).isSame(classinforData.classendtime))){
                     // loss四级时间在这一天的开班时间内
                 req.body.classinfId = classinfIdList[i]
                 addReturn = await exports.addLosstierData(req , res)
                 break
             }
-            if(moment(req.body.starttime).isAfter(classinforData.classstarttime)
+            if((moment(req.body.starttime).isAfter(classinforData.classstarttime)||
+                moment(req.body.starttime).isSame(classinforData.classstarttime))
                 && moment(req.body.endtime).isAfter(classinforData.classendtime)){
-                    // loss四级时间横跨了这一天和下一天
-               const thisendtime = req.body.endtime //把req.body.endtime保存下来
+                // loss四级时间横跨了这一天和下一天
+                const thisendtime = req.body.endtime //把req.body.endtime保存下来
                 // 这一天的添加loss四级时间
                 req.body.classinfId = classinfIdList[i]
                 req.body.endtime = moment(req.body.starttime).set({'hour': 23, 'minute': 59 ,'second': 59})
@@ -299,3 +306,24 @@ var showAddloss4After = {
             }
         }  
     }
+
+/*
+    编辑添加loss后的三级四级项目时间
+    */
+    exports.updateObjectimeAfteradd = async function(req , res) {
+        if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == ''
+            ||req.body.starttime == null||req.body.starttime == ''
+            ||req.body.endtime == null||req.body.endtime == '')
+           res.end(JSON.stringify(parameterError))
+       else{
+            // 编辑四级data
+            const updateReturn = await datainputServices.addLosstier4datatime(req , res)
+
+            if( updateReturn == 1){
+             res.end(JSON.stringify(dataSuccess))
+         }else{
+            res.end(JSON.stringify(updateError))
+        }
+    }
+}
+
