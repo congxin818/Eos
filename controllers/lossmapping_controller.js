@@ -381,7 +381,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		array.link = links;
 		alldata.push(array);
 		alldata.sort ((a, b) => a.order - b.order);
-		alldata.sort((a) => a.data.sort((m, n) => m.value - n.value))
+		//alldata.sort((a) => a.data.sort((m, n) => m.value - n.value))
 		for (var i = alldata.length - 1; i >= 0; i--) {
 			alldata[i].data.sort((m, n) => m.value - n.value);
 		}
@@ -397,7 +397,7 @@ exports.selectLossMappingByLinebodyIds = selectLossMappingByLinebodyIds;
 	计算KPItwo的每一项的平均数
  */
 async function computeKpitwo(allKpitwo , weight_sum){
-	console.log(JSON.stringify('allKpitwo----->'+ weight_sum , null , 4));
+	//console.log(JSON.stringify('allKpitwo----->'+ weight_sum , null , 4));
 	if (allKpitwo == undefined || allKpitwo == null || allKpitwo == '') {
 		return ;
 	}
@@ -430,9 +430,9 @@ async function computeKpitwo(allKpitwo , weight_sum){
 			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
-	console.log('yuzhizhe01');
-	console.log(weightMap);
-	console.log(resultMap);
+	// console.log('yuzhizhe01');
+	// console.log(weightMap);
+	// console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -452,7 +452,6 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
-	//await mapSort(map);
 	return map;
 }
 
@@ -460,7 +459,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 	计算losstier3的每一项的平均数
  */
 async function computeLosstier3(allLosstier3 , weight_sum){
-	console.log(JSON.stringify('allLosstier3----->'+ weight_sum , null , 4));
+	//console.log(JSON.stringify('allLosstier3----->'+ weight_sum , null , 4));
 	if (allLosstier3 == undefined || allLosstier3 == null || allLosstier3 == '') {
 		return ;
 	}
@@ -492,9 +491,9 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 			weightMap.set(allLosstier3[i][j].losstier3Lossid , mapWeightEle);
 		}
 	}
-	console.log('yuzhizhe02');
-	console.log(weightMap);
-	console.log(resultMap);
+	// console.log('yuzhizhe02');
+	// console.log(weightMap);
+	// console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -523,7 +522,6 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 		
 	}
 	//console.log(map);
-	//await mapSort(map);
 	return map;
 }
 
@@ -531,7 +529,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 	计算losstier4的每一项的平均数
  */
 async function computeLosstier4(allLosstier4 , weight_sum){
-	console.log(JSON.stringify('allLosstier4----->'+ weight_sum , null , 4));
+	//console.log(JSON.stringify('allLosstier4----->'+ weight_sum , null , 4));
 	if (allLosstier4 == undefined || allLosstier4 == null || allLosstier4 == '') {
 		return ;
 	}
@@ -562,9 +560,9 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 			weightMap.set(allLosstier4[i][j].losstier4Tier4id , mapWeightEle);
 		}
 	}
-	console.log('yuzhizhe03');
-	console.log(weightMap);
-	console.log(resultMap);
+	// console.log('yuzhizhe03');
+	// console.log(weightMap);
+	// console.log(resultMap);
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -593,7 +591,6 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
-	//await mapSort(map);
 	return map;
 }
 
@@ -715,36 +712,5 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 	return endTime;
 }
 
-/*
-	map 排序
- */
-async function mapSort(map) {
-    if (map == undefined || map == null || map == '') {
-    	return ;
-    }
-    var keys = await map.keySet(map);
-    console.log('keys------>' + JSON.stringify(keys , null , 4));
-    for(var i=0; i < keys.length - 1; i++) {
-        for( var j = i + 1; j < keys.length; j++) {
-            if(map[keys[i]] > map[keys[j]]){//如果前面的数据比后面的大就交换
-                var temp = map[keys[i]];
-                map[keys[i]] = map[keys[j]];
-                map[keys[j]] = temp; 
-            }
-        }
-    }
-    return 1;
-}
-
-Map.prototype.keySet = function(map) {
-	console.log('keys---keySet--->' + map);
-	var keyset = new Array();
-	var count = 0;
-	for (var [key , value] of map) {
-		keyset[count] = key;
-		count++;
-	}
-	return keyset;
-}
  
 
