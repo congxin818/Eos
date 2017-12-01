@@ -279,9 +279,9 @@ var showAddloss4After = {
             res.end(JSON.stringify(parameterError))
         else{
             // 开班开始---天
-            const classStartDay = moment(req.body.classStarttime).dayOfYear()
+            const classStartDay = moment(req.body.classStarttime).date()
             // 开班结束---天
-            const classEndDay = moment(req.body.classEndtime).dayOfYear()
+            const classEndDay = moment(req.body.classEndtime).date()
 
             if(classStartDay == classEndDay){
                 // 增加一条产品信息数据
@@ -310,15 +310,15 @@ var showAddloss4After = {
                         showdataList.push(addReturn)
                     }else{
                         // 中间的那些天
-                        var classStarttime = moment(req.body.classEndtime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
-                        var classEndtime = moment(req.body.classStarttime).set({'date': i,'hour': 23, 'minute': 59 ,'second': 59})
+                        var classStarttime = moment(req.body.classStarttime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
+                        var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 23, 'minute': 59 ,'second': 59})
                         // 增加一条产品信息数据
                         const addReturn = await datainputServices.addClassinf(classStarttime,
                             classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
                         showdataList.push(addReturn)
                     }
                 }
-                // 
+                
                 dataSuccess.date = showdataList
                 res.end(JSON.stringify(dataSuccess))
             }
