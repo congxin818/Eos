@@ -448,7 +448,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
-	await mapSort(map);
+	//await mapSort(map);
 	return map;
 }
 
@@ -519,7 +519,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 		
 	}
 	//console.log(map);
-	await mapSort(map);
+	//await mapSort(map);
 	return map;
 }
 
@@ -589,7 +589,7 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		//console.log("属性：" + key + ",值：" + value);
 	}
 	//console.log(map);
-	await mapSort(map);
+	//await mapSort(map);
 	return map;
 }
 
