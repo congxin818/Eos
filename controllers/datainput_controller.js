@@ -48,16 +48,23 @@ var showAddloss4After = {
     endtime:'',
 }
 
+var showAddPrpductData = {
+    productid:'',
+    productname:'',
+    conformproduct:'',
+    normalcycletime:''
+}
+
+
 /*
     根据用户设置的顺序展示二级结构
     */
     exports.showKpitwolev = async function(req , res) {
         if(req.body.userId == null||req.body.userId == '')
-           res.end(JSON.stringify(parameterError))
-       const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
-       var showList = []
-
-       for(var i = 0; i < kpitwolevidList.length ; i++){
+            res.end(JSON.stringify(parameterError))
+        const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
+        var showList = []
+        for(var i = 0; i < kpitwolevidList.length ; i++){
           var kpitwolev =  await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
           showList.push(kpitwolev.name)
       }
@@ -76,14 +83,24 @@ var showAddloss4After = {
         // 找到对应的三级目录结构
         const twolevdata = await datainputServices.selectTwoLevByName(req.body.twolevName)
         const losstier3DataList = await datainputServices.selectLosstier3BytwoId(twolevdata.kpitwoid)
+        var losstier4List =[]
+        var flag = true
         for(var i=0 ;i<losstier3DataList.length ;i++){
-            const losstier4NameList = await datainputServices.selectLosstier4Bytier3Id(losstier3DataList[i].lossid)
-            showLosstier34.losstier4 = losstier4NameList
-        }
-        showLosstier34.losstier3 = losstier3DataList
-        dataSuccess.data = showLosstier34
-        res.end(JSON.stringify(dataSuccess))     
-    }
+            var losstier4NameList = await datainputServices.selectLosstier4Bytier3Id(losstier3DataList[i].lossid)
+            if(losstier4NameList != null){
+                if(flag == true){
+                    losstier4List = losstier4NameList
+                    flag = false
+                }else{
+                 losstier4List = await losstier4List.concat(losstier4NameList)
+             }
+         }
+     }
+     showLosstier34.losstier4 = losstier4List
+     showLosstier34.losstier3 = losstier3DataList
+     dataSuccess.data = showLosstier34
+     res.end(JSON.stringify(dataSuccess))     
+ }
 
 /*
     点击确定按钮，创建一条数据并添加时间
@@ -214,27 +231,93 @@ var showAddloss4After = {
    }
 
 /*
+    展示产品名字（最小的产品类）下拉列表
+    */
+    exports.showProductName = async function(req , res) {
+        if(req.body.linebodyId == null||req.body.linebodyId == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+         const data = await datainputServices.selectProductnameById(req.body.linebodyId)
+         dataSuccess.data = data
+         res.end(JSON.stringify(dataSuccess))
+     }
+ }
+
+/*
     增加产品信息
     */
     exports.addProduct = async function(req , res) {
-        if(req.body.productType == null||req.body.productType == ''
+        if(req.body.productNameId == null||req.body.productNameId == ''
             ||req.body.conformProduct == null||req.body.conformProduct == ''
             ||req.body.normalCycletime == null||req.body.normalCycletime == ''
             ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
             var classinfIdList = req.body.classinfIdList.split(",")
-            var showData = []
             for(var i = 0;i < classinfIdList.length;i++){
                 req.body.classinfId = classinfIdList[i]
                 // 增加一条产品信息数据
                 const addReturn = await datainputServices.addProduct(req , res)
-                showData.push(addReturn)
+                // 设置展示的list 的值
+                showAddPrpductData.productid = showAddPrpductData.productid +','+ addReturn.productid
+                var flag = true
+                if(flag == true){
+                    const productname = await datainputServices.selectProductNameById(addReturn.productnameId)
+                    showAddPrpductData.productname = productname.name
+                    showAddPrpductData.conformproduct = addReturn.conformproduct
+                    showAddPrpductData.normalcycletime = addReturn.normalcycletime
+                    flag = false
+                }
             }
-            dataSuccess.data = showData
+
+            // 把多余的 ，去掉
+            showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
+            dataSuccess.data = showAddPrpductData
             res.end(JSON.stringify(dataSuccess))
         }   
     }
+
+/*
+    展示产品信息
+    */
+    exports.showProduct = async function(req , res) {
+        if(req.body.classinfIdList == null||req.body.classinfIdList == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+            var classinfIdList = req.body.classinfIdList.split(",")
+            
+            var showProduct =[]
+            for(var i = 0;i < classinfIdList.length;i++){
+                req.body.classinfId = classinfIdList[i]
+                // 查找一条产品信息
+                const data = await datainputServices.selectProductByclassId(classinfIdList[i])
+                for(var j = 0;j < data.length;j++){
+                    const samenamedata =  datainputServices.selectProductDataByName(data[j].productnameId)
+                    for(var k = 0;k < data.length;k++){
+                         // 设置展示的list 的值
+                         showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
+                         var flag = true
+                         if(flag == true){
+                            const productname = await datainputServices.selectProductNameById(samenamedata[k].productnameId)
+                            showAddPrpductData.productname = productname.name
+                            showAddPrpductData.conformproduct = samenamedata[k].conformproduct
+                            showAddPrpductData.normalcycletime = samenamedata[k].normalcycletime
+                            flag = false
+                        }
+
+                    }
+                     // 把多余的 ，去掉
+                     showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
+
+                 }
+
+             }
+
+
+             dataSuccess.data = showAddPrpductData
+             res.end(JSON.stringify(dataSuccess))
+         }
+     }
 
 /*
     更改产品信息
@@ -278,24 +361,7 @@ var showAddloss4After = {
         }
     }
 
-/*
-    展示产品信息
-    */
-    exports.showProduct = async function(req , res) {
-        if(req.body.classinfIdList == null||req.body.classinfIdList == '')
-            res.end(JSON.stringify(parameterError))
-        else{
-         var classinfIdList = req.body.classinfIdList.split(",")
-         var showProduct =[];
-         for(var i = 0;i < classinfIdList.length;i++){
-                // 查找一条产品信息
-                const data = await datainputServices.selectProductById(classinfIdList[i])
-                showProduct.push(data)
-            }
-            dataSuccess.data = showProduct
-            res.end(JSON.stringify(dataSuccess))
-        }
-    }
+
 /*
     增加开班详细信息
     */
