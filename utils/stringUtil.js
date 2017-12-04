@@ -52,7 +52,7 @@
  	const len=eval(data).length;  
  	let arr=[];  
  	for(var i=0;i<len;i++){  
- 		console.log(data[i].id);
+ 		//console.log(data[i].id);
  		arr.push(data[i].id);
  	}
  	//console.log(arr.length);

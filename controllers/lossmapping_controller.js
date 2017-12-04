@@ -387,7 +387,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		}
 	}
 	//console.log(lossTier4Map);
-	//console.log(JSON.stringify(allKpitwo , null , 4));
+	console.log(JSON.stringify(alldata , null , 4));
 	dataSuccess.data = alldata;
 	return dataSuccess;
 }
