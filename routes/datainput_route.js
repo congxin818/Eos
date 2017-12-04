@@ -32,6 +32,13 @@ router.post('/addLosstier4time2', function(req, res, next) {
 });
 
 /*
+	展示产品名字（最小的产品类）下拉列表
+ */
+router.post('/showProductName', function(req, res, next) {
+    controller.showProductName(req , res , next);
+});
+
+/*
 	展示产品信息
  */
 router.post('/showProduct', function(req, res, next) {

@@ -8,17 +8,13 @@
 
 
     module.exports = function(sequelize , DataTypes){
-    return sequelize.define('product' , {
+    return sequelize.define('productdata' , {
     //自增长id,主键,整形
     productid:{ 
         type:Sequelize.INTEGER,
         autoIncrement:true,
         primaryKey: true
     },
-        //产品种类
-        producttype: { 
-            type: Sequelize.STRING(50)
-        },
         //每种产品合格品的数量
         conformproduct: { 
 
