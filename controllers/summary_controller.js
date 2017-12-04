@@ -375,7 +375,6 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	let allData = {
 		status:allStatusData,
 		statusOther:statusOtherData,
-		type:Type,
 		stage:allStageData,
 		stageOther:stageOtherData
 	};
