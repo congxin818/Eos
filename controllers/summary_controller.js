@@ -103,10 +103,10 @@ async function computeLossStatusBytime(allLossStatus , time){
 
 			const mStartTime = new Date(projectStartTime).getTime();
 			const mEndTime = new Date(projectEndTime).getTime();
-			console.log('==========>mStartTime--->'+mStartTime);
-			console.log('==========>Time--->'+Time);
-			console.log('==========>projectEndTime--->'+mEndTime);
-			console.log('\n\n');
+			// console.log('==========>mStartTime--->'+mStartTime);
+			// console.log('==========>Time--->'+Time);
+			// console.log('==========>projectEndTime--->'+mEndTime);
+			// console.log('\n\n');
 			if (Time < mStartTime || Time > mEndTime) {
 				allLossStatus[i].splice(j , 1);//删除该元素
 				continue;
