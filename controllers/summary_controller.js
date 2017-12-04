@@ -29,18 +29,15 @@ var dataSuccess = {
 async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
 	// console.log(JSON.stringify(req.body.time , null , 4));
 	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
-	errorUtil.parameterError.type = req.body.type;
 	if (req.body.time == undefined || req.body.time == null || req.body.time == ''
-		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == ''
-		|| req.body.type == undefined || req.body.type == null || req.body.type == '') {
+		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const Ids = await req.body.linebodyIds.split(",");
-	errorUtil.serviceError.type = req.body.type;
 	if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
 		res.end(JSON.stringify(errorUtil.serviceError));
 	}
-	const allData = await this.selectOEEByLinebodyIds(req.body.time , req.body.linebodyIds , req.body.type);
+	const allData = await this.selectOEEByLinebodyIds(req.body.time , req.body.linebodyIds);
 	res.end(JSON.stringify(allData , null , 4));
 }
 exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLinebodyIds;
@@ -48,10 +45,9 @@ exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLine
 /*
 	查询OEE根据linebodyIds
  */
-async function selectOEEByLinebodyIds(time , linebodyIds , type){
+async function selectOEEByLinebodyIds(time , linebodyIds){
 	if (time == undefined || time == null || time == ''
-		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == ''
-		|| type == undefined || type == null || type == '') {
+		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == '') {
 		return errorUtil.parameterError;
 	}
 	const Ids = await linebodyIds.split(",");
@@ -75,7 +71,7 @@ async function selectOEEByLinebodyIds(time , linebodyIds , type){
 		return errorUtil.serviceError;
 	}
 	//console.log('yuzhizhe02----->'+JSON.stringify(allLossStatus , null , 4));
-	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length , type);
+	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length);
 	//console.log(JSON.stringify(allLossStatus , null , 4));
 	dataSuccess.data = allData;
 	return dataSuccess;
@@ -128,11 +124,10 @@ exports.computeLossStatusBytime = computeLossStatusBytime;
 /*
 	得到设备损失数组
  */
-async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
+async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == ''
-		|| Size == undefined || Size == null || Size == ''
-		|| Type == undefined || Type == null || Type == '') {
-		return Type;
+		|| Size == undefined || Size == null || Size == '') {
+		return ;
 	}
 	let OEE = {
 		key:'设备损失',
@@ -172,10 +167,10 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size , Type){
 	let Grasp_status = 0;//2.把握现状,代表码：b
 	let Set_goals = 0;//3.设定目标,代表码：c
 	let Analysis_cause = 0;//4.分析原因,代表码：d
-	let Countermeasures_plan = 0;//5.	对策计划,代表码：e
-	let Countermeasures_ = 0;//6.	对策落实,代表码：f
-	let Effect_confirmation = 0;//7.	效果确认,代表码：g
-	let Consolidation_results = 0;//8.	成果巩固,代表码：h
+	let Countermeasures_plan = 0;//对策计划,代表码：e
+	let Countermeasures_ = 0;//对策落实,代表码：f
+	let Effect_confirmation = 0;//效果确认,代表码：g
+	let Consolidation_results = 0;//成果巩固,代表码：h
 	for (var i = allLossStatus.length - 1; i >= 0; i--) {
 		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
 			const losstier3 = await Losstier3.findById(allLossStatus[i][j].losstier3Lossid);
