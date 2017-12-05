@@ -383,8 +383,8 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		alldata.sort ((a, b) => a.order - b.order);
 		//alldata.sort((a) => a.data.sort((m, n) => m.value - n.value))
 		for (var i = alldata.length - 1; i >= 0; i--) {
-			await alldata[i].data.sort((m, n) => m.value - n.value);
-			await alldata[i].link.sort((m, n) => m.value - n.value);
+			await alldata[i].data.sort((m, n) => n.value - m.value);
+			await alldata[i].link.sort((m, n) => n.value - m.value);
 		}
 	}
 	//console.log(lossTier4Map);
