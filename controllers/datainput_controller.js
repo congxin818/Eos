@@ -256,26 +256,33 @@ var showAddPrpductData = {
             res.end(JSON.stringify(parameterError))
         else{
             var classinfIdList = req.body.classinfIdList.split(",")
+            var addReturn
             for(var i = 0;i < classinfIdList.length;i++){
                 req.body.classinfId = classinfIdList[i]
                 // 增加一条产品信息数据
-                const addReturn = await datainputServices.addProduct(req , res)
+                addReturn = await datainputServices.addProduct(req , res)
+
                 // 设置展示的list 的值
-                showAddPrpductData.productid = showAddPrpductData.productid +','+ addReturn.productid
-                var flag = true
-                if(flag == true){
-                    const productname = await datainputServices.selectProductNameById(addReturn.productnameId)
-                    showAddPrpductData.productname = productname.name
-                    showAddPrpductData.conformproduct = addReturn.conformproduct
-                    showAddPrpductData.normalcycletime = addReturn.normalcycletime
-                    flag = false
-                }
+                // showAddPrpductData.productid = showAddPrpductData.productid +','+ addReturn.productid
+                // var flag = true
+                // if(flag == true){
+                //     const productname = await datainputServices.selectProductNameById(addReturn.productnameId)
+                //     showAddPrpductData.productname = productname.name
+                //     showAddPrpductData.conformproduct = addReturn.conformproduct
+                //     showAddPrpductData.normalcycletime = addReturn.normalcycletime
+                //     flag = false
+                // }
+
             }
 
             // 把多余的 ，去掉
-            showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
-            dataSuccess.data = showAddPrpductData
-            res.end(JSON.stringify(dataSuccess))
+            // showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
+
+            // dataSuccess.data =  showAddPrpductData
+            // res.end(JSON.stringify(dataSuccess))
+            if(addReturn!=null){
+                exports.showProduct(req , res)
+            }
         }   
     }
 
@@ -298,7 +305,7 @@ var showAddPrpductData = {
                     conformproduct:'',
                     normalcycletime:''
                 }
-                for(var k = 0;k < data.length;k++){
+                for(var k = 0;k < samenamedata.length;k++){
                          // 设置展示的list 的值
                          showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                          var flag = true
@@ -453,6 +460,6 @@ var showAddPrpductData = {
            res.end(JSON.stringify(dataSuccess))
        }else{
             // 删除失败
-       }     
-   }
+        }     
+    }
 }
