@@ -81,4 +81,10 @@ router.post('/updateObjectimeAfteradd', function(req, res, next) {
     controller.updateObjectimeAfteradd(req , res , next);
 });
 
+/*
+	刪除loss信息
+ */
+router.post('/deleteLoss4data', function(req, res, next) {
+    controller.deleteLoss4data(req , res , next);
+});
 module.exports = router;

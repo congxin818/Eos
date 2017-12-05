@@ -278,6 +278,10 @@ const Productname = require('../models').Productname;
     更改产品信息数据
     */
     exports.updateProduct = async function(req , res) {
+        productdata = {
+            conformproduct:req.body.conformProduct,
+            normalcycletime:req.body.normalCycletime
+        }
 
         const updateReturn =  await Productdata.update(productdata,
             {where:{productid:req.body.productId}})
@@ -326,3 +330,12 @@ const Productname = require('../models').Productname;
         return showAddloss4After
     }
 
+/*
+    删除loss4级data
+    */
+    exports.deleteLoss4data = async function(losstier4Dataid) {
+        
+        const loss4data =  await LinebodyLosstier4.findById(losstier4Dataid)
+        var data =  await loss4data.destroy();
+        return data
+    }
