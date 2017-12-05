@@ -322,7 +322,7 @@ var showAddPrpductData = {
          }
 
 /*
-    更改产品信息
+    编辑产品信息
     */
     exports.updateProduct = async function(req , res) {
         if(req.body.conformProduct == null||req.body.conformProduct == ''
@@ -441,3 +441,18 @@ var showAddPrpductData = {
     }
 }
 
+/*
+    删除loss信息
+    */
+    exports.deleteLoss4data = async function(req , res) {
+     if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == '')
+         res.end(JSON.stringify(parameterError))
+     else{
+        const deleteReturn = await datainputServices.deleteLoss4data(req.body.losstier4Dataid)
+        if(deleteReturn!=null){
+           res.end(JSON.stringify(dataSuccess))
+       }else{
+            // 删除失败
+       }     
+   }
+}
