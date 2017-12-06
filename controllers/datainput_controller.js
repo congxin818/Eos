@@ -92,22 +92,22 @@ var showAddPrpductData = {
                     losstier4List = losstier4NameList
                     flag = false
                 }else{
-                   losstier4List = await losstier4List.concat(losstier4NameList)
-               }
-           }
-       }
-       showLosstier34.losstier4 = losstier4List
-       showLosstier34.losstier3 = losstier3DataList
-       dataSuccess.data = showLosstier34
-       res.end(JSON.stringify(dataSuccess))     
-   }
+                 losstier4List = await losstier4List.concat(losstier4NameList)
+             }
+         }
+     }
+     showLosstier34.losstier4 = losstier4List
+     showLosstier34.losstier3 = losstier3DataList
+     dataSuccess.data = showLosstier34
+     res.end(JSON.stringify(dataSuccess))     
+ }
 
 
 /*
     点击确定按钮，创建一条数据并添加时间
     */
     exports.addLosstier4time2 = async function(req , res) {
-       if(req.body.classinfIdList == null||req.body.classinfIdList == ''
+     if(req.body.classinfIdList == null||req.body.classinfIdList == ''
         ||req.body.twolevName == null||req.body.twolevName == ''
         ||req.body.losstier3Id == null||req.body.losstier3Id == ''
         ||req.body.losstier4Id == null||req.body.losstier4Id == ''
@@ -238,11 +238,11 @@ var showAddPrpductData = {
         if(req.body.linebodyId == null||req.body.linebodyId == '')
             res.end(JSON.stringify(parameterError))
         else{
-         const data = await datainputServices.selectProductnameById(req.body.linebodyId)
-         dataSuccess.data = data
-         res.end(JSON.stringify(dataSuccess))
-     }
- }
+           const data = await datainputServices.selectProductnameById(req.body.linebodyId)
+           dataSuccess.data = data
+           res.end(JSON.stringify(dataSuccess))
+       }
+   }
 
 /*
     增加产品信息
@@ -262,6 +262,7 @@ var showAddPrpductData = {
                 addReturn = await datainputServices.addProduct(req , res)
             }
             if(addReturn!=null){
+                // 调用展示全部产品信息
                 exports.showProduct(req , res)
             }
         }   
@@ -289,11 +290,11 @@ var showAddPrpductData = {
                             samenamedata = smdata
                             flag = false
                         }else{
-                           samenamedata = await samenamedata.concat(smdata)
-                       }
-                   }
-               }
-               var showAddPrpductData = {
+                         samenamedata = await samenamedata.concat(smdata)
+                     }
+                 }
+             }
+             var showAddPrpductData = {
                 productid:'',
                 productname:'',
                 conformproduct:'',
@@ -304,14 +305,14 @@ var showAddPrpductData = {
                     showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                     var flag = true
                     if(flag == true){
-                       const productname = await datainputServices.selectProductNameById(samenamedata[k].productnameId)
-                       showAddPrpductData.productname = productname.name
-                       showAddPrpductData.conformproduct = samenamedata[k].conformproduct
-                       showAddPrpductData.normalcycletime = samenamedata[k].normalcycletime
-                       flag = false
-                   }
+                     const productname = await datainputServices.selectProductNameById(samenamedata[k].productnameId)
+                     showAddPrpductData.productname = productname.name
+                     showAddPrpductData.conformproduct = samenamedata[k].conformproduct
+                     showAddPrpductData.normalcycletime = samenamedata[k].normalcycletime
+                     flag = false
+                 }
 
-               }
+             }
                 // 把多余的 ，去掉
                 showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
                 showProduct.push(showAddPrpductData)
@@ -328,7 +329,8 @@ var showAddPrpductData = {
     exports.updateProduct = async function(req , res) {
         if(req.body.conformProduct == null||req.body.conformProduct == ''
             ||req.body.normalCycletime == null||req.body.normalCycletime == ''
-            ||req.body.productIdList == null||req.body.productIdList == '')
+            ||req.body.productIdList == null||req.body.productIdList == ''
+            ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
             var productIdList = req.body.productIdList.split(",")
@@ -340,7 +342,8 @@ var showAddPrpductData = {
                     res.end(JSON.stringify(updateError))
                 }
             }
-            res.end(JSON.stringify(dataSuccess))
+            // 调用展示全部产品信息
+            exports.showProduct(req , res)
         }
 
     }
@@ -349,18 +352,20 @@ var showAddPrpductData = {
     删除产品信息
     */
     exports.deleteProduct = async function(req , res) {
-        if(req.body.productIdList == null||req.body.productIdList == '')
+        if(req.body.productIdList == null||req.body.productIdList == ''
+            ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
-         var productIdList = req.body.productIdList.split(",")
-         for(var i = 0;i < productIdList.length;i++){
+           var productIdList = req.body.productIdList.split(",")
+           for(var i = 0;i < productIdList.length;i++){
                 // 删除一条产品信息
                 const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
                 if (deleteReturn == null||deleteReturn == '' ){
                     res.end(JSON.stringify(updateError))
                 }
             }
-            res.end(JSON.stringify(dataSuccess))
+            // 调用展示全部产品信息
+            exports.showProduct(req , res)
         }
     }
 
@@ -429,8 +434,8 @@ var showAddPrpductData = {
         if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == ''
             ||req.body.starttime == null||req.body.starttime == ''
             ||req.body.endtime == null||req.body.endtime == '')
-           res.end(JSON.stringify(parameterError))
-       else{
+         res.end(JSON.stringify(parameterError))
+     else{
             // 编辑四级data
             const updateReturn = await datainputServices.addLosstier4datatime(req , res)
 
@@ -448,9 +453,9 @@ var showAddPrpductData = {
     删除loss信息
     */
     exports.deleteLoss4data = async function(req , res) {
-     if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == '')
-         res.end(JSON.stringify(parameterError))
-     else{
+       if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == '')
+           res.end(JSON.stringify(parameterError))
+       else{
         const deleteReturn = await datainputServices.deleteLoss4data(req.body.losstier4Dataid)
         if(deleteReturn!=null){
             dataSuccess.data = deleteReturn
