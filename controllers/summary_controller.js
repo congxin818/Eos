@@ -185,9 +185,9 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 			if (kpitwo == null || kpitwo == ''|| kpitwo == undefined) {
 				continue ;
 			}
+			const status = allLossStatus[i][j].status;
+			const stage = allLossStatus[i][j].stage;
 			if (kpitwo.name == 'OEE') {
-				const status = allLossStatus[i][j].status;
-				const stage = allLossStatus[i][j].stage;
 				if (status == 1) {
 					OEE_began += 1;
 				}else if(status == 2){
@@ -220,7 +220,6 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 				}
 
 			}else if(kpitwo.name == 'Safety'){
-				const status = allLossStatus[i][j].status;
 				if (status == 1) {
 					Safety_began += 1;
 				}else if(status == 2){
@@ -252,7 +251,6 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 					continue ;
 				}
 			}else{
-				const status = allLossStatus[i][j].status;
 				if (status == 1) {
 					Defect_began += 1;
 				}else if(status == 2){
@@ -334,7 +332,7 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 		value:Set_goals
 	};//3.设定目标,代表码：c
 	let AnalysisCause = {
-		key:'分析原因',
+		key:'分析根因',
 		order:4,
 		value:Analysis_cause
 	};//4.分析原因,代表码：d
@@ -370,7 +368,7 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	await allStageData.push(IdentifyProblem);
 
 	allStageData.sort ((a, b) => a.order - b.order);
-	
+
 	let stageOtherData = {
 		IdentifyProblem:Identify_problem,
 		GraspStatus:Grasp_status,
