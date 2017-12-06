@@ -320,34 +320,42 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 
 	let IdentifyProblem = {
 		key:'明确问题',
+		order:1,
 		value:Identify_problem
 	};//1.明确问题,代表码：a
 	let GraspStatus = {
 		key:'把握现状',
+		order:2,
 		value:Grasp_status
 	};//2.把握现状,代表码：b
 	let SetGoals = {
 		key:'设定目标',
+		order:3,
 		value:Set_goals
 	};//3.设定目标,代表码：c
 	let AnalysisCause = {
 		key:'分析原因',
+		order:4,
 		value:Analysis_cause
 	};//4.分析原因,代表码：d
 	let CountermeasuresPlan = {
 		key:'对策计划',
+		order:5,
 		value:Countermeasures_plan
 	};//5.	对策计划,代表码：e
 	let Countermeasures = {
 		key:'对策落实',
+		order:6,
 		value:Countermeasures_
 	};//6.	对策落实,代表码：f
 	let EffectConfirmation = {
 		key:'效果确认',
+		order:7,
 		value:Effect_confirmation
 	};//7.	效果确认,代表码：g
 	let ConsolidationResults = {
 		key:'成果巩固',
+		order:8,
 		value:Consolidation_results
 	};//8.	成果巩固,代表码：h
 
@@ -361,6 +369,8 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	await allStageData.push(GraspStatus);
 	await allStageData.push(IdentifyProblem);
 
+	allStageData.sort ((a, b) => a.order - b.order);
+	
 	let stageOtherData = {
 		IdentifyProblem:Identify_problem,
 		GraspStatus:Grasp_status,
