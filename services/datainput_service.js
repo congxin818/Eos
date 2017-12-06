@@ -260,8 +260,8 @@ const Productname = require('../models').Productname;
 /*
     根据productnameId查找产品数据
     */
-    exports.selectProductDataByName = async function(productNameId) {
-        return  await Productdata.findAll({where:{productnameId:productNameId}})
+    exports.selectProductDataByName = async function(productNameId,classinfId) {
+        return  await Productdata.findAll({where:{productnameId:productNameId,classinformationClassinfid:classinfId}})
     }
 
 /*
