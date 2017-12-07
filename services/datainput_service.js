@@ -23,7 +23,7 @@ const Productname = require('../models').Productname;
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-           where:{userUserid: userId},order: [['sequence','ASC']]})
+         where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -233,6 +233,13 @@ const Productname = require('../models').Productname;
     }
 
 /*
+    验证添加的产品信息是否重复
+    */
+    exports.selectProductdataBy = async function(classinfId,productnameId) {
+        return  await Productdata.findOne({where: {classinformationClassinfid:classinfId,productnameId:productnameId}})
+    }
+
+/*
     添加产品信息数据
     */
     exports.addProduct = async function(req , res) {
@@ -307,8 +314,8 @@ const Productname = require('../models').Productname;
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-       return classinforData =  await Classinformation.findById(classinfId)
-   }
+     return classinforData =  await Classinformation.findById(classinfId)
+ }
 
 /*
     根据四级的id找到二级三级名字
@@ -334,7 +341,7 @@ const Productname = require('../models').Productname;
     删除loss4级data
     */
     exports.deleteLoss4data = async function(losstier4Dataid) {
-        
+
         const loss4data =  await LinebodyLosstier4.findById(losstier4Dataid)
         var data =  await loss4data.destroy();
         return data

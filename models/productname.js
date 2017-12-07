@@ -18,6 +18,10 @@
         //产品名字
         name: { 
             type: Sequelize.STRING(50)
+        },
+        //产品价格
+        price: { 
+            type: Sequelize.FLOAT
         }
     },{
         charset: 'utf8',

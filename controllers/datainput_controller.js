@@ -256,16 +256,23 @@ var showAddPrpductData = {
         else{
             var classinfIdList = req.body.classinfIdList.split(",")
             var addReturn
+            var checkFlag = false
             for(var i = 0;i < classinfIdList.length;i++){
                 req.body.classinfId = classinfIdList[i]
                 // 验证产品信息是否重复
-
-                // 增加一条产品信息数据
-                addReturn = await datainputServices.addProduct(req , res)
-            }
-            if(addReturn!=null){
+                const checkData = await datainputServices.selectProductdataBy(classinfIdList[i],req.body.productNameId)
+                if(checkData == ''||checkData == null||checkData == undefined){
+                     // 增加一条产品信息数据
+                     addReturn = await datainputServices.addProduct(req , res)
+                     checkFlag = true
+                 }
+             }
+             if(addReturn!=null){
                 // 调用展示全部产品信息
                 exports.showProduct(req , res)
+            }
+            if(checkFlag == false){
+                res.end(JSON.stringify(errorUtil.existError))
             }
         }   
     }
