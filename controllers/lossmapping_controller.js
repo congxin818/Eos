@@ -320,9 +320,10 @@ async function computeKpitwo(allKpitwo , weight_sum){
 			weightMap.set(allKpitwo[i][j].kpitwolevKpitwoid , mapWeightEle);
 		}
 	}
-	// console.log('yuzhizhe01');
-	// console.log(weightMap);
-	// console.log(resultMap);
+	console.log('yuzhizhe01');
+	console.log(weightMap);
+	console.log(resultMap);
+	console.log('\n');
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -341,7 +342,7 @@ async function computeKpitwo(allKpitwo , weight_sum){
 		await map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
-	//console.log(map);
+	console.log(map);
 	return map;
 }
 
@@ -381,9 +382,10 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 			weightMap.set(allLosstier3[i][j].losstier3Lossid , mapWeightEle);
 		}
 	}
-	// console.log('yuzhizhe02');
-	// console.log(weightMap);
-	// console.log(resultMap);
+	console.log('yuzhizhe02');
+	console.log(weightMap);
+	console.log(resultMap);
+	console.log('\n');
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -411,7 +413,7 @@ async function computeLosstier3(allLosstier3 , weight_sum){
 		await map.set(key , new Number(value).toFixed(4));
 		
 	}
-	//console.log(map);
+	console.log(map);
 	return map;
 }
 
@@ -450,9 +452,10 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 			weightMap.set(allLosstier4[i][j].losstier4Tier4id , mapWeightEle);
 		}
 	}
-	// console.log('yuzhizhe03');
-	// console.log(weightMap);
-	// console.log(resultMap);
+	console.log('yuzhizhe03');
+	console.log(weightMap);
+	console.log(resultMap);
+	console.log('\n');
 	let map = new Map();
 	for(var [key, value] of resultMap) {
 		const sum = await value.map(a => a).reduce ((pre, cur) => pre + cur);
@@ -480,7 +483,7 @@ async function computeLosstier4(allLosstier4 , weight_sum){
 		await map.set(key , new Number(value).toFixed(4));
 		//console.log("属性：" + key + ",值：" + value);
 	}
-	//console.log(map);
+	console.log(map);
 	return map;
 }
 
