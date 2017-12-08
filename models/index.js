@@ -100,8 +100,9 @@ Productbigclass.hasMany(Productsubclass, {as:'ProductbigSubclass' , constraints:
 Productsubclass.hasMany(Productname, {as:'ProductsubclassName' , constraints:true});
 //产品名字和产品数据建立1:N关系
 Productname.hasMany(Productdata, {as:'NameProductData' , constraints:true});
-//线体和产品名字建立1:N关系
-Linebody.hasMany(Productname, {as:'LinebodyProductname' , constraints:true});
+//线体和产品数据建立1:N关系
+// Linebody.hasMany(Productname, {as:'LinebodyProductname' , constraints:true});
+Linebody.hasMany(Productdata, {as:'LinebodyProductdata' , constraints:true});
 
 
 sequelize.sync();
