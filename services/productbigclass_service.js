@@ -33,17 +33,13 @@ exports.selectPtoductbigclassById = selectPtoductbigclassById;
  	添加
  */
 async function addProductbigclassOne(name , price , pId){
-	if (name == undefined || name == null || name == ''
-		||price == undefined || price == null || price == ''
-		||pId == undefined || pId == null || pId == '') {
+	if (name == undefined || name == null || name == '') {
 		return errorUtil.parameterError;
 	}
 	let productbigclass = {
 		name:name,
-		price:price,
-		productsubclassId:pId
 	};
-	const data = await Productbigclass.create(productname);
+	const data = await Productbigclass.create(productbigclass);
 	return data;
 }
 exports.addProductbigclassOne = addProductbigclassOne;

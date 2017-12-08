@@ -28,12 +28,12 @@ var dataSuccess = {
 async function selectProductAll(req , res , next){
 	const allProductbigclass = await Productbigclass.findAll();
 	if (allProductbigclass == undefined || allProductbigclass == null ||allProductbigclass == '') {
-		return errorUtil.noExistError;
+		res.end(JSON.stringify(errorUtil.noExistError));
 	}
 	//console.log(JSON.stringify(allProductbigclass , null , 4));
 	//const allProductsubclass = await Productsubclass.findAll();
 	//const allProductname = await Productname.findAll();
-	let bigClass_array = new Array();
+	let allData = new Array();
 	for (var i = allProductbigclass.length - 1; i >= 0; i--) {
 		let bigclass = {
 			id:'',
@@ -44,10 +44,79 @@ async function selectProductAll(req , res , next){
 		bigclass.name = allProductbigclass[i].name;
 		bigclass.pId = null;
 		//console.log(JSON.stringify(bigclass , null , 4));
-		bigClass_array.push(bigclass);
+		allData.push(bigclass);
 	}
-
-	res.end(JSON.stringify(allProductbigclass));
-
+	const allProductsubclass = await Productsubclass.findAll();
+	if (allProductsubclass == undefined || allProductsubclass == null ||allProductsubclass == '') {
+		dataSuccess.data = allData;
+		res.end(JSON.stringify(dataSuccess));
+	}else{
+		//console.log(JSON.stringify('yuzhizhe'));
+		for (var i = allProductsubclass.length - 1; i >= 0; i--) {
+			let subclass = {
+				id:'',
+				name:'',
+				pId:''
+			};
+			subclass.id = 's' + allProductsubclass[i].id;
+			subclass.name = allProductsubclass[i].name;
+			subclass.pId = allProductsubclass[i].productbigclassId;
+			//console.log(JSON.stringify(bigclass , null , 4));
+			allData.push(subclass);
+		}
+		const allProductname = await Productname.findAll();
+		if (allProductname == undefined || allProductname == null ||allProductname == '') {
+			dataSuccess.data = allData;
+			res.end(JSON.stringify(dataSuccess));
+		}else{
+			for (var i = allProductname.length - 1; i >= 0; i--) {
+				let product = {
+					id:'',
+					name:'',
+					pId:''
+				};
+				product.id = 'n' + allProductname[i].id;
+				product.name = allProductname[i].name;
+				product.pId = 's' + allProductname[i].productsubclassId;
+				//console.log(JSON.stringify(bigclass , null , 4));
+				allData.push(product);
+			}
+			dataSuccess.data = allData;
+			res.end(JSON.stringify(dataSuccess));
+		}
+	}
 }
 exports.selectProductAll = selectProductAll;
+
+/*
+	添加产品
+ */
+async function addProduct(req , res , next){
+	if (req.body.name == undefined || req.body.name == null || req.body.name == ''
+		||req.body.pId == undefined || req.body.pId == null || req.body.pId == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	if (isNaN(req.body.pId)) {
+		const pFlag = await req.body.pId.slice(0,1);
+		const pId = await req.body.pId.slice(1);
+		if (isNaN(pFlag)) {
+			if (pFlag == 's') {
+
+			}
+		}else{
+			res.end(JSON.stringify(errorUtil.parameterError));
+		}
+	}else{
+		const bigclass = {
+			name:req.body.name
+		};
+		const falg = await Productbigclass.create(bigclass);
+		if (falg == undefined || falg == null || falg == '') {
+			res.end(JSON.stringify(errorUtil.serviceError));
+		}else{
+			dataSuccess.data = falg;
+			res.end(JSON.stringify(dataSuccess));
+		}
+	}
+}
+exports.addProduct = addProduct;
