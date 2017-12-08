@@ -404,6 +404,7 @@ var showAddPrpductData = {
                 dataSuccess.data = addReturn
                 res.end(JSON.stringify(dataSuccess))
             }else{
+                console.log('else------------------>')
                 var showdataList = []
                 for(var i = classStartDay;i <= classEndDay;i++){
                     if(i == classStartDay){
