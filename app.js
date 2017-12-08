@@ -21,6 +21,7 @@ var impobject = require('./routes/impobject_route'); //improvement object
 var lossmapping = require('./routes/lossmapping_route'); //lossmapping
 var datainput = require('./routes/datainput_route'); //datainput
 var summary = require('./routes/summary_route'); //summary
+var product = require('./routes/product_route');//product
 
 var app = express();
 
@@ -58,7 +59,7 @@ app.use('/impobject' , impobject);
 app.use('/lossmapping' , lossmapping);
 app.use('/datainput' , datainput);
 app.use('/summary' , summary);
-
+app.use('/product' , product);
 // 404 错误
 var errorData_404 = {
     status: '404', 

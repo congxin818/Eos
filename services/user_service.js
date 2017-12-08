@@ -48,7 +48,6 @@ var dataSuccess = {
 	查找所有User
     */
     async function selectUserAll (req , res , next) {
-        var array = new Array();
         const users = await User.findAll ();
 
         if (users == '' || users == undefined || users == null)
