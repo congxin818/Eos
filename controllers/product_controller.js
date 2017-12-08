@@ -34,15 +34,21 @@ async function selectProductAll(req , res , next){
 	//const allProductsubclass = await Productsubclass.findAll();
 	//const allProductname = await Productname.findAll();
 	let allData = new Array();
+	const rootdata = {
+		id:1,
+		name:'产品列表',
+		pId:null
+	}
+	allData.push(rootdata);
 	for (var i = allProductbigclass.length - 1; i >= 0; i--) {
 		let bigclass = {
 			id:'',
 			name:'',
 			pId:''
 		};
-		bigclass.id = allProductbigclass[i].id;
+		bigclass.id = 'b' + allProductbigclass[i].id;
 		bigclass.name = allProductbigclass[i].name;
-		bigclass.pId = null;
+		bigclass.pId = 1;
 		//console.log(JSON.stringify(bigclass , null , 4));
 		allData.push(bigclass);
 	}
@@ -60,7 +66,7 @@ async function selectProductAll(req , res , next){
 			};
 			subclass.id = 's' + allProductsubclass[i].id;
 			subclass.name = allProductsubclass[i].name;
-			subclass.pId = allProductsubclass[i].productbigclassId;
+			subclass.pId = 'b' + allProductsubclass[i].productbigclassId;
 			//console.log(JSON.stringify(bigclass , null , 4));
 			allData.push(subclass);
 		}
@@ -100,8 +106,32 @@ async function addProduct(req , res , next){
 		const pFlag = await req.body.pId.slice(0,1);
 		const pId = await req.body.pId.slice(1);
 		if (isNaN(pFlag)) {
-			if (pFlag == 's') {
-
+			if (pFlag == 'b') {
+				const subclass = {
+					name:req.body.name,
+					productbigclassId:pId
+				};
+				const falg = await Productsubclass.create(subclass);
+				if (falg == undefined || falg == null || falg == '') {
+					res.end(JSON.stringify(errorUtil.serviceError));
+				}else{
+					dataSuccess.data = falg;
+					res.end(JSON.stringify(dataSuccess));
+				}
+			}else if(pFlag == 's'){
+				const product = {
+					name:req.body.name,
+					productsubclassId:pId
+				};
+				const falg = await Productname.create(product);
+				if (falg == undefined || falg == null || falg == '') {
+					res.end(JSON.stringify(errorUtil.serviceError));
+				}else{
+					dataSuccess.data = falg;
+					res.end(JSON.stringify(dataSuccess));
+				}
+			}else{
+				res.end(JSON.stringify(errorUtil.parameterError));
 			}
 		}else{
 			res.end(JSON.stringify(errorUtil.parameterError));
@@ -118,5 +148,6 @@ async function addProduct(req , res , next){
 			res.end(JSON.stringify(dataSuccess));
 		}
 	}
+
 }
 exports.addProduct = addProduct;
