@@ -227,7 +227,7 @@ const LinebodyProductname = require('../models').LinebodyProductname;
          var productnameList = []
          for(var i=0;i<lineproductnameList.length;i++){
             const productname = await Productname.findById(lineproductnameList[i].productnameId)
-            productnameList.push(productname.name)
+            productnameList.push(productname)
          }  
         return  productnameList
 
