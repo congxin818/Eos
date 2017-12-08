@@ -66,10 +66,10 @@ async function selectOEEByLinebodyIds(time , linebodyIds){
 		}
 	}
 	//console.log('yuzhizhe01----->'+JSON.stringify(allLossStatus , null , 4));
-	const falg = await this.computeLossStatusBytime(allLossStatus , time);
-	if (falg == null || falg == '') {
-		return errorUtil.serviceError;
-	}
+	// const falg = await this.computeLossStatusBytime(allLossStatus , time);
+	// if (falg == null || falg == '') {
+	// 	return errorUtil.serviceError;
+	// }
 	//console.log('yuzhizhe02----->'+JSON.stringify(allLossStatus , null , 4));
 	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length);
 	//console.log(JSON.stringify(allLossStatus , null , 4));
