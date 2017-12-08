@@ -26,6 +26,7 @@ var Productdata = sequelize.import('./productdata.js');
 var Productbigclass = sequelize.import('./productbigclass.js');
 var Productsubclass = sequelize.import('./productsubclass.js');
 var Productname = sequelize.import('./productname.js');
+var LinebodyProductname = sequelize.import('./linebodyproductname.js');
 
 //user和group之间N:M关系
 User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
@@ -51,7 +52,9 @@ Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
 User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
 Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 
-
+//线体和产品名字结构建立N:M关系
+// Linebody.hasMany(Productname, {as:'LinebodyProductname' , constraints:true});
+Linebody.belongsToMany(Productname,{through: LinebodyProductname,as:'LinebodyProductnames'});
 
 //Linebody和Kpitwolev建立M：N关系
 Linebody.hasMany(LinebodyKpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
@@ -98,12 +101,8 @@ Classinformation.hasMany(Productdata, {as:'ClassinfProductData' , constraints:tr
 Productbigclass.hasMany(Productsubclass, {as:'ProductbigSubclass' , constraints:true});
 //产品小类和产品名字建立1:N关系
 Productsubclass.hasMany(Productname, {as:'ProductsubclassName' , constraints:true});
-//产品名字和产品数据建立1:N关系
-Productname.hasMany(Productdata, {as:'NameProductData' , constraints:true});
-//线体和产品数据建立1:N关系
-// Linebody.hasMany(Productname, {as:'LinebodyProductname' , constraints:true});
-Linebody.hasMany(Productdata, {as:'LinebodyProductdata' , constraints:true});
-
+//产品名字线体关联表和产品数据建立1:N关系
+LinebodyProductname.hasMany(Productdata, {as:'LineProductnameproductdata' , constraints:true});
 
 sequelize.sync();
 
@@ -128,3 +127,4 @@ exports.Productdata = Productdata;
 exports.Productbigclass = Productbigclass;
 exports.Productsubclass = Productsubclass;
 exports.Productname = Productname;
+exports.LinebodyProductname = LinebodyProductname;

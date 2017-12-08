@@ -17,13 +17,14 @@ const UserKpitwolev = require('../models').UserKpitwolev;
 const Classinformation = require('../models').Classinformation;
 const Productdata = require('../models').Productdata;
 const Productname = require('../models').Productname;
+const LinebodyProductname = require('../models').LinebodyProductname;
 
 /*
     根据用户设置的顺序查找二级结构
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-         where:{userUserid: userId},order: [['sequence','ASC']]})
+           where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -222,7 +223,14 @@ const Productname = require('../models').Productname;
     展示产品名字（最小的产品类）下拉列表
     */
     exports.selectProductnameById = async function(linebodyId) {
-        return  await Productname.findAll({where:{linebodyLinebodyid:linebodyId}})  
+         const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
+         var productnameList = []
+         for(var i=0;i<lineproductnameList.length;i++){
+            const productname = await Productname.findById(lineproductnameList[i].productnameId)
+            productnameList.push(productname.name)
+         }  
+        return  productnameList
+
     }
 
 /*
@@ -235,40 +243,43 @@ const Productname = require('../models').Productname;
 /*
     验证添加的产品信息是否重复
     */
-    exports.selectProductdataBy = async function(classinfId,productnameId) {
-        return  await Productdata.findOne({where: {classinformationClassinfid:classinfId,productnameId:productnameId}})
+    exports.selectProductdataBy = async function(linebodyId,classinfId,productnameId) {
+        const lineproductname = await LinebodyProductname.findOne({
+            where:{productnameId:productnameId,linebodyLinebodyid:linebodyId}})
+        return  await Productdata.findOne({
+            where: {classinformationClassinfid:classinfId,linebodyproductnameId:lineproductname.id}})
     }
 
 /*
     添加产品信息数据
     */
     exports.addProduct = async function(req , res) {
-
         var productdata = {
             conformproduct : req.body.conformProduct,
             normalcycletime : req.body.normalCycletime
         }
         const classinformation = await Classinformation.findById(req.body.classinfId) 
-        const productname = await Productname.findById(req.body.productNameId)
+        const lineproductname = await LinebodyProductname.findOne({
+            where:{productnameId:req.body.productNameId,linebodyLinebodyid:req.body.linebodyId}})
         productdata = await Productdata.create(productdata)
-        await productname.addNameProductData(productdata)
+        await lineproductname.addLineProductnameproductdata(productdata)
         await classinformation.addClassinfProductData(productdata)
-        productdata = await Productdata.findById(productdata.productid)
         return productdata
     }
 
 /*
     根据id查找产品名字
     */
-    exports.selectProductNameById = async function(productNameId) {
-        return  await Productname.findById(productNameId)
+    exports.selectProductNameById = async function(linebodyproductnameId) {
+        const lineproductname = await LinebodyProductname.findById(linebodyproductnameId)
+        return  await Productname.findById(lineproductname.productnameId)
     }
 
 /*
     根据productnameId查找产品数据
     */
-    exports.selectProductDataByName = async function(productNameId,classinfId) {
-        return  await Productdata.findAll({where:{productnameId:productNameId,classinformationClassinfid:classinfId}})
+    exports.selectProductDataByName = async function(linebodyproductnameId,classinfId) {
+        return  await Productdata.findAll({where:{linebodyproductnameId:linebodyproductnameId,classinformationClassinfid:classinfId}})
     }
 
 /*
@@ -314,8 +325,8 @@ const Productname = require('../models').Productname;
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-     return classinforData =  await Classinformation.findById(classinfId)
- }
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
 
 /*
     根据四级的id找到二级三级名字
