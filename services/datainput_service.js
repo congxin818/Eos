@@ -223,7 +223,14 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     展示产品名字（最小的产品类）下拉列表
     */
     exports.selectProductnameById = async function(linebodyId) {
-        return  await Productname.findAll({where:{linebodyLinebodyid:linebodyId}})  
+         const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
+         var productnameList = []
+         for(var i=0;i<lineproductnameList.length;i++){
+            const productname = await Productname.findById(lineproductnameList[i].productnameId)
+            productnameList.push(productname.name)
+         }  
+        return  productnameList
+
     }
 
 /*
