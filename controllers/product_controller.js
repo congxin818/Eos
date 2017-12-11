@@ -141,7 +141,7 @@ async function addProductOne(req , res , next){
 				if (subclass == undefined || subclass == null || subclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const existProduct = await Product.findOne({where:{name:req.body.name}});
+					const existProduct = await Productname.findOne({where:{name:req.body.name}});
 					if (existProduct == undefined || existProduct == null || existProduct == '') {
 						const product = {
 							name:req.body.name,
