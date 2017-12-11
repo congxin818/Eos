@@ -89,3 +89,15 @@ async function updateProductnameById(id , name , price){
 	return falg;
 }
 exports.updateProductnameById = updateProductnameById;
+
+/*
+	清理函数
+ */
+async function ProductnameClear(){
+    const product = await Productname.findAll({where:{ productsubclassId:null}});
+    //console.log(JSON.stringify(subclass.length));
+    for (var i = product.length - 1; i >= 0; i--) {
+        await product[i].destroy();
+    }
+}
+exports.ProductnameClear = ProductnameClear;

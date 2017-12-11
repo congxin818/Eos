@@ -308,6 +308,8 @@ async function deleteProductById(req , res , next){
 					if (falg == undefined || falg == null || falg == '') {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					}else{
+						await Productsubclass_service.ProductsubclassClear();
+						await Productname_service.ProductnameClear();
 						dataSuccess.data = falg;
 						res.end(JSON.stringify(dataSuccess));
 					}
@@ -321,6 +323,7 @@ async function deleteProductById(req , res , next){
 					if (falg == undefined || falg == null || falg == '' || falg != 1) {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					}else{
+						await Productname_service.ProductnameClear();
 						dataSuccess.data = falg;
 						res.end(JSON.stringify(dataSuccess));
 					}

@@ -86,3 +86,14 @@ async function updateProductsubclassById(id , name , price){
 	return falg;
 }
 exports.updateProductsubclassById = updateProductsubclassById;
+/*
+	清理函数
+ */
+async function ProductsubclassClear(){
+    const subclass = await Productsubclass.findAll({where:{ productbigclassId:null}});
+    //console.log(JSON.stringify(subclass.length));
+    for (var i = subclass.length - 1; i >= 0; i--) {
+        await subclass[i].destroy();
+    }
+}
+exports.ProductsubclassClear = ProductsubclassClear;
