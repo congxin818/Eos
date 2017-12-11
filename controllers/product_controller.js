@@ -119,7 +119,15 @@ async function addProductOne(req , res , next){
 					if (falg == undefined || falg == null || falg == '') {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					}else{
-						dataSuccess.data = falg;
+						let returnsubclass = {
+							id:'',
+							name:'',
+							pId:''
+						};
+						returnsubclass.id = 's' + falg.id;
+						returnsubclass.name = falg.name;
+						returnsubclass.pId = 'b' + falg.productbigclassId;
+						dataSuccess.data = returnsubclass;
 						res.end(JSON.stringify(dataSuccess));
 					}
 				}
@@ -136,7 +144,15 @@ async function addProductOne(req , res , next){
 					if (falg == undefined || falg == null || falg == '') {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					}else{
-						dataSuccess.data = falg;
+						let returnProduct = {
+							id:'',
+							name:'',
+							pId:''
+						};
+						returnProduct.id = 'n' + falg.id;
+						returnProduct.name = falg.name;
+						returnProduct.pId = 's' + falg.productsubclassId;
+						dataSuccess.data = returnProduct;
 						res.end(JSON.stringify(dataSuccess));
 					}
 				}
@@ -154,7 +170,15 @@ async function addProductOne(req , res , next){
 		if (falg == undefined || falg == null || falg == '') {
 			res.end(JSON.stringify(errorUtil.serviceError));
 		}else{
-			dataSuccess.data = falg;
+			let returnBigclass = {
+				id:'',
+				name:'',
+				pId:''
+			};
+			returnBigclass.id = 'b' + falg.id;
+			returnBigclass.name = falg.name;
+			returnBigclass.pId = 1;
+			dataSuccess.data = returnBigclass;
 			res.end(JSON.stringify(dataSuccess));
 		}
 	}
