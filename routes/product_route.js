@@ -39,8 +39,8 @@ router.post('/deleteProductById', function(req, res, next) {
 /*
 	编辑产品
  */
-router.post('/selectPtoductnameById', function(req, res, next) {
-    controller.selectPtoductnameById(req , res , next);
+router.post('/selectProductnameById', function(req, res, next) {
+    controller.selectProductnameById(req , res , next);
 });
 
 /*

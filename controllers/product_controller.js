@@ -356,7 +356,7 @@ exports.deleteProductById = deleteProductById;
 /*
 	根据产品id查询单价
  */
-async function selectPtoductnameById(req , res , next){
+async function selectProductnameById(req , res , next){
 	if (req.body.id == undefined || req.body.id == null || req.body.id == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
@@ -378,7 +378,7 @@ async function selectPtoductnameById(req , res , next){
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 }
-exports.selectPtoductnameById = selectPtoductnameById;
+exports.selectProductnameById = selectProductnameById;
 
 /*
 	根据产品id修改产品单价
