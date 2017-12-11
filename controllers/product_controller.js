@@ -246,14 +246,14 @@ async function updateProductById(req , res , next){
 					}
 				}
 			}else if(pFlag == 'n'){
-				const product = await Product.findById(pId);
+				const product = await Productname.findById(pId);
 				if (product == undefined || product == null || product == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
 					const newProduct = {
 						name:req.body.name
 					};
-					const falg = await Product.update(newProduct,{where:{id:pId}});
+					const falg = await Productname.update(newProduct,{where:{id:pId}});
 					if (falg == undefined || falg == null || falg == '' || falg != 1) {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					}else{
