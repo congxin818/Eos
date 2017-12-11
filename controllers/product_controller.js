@@ -109,7 +109,7 @@ async function addProductOne(req , res , next){
 			if (pFlag == 'b') {
 				const bigclass = await Productbigclass.findById(pId);
 				if (bigclass == undefined || bigclass == null || bigclass == '') {
-					res.end(JSON.stringify(errorUtil.parameterError));
+					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
 					const subclass = {
 						name:req.body.name,
@@ -126,7 +126,7 @@ async function addProductOne(req , res , next){
 			}else if(pFlag == 's'){
 				const subclass = await Productsubclass.findById(pId);
 				if (subclass == undefined || subclass == null || subclass == '') {
-					res.end(JSON.stringify(errorUtil.parameterError));
+					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
 					const product = {
 						name:req.body.name,
@@ -161,3 +161,137 @@ async function addProductOne(req , res , next){
 
 }
 exports.addProductOne = addProductOne;
+
+/*
+	编辑产品
+ */
+async function updateProductById(req , res , next){
+	if (req.body.name == undefined || req.body.name == null || req.body.name == ''
+		||req.body.id == undefined || req.body.id == null || req.body.id == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	if (isNaN(req.body.id)) {
+		const pFlag = await req.body.id.slice(0,1);
+		const pId = await req.body.id.slice(1);
+		if (isNaN(pFlag)) {
+			if (pFlag == 'b') {
+				const bigclass = await Productbigclass.findById(pId);
+				if (bigclass == undefined || bigclass == null || bigclass == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const newBigclass = {
+						name:req.body.name
+					};
+					const falg = await Productbigclass.update(newBigclass,{where:{id:pId}});
+					if (falg == undefined || falg == null || falg == '' || falg != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else if(pFlag == 's'){
+				const subclass = await Productsubclass.findById(pId);
+				if (subclass == undefined || subclass == null || subclass == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const newSubclass = {
+						name:req.body.name
+					};
+					const falg = await Productsubclass.update(newSubclass,{where:{id:pId}});
+					if (falg == undefined || falg == null || falg == '' || falg != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else if(pFlag == 'n'){
+				const product = await Product.findById(pId);
+				if (product == undefined || product == null || product == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const newProduct = {
+						name:req.body.name
+					};
+					const falg = await Product.update(newProduct,{where:{id:pId}});
+					if (falg == undefined || falg == null || falg == '' || falg != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else{
+				res.end(JSON.stringify(errorUtil.parameterError));
+			}
+		}else{
+			res.end(JSON.stringify(errorUtil.parameterError));
+		}
+	}else{
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+}
+exports.updateProductById = updateProductById;
+
+/*
+	删除产品
+ */
+async function deleteProductById(req , res , next){
+	if (req.body.id == undefined || req.body.id == null || req.body.id == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	if (isNaN(req.body.id)) {
+		const pFlag = await req.body.id.slice(0,1);
+		const pId = await req.body.id.slice(1);
+		if (isNaN(pFlag)) {
+			if (pFlag == 'b') {
+				const bigclass = await Productbigclass.findById(pId);
+				if (bigclass == undefined || bigclass == null || bigclass == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const falg = await Productbigclass.destroy({where:{id:pId}});
+					if (falg == undefined || falg == null || falg == '') {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else if(pFlag == 's'){
+				const subclass = await Productsubclass.findById(pId);
+				if (subclass == undefined || subclass == null || subclass == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const falg = await Productsubclass.destroy({where:{id:pId}});
+					if (falg == undefined || falg == null || falg == '' || falg != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else if(pFlag == 'n'){
+				const product = await Product.findById(pId);
+				if (product == undefined || product == null || product == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const falg = await Product.destroy({where:{id:pId}});
+					if (falg == undefined || falg == null || falg == '' || falg != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else{
+				res.end(JSON.stringify(errorUtil.parameterError));
+			}
+		}else{
+			res.end(JSON.stringify(errorUtil.parameterError));
+		}
+	}else{
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+}
+exports.deleteProductById = deleteProductById;

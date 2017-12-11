@@ -21,4 +21,18 @@ router.get('/selectProductAll', function(req, res, next) {
 router.post('/addProductOne', function(req, res, next) {
     controller.addProductOne(req , res , next);
 });
+
+/*
+	编辑产品
+ */
+router.post('/updateProductById', function(req, res, next) {
+    controller.updateProductById(req , res , next);
+});
+
+/*
+	编辑产品
+ */
+router.post('/deleteProductById', function(req, res, next) {
+    controller.deleteProductById(req , res , next);
+});
 module.exports = router;
