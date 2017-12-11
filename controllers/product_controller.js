@@ -356,13 +356,13 @@ exports.deleteProductById = deleteProductById;
 /*
 	根据产品id查询单价
  */
-async function selectProductnreqameById(req , res , next){
+async function selectProductnameById(req , res , next){
 	if (req.body.id == undefined || req.body.id == null || req.body.id == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(req.body.id)) {
 		const pFlag = await req.body.id.slice(0,1);
-		const pId = await .body.id.slice(1);
+		const pId = await req.body.id.slice(1);
 		if (isNaN(pFlag) && pFlag == 'n') {
 			const product = await Productname.findById(pId);
 			if(product == undefined || product == null || product == ''){
