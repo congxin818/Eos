@@ -35,4 +35,18 @@ router.post('/updateProductById', function(req, res, next) {
 router.post('/deleteProductById', function(req, res, next) {
     controller.deleteProductById(req , res , next);
 });
+
+/*
+	编辑产品
+ */
+router.post('/selectPtoductnameById', function(req, res, next) {
+    controller.selectPtoductnameById(req , res , next);
+});
+
+/*
+	编辑产品
+ */
+router.post('/updateProductnameById', function(req, res, next) {
+    controller.updateProductnameById(req , res , next);
+});
 module.exports = router;

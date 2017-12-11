@@ -8,6 +8,12 @@ let Productname = require('../models').Productname;
 
 var errorUtil = require('../utils/errorUtil');
 
+var dataSuccess = {
+    status: '0', 
+    msg: '请求成功',
+    data:'fas'
+};
+
 /*
 	查询所有
  */
@@ -26,6 +32,7 @@ async function selectPtoductnameById(id){
 	}
 	const data = await Productname.findById(id);
 	return data;
+	
 }
 exports.selectPtoductnameById = selectPtoductnameById;
 
@@ -70,7 +77,7 @@ exports.deleteProductnameById = deleteProductnameById;
 /*
 	根据Id跟新
  */
-async function updateProductnameById(id , name , price){
+async function updateProductnameById(id , price){
 	if (id == undefined || id == null || id == '') {
 		return errorUtil.parameterError;
 	}
@@ -79,7 +86,6 @@ async function updateProductnameById(id , name , price){
         return errorUtil.noExistError;
     }
     let productname = {
-		name:name,
 		price:price
 	};
 	const falg = await Productname.update(productname,{where:{id:id}});

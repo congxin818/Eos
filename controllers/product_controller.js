@@ -329,11 +329,11 @@ async function deleteProductById(req , res , next){
 					}
 				}
 			}else if(pFlag == 'n'){
-				const product = await Product.findById(pId);
+				const product = await Productname.findById(pId);
 				if (product == undefined || product == null || product == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const falg = await Product.destroy({where:{id:pId}});
+					const falg = await Productname.destroy({where:{id:pId}});
 					if (falg == undefined || falg == null || falg == '' || falg != 1) {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					}else{
@@ -352,3 +352,66 @@ async function deleteProductById(req , res , next){
 	}
 }
 exports.deleteProductById = deleteProductById;
+
+/*
+	根据产品id查询单价
+ */
+async function selectPtoductnameById(req , res , next){
+	if (req.body.id == undefined || req.body.id == null || req.body.id == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	if (isNaN(req.body.id)) {
+		const pFlag = await req.body.id.slice(0,1);
+		const pId = await req.body.id.slice(1);
+		if (isNaN(pFlag) && pFlag == 'n') {
+			const product = await Productname.findById(pId);
+			if(product == undefined || product == null || product == ''){
+				res.end(JSON.stringify(errorUtil.noExistError));
+			}else{
+				dataSuccess.data = product;
+				res.end(JSON.stringify(dataSuccess));
+			}
+		}else{
+			res.end(JSON.stringify(errorUtil.parameterError));
+		}
+	}else{
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+}
+exports.selectPtoductnameById = selectPtoductnameById;
+
+/*
+	根据产品id修改产品单价
+ */
+async function updateProductnameById(req , res , next){
+	if (req.body.id == undefined || req.body.id == null || req.body.id == ''
+		||req.body.price == undefined || req.body.price == null || req.body.price == '') {
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+	if (isNaN(req.body.id)) {
+		const pFlag = await req.body.id.slice(0,1);
+		const pId = await req.body.id.slice(1);
+		if (isNaN(pFlag) && pFlag == 'n') {
+			const product = await Productname.findById(pId);
+			if(product == undefined || product == null || product == ''){
+				res.end(JSON.stringify(errorUtil.noExistError));
+			}else{
+				let productname = {
+					price:price
+				};
+				const falg = await Productname.update(productname,{where:{id:pId}});
+				if (falg == undefined ||falg == null ||falg == '' || falg != 1) {
+					res.end(JSON.stringify(errorUtil.serviceError));
+			    }else{
+			    	dataSuccess.data = falg;
+					res.end(JSON.stringify(dataSuccess));
+			    }
+			}
+		}else{
+			res.end(JSON.stringify(errorUtil.parameterError));
+		}
+	}else{
+		res.end(JSON.stringify(errorUtil.parameterError));
+	}
+}
+exports.updateProductnameById = updateProductnameById;
