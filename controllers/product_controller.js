@@ -218,15 +218,20 @@ async function updateProductById(req , res , next){
 				if (bigclass == undefined || bigclass == null || bigclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const newBigclass = {
-						name:req.body.name
-					};
-					const falg = await Productbigclass.update(newBigclass,{where:{id:pId}});
-					if (falg == undefined || falg == null || falg == '' || falg != 1) {
-						res.end(JSON.stringify(errorUtil.serviceError));
+					const existBigclass = await Productbigclass.findOne({where:{name:req.body.name}});
+					if (existBigclass == undefined || existBigclass == null || existBigclass == '') {
+						const newBigclass = {
+							name:req.body.name
+						};
+						const falg = await Productbigclass.update(newBigclass,{where:{id:pId}});
+						if (falg == undefined || falg == null || falg == '' || falg != 1) {
+							res.end(JSON.stringify(errorUtil.serviceError));
+						}else{
+							dataSuccess.data = falg;
+							res.end(JSON.stringify(dataSuccess));
+						}
 					}else{
-						dataSuccess.data = falg;
-						res.end(JSON.stringify(dataSuccess));
+						res.end(JSON.stringify(errorUtil.existError));
 					}
 				}
 			}else if(pFlag == 's'){
@@ -234,15 +239,20 @@ async function updateProductById(req , res , next){
 				if (subclass == undefined || subclass == null || subclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const newSubclass = {
-						name:req.body.name
-					};
-					const falg = await Productsubclass.update(newSubclass,{where:{id:pId}});
-					if (falg == undefined || falg == null || falg == '' || falg != 1) {
-						res.end(JSON.stringify(errorUtil.serviceError));
+					const existSubclass = await Productsubclass.findOne({where:{name:req.body.name}});
+					if (existSubclass == undefined || existSubclass == null || existSubclass == '') {
+						const newSubclass = {
+							name:req.body.name
+						};
+						const falg = await Productsubclass.update(newSubclass,{where:{id:pId}});
+						if (falg == undefined || falg == null || falg == '' || falg != 1) {
+							res.end(JSON.stringify(errorUtil.serviceError));
+						}else{
+							dataSuccess.data = falg;
+							res.end(JSON.stringify(dataSuccess));
+						}
 					}else{
-						dataSuccess.data = falg;
-						res.end(JSON.stringify(dataSuccess));
+						res.end(JSON.stringify(errorUtil.existError));
 					}
 				}
 			}else if(pFlag == 'n'){
@@ -250,15 +260,20 @@ async function updateProductById(req , res , next){
 				if (product == undefined || product == null || product == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const newProduct = {
-						name:req.body.name
-					};
-					const falg = await Productname.update(newProduct,{where:{id:pId}});
-					if (falg == undefined || falg == null || falg == '' || falg != 1) {
-						res.end(JSON.stringify(errorUtil.serviceError));
+					const existSubclass = await Productname.findOne({where:{name:req.body.name}});
+					if (existSubclass == undefined || existSubclass == null || existSubclass == '') {
+						const newProduct = {
+							name:req.body.name
+						};
+						const falg = await Productname.update(newProduct,{where:{id:pId}});
+						if (falg == undefined || falg == null || falg == '' || falg != 1) {
+							res.end(JSON.stringify(errorUtil.serviceError));
+						}else{
+							dataSuccess.data = falg;
+							res.end(JSON.stringify(dataSuccess));
+						}
 					}else{
-						dataSuccess.data = falg;
-						res.end(JSON.stringify(dataSuccess));
+						res.end(JSON.stringify(errorUtil.existError));
 					}
 				}
 			}else{
