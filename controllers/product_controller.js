@@ -111,24 +111,29 @@ async function addProductOne(req , res , next){
 				if (bigclass == undefined || bigclass == null || bigclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const subclass = {
-						name:req.body.name,
-						productbigclassId:pId
-					};
-					const falg = await Productsubclass.create(subclass);
-					if (falg == undefined || falg == null || falg == '') {
-						res.end(JSON.stringify(errorUtil.serviceError));
-					}else{
-						let returnsubclass = {
-							id:'',
-							name:'',
-							pId:''
+					const existSubclass = await Productsubclass.findOne({where:{name:req.body.name}});
+					if (existSubclass == undefined || existSubclass == null || existSubclass == '') {
+						const subclass = {
+							name:req.body.name,
+							productbigclassId:pId
 						};
-						returnsubclass.id = 's' + falg.id;
-						returnsubclass.name = falg.name;
-						returnsubclass.pId = 'b' + falg.productbigclassId;
-						dataSuccess.data = returnsubclass;
-						res.end(JSON.stringify(dataSuccess));
+						const falg = await Productsubclass.create(subclass);
+						if (falg == undefined || falg == null || falg == '') {
+							res.end(JSON.stringify(errorUtil.serviceError));
+						}else{
+							let returnsubclass = {
+								id:'',
+								name:'',
+								pId:''
+							};
+							returnsubclass.id = 's' + falg.id;
+							returnsubclass.name = falg.name;
+							returnsubclass.pId = 'b' + falg.productbigclassId;
+							dataSuccess.data = returnsubclass;
+							res.end(JSON.stringify(dataSuccess));
+						}
+					}else{
+						res.end(JSON.stringify(errorUtil.existError));
 					}
 				}
 			}else if(pFlag == 's'){
@@ -136,24 +141,29 @@ async function addProductOne(req , res , next){
 				if (subclass == undefined || subclass == null || subclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const product = {
-						name:req.body.name,
-						productsubclassId:pId
-					};
-					const falg = await Productname.create(product);
-					if (falg == undefined || falg == null || falg == '') {
-						res.end(JSON.stringify(errorUtil.serviceError));
-					}else{
-						let returnProduct = {
-							id:'',
-							name:'',
-							pId:''
+					const existProduct = await Product.findOne({where:{name:req.body.name}});
+					if (existProduct == undefined || existProduct == null || existProduct == '') {
+						const product = {
+							name:req.body.name,
+							productsubclassId:pId
 						};
-						returnProduct.id = 'n' + falg.id;
-						returnProduct.name = falg.name;
-						returnProduct.pId = 's' + falg.productsubclassId;
-						dataSuccess.data = returnProduct;
-						res.end(JSON.stringify(dataSuccess));
+						const falg = await Productname.create(product);
+						if (falg == undefined || falg == null || falg == '') {
+							res.end(JSON.stringify(errorUtil.serviceError));
+						}else{
+							let returnProduct = {
+								id:'',
+								name:'',
+								pId:''
+							};
+							returnProduct.id = 'n' + falg.id;
+							returnProduct.name = falg.name;
+							returnProduct.pId = 's' + falg.productsubclassId;
+							dataSuccess.data = returnProduct;
+							res.end(JSON.stringify(dataSuccess));
+						}
+					}else{
+						res.end(JSON.stringify(errorUtil.existError));
 					}
 				}
 			}else{
@@ -163,23 +173,28 @@ async function addProductOne(req , res , next){
 			res.end(JSON.stringify(errorUtil.parameterError));
 		}
 	}else{
-		const bigclass = {
-			name:req.body.name
-		};
-		const falg = await Productbigclass.create(bigclass);
-		if (falg == undefined || falg == null || falg == '') {
-			res.end(JSON.stringify(errorUtil.serviceError));
-		}else{
-			let returnBigclass = {
-				id:'',
-				name:'',
-				pId:''
+		const existBigclass = await Productbigclass.findOne({where:{name:req.body.name}});
+		if (existBigclass == undefined || existBigclass == null || existBigclass == '') {
+			const bigclass = {
+				name:req.body.name
 			};
-			returnBigclass.id = 'b' + falg.id;
-			returnBigclass.name = falg.name;
-			returnBigclass.pId = 1;
-			dataSuccess.data = returnBigclass;
-			res.end(JSON.stringify(dataSuccess));
+			const falg = await Productbigclass.create(bigclass);
+			if (falg == undefined || falg == null || falg == '') {
+				res.end(JSON.stringify(errorUtil.serviceError));
+			}else{
+				let returnBigclass = {
+					id:'',
+					name:'',
+					pId:''
+				};
+				returnBigclass.id = 'b' + falg.id;
+				returnBigclass.name = falg.name;
+				returnBigclass.pId = 1;
+				dataSuccess.data = returnBigclass;
+				res.end(JSON.stringify(dataSuccess));
+			}	
+		}else{
+			res.end(JSON.stringify(errorUtil.existError));
 		}
 	}
 
