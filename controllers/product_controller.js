@@ -97,7 +97,7 @@ exports.selectProductAll = selectProductAll;
 /*
 	添加产品
  */
-async function addProduct(req , res , next){
+async function addProductOne(req , res , next){
 	if (req.body.name == undefined || req.body.name == null || req.body.name == ''
 		||req.body.pId == undefined || req.body.pId == null || req.body.pId == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
@@ -107,28 +107,38 @@ async function addProduct(req , res , next){
 		const pId = await req.body.pId.slice(1);
 		if (isNaN(pFlag)) {
 			if (pFlag == 'b') {
-				const subclass = {
-					name:req.body.name,
-					productbigclassId:pId
-				};
-				const falg = await Productsubclass.create(subclass);
-				if (falg == undefined || falg == null || falg == '') {
-					res.end(JSON.stringify(errorUtil.serviceError));
+				const bigclass = await Productbigclass.findById(pId);
+				if (bigclass == undefined || bigclass == null || bigclass == '') {
+					res.end(JSON.stringify(errorUtil.parameterError));
 				}else{
-					dataSuccess.data = falg;
-					res.end(JSON.stringify(dataSuccess));
+					const subclass = {
+						name:req.body.name,
+						productbigclassId:pId
+					};
+					const falg = await Productsubclass.create(subclass);
+					if (falg == undefined || falg == null || falg == '') {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
 				}
 			}else if(pFlag == 's'){
-				const product = {
-					name:req.body.name,
-					productsubclassId:pId
-				};
-				const falg = await Productname.create(product);
-				if (falg == undefined || falg == null || falg == '') {
-					res.end(JSON.stringify(errorUtil.serviceError));
+				const subclass = await Productsubclass.findById(pId);
+				if (subclass == undefined || subclass == null || subclass == '') {
+					res.end(JSON.stringify(errorUtil.parameterError));
 				}else{
-					dataSuccess.data = falg;
-					res.end(JSON.stringify(dataSuccess));
+					const product = {
+						name:req.body.name,
+						productsubclassId:pId
+					};
+					const falg = await Productname.create(product);
+					if (falg == undefined || falg == null || falg == '') {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = falg;
+						res.end(JSON.stringify(dataSuccess));
+					}
 				}
 			}else{
 				res.end(JSON.stringify(errorUtil.parameterError));
@@ -150,4 +160,4 @@ async function addProduct(req , res , next){
 	}
 
 }
-exports.addProduct = addProduct;
+exports.addProductOne = addProductOne;

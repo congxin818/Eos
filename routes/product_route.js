@@ -14,4 +14,11 @@ router.get('/selectProductAll', function(req, res, next) {
     controller.selectProductAll(req , res , next);
 });
 
+
+/*
+	添加产品
+ */
+router.post('/addProductOne', function(req, res, next) {
+    controller.addProductOne(req , res , next);
+});
 module.exports = router;
