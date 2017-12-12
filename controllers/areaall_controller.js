@@ -430,7 +430,8 @@ async function selectProductsByLinebodyId(req , res , next){
     }
     //console.log('yuzhizhe03------>'+JSON.stringify(allBigClass , null , 4));
     //console.log(JSON.stringify(returnData , null , 4));
-    res.end(JSON.stringify(returnData));
+    dataSuccess.data = returnData
+    res.end(JSON.stringify(dataSuccess));
 }
 exports.selectProductsByLinebodyId = selectProductsByLinebodyId;
 
