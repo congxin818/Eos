@@ -55,6 +55,7 @@ Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
 //线体和产品名字结构建立N:M关系
 // Linebody.hasMany(Productname, {as:'LinebodyProductname' , constraints:true});
 Linebody.belongsToMany(Productname,{through: LinebodyProductname,as:'LinebodyProductnames'});
+//Productname.belongsToMany(Linebody,{through: LinebodyProductname,as:'LinebodyProductnames'});
 
 //Linebody和Kpitwolev建立M：N关系
 Linebody.hasMany(LinebodyKpitwolev, {as:'LinebodyKpitwolev' , constraints:true});

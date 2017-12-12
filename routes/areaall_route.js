@@ -39,4 +39,11 @@ router.get('/text123', function(req, res, next) {
     controller.text123(req , res);
 });
 
-	module.exports = router;
+/*
+	更改地区
+	*/
+router.post('/selectProductsByLinebodyId', function(req, res, next) {
+	controller.selectProductsByLinebodyId(req , res , next);
+});
+
+module.exports = router;

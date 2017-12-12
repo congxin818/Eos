@@ -4,6 +4,13 @@
     时间：2017/10/26
     */
 
+/*
+    修改区域控制处理
+    修改内容：
+    修改人：Android
+    修改时间：2017/12/12
+ */
+
 //引入数据库Message模块
 const groupconler = require('./group_controller');
 const factoryconler = require('./factory_controller');
@@ -14,6 +21,11 @@ const facServices = require('../services/factory_service');
 const wksServices = require('../services/workshop_service');
 const linbyServices = require('../services/linebody_service');
 const errorUtil = require('../utils/errorUtil');
+var moment = require('moment');
+const Linebody = require('../models').Linebody;
+const Productdata = require('../models').Productdata;
+const Productsubclass = require('../models').Productsubclass;
+const Productbigclass= require('../models').Productbigclass;
 
 const dataSuccess = {
     status: '0', 
@@ -290,5 +302,136 @@ const updateAreaError = {
         const allData =  await exports.selectAreaAll(req , res);
         res.end(JSON.stringify(allData));
     }
+
+ /**
+     * 时间转为秒
+     * @param time 时间(00:00:00)
+     * @returns {string} 时间戳（单位：秒）
+     */
+async function time_to_sec(time) {
+    var s = '';
+    if (time == undefined || time == null || time == '') {
+        return 0;
+    }
+    var hour = time.split(':')[0];
+    var min = time.split(':')[1];
+    var sec = time.split(':')[2];
+
+    s = Number(hour*3600) + Number(min*60) + Number(sec);
+
+    return s;
+}
+exports.time_to_sec = time_to_sec;
+
+async function selectProductsByLinebodyId(req , res , next){
+    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    //console.log(JSON.stringify(allProductbigclass , null , 4));
+    //console.log('yuzhizhe');
+    const linebody = await Linebody.findById(req.body.linebodyId);
+    if (linebody == undefined || linebody == null || linebody == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    let returnData = {
+        modelList : new Array(),
+        data : new Array()
+    };
+    let Data1 = {
+        result : new Array(),
+        data : new Array()
+    };
+    const linebodyProduct = await linebody.getLinebodyProductnames();
+    for (var i = linebodyProduct.length - 1; i >= 0; i--) {
+        if (linebodyProduct[i] == undefined || linebodyProduct[i] == null || linebodyProduct[i] == '') {
+            continue;
+        }
+        let allProduct = {
+            id : '',
+            name : new Array(),
+            value : ''
+        }
+        //const value = await linebodyProduct[i].getLineProductnameproductdata();
+        
+        
+        allProduct.value = await this.time_to_sec(linebodyProduct[i].linebodyproductname.normalcycletime);
+        //console.log(JSON.stringify(allProduct.value, null , 4));
+        
+        await allProduct.name.push(linebodyProduct[i].id);
+        const subClass = await Productsubclass.findById(linebodyProduct[i].productsubclassId);
+        await allProduct.name.push(subClass.id);
+        const bigClass = await Productbigclass.findById(subClass.productbigclassId);
+        await allProduct.name.push(bigClass.id);
+        await allProduct.name.reverse();
+        //console.log(JSON.stringify(allProduct , null , 4));
+        Data1.result.push(allProduct);
+    }
+    returnData.modelList.push(Data1);
+
+    const allBigClass = await Productbigclass.findAll();
+    if (allBigClass == undefined || allBigClass == null || allBigClass == '') {
+        res.end(JSON.stringify(returnData));
+        return;
+    }
+    for (var i = allBigClass.length - 1; i >= 0; i--) {
+        //console.log('yuzhizhe03------>'+JSON.stringify(allBigClass[i] , null , 4));
+        if (allBigClass[i] == undefined || allBigClass[i] == null || allBigClass[i] == '') {
+            // /console.log('yuzhizhe');
+            continue;
+        }else{
+            let bigClass = {
+                id: allBigClass[i].id,
+                name: allBigClass[i].name,
+                children: new Array()
+            };
+            const allSubClass = await allBigClass[i].getProductbigSubclass();
+            if (allSubClass == undefined || allSubClass == null || allSubClass == '') {
+                //console.log('yuzhizhe');
+                continue;
+            }else{
+                for (var j = allSubClass.length - 1; j >= 0; j--) {
+                    //console.log('yuzhizhe02------>'+JSON.stringify(allSubClass[j] , null , 4));
+                    if (allSubClass[j] == undefined || allSubClass[j] == null || allSubClass[j] == '') {
+                        //console.log('yuzhizhe');
+                        continue;
+                    }else{
+                        let subClass = {
+                            id: allSubClass[j].id,
+                            name: allSubClass[j].name,
+                            children: new Array()
+                        };
+                        const allProduct = await allSubClass[j].getProductsubclassName();
+                        if (allProduct == undefined || allProduct == null || allProduct == '') {
+                            //console.log('yuzhizhe');
+                            continue;
+                        }else{
+                            for (var k = allProduct.length - 1; k >= 0; k--) {
+                                //console.log('yuzhizhe01------>'+JSON.stringify(allProduct[k] , null , 4));
+                                if (allProduct[k] == undefined || allProduct[k] == null || allProduct[k] == '') {
+                                    //console.log('yuzhizhe');
+                                    continue;
+                                }else{
+                                    let product = {
+                                        id: allProduct[k].id,
+                                        name: allProduct[k].name
+                                    };
+                                    await subClass.children.push(product);
+                                }
+                            }
+                        }
+                        await bigClass.children.push(subClass);
+                    }
+                }
+            }
+            await returnData.data.push(bigClass); 
+        }
+    }
+    //console.log('yuzhizhe03------>'+JSON.stringify(allBigClass , null , 4));
+    //console.log(JSON.stringify(returnData , null , 4));
+    res.end(JSON.stringify(returnData));
+}
+exports.selectProductsByLinebodyId = selectProductsByLinebodyId;
 
 
