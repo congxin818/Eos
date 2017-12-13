@@ -10,6 +10,7 @@ const lossstatusServices = require('../services/lossstatus_service');
 const impobjServices = require('../services/impobject_service');
 const Kpitwolev = require('../models').Kpitwolev;
 const Losstier3 = require('../models').Losstier3;
+const moment = require('moment');
 
 var dataSuccess = {
   status: '0', 
@@ -80,15 +81,15 @@ const kpiTwoShow = {
         // 对项目状态log表进行增加
         if(beforStatus != updateData.status||beforStage != updateData.stage){
           updateDatalog = await impobjServices.addLostatuslog(req , res,beforStatus,beforStage)
-       }
-       if(updateData != null && updateDatalog != null){
-        dataSuccess.data  = updateData
-        res.end(JSON.stringify(dataSuccess))
-      }else{
-        res.end(JSON.stringify(updateError))
-      }   
+        }
+        if(updateData != null && updateDatalog != null){
+          dataSuccess.data  = updateData
+          res.end(JSON.stringify(dataSuccess))
+        }else{
+          res.end(JSON.stringify(updateError))
+        }   
 
-    }
+      }
 
 /*
     improvment展示历史信息
@@ -98,8 +99,13 @@ const kpiTwoShow = {
         res.end(JSON.stringify(parameterError))
       }
         // 对项目状态log表进行查找
-        const showData = await impobjServices.showImpItemhistory(req.body.linebodyId)
-        dataSuccess.data  = showData
+        const data = await impobjServices.showImpItemhistory(req.body.linebodyId)
+        if(data.length > 0){
+          for(var i = 0;i < data.length;i++){
+            data[i].createdAt  = moment(data[i].createdAt).format('YYYY-MM-DD')
+          }
+        }
+        dataSuccess.data  = data
         res.end(JSON.stringify(dataSuccess))  
       }
 
@@ -112,7 +118,7 @@ const kpiTwoShow = {
         req.body.linebodyId == null||req.body.linebodyId == ''){
         res.end(JSON.stringify(parameterError))
     }
-    const data = await lossstatusServices.selectLostatusById(req.body.lossId,req.body.linebodyId)
+    var data = await lossstatusServices.selectLostatusById(req.body.lossId,req.body.linebodyId)
     dataSuccess.data = data 
     res.end(JSON.stringify(dataSuccess))
   }
@@ -140,18 +146,17 @@ const kpiTwoShow = {
         ||req.body.linebodyId == ''){
        res.end(JSON.stringify(parameterError))
    }
+   var addReturn
    var lossIdList = req.body.lossIdList.split(",")
    for(var i=0;i<lossIdList.length;i++){
-    const addReturn = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
-    if(addReturn == null||addReturn == ''){
-      res.end(JSON.stringify(addObjectError))
-    }
-    if(addReturn.status == 101){
-     res.end(JSON.stringify(addReturn))
+     addReturn = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
+     if(addReturn == null||addReturn == ''){
+      res.end(JSON.stringify(addObjectError))}
+      if(addReturn.status == 101){
+       res.end(JSON.stringify(addReturn))}
+     }
+     res.end(JSON.stringify(dataSuccess))
    }
- }
- res.end(JSON.stringify(dataSuccess))
-}
 
 /*
     根据线体id删除现进行项目
