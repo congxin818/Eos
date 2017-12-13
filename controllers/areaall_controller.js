@@ -24,6 +24,7 @@ const errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 const Linebody = require('../models').Linebody;
 const Productdata = require('../models').Productdata;
+const Productname = require('../models').Productname;
 const Productsubclass = require('../models').Productsubclass;
 const Productbigclass= require('../models').Productbigclass;
 
@@ -382,8 +383,8 @@ async function selectProductsByLinebodyId(req , res , next){
             continue;
         }else{
             let bigClass = {
-                id: allBigClass[i].id,
-                name: allBigClass[i].name,
+                value: allBigClass[i].id,
+                label: allBigClass[i].name,
                 children: new Array()
             };
             const allSubClass = await allBigClass[i].getProductbigSubclass();
@@ -398,8 +399,8 @@ async function selectProductsByLinebodyId(req , res , next){
                         continue;
                     }else{
                         let subClass = {
-                            id: allSubClass[j].id,
-                            name: allSubClass[j].name,
+                            value: allSubClass[j].id,
+                            label: allSubClass[j].name,
                             children: new Array()
                         };
                         const allProduct = await allSubClass[j].getProductsubclassName();
@@ -414,8 +415,8 @@ async function selectProductsByLinebodyId(req , res , next){
                                     continue;
                                 }else{
                                     let product = {
-                                        id: allProduct[k].id,
-                                        name: allProduct[k].name
+                                        value: allProduct[k].id,
+                                        label: allProduct[k].name
                                     };
                                     await subClass.children.push(product);
                                 }
@@ -434,5 +435,28 @@ async function selectProductsByLinebodyId(req , res , next){
     res.end(JSON.stringify(dataSuccess));
 }
 exports.selectProductsByLinebodyId = selectProductsByLinebodyId;
+
+/**
+ * 根据线体id添加产品
+ */
+async function addProductByLinebodyId(req , res , next){
+    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == ''
+        ||req.body.productId == undefined || req.body.productId == null || req.body.productId == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    const linebody = await Linebody.findById(req.body.linebodyId);
+    const product = await Productname.findById(req.body.productId);
+    if (linebody == undefined || linebody == null || linebody == ''
+        ||product == undefined || product == null || product == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    const flag = await linebody.setLinebodyProductnames(product);
+    console.log(JSON.stringify(flag , null , 4));
+    res.end(JSON.stringify(flag));
+}
+exports.addProductByLinebodyId = addProductByLinebodyId;
+
 
 

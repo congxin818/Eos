@@ -30,14 +30,14 @@ router.post('/updateProductById', function(req, res, next) {
 });
 
 /*
-	编辑产品
+	删除产品
  */
 router.post('/deleteProductById', function(req, res, next) {
     controller.deleteProductById(req , res , next);
 });
 
 /*
-	编辑产品
+	查询产品
  */
 router.post('/selectProductnameById', function(req, res, next) {
     controller.selectProductnameById(req , res , next);
@@ -45,6 +45,13 @@ router.post('/selectProductnameById', function(req, res, next) {
 
 /*
 	编辑产品
+ */
+router.post('/updateProductnameById', function(req, res, next) {
+    controller.updateProductnameById(req , res , next);
+});
+
+/*
+    编辑产品
  */
 router.post('/updateProductnameById', function(req, res, next) {
     controller.updateProductnameById(req , res , next);
