@@ -27,6 +27,7 @@ const Productdata = require('../models').Productdata;
 const Productname = require('../models').Productname;
 const Productsubclass = require('../models').Productsubclass;
 const Productbigclass= require('../models').Productbigclass;
+const LinebodyProductname= require('../models').LinebodyProductname;
 
 const dataSuccess = {
     status: '0', 
@@ -350,7 +351,7 @@ async function sec_to_time(s) {
 }
 exports.sec_to_time = sec_to_time;
 
-async function selectProductsByLinebodyId(req , res , next){
+async function selectLinebodyProductsByLinebodyId(req , res , next){
     if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
@@ -460,12 +461,12 @@ async function selectProductsByLinebodyId(req , res , next){
     dataSuccess.data = returnData
     res.end(JSON.stringify(dataSuccess));
 }
-exports.selectProductsByLinebodyId = selectProductsByLinebodyId;
+exports.selectLinebodyProductsByLinebodyId = selectLinebodyProductsByLinebodyId;
 
 /**
  * 根据线体id添加能产品
  */
-async function addProductByLinebodyId(req , res , next){
+async function addLinebodyProductByLinebodyId(req , res , next){
     if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == ''
         ||req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
         ||req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
@@ -491,36 +492,65 @@ async function addProductByLinebodyId(req , res , next){
     }
     //console.log(JSON.stringify(flag , null , 4));
 }
-exports.addProductByLinebodyId = addProductByLinebodyId;
+exports.addLinebodyProductByLinebodyId = addLinebodyProductByLinebodyId;
 
 /**
  * 根据线体id删除能产品
  */
-async function deleteProductByLinebodyId(req , res , next){
-    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == ''
+async function deleteLinebodyProductById(req , res , next){
+    if (req.body.id == undefined || req.body.id == null || req.body.id == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    const linebodyProductname = await LinebodyProductname.findById(req.body.id);
+    if (linebodyProductname == undefined || linebodyProductname == null || linebodyProductname == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    const flag = await linebodyProductname.destroy({where:{id:req.body.id}});
+    if (flag == undefined || flag == null || flag == '') {
+        res.end(JSON.stringify(errorUtil.serviceError));
+        return;
+    }else{
+        dataSuccess.data = flag;
+        res.end(JSON.stringify(dataSuccess));
+    }
+    //console.log(JSON.stringify(flag , null , 4));
+}
+exports.deleteLinebodyProductById = deleteLinebodyProductById;
+
+/**
+ * 根据线体id编辑产品
+ */
+async function updateLinebodyProductById(req , res , next){
+    if (req.body.id == undefined || req.body.id == null || req.body.id == ''
         ||req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
         ||req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
         ) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
-    const linebody = await Linebody.findById(req.body.linebodyId);
+    const linebodyProductname = await LinebodyProductname.findById(req.body.id);
     const product = await Productname.findById(req.body.productId);
-    if (linebody == undefined || linebody == null || linebody == ''
+    if (linebodyProductname == undefined || linebodyProductname == null || linebodyProductname == ''
         ||product == undefined || product == null || product == '') {
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
     const time = await this.sec_to_time(req.body.cTime);
-    const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
-    if (flag == undefined || flag == null || flag == '') {
+    let value = {
+        normalcycletime:time,
+        productnameId:req.body.productId
+    }
+    const flag = await LinebodyProductname.update(value,{where:{id:req.body.id}});
+    if (flag == undefined || flag == null || flag == '' || flag != 1) {
         res.end(JSON.stringify(errorUtil.existError));
         return;
     }else{
-        dataSuccess.data = 1;
+        dataSuccess.data = flag;
         res.end(JSON.stringify(dataSuccess));
     }
     //console.log(JSON.stringify(flag , null , 4));
 }
-exports.addProductByLinebodyId = addProductByLinebodyId;
+exports.updateLinebodyProductById = updateLinebodyProductById;
 
