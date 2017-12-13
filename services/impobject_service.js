@@ -89,8 +89,8 @@ const moment = require('moment');
         }
         // 添加数据
         var lossstatus =  await losstier3.createLossstatus(lostatusdata)
-        addReturn = await linebody.addLinebodyLossstatus(lossstatus)
-        return addReturn
+        await linebody.addLinebodyLossstatus(lossstatus)
+        return lossstatus
     }
 
 /*
