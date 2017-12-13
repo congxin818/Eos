@@ -148,13 +148,16 @@ const kpiTwoShow = {
    }
    var addReturn
    var lossIdList = req.body.lossIdList.split(",")
+   var addReturnList = []
    for(var i=0;i<lossIdList.length;i++){
      addReturn = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
+     addReturnList.push(addReturn)
      if(addReturn == null||addReturn == ''){
       res.end(JSON.stringify(addObjectError))}
       if(addReturn.status == 101){
        res.end(JSON.stringify(addReturn))}
      }
+     dataSuccess.data = addReturnList
      res.end(JSON.stringify(dataSuccess))
    }
 
