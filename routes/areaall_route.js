@@ -46,4 +46,10 @@ router.post('/selectProductsByLinebodyId', function(req, res, next) {
 	controller.selectProductsByLinebodyId(req , res , next);
 });
 
+/*
+    编辑产品
+ */
+router.post('/addProductByLinebodyId', function(req, res, next) {
+    controller.addProductByLinebodyId(req , res , next);
+});
 module.exports = router;

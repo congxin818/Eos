@@ -324,6 +324,32 @@ async function time_to_sec(time) {
 }
 exports.time_to_sec = time_to_sec;
 
+/**
+     * 时间秒数格式化
+     * @param s 时间戳（单位：秒）
+     * @returns {*} 格式化后的时分秒
+     */
+async function sec_to_time(s) {
+    var t;
+    if(s > -1){
+        var hour = Math.floor(s/3600);
+        var min = Math.floor(s/60) % 60;
+        var sec = s % 60;
+        if(hour < 10) {
+             t = '0'+ hour + ":";
+        } else {
+            t = hour + ":";
+        }
+
+        if(min < 10){t += "0";}
+        t += min + ":";
+        if(sec < 10){t += "0";}
+        t += sec.toFixed(2);
+    }
+    return t;
+}
+exports.sec_to_time = sec_to_time;
+
 async function selectProductsByLinebodyId(req , res , next){
     if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
@@ -441,7 +467,9 @@ exports.selectProductsByLinebodyId = selectProductsByLinebodyId;
  */
 async function addProductByLinebodyId(req , res , next){
     if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == ''
-        ||req.body.productId == undefined || req.body.productId == null || req.body.productId == '') {
+        ||req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
+        ||req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
+        ) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
@@ -452,9 +480,16 @@ async function addProductByLinebodyId(req , res , next){
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
-    const flag = await linebody.setLinebodyProductnames(product);
-    console.log(JSON.stringify(flag , null , 4));
-    res.end(JSON.stringify(flag));
+    const time = await this.sec_to_time(req.body.cTime);
+    const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
+    if (flag == undefined || flag == null || flag == '') {
+        res.end(JSON.stringify(errorUtil.existError));
+        return;
+    }else{
+        dataSuccess.data = 1;
+        res.end(JSON.stringify(dataSuccess));
+    }
+    //console.log(JSON.stringify(flag , null , 4));
 }
 exports.addProductByLinebodyId = addProductByLinebodyId;
 

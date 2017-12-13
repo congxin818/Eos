@@ -50,10 +50,5 @@ router.post('/updateProductnameById', function(req, res, next) {
     controller.updateProductnameById(req , res , next);
 });
 
-/*
-    编辑产品
- */
-router.post('/updateProductnameById', function(req, res, next) {
-    controller.updateProductnameById(req , res , next);
-});
+
 module.exports = router;
