@@ -486,7 +486,7 @@ async function addProductByLinebodyId(req , res , next){
         res.end(JSON.stringify(errorUtil.existError));
         return;
     }else{
-        dataSuccess.data = 1;
+        dataSuccess.data = flag.id;
         res.end(JSON.stringify(dataSuccess));
     }
     //console.log(JSON.stringify(flag , null , 4));
