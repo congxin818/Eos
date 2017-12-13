@@ -13,6 +13,7 @@ const Lossstatus = require('../models').Lossstatus;
 const errorUtil = require('../utils/errorUtil');
 const UserKpitwolev = require('../models').UserKpitwolev;
 const Lossstatuslog = require('../models').Lossstatuslog;
+const moment = require('moment');
 
 
 /*
@@ -20,7 +21,7 @@ const Lossstatuslog = require('../models').Lossstatuslog;
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return  await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-           where:{userUserid: userId},order: [['sequence','ASC']]})
+         where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -74,9 +75,12 @@ const Lossstatuslog = require('../models').Lossstatuslog;
 
         const linebody = await Linebody.findById(linebodyid)
         const losstier3 = await Losstier3.findById(lossid)
+        const nowtime = moment().format('YYYY-MM-DD')
+        const concatname = linebody.linebodyname + losstier3.name + nowtime
         const lostatusdata={
-            projectname: losstier3.name,
-            losscategory: losstier3.name
+            projectname: concatname,
+            losscategory: losstier3.name,
+            status : 1
         }
         // 验证数据是否已经存在
         const data = await Lossstatus.findOne({where:{linebodyLinebodyid:linebodyid,losstier3Lossid:lossid}})
@@ -86,7 +90,7 @@ const Lossstatuslog = require('../models').Lossstatuslog;
         // 添加数据
         var lossstatus =  await losstier3.createLossstatus(lostatusdata)
         addReturn = await linebody.addLinebodyLossstatus(lossstatus)
-        return addReturn;
+        return addReturn
     }
 
 /*
@@ -117,5 +121,5 @@ const Lossstatuslog = require('../models').Lossstatuslog;
     */
     exports.showImpItemhistory = async function(linebodyId) {      
         return  await Lossstatuslog.findAll({attributes: ['beforstatus','status','beforstage','stage','createdAt'],
-           where:{linebodyLinebodyid: linebodyId}})
+         where:{linebodyLinebodyid: linebodyId}})
     }

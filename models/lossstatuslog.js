@@ -49,11 +49,11 @@
         },
         // 项目开始日期
         objectstarttime:{
-            type:Sequelize.DATE
+            type:Sequelize.DATEONLY
         },
         // 项目预期结束日期
         planendtime:{
-            type:Sequelize.DATE
+            type:Sequelize.DATEONLY
         },
         // 更改前项目运行阶段
         beforstage:{
