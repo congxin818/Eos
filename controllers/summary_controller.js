@@ -147,19 +147,19 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	Defect.value.push(Size * 3);
 	let OEE_began = 0;
 	let OEE_run = 0;
-	let OEE_delay = 0;
+	//let OEE_delay = 0;
 	let OEE_follow = 0;
 	let OEE_close = 0;
 
 	let Safety_began = 0;
 	let Safety_run = 0;
-	let Safety_delay = 0;
+	//let Safety_delay = 0;
 	let Safety_follow = 0;
 	let Safety_close = 0;
 
 	let Defect_began = 0;
 	let Defect_run = 0;
-	let Defect_delay = 0;
+	//let Defect_delay = 0;
 	let Defect_follow = 0;
 	let Defect_close = 0;
 
@@ -209,11 +209,13 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 					}else if(stage == 'h'){
 						Consolidation_results += 1;
 					}
-				}else if(status == 3){
-					OEE_delay += 1;
-				}else if(status == 4){
+				}
+				// else if(status == 3){
+				// 	OEE_delay += 1;
+				// }
+				else if(status == 3){
 					OEE_follow += 1;
-				}else if(status == 5){
+				}else if(status == 4){
 					OEE_close += 1;
 				}else{
 					continue ;
@@ -241,11 +243,13 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 					}else if(stage == 'h'){
 						Consolidation_results += 1;
 					}
-				}else if(status == 3){
-					Safety_delay += 1;
-				}else if(status == 4){
+				}
+				// else if(status == 3){
+				// 	Safety_delay += 1;
+				// }
+				else if(status == 3){
 					Safety_follow += 1;
-				}else if(status == 5){
+				}else if(status == 4){
 					Safety_close += 1;
 				}else{
 					continue ;
@@ -272,11 +276,13 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 					}else if(stage == 'h'){
 						Consolidation_results += 1;
 					}
-				}else if(status == 3){
-					Defect_delay += 1;
-				}else if(status == 4){
+				}
+				// else if(status == 3){
+				// 	Defect_delay += 1;
+				// }
+				else if(status == 3){
 					Defect_follow += 1;
-				}else if(status == 5){
+				}else if(status == 4){
 					Defect_close += 1;
 				}else{
 					continue ;
@@ -286,19 +292,19 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	}
 	await OEE.value.push(OEE_began);
 	await OEE.value.push(OEE_run);
-	await OEE.value.push(OEE_delay);
+	//await OEE.value.push(OEE_delay);
 	await OEE.value.push(OEE_follow);
 	await OEE.value.push(OEE_close);
 
 	await Safety.value.push(Safety_began);
 	await Safety.value.push(Safety_run);
-	await Safety.value.push(Safety_delay);
+	//await Safety.value.push(Safety_delay);
 	await Safety.value.push(Safety_follow);
 	await Safety.value.push(Safety_close);
 
 	await Defect.value.push(Defect_began);
 	await Defect.value.push(Defect_run);
-	await Defect.value.push(Defect_delay);
+	//await Defect.value.push(Defect_delay);
 	await Defect.value.push(Defect_follow);
 	await Defect.value.push(Defect_close);
 
@@ -311,7 +317,7 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 		projectNumber:Size * 10,
 		beganNumber:OEE_began + Safety_began + Defect_began,
 		runNumber:OEE_run + Safety_run + Defect_run,
-		delayNumber:OEE_delay + Safety_delay + Defect_delay,
+		//delayNumber:OEE_delay + Safety_delay + Defect_delay,
 		followNumber:OEE_follow + Safety_follow + Defect_follow,
 		closeNumber:OEE_close + Safety_close + Defect_close
 	};
