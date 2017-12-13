@@ -12,6 +12,7 @@ const Linebody = require('../models').Linebody;
 const Lossstatus = require('../models').Lossstatus;
 const errorUtil = require('../utils/errorUtil');
 const UserKpitwolev = require('../models').UserKpitwolev;
+const Lossstatuslog = require('../models').Lossstatuslog;
 
 
 /*
@@ -88,3 +89,33 @@ const UserKpitwolev = require('../models').UserKpitwolev;
         return addReturn;
     }
 
+/*
+    对项目状态log表进行增加
+    */
+    exports.addLostatuslog = async function (req , res,beforStatus,beforStage){
+        var lossstatuslog = {
+            projectnumber:req.body.projectnumber,
+            projectname:req.body.projectname,
+            losscategory:req.body.losscategory,
+            beforstatus:beforStatus,
+            status:req.body.status,
+            startperformance :req.body.startperformance,
+            target:req.body.target,
+            performance :req.body.performance,
+            objectstarttime:req.body.objectstarttime,
+            planendtime:req.body.planendtime,
+            beforstage:beforStage,
+            stage:req.body.stage
+        }
+        const linebody = await Linebody.findById(req.body.linebodyId)
+        lossstatuslog =  await linebody.createLinebodyLossstatuslog(lossstatuslog)
+        return lossstatuslog
+    }
+
+/*
+    improvment展示历史信息 查找log表
+    */
+    exports.showImpItemhistory = async function(linebodyId) {      
+        return  await Lossstatuslog.findAll({attributes: ['beforstatus','status','beforstage','stage','createdAt'],
+           where:{linebodyLinebodyid: linebodyId}})
+    }
