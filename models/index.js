@@ -15,6 +15,7 @@ var UserKpitwolev = sequelize.import('./userkpitwolev.js');
 var Losstier3 = sequelize.import('./losstier3.js');
 var Lossstatus = sequelize.import('./lossstatus.js');
 var Losstier4 = sequelize.import('./losstier4.js');
+var Lossstatuslog = sequelize.import('./lossstatuslog.js');
 
 var LinebodyKpitwolev = sequelize.import('./linebodykpitwolev.js');
 var LinebodyLosstier3 = sequelize.import('./linebodylosstier3.js');
@@ -85,6 +86,8 @@ Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 Linebody.hasMany(Lossstatus, {as:'LinebodyLossstatus' ,constraints:true});
 //Losstier3和Lossstatus建立1：1关系
 Losstier3.hasOne(Lossstatus);
+//Linebody和Lossstatuslog建立1：N关系
+Linebody.hasMany(Lossstatuslog, {as:'LinebodyLossstatuslog' ,constraints:true});
 
 //Kpionelev和Kpitwolev建立1：N关系
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
@@ -120,6 +123,7 @@ exports.Losstier3 = Losstier3;
 exports.UserKpitwolev = UserKpitwolev;
 exports.Lossstatus = Lossstatus;
 exports.Losstier4 = Losstier4;
+exports.Lossstatuslog = Lossstatuslog;
 exports.LinebodyKpitwolev = LinebodyKpitwolev;
 exports.LinebodyLosstier3 = LinebodyLosstier3;
 exports.LinebodyLosstier4 = LinebodyLosstier4;
