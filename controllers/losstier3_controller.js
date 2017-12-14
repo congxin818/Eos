@@ -88,7 +88,9 @@ async function addLossOne(req , res , next){
 							if (value == undefined || value == null || value == '' || value != 1) {
 								const de_flag = await Losstier3.destroy({where:{lossid:flag.lossid}});
 								res.end(JSON.stringify(errorUtil.serviceError));
+								return ;
 							}
+							flag.id = 'l' + flag.lossid;
 							dataSuccess.data = flag;
 							res.end(JSON.stringify(dataSuccess));
 						}
@@ -113,13 +115,15 @@ async function addLossOne(req , res , next){
 							res.end(JSON.stringify(errorUtil.serviceError));
 						}else{
 							const newLoss = {
-								id:'l' + flag.tier4id
+								id:'h' + flag.tier4id
 							};
 							const value = await Losstier4.update(newLoss , {where:{lossid:flag.tier4id}});
 							if (value == undefined || value == null || value == '' || value != 1) {
 								const de_flag = await Losstier4.destroy({where:{lossid:flag.tier4id}});
 								res.end(JSON.stringify(errorUtil.serviceError));
+								return;
 							}
+							flag.id = 'h' + flag.lossid;
 							dataSuccess.data = flag;
 							res.end(JSON.stringify(dataSuccess));
 						}
@@ -185,30 +189,16 @@ async function updateLossById(req , res , next){
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const lossname = req.body.name;
-	const pid = req.body.pId;
 	const ID = req.body.id;
 	if (lossname == undefined || lossname == null || lossname == ''
 		|| pid == undefined || pid == null || pid == ''
 		|| ID == undefined || ID == null || ID == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
-	if (isNaN(pid)) {
-		const lossid = ID.slice(1);
-		if (lossid == undefined || lossid == null || lossid == '') {
-			res.end(JSON.stringify(errorUtil.parameterError));
-		}
-		const loss = await service.selectLossById(lossid);
-		if (loss == undefined || loss == null || loss == '') {
-			res.end(JSON.stringify(errorUtil.noExistError));
-		}
-		const data = await service.updateLossById(lossid , lossname , pid);
-		if (data == undefined || data == null || data == '' || data != 1) {
-			res.end(JSON.stringify(errorUtil.serviceError));
-		}
-		dataSuccess.data = data;
-		res.end(JSON.stringify(dataSuccess));
+	if (isNaN(ID)) {
+		
 	}else{
-		await kpiall_controller.updateKPItwoLev(req , res);
+		
 	}
 }
 exports.updateLossById = updateLossById;
