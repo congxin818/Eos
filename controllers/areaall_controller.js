@@ -398,7 +398,8 @@ async function selectLinebodyProductsByLinebodyId(req , res , next){
         //console.log(JSON.stringify(allProduct , null , 4));
         Data1.result.push(allProduct);
     }
-    returnData.modelList.push(Data1);
+
+    returnData.modelList.push(Data1.reverse());
 
     const allBigClass = await Productbigclass.findAll();
     if (allBigClass == undefined || allBigClass == null || allBigClass == '') {
