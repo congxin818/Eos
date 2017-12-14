@@ -103,8 +103,8 @@ async function addLossOne(req , res , next){
 				if (losstier3 == undefined || losstier3 == null || losstier3 == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				}else{
-					const Losstier4 = await Losstier4.findOne({where:{name:req.body.name}});
-					if (Losstier4 == undefined || Losstier4 == null || Losstier4 == '') {
+					const losstier4 = await Losstier4.findOne({where:{name:req.body.name}});
+					if (losstier4 == undefined || losstier4 == null || losstier4 == '') {
 						const newLosstier4 = {
 							name:req.body.name,
 							losstier3Lossid:pId,
@@ -117,13 +117,13 @@ async function addLossOne(req , res , next){
 							const newLoss = {
 								id:'h' + flag.tier4id
 							};
-							const value = await Losstier4.update(newLoss , {where:{lossid:flag.tier4id}});
+							const value = await Losstier4.update(newLoss , {where:{tier4id:flag.tier4id}});
 							if (value == undefined || value == null || value == '' || value != 1) {
-								const de_flag = await Losstier4.destroy({where:{lossid:flag.tier4id}});
+								const de_flag = await Losstier4.destroy({where:{tier4id:flag.tier4id}});
 								res.end(JSON.stringify(errorUtil.serviceError));
 								return;
 							}
-							flag.id = 'h' + flag.lossid;
+							flag.id = 'h' + flag.tier4id;
 							dataSuccess.data = flag;
 							res.end(JSON.stringify(dataSuccess));
 						}
@@ -198,7 +198,7 @@ async function updateLossById(req , res , next){
 	if (isNaN(ID)) {
 		
 	}else{
-		
+		//const flag = await 
 	}
 }
 exports.updateLossById = updateLossById;
