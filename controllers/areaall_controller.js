@@ -346,6 +346,8 @@ async function sec_to_time(s) {
         t += min + ":";
         if(sec < 10){t += "0";}
         t += sec.toFixed(2);
+    }else{
+        t = '00:00:00';
     }
     return t;
 }
