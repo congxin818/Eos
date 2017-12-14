@@ -191,14 +191,69 @@ async function updateLossById(req , res , next){
 	const lossname = req.body.name;
 	const ID = req.body.id;
 	if (lossname == undefined || lossname == null || lossname == ''
-		|| pid == undefined || pid == null || pid == ''
 		|| ID == undefined || ID == null || ID == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(ID)) {
-		
+		const pFlag = await ID.slice(0,1);
+		const pId = await ID.slice(1);
+		if (isNaN(pFlag)) {
+			if (pFlag == 't') {
+				const kpitwo = await Kpitwolev.findById(pId);
+				if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const newKpitwo= {
+						name:req.body.name,
+					};
+					const flag = await Kpitwolev.update(newKpitwo , {where:{kpitwoid:pId}});
+					if (flag == undefined || flag == null || flag == '' || flag != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = flag;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else if(pFlag == 'l'){
+				const losstier3 = await Losstier3.findById(pId);
+				if (losstier3 == undefined || losstier3 == null || losstier3 == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const newLosstier3= {
+						name:req.body.name,
+					};
+					const flag = await Losstier3.update(newLosstier3 , {where:{lossid:pId}});
+					if (flag == undefined || flag == null || flag == '' || flag != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = flag;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else if(pFlag == 'h'){
+				const losstier4 = await Losstier4.findById(pId);
+				if (losstier4 == undefined || losstier4 == null || losstier4 == '') {
+					res.end(JSON.stringify(errorUtil.noExistError));
+				}else{
+					const newLosstier4= {
+						name:req.body.name,
+					};
+					const flag = await Losstier4.update(newLosstier4 , {where:{tier4id:pId}});
+					if (flag == undefined || flag == null || flag == '' || flag != 1) {
+						res.end(JSON.stringify(errorUtil.serviceError));
+					}else{
+						dataSuccess.data = flag;
+						res.end(JSON.stringify(dataSuccess));
+					}
+				}
+			}else{
+				res.end(JSON.stringify(errorUtil.parameterError));
+			}
+		}else{
+			res.end(JSON.stringify(errorUtil.parameterError));
+		}
 	}else{
-		//const flag = await 
+		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 }
 exports.updateLossById = updateLossById;
