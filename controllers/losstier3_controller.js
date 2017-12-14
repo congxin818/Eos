@@ -158,7 +158,16 @@ async function deleteLossById(req , res , next){
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (type == 't') {
-		await kpiall_controller.deleteKPItwoLev(req , res);
+		const falg = await Kpitwolev.destroy({where:{kpitwoid:ID}});
+		//console.log('yuzhizhe_falg---->'+ falg);
+		if (falg == undefined || falg == null || falg == '') {
+			res.end(JSON.stringify(errorUtil.noExistError));
+		}else{
+			await service.lossClear();
+    		await losstier4_service.losstier4Clear();
+			dataSuccess.data = falg;
+			res.end(JSON.stringify(dataSuccess));
+		}
 	}else if(type == 'l'){
 		const falg = await service.deleteLossById(ID);
 		//console.log('yuzhizhe_falg---->'+ falg);
