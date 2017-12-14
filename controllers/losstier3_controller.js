@@ -165,7 +165,7 @@ async function deleteLossById(req , res , next){
 			res.end(JSON.stringify(dataSuccess));
 		}
 	}else if(type == 'h'){
-		const falg = await Losstier4.destroy(where:{tier4id:ID}});
+		const falg = await Losstier4.destroy({where:{tier4id:ID}});
 		//console.log('yuzhizhe_falg---->'+ falg);
 		if (falg == undefined || falg == null || falg == '') {
 			res.end(JSON.stringify(errorUtil.noExistError));
