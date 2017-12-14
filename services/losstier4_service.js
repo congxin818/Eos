@@ -146,7 +146,7 @@ exports.updateLosstier4ById = updateLosstier4ById;
     根据关联清理数据库
  */
 async function losstier4Clear(){
-    const loss = await Losstier4.findAll({where:{ kpitwolevKpitwoid:null}});
+    const loss = await Losstier4.findAll({where:{ losstier3Lossid:null}});
     //console.log(JSON.stringify(workshop.length));
     for (var i = loss.length - 1; i >= 0; i--) {
         await loss[i].destroy();
