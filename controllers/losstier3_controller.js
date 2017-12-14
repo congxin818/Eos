@@ -165,6 +165,8 @@ async function deleteLossById(req , res , next){
 		if (falg == undefined || falg == null || falg == '') {
 			res.end(JSON.stringify(errorUtil.noExistError));
 		}else{
+			await service.lossClear();
+    		await losstier4_service.losstier4Clear();
 			dataSuccess.data = falg;
 			res.end(JSON.stringify(dataSuccess));
 		}
