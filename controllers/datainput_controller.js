@@ -404,7 +404,6 @@ var showAddPrpductData = {
                     req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
                 showdataList.push(addReturn)
             }else{
-
                 for(var i = classStartDay;i <= classEndDay;i++){
                     if(i == classStartDay){
                         // 第一天

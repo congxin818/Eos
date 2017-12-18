@@ -39,4 +39,31 @@ router.get('/text123', function(req, res, next) {
     controller.text123(req , res);
 });
 
-	module.exports = router;
+/*
+	根据线体ID查询该线体能生产的产品
+	*/
+router.post('/selectLinebodyProductsByLinebodyId', function(req, res, next) {
+	controller.selectLinebodyProductsByLinebodyId(req , res , next);
+});
+
+/*
+    根据线体ID添加产品
+ */
+router.post('/addLinebodyProductByLinebodyId', function(req, res, next) {
+    controller.addLinebodyProductByLinebodyId(req , res , next);
+});
+
+/*
+    根据线体ID删除产品
+ */
+router.post('/deleteLinebodyProductById', function(req, res, next) {
+    controller.deleteLinebodyProductById(req , res , next);
+});
+
+/*
+    根据线体ID删除产品
+ */
+router.post('/updateLinebodyProductById', function(req, res, next) {
+    controller.updateLinebodyProductById(req , res , next);
+});
+module.exports = router;

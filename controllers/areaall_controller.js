@@ -4,6 +4,13 @@
     时间：2017/10/26
     */
 
+/*
+    修改区域控制处理
+    修改内容：
+    修改人：Android
+    修改时间：2017/12/12
+ */
+
 //引入数据库Message模块
 const groupconler = require('./group_controller');
 const factoryconler = require('./factory_controller');
@@ -14,6 +21,13 @@ const facServices = require('../services/factory_service');
 const wksServices = require('../services/workshop_service');
 const linbyServices = require('../services/linebody_service');
 const errorUtil = require('../utils/errorUtil');
+var moment = require('moment');
+const Linebody = require('../models').Linebody;
+const Productdata = require('../models').Productdata;
+const Productname = require('../models').Productname;
+const Productsubclass = require('../models').Productsubclass;
+const Productbigclass= require('../models').Productbigclass;
+const LinebodyProductname= require('../models').LinebodyProductname;
 
 const dataSuccess = {
     status: '0', 
@@ -291,4 +305,255 @@ const updateAreaError = {
         res.end(JSON.stringify(allData));
     }
 
+ /**
+     * 时间转为秒
+     * @param time 时间(00:00:00)
+     * @returns {string} 时间戳（单位：秒）
+     */
+async function time_to_sec(time) {
+    var s = '';
+    if (time == undefined || time == null || time == '') {
+        return 0;
+    }
+    var hour = time.split(':')[0];
+    var min = time.split(':')[1];
+    var sec = time.split(':')[2];
+
+    s = Number(hour*3600) + Number(min*60) + Number(sec);
+
+    return s;
+}
+exports.time_to_sec = time_to_sec;
+
+/**
+     * 时间秒数格式化
+     * @param s 时间戳（单位：秒）
+     * @returns {*} 格式化后的时分秒
+     */
+async function sec_to_time(s) {
+    var t;
+    if(s > -1){
+        var hour = Math.floor(s/3600);
+        var min = Math.floor(s/60) % 60;
+        var sec = s % 60;
+        if(hour < 10) {
+             t = '0'+ hour + ":";
+        } else {
+            t = hour + ":";
+        }
+
+        if(min < 10){t += "0";}
+        t += min + ":";
+        if(sec < 10){t += "0";}
+        t += sec.toFixed(2);
+    }else{
+        t = '00:00:00';
+    }
+    return t;
+}
+exports.sec_to_time = sec_to_time;
+
+async function selectLinebodyProductsByLinebodyId(req , res , next){
+    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    //console.log(JSON.stringify(allProductbigclass , null , 4));
+    //console.log('yuzhizhe');
+    const linebody = await Linebody.findById(req.body.linebodyId);
+    if (linebody == undefined || linebody == null || linebody == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    let returnData = {
+        modelList : new Array(),
+        data : new Array()
+    };
+    let Data1 = {
+        result : new Array(),
+        data : new Array()
+    };
+    const linebodyProduct = await linebody.getLinebodyProductnames();
+    for (var i = linebodyProduct.length - 1; i >= 0; i--) {
+        if (linebodyProduct[i] == undefined || linebodyProduct[i] == null || linebodyProduct[i] == '') {
+            continue;
+        }
+        let allProduct = {
+            id : '',
+            name : new Array(),
+            value : ''
+        }
+        //const value = await linebodyProduct[i].getLineProductnameproductdata();
+        allProduct.id = linebodyProduct[i].linebodyproductname.id;
+        
+        allProduct.value = await this.time_to_sec(linebodyProduct[i].linebodyproductname.normalcycletime);
+        //console.log(JSON.stringify(allProduct.value, null , 4));
+        
+        await allProduct.name.push(linebodyProduct[i].id);
+        const subClass = await Productsubclass.findById(linebodyProduct[i].productsubclassId);
+        await allProduct.name.push(subClass.id);
+        const bigClass = await Productbigclass.findById(subClass.productbigclassId);
+        await allProduct.name.push(bigClass.id);
+        await allProduct.name.reverse();
+        //console.log(JSON.stringify(allProduct , null , 4));
+        Data1.result.push(allProduct);
+    }
+    Data1.result.reverse();
+    returnData.modelList.push(Data1);
+
+    const allBigClass = await Productbigclass.findAll();
+    if (allBigClass == undefined || allBigClass == null || allBigClass == '') {
+        res.end(JSON.stringify(returnData));
+        return;
+    }
+    for (var i = allBigClass.length - 1; i >= 0; i--) {
+        //console.log('yuzhizhe03------>'+JSON.stringify(allBigClass[i] , null , 4));
+        if (allBigClass[i] == undefined || allBigClass[i] == null || allBigClass[i] == '') {
+            // /console.log('yuzhizhe');
+            continue;
+        }else{
+            let bigClass = {
+                value: allBigClass[i].id,
+                label: allBigClass[i].name,
+                children: new Array()
+            };
+            const allSubClass = await allBigClass[i].getProductbigSubclass();
+            if (allSubClass == undefined || allSubClass == null || allSubClass == '') {
+                //console.log('yuzhizhe');
+                continue;
+            }else{
+                for (var j = allSubClass.length - 1; j >= 0; j--) {
+                    //console.log('yuzhizhe02------>'+JSON.stringify(allSubClass[j] , null , 4));
+                    if (allSubClass[j] == undefined || allSubClass[j] == null || allSubClass[j] == '') {
+                        //console.log('yuzhizhe');
+                        continue;
+                    }else{
+                        let subClass = {
+                            value: allSubClass[j].id,
+                            label: allSubClass[j].name,
+                            children: new Array()
+                        };
+                        const allProduct = await allSubClass[j].getProductsubclassName();
+                        if (allProduct == undefined || allProduct == null || allProduct == '') {
+                            //console.log('yuzhizhe');
+                            continue;
+                        }else{
+                            for (var k = allProduct.length - 1; k >= 0; k--) {
+                                //console.log('yuzhizhe01------>'+JSON.stringify(allProduct[k] , null , 4));
+                                if (allProduct[k] == undefined || allProduct[k] == null || allProduct[k] == '') {
+                                    //console.log('yuzhizhe');
+                                    continue;
+                                }else{
+                                    let product = {
+                                        value: allProduct[k].id,
+                                        label: allProduct[k].name
+                                    };
+                                    await subClass.children.push(product);
+                                }
+                            }
+                        }
+                        await bigClass.children.push(subClass);
+                    }
+                }
+            }
+            await returnData.data.push(bigClass); 
+        }
+    }
+    //console.log('yuzhizhe03------>'+JSON.stringify(allBigClass , null , 4));
+    //console.log(JSON.stringify(returnData , null , 4));
+    dataSuccess.data = returnData
+    res.end(JSON.stringify(dataSuccess));
+}
+exports.selectLinebodyProductsByLinebodyId = selectLinebodyProductsByLinebodyId;
+
+/**
+ * 根据线体id添加能产品
+ */
+async function addLinebodyProductByLinebodyId(req , res , next){
+    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == ''
+        ||req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
+        ||req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
+        ) {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    const linebody = await Linebody.findById(req.body.linebodyId);
+    const product = await Productname.findById(req.body.productId);
+    if (linebody == undefined || linebody == null || linebody == ''
+        ||product == undefined || product == null || product == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    const time = await this.sec_to_time(req.body.cTime);
+    const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
+    if (flag == undefined || flag == null || flag == '' || flag == 1) {
+        res.end(JSON.stringify(errorUtil.existError));
+        return;
+    }else{
+        dataSuccess.data = flag[0][0].id;
+        res.end(JSON.stringify(dataSuccess));
+    }
+    //console.log(JSON.stringify(flag , null , 4));
+}
+exports.addLinebodyProductByLinebodyId = addLinebodyProductByLinebodyId;
+
+/**
+ * 根据线体id删除能产品
+ */
+async function deleteLinebodyProductById(req , res , next){
+    if (req.body.id == undefined || req.body.id == null || req.body.id == '') {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    const linebodyProductname = await LinebodyProductname.findById(req.body.id);
+    if (linebodyProductname == undefined || linebodyProductname == null || linebodyProductname == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    const flag = await linebodyProductname.destroy({where:{id:req.body.id}});
+    if (flag == undefined || flag == null || flag == '') {
+        res.end(JSON.stringify(errorUtil.serviceError));
+        return;
+    }else{
+        dataSuccess.data = flag;
+        res.end(JSON.stringify(dataSuccess));
+    }
+    //console.log(JSON.stringify(flag , null , 4));
+}
+exports.deleteLinebodyProductById = deleteLinebodyProductById;
+
+/**
+ * 根据线体id编辑产品
+ */
+async function updateLinebodyProductById(req , res , next){
+    if (req.body.id == undefined || req.body.id == null || req.body.id == ''
+        ||req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
+        ||req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
+        ) {
+        res.end(JSON.stringify(errorUtil.parameterError));
+        return;
+    }
+    const linebodyProductname = await LinebodyProductname.findById(req.body.id);
+    const product = await Productname.findById(req.body.productId);
+    if (linebodyProductname == undefined || linebodyProductname == null || linebodyProductname == ''
+        ||product == undefined || product == null || product == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    const time = await this.sec_to_time(req.body.cTime);
+    let value = {
+        normalcycletime:time,
+        productnameId:req.body.productId
+    }
+    const flag = await LinebodyProductname.update(value,{where:{id:req.body.id}});
+    if (flag == undefined || flag == null || flag == '' || flag != 1) {
+        res.end(JSON.stringify(errorUtil.existError));
+        return;
+    }else{
+        dataSuccess.data = flag;
+        res.end(JSON.stringify(dataSuccess));
+    }
+    //console.log(JSON.stringify(flag , null , 4));
+}
+exports.updateLinebodyProductById = updateLinebodyProductById;
 

@@ -12,6 +12,10 @@ var sequelize = require('../mysql').sequelize();
             type:Sequelize.INTEGER,
             autoIncrement:true,
             primaryKey: true
+        },
+        //每种产品的标准循环时间
+        normalcycletime:{
+            type:Sequelize.TIME
         }
     });
 }
