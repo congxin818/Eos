@@ -250,7 +250,6 @@ var showAddPrpductData = {
     exports.addProduct = async function(req , res) {
         if(req.body.productNameId == null||req.body.productNameId == ''
             ||req.body.conformProduct == null||req.body.conformProduct == ''
-            ||req.body.normalCycletime == null||req.body.normalCycletime == ''
             ||req.body.classinfIdList == null||req.body.classinfIdList == ''
             ||req.body.linebodyId == null||req.body.linebodyId == ''
             )
@@ -320,7 +319,9 @@ var showAddPrpductData = {
                        const productname = await datainputServices.selectProductNameById(samenamedata[k].linebodyproductnameId)
                        showAddPrpductData.productname = productname.name
                        showAddPrpductData.conformproduct = samenamedata[k].conformproduct
-                       showAddPrpductData.normalcycletime = samenamedata[k].normalcycletime
+                       const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
+                       console.log('-------------->'+JSON.stringify(lineproname,null,4))
+                       showAddPrpductData.normalcycletime = lineproname.normalcycletime
                        flag = false
                    }
 
@@ -340,7 +341,6 @@ var showAddPrpductData = {
     */
     exports.updateProduct = async function(req , res) {
         if(req.body.conformProduct == null||req.body.conformProduct == ''
-            ||req.body.normalCycletime == null||req.body.normalCycletime == ''
             ||req.body.productIdList == null||req.body.productIdList == ''
             ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
