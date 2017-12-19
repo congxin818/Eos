@@ -564,30 +564,23 @@ async function updateLinebodyProductById(req , res , next){
             if (linebodyProduct[i].id == req.body.productId) {
                 res.end(JSON.stringify(errorUtil.existError));
                 return;
-            }else{
-
             }
         }
     }
-    console.log(JSON.stringify(linebodyProduct , null , 4));
-    // const existFlag = await linebody.hasLinebodyProductnames(product);
-    // if (existFlag) {
-    //     res.end(JSON.stringify(errorUtil.existError));
-    // }else{
-    //     const time = await this.sec_to_time(req.body.cTime);
-    //     let value = {
-    //         normalcycletime:time,
-    //         productnameId:req.body.productId
-    //     }
-    //     const flag = await LinebodyProductname.update(value,{where:{id:req.body.id}});
-    //     console.log(JSON.stringify(flag , null , 4));
-    //     if (flag == undefined || flag == null || flag == '' || flag != 1) {
-    //         res.end(JSON.stringify(errorUtil.serviceError));
-    //     }else{
-    //         dataSuccess.data = flag;
-    //         res.end(JSON.stringify(dataSuccess));
-    //     }
-    // }
+    //console.log(JSON.stringify(linebodyProduct , null , 4));
+    const time = await this.sec_to_time(req.body.cTime);
+    let value = {
+        normalcycletime:time,
+        productnameId:req.body.productId
+    }
+    const flag = await LinebodyProductname.update(value,{where:{id:req.body.id}});
+    console.log(JSON.stringify(flag , null , 4));
+    if (flag == undefined || flag == null || flag == '' || flag != 1) {
+        res.end(JSON.stringify(errorUtil.serviceError));
+    }else{
+        dataSuccess.data = flag;
+        res.end(JSON.stringify(dataSuccess));
+    }
 }
 exports.updateLinebodyProductById = updateLinebodyProductById;
 
