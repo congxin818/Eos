@@ -98,6 +98,7 @@ const kpiTwoShow = {
       if(req.body.linebodyId == null||req.body.linebodyId == ''){
         res.end(JSON.stringify(parameterError))
       }
+        console.log('--展示历史信息--')
         // 对项目状态log表进行查找
         const data = await impobjServices.showImpItemhistory(req.body.linebodyId)
         if(data.length > 0){
@@ -131,6 +132,7 @@ const kpiTwoShow = {
       if(req.body.linebodyId == null||req.body.linebodyId == ''){
        res.end(JSON.stringify(parameterError))
      }
+        console.log('--展示现进行项目--')
        // 根据线体id把loss状态表中所有项目名字查找出来
        const lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
        dataSuccess.data = lostatusNameList
