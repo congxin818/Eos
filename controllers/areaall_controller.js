@@ -553,7 +553,7 @@ async function updateLinebodyProductById(req , res , next){
     }
     const time = await this.sec_to_time(req.body.cTime);
     let value = {
-        normalcycletime:time,
+        normalcycletime:new Date(time),
         productnameId:req.body.productId
     }
     const flag = await LinebodyProductname.update(value,{where:{id:req.body.id}});
