@@ -137,7 +137,7 @@ async function selectLossMappingByLinebodyIds(userId , linebodyIds , startTime ,
 		return errorUtil.parameterError;
 	}
 	const user = await User.findById(userId);
-	let type = 0;
+	//let type = 0;
 	//console.log(JSON.stringify(user , null , 4));
 	if (user == undefined || user == null || user == '') {
 		return errorUtil.noExistError;

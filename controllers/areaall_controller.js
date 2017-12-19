@@ -353,6 +353,11 @@ async function sec_to_time(s) {
 }
 exports.sec_to_time = sec_to_time;
 
+/**
+     * 根据线体ID查询线体的所有能生产的产品
+     * @param req 请求
+     * @returns res 请求返回
+     */
 async function selectLinebodyProductsByLinebodyId(req , res , next){
     if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
@@ -484,15 +489,21 @@ async function addLinebodyProductByLinebodyId(req , res , next){
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
-    const time = await this.sec_to_time(req.body.cTime);
-    const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
-    if (flag == undefined || flag == null || flag == '' || flag == 1) {
-        res.end(JSON.stringify(errorUtil.existError));
-        return;
-    }else{
-        dataSuccess.data = flag[0][0].id;
-        res.end(JSON.stringify(dataSuccess));
-    }
+    // const value = await linebody.hasLinebodyProductnames(product);
+    // if (value) {
+    //     res.end(JSON.stringify(errorUtil.existError));
+    // }else{
+        const time = await this.sec_to_time(req.body.cTime);
+        const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
+        if (flag == undefined || flag == null || flag == '' || flag == 1) {
+            res.end(JSON.stringify(errorUtil.existError));
+            return;
+        }else{
+            dataSuccess.data = flag[0][0].id;
+            res.end(JSON.stringify(dataSuccess));
+        }
+    //}
+    
     //console.log(JSON.stringify(flag , null , 4));
 }
 exports.addLinebodyProductByLinebodyId = addLinebodyProductByLinebodyId;
@@ -546,6 +557,7 @@ async function updateLinebodyProductById(req , res , next){
         productnameId:req.body.productId
     }
     const flag = await LinebodyProductname.update(value,{where:{id:req.body.id}});
+    console.log(JSON.stringify(flag , null , 4));
     if (flag == undefined || flag == null || flag == '' || flag != 1) {
         res.end(JSON.stringify(errorUtil.existError));
         return;
@@ -553,7 +565,7 @@ async function updateLinebodyProductById(req , res , next){
         dataSuccess.data = flag;
         res.end(JSON.stringify(dataSuccess));
     }
-    //console.log(JSON.stringify(flag , null , 4));
+    
 }
 exports.updateLinebodyProductById = updateLinebodyProductById;
 
