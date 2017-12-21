@@ -15,3 +15,13 @@ var dataSuccess = {
     data:'fas'
 };
 
+/*
+    用户登录接口
+    */
+async function findAndCount(req , res , next){
+    if (req.query.page == undefined ||req.query.page == ''||req.query.page == null) {
+        res.end(parameterError);
+        return;
+    }
+}
+exports.findAndCount = findAndCount;

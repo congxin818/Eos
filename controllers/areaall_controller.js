@@ -489,22 +489,15 @@ async function addLinebodyProductByLinebodyId(req , res , next){
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
-    // const value = await linebody.hasLinebodyProductnames(product);
-    // if (value) {
-    //     res.end(JSON.stringify(errorUtil.existError));
-    // }else{
-        const time = await this.sec_to_time(req.body.cTime);
-        const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
-        if (flag == undefined || flag == null || flag == '' || flag == 1) {
-            res.end(JSON.stringify(errorUtil.existError));
-            return;
-        }else{
-            dataSuccess.data = flag[0][0].id;
-            res.end(JSON.stringify(dataSuccess));
-        }
-    //}
-    
-    //console.log(JSON.stringify(flag , null , 4));
+    const time = await this.sec_to_time(req.body.cTime);
+    const flag = await linebody.addLinebodyProductnames(product,{through:{normalcycletime:time}});
+    if (flag == undefined || flag == null || flag == '' || flag == 1) {
+        res.end(JSON.stringify(errorUtil.existError));
+        return;
+    }else{
+        dataSuccess.data = flag[0][0].id;
+        res.end(JSON.stringify(dataSuccess));
+    }
 }
 exports.addLinebodyProductByLinebodyId = addLinebodyProductByLinebodyId;
 
