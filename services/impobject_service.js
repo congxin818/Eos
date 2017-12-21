@@ -82,11 +82,7 @@ const moment = require('moment');
             losscategory: losstier3.name,
             status : 1
         }
-        // 验证数据是否已经存在
-        const data = await Lossstatus.findOne({where:{linebodyLinebodyid:linebodyid,losstier3Lossid:lossid}})
-        if(data!=null){
-            return errorUtil.existError;
-        }
+        
         // 添加数据
         var lossstatus =  await losstier3.createLossstatus(lostatusdata)
         await linebody.addLinebodyLossstatus(lossstatus)
