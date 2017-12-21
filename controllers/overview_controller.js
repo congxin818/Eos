@@ -4,6 +4,7 @@
 var service = require('../services/user_service');
 var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
+var Classinformation = require('../models').Classinformation;//引入数据库Classinformation模块
 var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
@@ -45,8 +46,9 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     	}
     	const linebody = await Linebody.findById(Ids[i]);
     	const linebodyKpitwo = await linebody.getLinebodyKpitwolev();
-    	if (linebody == null || linebody == ''
-    		||linebodyKpitwo == null || linebodyKpitwo == '') {
+    	const classInfo = await 
+    	if (linebody == null || linebody == ''|| linebody == undefined
+    		||linebodyKpitwo == null || linebodyKpitwo == '' || linebodyKpitwo == undefined) {
     		continue;
     	}
     	
