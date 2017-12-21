@@ -255,8 +255,7 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     */
     exports.addProduct = async function(req , res) {
         var productdata = {
-            conformproduct : req.body.conformProduct,
-            normalcycletime : req.body.normalCycletime
+            conformproduct : req.body.conformProduct
         }
         const classinformation = await Classinformation.findById(req.body.classinfId) 
         const lineproductname = await LinebodyProductname.findOne({
@@ -273,6 +272,13 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     exports.selectProductNameById = async function(linebodyproductnameId) {
         const lineproductname = await LinebodyProductname.findById(linebodyproductnameId)
         return  await Productname.findById(lineproductname.productnameId)
+    }
+
+/*
+    根据线体id和产品名称id查找产品ccy时间
+    */
+    exports.selectCCYtimeById = async function(linebodyproductnameId) {
+         return await LinebodyProductname.findById(linebodyproductnameId)  
     }
 
 /*
@@ -297,8 +303,7 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     */
     exports.updateProduct = async function(req , res) {
         productdata = {
-            conformproduct:req.body.conformProduct,
-            normalcycletime:req.body.normalCycletime
+            conformproduct:req.body.conformProduct
         }
 
         const updateReturn =  await Productdata.update(productdata,
