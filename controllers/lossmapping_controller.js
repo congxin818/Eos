@@ -17,6 +17,7 @@ var LinebodyLosstier4 = require('../models').LinebodyLosstier4;
 var Classinformation = require('../models').Classinformation;
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
+
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
