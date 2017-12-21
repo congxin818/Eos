@@ -145,23 +145,27 @@ const kpiTwoShow = {
             reviewdata : ''
           }
           if(lostatusNameList[i].status != 4){
-            const reviewday =  moment(lostatusNameList[i].createdAt).date()
-            var reviewdata =  moment().set({'date': reviewday})
-            if(reviewdata < moment()){
-              reviewdata =  moment().set({'month': moment().month() + 1 ,'date': reviewday})
+            if(lostatusNameList[i].objectstarttime != null){
+              const reviewday =  moment(lostatusNameList[i].createdAt).date()
+              var reviewdata =  moment().set({'date': reviewday})
+              if(reviewdata < moment()){
+                reviewdata =  moment().set({'month': moment().month() + 1 ,'date': reviewday})
+              }
+              // review日期
+              showObjectnow.reviewdata = moment(reviewdata).format('YYYY-MM-DD') 
             }
-            // 封装格式
-            showObjectnow.reviewdata = moment(reviewdata).format('YYYY-MM-DD') 
-            showObjectnow.projectname = lostatusNameList[i].projectname
-            showObjectnow.losstier3Lossid = lostatusNameList[i].losstier3Lossid
-            showObjectnow.status = lostatusNameList[i].status
-            showObjectnowList.push(showObjectnow)
-          }
+
+          // 封装格式
+          showObjectnow.projectname = lostatusNameList[i].projectname
+          showObjectnow.losstier3Lossid = lostatusNameList[i].losstier3Lossid
+          showObjectnow.status = lostatusNameList[i].status
+          showObjectnowList.push(showObjectnow)
         }
       }
-      dataSuccess.data = showObjectnowList
-      res.end(JSON.stringify(dataSuccess)) 
     }
+    dataSuccess.data = showObjectnowList
+    res.end(JSON.stringify(dataSuccess)) 
+  }
 
 /*
     根据loss id增加现进行项目
@@ -169,23 +173,37 @@ const kpiTwoShow = {
     exports.addObjectnowBylossid = async function(req , res) {
       if(req.body.lossIdList == null||req.body.lossIdList.length == 0
         ||req.body.lossIdList == ''||req.body.linebodyId == null
-        ||req.body.linebodyId == ''){
+        ||req.body.linebodyId == '')
        res.end(JSON.stringify(parameterError))
-   }
-   var addReturn
-   var lossIdList = req.body.lossIdList.split(",")
-   var addReturnList = []
-   for(var i=0;i<lossIdList.length;i++){
-     addReturn = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
-     addReturnList.push(addReturn)
-     if(addReturn == null||addReturn == ''){
-      res.end(JSON.stringify(addObjectError))}
-      if(addReturn.status == 101){
-       res.end(JSON.stringify(addReturn))}
-     }
-     dataSuccess.data = addReturnList
-     res.end(JSON.stringify(dataSuccess))
-   }
+
+     var addReturn
+     var lossIdList = req.body.lossIdList.split(",")
+     var addReturnList = []
+     // 验证数据是否已经存在
+     var checkAddflag = false
+     var checkAddErr
+     for(var i=0;i<lossIdList.length;i++){
+       checkAddErr = await impobjServices.checkAddexist(req.body.linebodyId,lossIdList[i])
+       if(checkAddErr.status == 101){
+        checkAddflag = true
+        break
+      }
+    }
+    if(checkAddflag == false){
+      // 添加现进行项目
+      for(var i=0;i<lossIdList.length;i++){
+        addReturn = await impobjServices.addObjectnowBylossid(req.body.linebodyId,lossIdList[i])
+        addReturnList.push(addReturn)
+        if(addReturn == null||addReturn == ''){
+          res.end(JSON.stringify(addObjectError))
+        }
+      }
+      dataSuccess.data = addReturnList
+      res.end(JSON.stringify(dataSuccess))
+    }else{
+      res.end(JSON.stringify(checkAddErr))
+    }
+  }
 
 /*
     根据线体id删除现进行项目

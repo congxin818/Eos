@@ -21,7 +21,7 @@ const moment = require('moment');
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return  await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-         where:{userUserid: userId},order: [['sequence','ASC']]})
+           where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -90,6 +90,19 @@ const moment = require('moment');
     }
 
 /*
+    增加一条lossstatus数据验证数据是否已经存在
+    */
+    exports.checkAddexist = async function(linebodyid,lossid) {
+    // 验证数据是否已经存在
+    const data = await Lossstatus.findOne({where:{linebodyLinebodyid:linebodyid,losstier3Lossid:lossid}})
+    if(data!=null){
+        if(data.status != 4){
+            return errorUtil.existError
+        }  
+    }
+    return data
+}
+/*
     对项目状态log表进行增加
     */
     exports.addLostatuslog = async function (req , res,beforStatus,beforStage){
@@ -117,5 +130,5 @@ const moment = require('moment');
     */
     exports.showImpItemhistory = async function(linebodyId) {      
         return  await Lossstatuslog.findAll({attributes: ['beforstatus','status','beforstage','stage','createdAt'],
-         where:{linebodyLinebodyid: linebodyId}})
+           where:{linebodyLinebodyid: linebodyId}})
     }
