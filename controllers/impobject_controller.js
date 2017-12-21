@@ -182,9 +182,11 @@ const kpiTwoShow = {
      var checkAddErr
      for(var i=0;i<lossIdList.length;i++){
        checkAddErr = await impobjServices.checkAddexist(req.body.linebodyId,lossIdList[i])
-       if(checkAddErr.status == 101){
-        checkAddflag = true
-        break
+       if(checkAddErr != null){
+        if(checkAddErr.status == 101){
+          checkAddflag = true
+          break
+        }
       }
     }
     if(checkAddflag == false){
