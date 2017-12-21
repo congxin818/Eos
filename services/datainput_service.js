@@ -16,6 +16,7 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
 const UserKpitwolev = require('../models').UserKpitwolev;
 const Classinformation = require('../models').Classinformation;
 const Productdata = require('../models').Productdata;
+const Productsubclass = require('../models').Productsubclass;
 const Productname = require('../models').Productname;
 const LinebodyProductname = require('../models').LinebodyProductname;
 
@@ -227,8 +228,9 @@ const LinebodyProductname = require('../models').LinebodyProductname;
          var productnameList = []
          for(var i=0;i<lineproductnameList.length;i++){
             const productname = await Productname.findById(lineproductnameList[i].productnameId)
+            // const productsubclass = await Productsubclass.findById(lineproductnameList[i].productnameId)
             productnameList.push(productname)    
-         }  
+         }
         return  productnameList
 
     }
