@@ -320,7 +320,6 @@ var showAddPrpductData = {
                        showAddPrpductData.productname = productname.name
                        showAddPrpductData.conformproduct = samenamedata[k].conformproduct
                        const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
-                       console.log('-------------->'+JSON.stringify(lineproname,null,4))
                        showAddPrpductData.normalcycletime = lineproname.normalcycletime
                        flag = false
                    }

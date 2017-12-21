@@ -34,6 +34,7 @@ const kpiTwoShow = {
   pId:'fas'
 };
 
+
 /*
     improvment展示项目池信息
     */ 
@@ -123,7 +124,6 @@ const kpiTwoShow = {
     res.end(JSON.stringify(dataSuccess))
   }
 
-
 /*
     根据线体id展示现进行项目
     */
@@ -132,10 +132,34 @@ const kpiTwoShow = {
        res.end(JSON.stringify(parameterError))
      }
        // 根据线体id把loss状态表中所有项目名字查找出来
-       const lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
-       dataSuccess.data = lostatusNameList
-       res.end(JSON.stringify(dataSuccess)) 
-     }
+       var lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
+       if(lostatusNameList != null){
+        var showObjectnowList = []
+        for(var i = 0;i < lostatusNameList.length;i++){
+          var showObjectnow = {
+            projectname : '',
+            losstier3Lossid : '',
+            status : '',
+            reviewdata : ''
+          }
+          if(lostatusNameList[i].status != 4){
+            const reviewday =  moment(lostatusNameList[i].createdAt).date()
+            var reviewdata =  moment().set({'date': reviewday})
+            if(reviewdata < moment()){
+              reviewdata =  moment().set({'month': moment().month() + 1 ,'date': reviewday})
+            }
+            // 封装格式
+            showObjectnow.reviewdata = moment(reviewdata).format('YYYY-MM-DD') 
+            showObjectnow.projectname = lostatusNameList[i].projectname
+            showObjectnow.losstier3Lossid = lostatusNameList[i].losstier3Lossid
+            showObjectnow.status = lostatusNameList[i].status
+            showObjectnowList.push(showObjectnow)
+          }
+        }
+      }
+      dataSuccess.data = showObjectnowList
+      res.end(JSON.stringify(dataSuccess)) 
+    }
 
 /*
     根据loss id增加现进行项目
