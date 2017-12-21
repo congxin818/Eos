@@ -30,10 +30,20 @@
 	根据loss三级目录id查询一个loss status
  */
  async function selectLostatusById(losstier3id,linebodyid){
-  const lossstatus = await Lossstatus.findOne({
+  const lossstatusList = await Lossstatus.findAll({
     where:{losstier3Lossid:losstier3id,linebodyLinebodyid:linebodyid}
-  });
-  return lossstatus
+  })
+  var lossstatus
+  if(lossstatusList!=null){
+   for(var i = 0;i<lossstatusList.length;i++){
+    if(lossstatusList[i].status != 4){
+      lossstatus = lossstatusList[i]
+      break
+    }
+  }
+}
+
+return lossstatus
 }
 exports.selectLostatusById = selectLostatusById;
 
