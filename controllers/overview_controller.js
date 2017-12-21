@@ -49,6 +49,7 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     		||linebodyKpitwo == null || linebodyKpitwo == '') {
     		continue;
     	}
+    	
 
     }
 
