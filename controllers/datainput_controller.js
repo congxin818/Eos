@@ -316,8 +316,8 @@ var showAddPrpductData = {
                     showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                     var flag = true
                     if(flag == true){
-                       const productname = await datainputServices.selectProductNameById(samenamedata[k].linebodyproductnameId)
-                       showAddPrpductData.productname = productname.name
+                       const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
+                       showAddPrpductData.productname = concatName
                        showAddPrpductData.conformproduct = samenamedata[k].conformproduct
                        const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
                        showAddPrpductData.normalcycletime = lineproname.normalcycletime
