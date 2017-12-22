@@ -16,6 +16,7 @@ const LinebodyLosstier4 = require('../models').LinebodyLosstier4;
 const UserKpitwolev = require('../models').UserKpitwolev;
 const Classinformation = require('../models').Classinformation;
 const Productdata = require('../models').Productdata;
+const Productbigclass = require('../models').Productbigclass;
 const Productsubclass = require('../models').Productsubclass;
 const Productname = require('../models').Productname;
 const LinebodyProductname = require('../models').LinebodyProductname;
@@ -224,16 +225,99 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     展示产品名字（最小的产品类）下拉列表
     */
     exports.selectProductnameById = async function(linebodyId) {
-         const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
-         var productnameList = []
-         for(var i=0;i<lineproductnameList.length;i++){
-            const productname = await Productname.findById(lineproductnameList[i].productnameId)
-            // const productsubclass = await Productsubclass.findById(lineproductnameList[i].productnameId)
-            productnameList.push(productname)    
-         }
-        return  productnameList
+     const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
 
+     var productnameIdList = []
+     var productsubIdList = []
+     var productbigIdList = []
+
+     var sproductbigIdList = []
+     if(lineproductnameList != null){
+        for(var i = 0;i < lineproductnameList.length;i++){
+
+            const productname = await Productname.findById(lineproductnameList[i].productnameId)
+            productnameIdList.push(productname.id)
+
+            const productsubclass = await Productsubclass.findById(productname.productsubclassId)
+            productsubIdList.push(productsubclass.id)
+
+            const productbigclass = await Productbigclass.findById(productsubclass.productbigclassId)
+            productbigIdList.push(productbigclass.id)
+        }
     }
+
+    // 查重后的数组
+    var productnameIdListNo = await exports.unique2(productnameIdList)
+    var productsubIdListNo = await exports.unique2(productsubIdList)
+    var productbigIdListNo = await exports.unique2(productbigIdList)
+    if(productbigIdListNo != null){
+        for(var i = 0;i < productbigIdListNo.length;i++){
+            var sproductsubIdList = []
+            var childData ={
+                value : '',
+                label : '',
+                children : ''}
+        // 把大类放到显示格式里
+        const productbigclass = await Productbigclass.findById(productbigIdListNo[i])
+        childData.value = productbigclass.id
+        childData.label = productbigclass.name
+
+        // 查询大类下的产品小类
+        const productsubclass = await Productsubclass.findAll({where:{productbigclassId:productbigIdListNo[i]}})
+        if(productsubclass != null){
+         for(var j = 0;j < productsubclass.length;j++){
+            var sproductnameIdList = []
+            var childsubData ={
+                value : '',
+                label : '',
+                children : ''}       
+                if(productsubIdListNo.indexOf(productsubclass[j].id) > -1){
+                    childsubData.value = productsubclass[j].id
+                    childsubData.label = productsubclass[j].name 
+
+                // 查询产品小类下的产品名称
+                const productname = await Productname.findAll({where:{productsubclassId:productsubclass[j].id}})
+                if(productname != null){
+                    for(var k = 0;k < productname.length;k++){
+                      var childrenname ={
+                        value : '',
+                        label : ''}
+                        if(productnameIdListNo.indexOf(productname[k].id) > -1){
+                            childrenname.value = productname[k].id
+                            childrenname.label = productname[k].name 
+                            sproductnameIdList.push(childrenname)
+                        }
+                    }
+                }
+                childsubData.children = sproductnameIdList
+                sproductsubIdList.push(childsubData)
+            }
+        }
+    }
+
+    childData.children = sproductsubIdList
+    sproductbigIdList.push(childData)
+}
+}
+
+
+return  sproductbigIdList
+
+}
+
+/*
+    数组查重
+    */
+    exports.unique2 = async function(thisList) {
+        thisList.sort();
+        var res = [thisList[0]];
+        for(var i = 1; i < thisList.length; i++){
+          if(thisList[i] !== res[res.length - 1]){
+             res.push(thisList[i]);
+         }
+     }
+     return res
+ }
 
 /*
     展示产品数据信息数据
@@ -269,19 +353,22 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     }
 
 /*
-    根据id查找产品名字
+    根据id查找组合名字： 产品大类/产品小类/产品名字
     */
-    exports.selectProductNameById = async function(linebodyproductnameId) {
+    exports.selectconcatNameById = async function(linebodyproductnameId) {
         const lineproductname = await LinebodyProductname.findById(linebodyproductnameId)
-        return  await Productname.findById(lineproductname.productnameId)
+        const productname =  await Productname.findById(lineproductname.productnameId)
+        const productsubclass = await Productsubclass.findById(productname.productsubclassId)
+        const productbigclass = await Productbigclass.findById(productsubclass.productbigclassId)
+        return productbigclass.name +'/'+ productsubclass.name +'/'+productname.name
     }
 
 /*
     根据线体id和产品名称id查找产品ccy时间
     */
     exports.selectCCYtimeById = async function(linebodyproductnameId) {
-         return await LinebodyProductname.findById(linebodyproductnameId)  
-    }
+     return await LinebodyProductname.findById(linebodyproductnameId)  
+ }
 
 /*
     根据productnameId查找产品数据
