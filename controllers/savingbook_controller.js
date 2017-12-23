@@ -60,10 +60,10 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     	}else{
     		await returnData.push(value);
     	}
-    	console.log("---eTime--->"+JSON.stringify(eTime));
+
     	sTime = sTime.add(1 , 'months');
     	eTime = sTime.endOf('month');
-
+		console.log("---eTime--->"+JSON.stringify(eTime));
     	eTime_num = eTime.valueOf();
     }
     dataSuccess.data = returnData;
