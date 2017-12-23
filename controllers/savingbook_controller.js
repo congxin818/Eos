@@ -47,7 +47,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     	}
     }
     const endTime_num = moment(req.body.endTime);
-    console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
     let sTime = moment(req.body.startTime);
     let eTime = sTime.endOf('month');
     let eTime_num = eTime.valueOf();
@@ -55,7 +55,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     let returnData = new Array();
     while(eTime_num <= endTime_num.valueOf()){
     	const value =  await this.computeByTimes(sTime , eTime , allData);
-    	console.log("---value--->"+JSON.stringify(value));
+    	//console.log("---value--->"+JSON.stringify(value));
     	if (value == undefined || value == null || value == '') {
     		continue;
     	}else{
@@ -64,7 +64,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
 
     	sTime = sTime.add(1 , 'months');
     	eTime = sTime.endOf('month');
-		console.log("---eTime--->"+JSON.stringify(eTime));
+		//console.log("---eTime--->"+JSON.stringify(eTime));
     	eTime_num = eTime.valueOf();
     }
     dataSuccess.data = returnData;
