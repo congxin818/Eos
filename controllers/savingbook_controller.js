@@ -112,8 +112,8 @@ async function computeByTimes(startTime , endTime , allData){
 
     	//console.log("---ceTime--->"+JSON.stringify(ceTime));
     }
-    await data.push(Number(expectSum).toFixed(2));
     await data.push(Number(actualSum).toFixed(2));
+    await data.push(Number(expectSum).toFixed(2));
     return data;
 }
 exports.computeByTimes = computeByTimes;
