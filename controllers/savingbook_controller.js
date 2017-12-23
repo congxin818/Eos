@@ -60,8 +60,10 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     	}else{
     		await returnData.push(value);
     	}
+    	console.log("---eTime--->"+JSON.stringify(eTime));
     	sTime = sTime.add(1 , 'months');
-    	eTime = eTime.add(1 , 'months');
+    	eTime = sTime.endOf('month');
+
     	eTime_num = eTime.valueOf();
     }
     dataSuccess.data = returnData;
@@ -100,7 +102,7 @@ async function computeByTimes(startTime , endTime , allData){
     	const ceTime_num = ceTime.valueOf();
 
     	if (sTime_num > ceTime_num || eTime_num < csTime_num) {
-    		console.log("---yuzhizhe--->");
+    		//console.log("---yuzhizhe--->");
     		continue;
     	}else{
     		expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
