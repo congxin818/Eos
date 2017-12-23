@@ -54,7 +54,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     let returnData = new Array();
     while(eTime_num <= endTime_num){
     	const value =  await this.computeByTimes(sTime , eTime , allData);
-    	//console.log("---value--->"+JSON.stringify(value));
+    	console.log("---value--->"+JSON.stringify(value));
     	if (value == undefined || value == null || value == '') {
     		continue;
     	}else{
