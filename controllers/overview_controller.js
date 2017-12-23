@@ -20,11 +20,11 @@ var dataSuccess = {
 async function selectOverviewByTimesAndLinebodys(req , res , next){
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
     	||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
-    	||req.body.linebodys == undefined || req.body.linebodys == ''|| req.body.linebodys == null) {
+    	||req.body.linebodIds == undefined || req.body.linebodIds == ''|| req.body.linebodIds == null) {
         res.end(errorUtil.parameterError);
         return;
     }
-    const Ids = req.body.linebodys.split(',');
+    const Ids = req.body.linebodIds.split(',');
     if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;

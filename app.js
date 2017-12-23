@@ -23,6 +23,7 @@ var datainput = require('./routes/datainput_route'); //datainput
 var summary = require('./routes/summary_route'); //summary
 var product = require('./routes/product_route');//product
 var overview = require('./routes/overview_route');//overview
+var savingbook = require('./routes/savingbook_route');//savingbook
 
 var app = express();
 
@@ -62,6 +63,7 @@ app.use('/datainput' , datainput);
 app.use('/summary' , summary);
 app.use('/product' , product);
 app.use('/overview' , overview);
+app.use('/savingbook' , savingbook);
 // 404 错误
 var errorData_404 = {
     status: '404', 
