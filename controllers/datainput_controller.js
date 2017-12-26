@@ -170,7 +170,6 @@ var showAddPrpductData = {
             }
 
         }
-
         // 返回值设定
         if(addReturn != null &&addReturn != 1 ){
             dataSuccess.data = addReturn
@@ -188,47 +187,50 @@ var showAddPrpductData = {
     */
     exports.addLosstierData= async function(req , res) {
 
-        // 验证这个2级loss有没有重复
-        var kpitwolevData = await datainputServices.selectKpitwolevDataBy(req , res)
-        if(kpitwolevData == null){
-            kpitwolevData = await datainputServices.addKpitwolevByname(req , res);
-        }
+       //  // 验证这个2级loss有没有重复
+       //  var kpitwolevData = await datainputServices.selectKpitwolevDataBy(req , res)
+       //  if(kpitwolevData == null){
+       //      kpitwolevData = await datainputServices.addKpitwolevByname(req , res);
+       //  }
 
-        // 验证这个3级loss有没有重复
-        var losstier3Data = await datainputServices.selectLosstier3By(kpitwolevData.id,
-            req.body.losstier3Id,req.body.linebodyId)
-        if(losstier3Data == null){
-            losstier3Data = await datainputServices.addLosstier3data(kpitwolevData.id,
-                req.body.losstier3Id,req.body.linebodyId)
-        }
+       //  // 验证这个3级loss有没有重复
+       //  var losstier3Data = await datainputServices.selectLosstier3By(kpitwolevData.id,
+       //      req.body.losstier3Id,req.body.linebodyId)
+       //  if(losstier3Data == null){
+       //      losstier3Data = await datainputServices.addLosstier3data(kpitwolevData.id,
+       //          req.body.losstier3Id,req.body.linebodyId)
+       //  }
 
-        // 验证添加的这个四级loss数据是否重复
-        req.body.losstier3Dataid = losstier3Data.id
-        var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
-        var addReturn = null
-        if(losstier4Data == null){
-            // 添加一条四级loss数据
-            losstier4Data = await datainputServices.addLosstier4data(losstier3Data.id,
-                req.body.losstier4Id,req.body.linebodyId)
+       //  // 验证添加的这个四级loss数据是否重复
+       //  req.body.losstier3Dataid = losstier3Data.id
+       //  var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
+       //  var addReturn = null
+       //  if(losstier4Data == null){
+       //      // 添加一条四级loss数据
+       //      losstier4Data = await datainputServices.addLosstier4data(losstier3Data.id,
+       //          req.body.losstier4Id,req.body.linebodyId)
 
-            // 添加四级loss发生的开始时间和结束时间
-            req.body.losstier4Dataid = losstier4Data.id
-            addReturn = await datainputServices.addLosstier4datatime(req , res)
-            if(addReturn != 1){
-                losstier4Data = null
-            }
+       //      // 添加四级loss发生的开始时间和结束时间
+       //      req.body.losstier4Dataid = losstier4Data.id
+       //      addReturn = await datainputServices.addLosstier4datatime(req , res)
+       //      if(addReturn != 1){
+       //          losstier4Data = null
+       //      }
 
 
-            // 封装成前台需要的格式
-            showAddloss4After = await datainputServices.showNameByloss4dataId(losstier4Data.id,showAddloss4After)
-            losstier4Data = showAddloss4After
+       //      // 封装成前台需要的格式
+       //      showAddloss4After = await datainputServices.showNameByloss4dataId(losstier4Data.id,showAddloss4After)
+       //      losstier4Data = showAddloss4After
 
-        }else{
+       //  }else{
 
-           // 四级loss数据重复
-           losstier4Data = 1
-       }
-       return losstier4Data
+       //     // 四级loss数据重复
+       //     losstier4Data = 1
+       // }
+
+       // 添加四级loss发生的开始时间和结束时间
+       const losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
+       return losstier4dataList
    }
 
 /*
