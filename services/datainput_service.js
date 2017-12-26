@@ -322,7 +322,7 @@ const moment = require('moment');
                         endtime: formatTimeReturn.formatEndtime
                     }
                     var addKpitwolevdata= await exports.addKpitwolevByname(kpitwolev,req.body.linebodyId,req.body.classinfId)
-                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:addLosstier3data.id}})
+                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:addKpitwolevdata.id}})
 
                     // 在三级data中更新所属的二级data
                     await addKpitwolevdata.addKpitwolevLosstier3Data(linebodyLosstier3List[i])
