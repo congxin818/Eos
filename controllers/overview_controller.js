@@ -30,7 +30,7 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
-    console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
+    //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
     const data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids);
     res.end(JSON.stringify(data));
 
@@ -68,32 +68,30 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     	}
     }
 
-    const endTime_num = moment(endTime);
+    const endTime_num = moment(endTime).valueOf();
     //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    
     let sTime = moment(startTime);
-    console.log("---sTime12--->"+JSON.stringify(sTime));
-    let eTime = sTime.endOf('month');
-    console.log("---sTime--->"+JSON.stringify(sTime));
+    //console.log("---sTime--->"+JSON.stringify(sTime));
+    let eTime = sTime.endOf('day');
+    
     let eTime_num = eTime.valueOf();
-
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let returnData = new Array();
-    while(eTime_num <= endTime_num.valueOf()){
+    while(eTime_num <= endTime_num){
 
         const value =  await this.computeOEETodayByTimes(sTime , eTime , allData);
         
         if (value === undefined || value === null || value === '') {
-            continue;
+            console.log("---yuzhizhe0--->");
         }else{
             await returnData.push(value);
         }
         sTime = sTime.add(1 , 'days');
-        eTime = sTime.endOf('day');
-        //console.log("---eTime--->"+JSON.stringify(eTime));
+        console.log("---eTime--->"+JSON.stringify(eTime));
         eTime_num = eTime.valueOf();
     }
-    //const data = await this.computeTodayByTimes(startTime , endTime , allData);
     return allData;
-    //console.log("------>"+JSON.stringify(allData , null , 4));
 }
 exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
 
@@ -106,6 +104,7 @@ async function computeOEETodayByTimes(startTime , endTime ,allData){
 	if (startTime == undefined || startTime == ''|| startTime == null
     	||endTime == undefined || endTime == ''|| endTime == null
     	||allData == undefined || allData == ''|| allData == null) {
+        console.log("---yuzhizhe1--->");
         return;
     }
     const sTime = moment(startTime);
@@ -117,6 +116,7 @@ async function computeOEETodayByTimes(startTime , endTime ,allData){
     	||eTime == undefined || eTime == ''|| eTime == null
         ||sTime_num == undefined || sTime_num == ''|| sTime_num == null
         ||eTime_num == undefined || eTime_num == ''|| eTime_num == null) {
+        console.log("---yuzhizhe2--->");
     	return;
     }
 
@@ -166,7 +166,7 @@ async function computeOEETodayByTimes(startTime , endTime ,allData){
     	
     }
     console.log('yuzhizhe01');
-    console.log(data);
+    console.log('-----data--->'+data);
     console.log('\n');
     return valueSum;
 }
