@@ -27,7 +27,7 @@ const moment = require('moment');
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-         where:{userUserid: userId},order: [['sequence','ASC']]})
+           where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -106,11 +106,11 @@ const moment = require('moment');
     添加四级三级二级loss结构及value值
     */
     exports.addLosstier4datatime = async function(req , res) {
-       const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
-       const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
-       await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List)
-       return LinebodyLosstier4List
-   }
+     const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
+     const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
+     await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List)
+     return LinebodyLosstier4List
+ }
 
 /*
     添加四级数据value值
@@ -381,14 +381,14 @@ const moment = require('moment');
     展示产品名字（最小的产品类）下拉列表
     */
     exports.selectProductnameById = async function(linebodyId) {
-       const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
+     const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
 
-       var productnameIdList = []
-       var productsubIdList = []
-       var productbigIdList = []
+     var productnameIdList = []
+     var productsubIdList = []
+     var productbigIdList = []
 
-       var sproductbigIdList = []
-       if(lineproductnameList != null){
+     var sproductbigIdList = []
+     if(lineproductnameList != null){
         for(var i = 0;i < lineproductnameList.length;i++){
 
             const productname = await Productname.findById(lineproductnameList[i].productnameId)
@@ -421,7 +421,7 @@ const moment = require('moment');
         // 查询大类下的产品小类
         const productsubclass = await Productsubclass.findAll({where:{productbigclassId:productbigIdListNo[i]}})
         if(productsubclass != null){
-           for(var j = 0;j < productsubclass.length;j++){
+         for(var j = 0;j < productsubclass.length;j++){
             var sproductnameIdList = []
             var childsubData ={
                 value : '',
@@ -469,11 +469,11 @@ return  sproductbigIdList
         var res = [thisList[0]];
         for(var i = 1; i < thisList.length; i++){
           if(thisList[i] !== res[res.length - 1]){
-           res.push(thisList[i]);
-       }
-   }
-   return res
-}
+             res.push(thisList[i]);
+         }
+     }
+     return res
+ }
 
 /*
     展示产品数据信息数据
@@ -523,8 +523,8 @@ return  sproductbigIdList
     根据线体id和产品名称id查找产品ccy时间
     */
     exports.selectCCYtimeById = async function(linebodyproductnameId) {
-       return await LinebodyProductname.findById(linebodyproductnameId)  
-   }
+     return await LinebodyProductname.findById(linebodyproductnameId)  
+ }
 
 /*
     根据productnameId查找产品数据
@@ -575,18 +575,14 @@ return  sproductbigIdList
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-     return classinforData =  await Classinformation.findById(classinfId)
- }
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
 
 /*
     根据四级的id找到二级三级名字
     */
-    exports.showNameByloss4dataId = async function(losstier4Data,showAddloss4After,losstier3Id,twolevName) {
-
-        showAddloss4After.losstier4Dataid = losstier4Data.id
-        showAddloss4After.starttime = losstier4Data.starttime
-        showAddloss4After.endtime = losstier4Data.endtime
-        const losstier4 = await Losstier4.findById(losstier4Data.losstier4Tier4id)
+    exports.showNameByloss4dataId = async function(showAddloss4After,losstier4Tier4id,losstier3Id,twolevName) {
+        const losstier4 = await Losstier4.findById(losstier4Tier4id)
         showAddloss4After.losstier4name = losstier4.name
         const losstier3 = await Losstier3.findById(losstier3Id)
         showAddloss4After.losstier3name = losstier3.name
