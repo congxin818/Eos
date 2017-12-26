@@ -20,13 +20,14 @@ const Productbigclass = require('../models').Productbigclass;
 const Productsubclass = require('../models').Productsubclass;
 const Productname = require('../models').Productname;
 const LinebodyProductname = require('../models').LinebodyProductname;
+const moment = require('moment');
 
 /*
     根据用户设置的顺序查找二级结构
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-           where:{userUserid: userId},order: [['sequence','ASC']]})
+         where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -39,12 +40,11 @@ const LinebodyProductname = require('../models').LinebodyProductname;
 /*
 	根据二级目录名字创建一条二级目录数据
     */
-    exports.addKpitwolevByname = async function(req) {
+    exports.addKpitwolevByname = async function(kpitwolev,linebodyId,classinfId) {
 
         const kpitwolevdata = {}
-        const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
-        const linebody = await Linebody.findById(req.body.linebodyId)
-        const classinformation = await Classinformation.findById(req.body.classinfId)    
+        const linebody = await Linebody.findById(linebodyId)
+        const classinformation = await Classinformation.findById(classinfId)    
         // 添加数据
         var linebodyKpitwolev =  await kpitwolev.createLinebodyKpitwolev(kpitwolevdata)
         await classinformation.addClassinfKpitwolevData(linebodyKpitwolev)
@@ -79,13 +79,12 @@ const LinebodyProductname = require('../models').LinebodyProductname;
 /*
     根据二级loss数据创建一条三级loss数据
     */
-    exports.addLosstier3data = async function(twolevDataid,losstier3Id,linebodyId) {
+    exports.addLosstier3data = async function(losstier3Id,linebodyId) {
         var losstier3data = {}
-        const twolevData = await LinebodyKpitwolev.findById(twolevDataid)
+
         const losstier3 = await Losstier3.findById(losstier3Id)
         const linebody = await Linebody.findById(linebodyId)
         losstier3data =  await losstier3.createLinebodyLosstier3(losstier3data)
-        await twolevData.addKpitwolevLosstier3Data(losstier3data)
         await linebody.addLinebodyLosstier3(losstier3data)
         return losstier3data
     }
@@ -93,55 +92,99 @@ const LinebodyProductname = require('../models').LinebodyProductname;
 /*
     根据三级loss数据创建一条四级loss数据
     */
-    exports.addLosstier4data = async function(losstier3Dataid,losstier4Id,linebodyId) {
+    exports.addLosstier4data = async function(losstier4Id,linebodyId) {
 
         var losstier4data = {}
-        const losstier3Data = await LinebodyLosstier3.findById(losstier3Dataid)
         const losstier4 = await Losstier4.findById(losstier4Id)
         const linebody = await Linebody.findById(linebodyId)
         losstier4data =  await losstier4.createLinebodyLosstier4(losstier4data)
-        await losstier3Data.addLosstier3Losstier4Data(losstier4data)
         await linebody.addLinebodyLosstier4(losstier4data)
         return losstier4data
     }
 
 /*
-    添加四级loss数据的开始时间和结束时间
+    添加四级三级二级loss结构及value值
     */
     exports.addLosstier4datatime = async function(req , res) {
-      const starttime = new Date(req.body.starttime)
-      const endtime = new Date(req.body.endtime)
-      var losstier4data = {
-        starttime: starttime,
-        endtime: endtime
-    }
-    const addReturn = await LinebodyLosstier4.update(losstier4data,{where:{id:req.body.losstier4Dataid}});
-
-    await exports.addLosstier4datavalue(starttime , endtime ,req.body.losstier4Dataid)
-    await exports.addLosstier3datavalue(req.body.losstier4Dataid)
-    await exports.addLosstier2datavalue(req.body.losstier4Dataid)
-
-    return addReturn
-}
+       const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
+       const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
+       await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List)
+       return LinebodyLosstier4List
+   }
 
 /*
     添加四级数据value值
     */
-    exports.addLosstier4datavalue = async function(starttime , endtime ,losstier4Dataid) {
+    exports.addLosstier4datavalue = async function(req , res) {
+        const starttime = new Date(req.body.starttime)
+        const endtime = new Date(req.body.endtime)
         // 持续时间（毫秒）
         const duration = endtime.getTime() - starttime.getTime()
-        // 找到开班时间（毫秒）
-        const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
-        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
-        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
-        const classinformation = await Classinformation.findById(kpitwolevData.classinformationClassinfid)
-        const classstarttime = classinformation.classstarttime
-        const classendtime = classinformation.classendtime
-        const classDuration = classendtime.getTime() - classstarttime.getTime()
-        const tier4value = (duration/classDuration).toFixed(4)
-        var losstier4data = {value: tier4value}
-        await LinebodyLosstier4.update(losstier4data,{where:{id:losstier4Dataid}})
+        //中间有多少个完整的15分钟
+
+        var ccyTimeindex    //完整的15分钟个数
+        var LinebodyLosstier4List =[] //返回增加的loss4值
+
+        // 格式化
+        var formatTimeReturn = await exports.formatTime(starttime,endtime)
+        var  formatStarttime = formatTimeReturn.formatStarttime //格式化开始时间
+        var formatEndtime = formatTimeReturn.formatEndtime  // 格式化结束时间
+        ccyTimeindex = (formatEndtime.unix() - formatStarttime.unix())/(15*60) - 2
+        // 判断持续时间
+
+        if(ccyTimeindex >= 0){
+            // 把开始时间到15分钟添加到表里
+            var losstier4data = {
+                value: (formatStarttime.unix() - moment(starttime).unix())/(15*60) + 1,
+                starttime: starttime,
+                endtime:  moment(formatStarttime).add(15, 'minutes')
+            }
+            var addLosstier4data = await exports.addLosstier4data(req.body.losstier4Id,req.body.linebodyId)
+            await LinebodyLosstier4.update(losstier4data,{where:{id:addLosstier4data.id}})
+            addLosstier4data = await LinebodyLosstier4.findById(addLosstier4data.id)
+            LinebodyLosstier4List.push(addLosstier4data)    
+
+            // 把15分钟到结束时间添加到表里
+            var losstier4dataEnd = {
+                value: (moment(endtime).unix()- formatEndtime.unix())/(15*60) + 1,
+                starttime: moment(formatEndtime).subtract(15, 'minutes'),
+                endtime: endtime
+            }
+            var addLosstier4dataEnd = await exports.addLosstier4data(req.body.losstier4Id,req.body.linebodyId)
+            await LinebodyLosstier4.update(losstier4dataEnd,{where:{id:addLosstier4dataEnd.id}})
+            addLosstier4dataEnd = await LinebodyLosstier4.findById(addLosstier4dataEnd.id)
+            LinebodyLosstier4List.push(addLosstier4dataEnd)
+            if(ccyTimeindex > 0){
+                // 把中间的完整15分钟value添加到表里
+                for(var i = 0;i < ccyTimeindex;i++){
+                    var losstier4data = {
+                        value: 1,
+                        starttime: moment(formatStarttime).add(15*(i + 1), 'minutes'),
+                        endtime:  moment(formatStarttime).add(15*(i + 2), 'minutes')
+                    }
+                    var addLosstier4data = await exports.addLosstier4data(req.body.losstier4Id,req.body.linebodyId)
+                    await LinebodyLosstier4.update(losstier4data,{where:{id:addLosstier4data.id}})
+                    addLosstier4data = await LinebodyLosstier4.findById(addLosstier4data.id)
+                    LinebodyLosstier4List.push(addLosstier4data)
+
+                }
+            }
+        }else{
+            // 持续时间不到15分钟
+            var losstier4data = {
+                value: (endtime.getTime() - starttime.getTime())/(15*60000),
+                starttime: starttime,
+                endtime: endtime
+            }
+            var addLosstier4data = await exports.addLosstier4data(req.body.losstier4Id,req.body.linebodyId)
+            await LinebodyLosstier4.update(losstier4data,{where:{id:addLosstier4data.id}})
+            addLosstier4data = await LinebodyLosstier4.findById(addLosstier4data.id)
+            LinebodyLosstier4List.push(addLosstier4data)
+        }
+        return LinebodyLosstier4List
     }
+
+
 
 /*
     根据四级数据id查到这个四级数据
@@ -153,37 +196,152 @@ const LinebodyProductname = require('../models').LinebodyProductname;
 /*
     添加三级数据value值
     */
-    exports.addLosstier3datavalue = async function(losstier4Dataid) {
-        //把这个四级value的值加到对应的三级目录上
-        const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
-        const loss4DataList = await  LinebodyLosstier4.findAll({'attributes': ['value'],where:{
-            linebodylosstier3Id: losstier4Data.linebodylosstier3Id
-        }})
-        var loss4Datasum = []
-        for(var i = 0;i<loss4DataList.length;i++){
-            loss4Datasum.push(loss4DataList[i].value)
+    exports.addLosstier3datavalue = async function(req , res , linebodyLosstier4List) {
+        var linebodyLosstier3List = []
+        if(linebodyLosstier4List != null){
+            for(var i = 0;i < linebodyLosstier4List.length;i++){
+                // 四级loss 的时间是否格式化
+                var formatTimeReturn ={
+                    formatStarttime : '',
+                    formatEndtime : ''
+                }
+                // 格式化传来的四级loss data开始和结束时间
+                if(linebodyLosstier4List[i].starttime.getTime()%(15*6000)==0 &&linebodyLosstier4List[i].endtime.getTime()%(15*6000)==0){
+                    formatTimeReturn.formatStarttime = linebodyLosstier4List[i].starttime
+                    formatTimeReturn.formatEndtime = linebodyLosstier4List[i].endtime
+                }else{
+                    formatTimeReturn = await exports.formatTime(linebodyLosstier4List[i].starttime,linebodyLosstier4List[i].endtime)
+                }
+                const losstier3Data =  await LinebodyLosstier3.findOne({
+                    where:{starttime : formatTimeReturn.formatStarttime,
+                        endtime : formatTimeReturn.formatEndtime,
+                        losstier3Lossid : req.body.losstier3Id}})
+                if(losstier3Data == null){
+                    // 这个四级loss的时间在三级loss不存在，新建三级lossdata
+                    var losstier3data = {
+                        value: linebodyLosstier4List[i].value,
+                        starttime: formatTimeReturn.formatStarttime,
+                        endtime: formatTimeReturn.formatEndtime
+                    }
+                    var addLosstier3data = await exports.addLosstier3data(req.body.losstier3Id,req.body.linebodyId)
+                    await LinebodyLosstier3.update(losstier3data,{where:{id:addLosstier3data.id}})
+                    addLosstier3data = await LinebodyLosstier3.findById(addLosstier3data.id)
+                    linebodyLosstier3List.push(addLosstier3data)
+
+                    // 在四级data中更新所属的三级data
+                    await addLosstier3data.addLosstier3Losstier4Data(linebodyLosstier4List[i])
+
+                }else{
+                    // 这个四级loss的时间在三级loss，把四级的value值加到三级上
+                    const newValue = linebodyLosstier4List[i].value + losstier3Data.value
+                    if(newValue > 1) {
+                        newValue = 1
+                    }
+                    //-----------------------------
+                    var losstier3data = {value: newValue}
+                    await LinebodyLosstier3.update(losstier3data,{where:{id:losstier3Data.id}})
+                    addLosstier3data = await LinebodyLosstier3.findById(losstier3Data.id)
+                    linebodyLosstier3List.push(addLosstier3data)
+
+                    // 在四级data中更新所属的三级data
+                    await losstier3Data.addLosstier3Losstier4Data(linebodyLosstier4List[i])
+                }
+            }
         }
-        const sumloss4Datavalue = await loss4Datasum.reduce(function(pre,cur){return pre + cur})
-        var losstier3data = {value: sumloss4Datavalue}
-        await LinebodyLosstier3.update(losstier3data,{where:{id:losstier4Data.linebodylosstier3Id}})
+        return linebodyLosstier3List
     }
+
+/*
+    格式化loss data的开始时间和结束时间
+    例： 开始时间 16:05:00 --> 16:00:00 结束时间 16:05:00 --> 16:15:00
+    */
+    exports.formatTime = async function(starttime,endtime) {
+    var formatStarttime //格式化开始时间
+    var formatEndtime   // 格式化结束时间
+
+    var timesetFlag = false
+    var timeendsetFlag = false
+    for(var l = 0;l < 4;l++){
+        if(moment(starttime).unix()%(15*60) == 0 && timesetFlag == false){
+            formatStarttime = moment(starttime)
+            timesetFlag = true
+        }
+        if(moment(endtime).unix()%(15*60) == 0 && timeendsetFlag == false){
+            formatEndtime = moment(endtime)
+            timeendsetFlag = true
+        }
+
+        if(moment(starttime).minute() < 15*(l + 1) && timesetFlag == false){
+            formatStarttime = moment(starttime).set({'minute': 15*l ,'second': 00})
+            timesetFlag = true
+
+        }  
+        if(moment(endtime).minute() < 15*(l + 1)&& timeendsetFlag == false){
+            formatEndtime = moment(endtime).set({'minute': 15*(l + 1) ,'second': 00})
+            break
+        }
+    }
+
+    // 返回值设定
+    return formatTimeReturn ={
+        formatStarttime : formatStarttime,
+        formatEndtime : formatEndtime
+    }
+}
+
 
 /*
     添加二级数据value值
     */
-    exports.addLosstier2datavalue = async function(losstier4Dataid) {
-        //把这个三级value的值加到对应的二级目录上
-        const losstier4Data =  await LinebodyLosstier4.findById(losstier4Dataid)
-        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
-        const loss3DataList = await  LinebodyLosstier3.findAll({'attributes': ['value'],where:{
-            linebodyKpitwolevId: losstier3Data.linebodyKpitwolevId}})
-        var loss3Datasum = []
-        for(var i = 0;i<loss3DataList.length;i++){
-            loss3Datasum.push(loss3DataList[i].value)
+    exports.addLosstier2datavalue = async function(req , res , linebodyLosstier3List) {
+
+        if(linebodyLosstier3List != null){
+            for(var i = 0;i < linebodyLosstier3List.length;i++){
+                // 四级loss 的时间是否格式化
+                var formatTimeReturn ={
+                    formatStarttime : '',
+                    formatEndtime : ''
+                }
+                // 格式化传来的三级loss data开始和结束时间
+                if(linebodyLosstier3List[i].starttime.getTime()%(15*6000)==0 &&linebodyLosstier3List[i].endtime.getTime()%(15*6000)==0){
+                    formatTimeReturn.formatStarttime = linebodyLosstier3List[i].starttime
+                    formatTimeReturn.formatEndtime = linebodyLosstier3List[i].endtime
+                }else{
+                    formatTimeReturn = await exports.formatTime(linebodyLosstier3List[i].starttime,linebodyLosstier3List[i].endtime)
+                }
+                const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
+                const kpitwolevData =  await LinebodyKpitwolev.findOne({
+                    where:{starttime : formatTimeReturn.formatStarttime,
+                        endtime : formatTimeReturn.formatEndtime,
+                        kpitwolevKpitwoid : kpitwolev.kpitwoid}})
+                if(kpitwolevData == null){
+                    // 这个三级loss的时间在二级loss不存在，新建三级lossdata
+                    var kpitwolevdata = {
+                        value: linebodyLosstier3List[i].value,
+                        starttime: formatTimeReturn.formatStarttime,
+                        endtime: formatTimeReturn.formatEndtime
+                    }
+                    var addKpitwolevdata= await exports.addKpitwolevByname(kpitwolev,req.body.linebodyId,req.body.classinfId)
+                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:addLosstier3data.id}})
+
+                    // 在三级data中更新所属的二级data
+                    await addKpitwolevdata.addKpitwolevLosstier3Data(linebodyLosstier3List[i])
+                }else{
+                    // 这个三级loss的时间在二级loss，把三级的value值加到二级上
+                    const newValue = linebodyLosstier3List[i].value + kpitwolevData.value
+                    if(newValue > 1) {
+                        newValue = 1
+                    }
+                    // ------------------
+                    var kpitwolevdata = {value: newValue}
+                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
+
+                    // 在三级data中更新所属的二级data
+                    await kpitwolevData.addKpitwolevLosstier3Data(linebodyLosstier3List[i])
+                }
+            }
         }
-        const sumloss3Datavalue = await loss3Datasum.reduce(function(pre,cur){return pre + cur})
-        var kpitwolevdata = {value: sumloss3Datavalue}
-        await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:losstier3Data.linebodyKpitwolevId}})
+
     }
 
 /*
@@ -225,14 +383,14 @@ const LinebodyProductname = require('../models').LinebodyProductname;
     展示产品名字（最小的产品类）下拉列表
     */
     exports.selectProductnameById = async function(linebodyId) {
-     const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
+       const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
 
-     var productnameIdList = []
-     var productsubIdList = []
-     var productbigIdList = []
+       var productnameIdList = []
+       var productsubIdList = []
+       var productbigIdList = []
 
-     var sproductbigIdList = []
-     if(lineproductnameList != null){
+       var sproductbigIdList = []
+       if(lineproductnameList != null){
         for(var i = 0;i < lineproductnameList.length;i++){
 
             const productname = await Productname.findById(lineproductnameList[i].productnameId)
@@ -265,7 +423,7 @@ const LinebodyProductname = require('../models').LinebodyProductname;
         // 查询大类下的产品小类
         const productsubclass = await Productsubclass.findAll({where:{productbigclassId:productbigIdListNo[i]}})
         if(productsubclass != null){
-         for(var j = 0;j < productsubclass.length;j++){
+           for(var j = 0;j < productsubclass.length;j++){
             var sproductnameIdList = []
             var childsubData ={
                 value : '',
@@ -313,11 +471,11 @@ return  sproductbigIdList
         var res = [thisList[0]];
         for(var i = 1; i < thisList.length; i++){
           if(thisList[i] !== res[res.length - 1]){
-             res.push(thisList[i]);
-         }
-     }
-     return res
- }
+           res.push(thisList[i]);
+       }
+   }
+   return res
+}
 
 /*
     展示产品数据信息数据
@@ -367,8 +525,8 @@ return  sproductbigIdList
     根据线体id和产品名称id查找产品ccy时间
     */
     exports.selectCCYtimeById = async function(linebodyproductnameId) {
-     return await LinebodyProductname.findById(linebodyproductnameId)  
- }
+       return await LinebodyProductname.findById(linebodyproductnameId)  
+   }
 
 /*
     根据productnameId查找产品数据
@@ -419,8 +577,8 @@ return  sproductbigIdList
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-       return classinforData =  await Classinformation.findById(classinfId)
-   }
+     return classinforData =  await Classinformation.findById(classinfId)
+ }
 
 /*
     根据四级的id找到二级三级名字
