@@ -217,21 +217,23 @@ var showAddPrpductData = {
        //          losstier4Data = null
        //      }
 
-
-       //      // 封装成前台需要的格式
-       //      showAddloss4After = await datainputServices.showNameByloss4dataId(losstier4Data.id,showAddloss4After)
-       //      losstier4Data = showAddloss4After
-
        //  }else{
 
        //     // 四级loss数据重复
        //     losstier4Data = 1
        // }
 
-       // 添加四级loss发生的开始时间和结束时间
-       const losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
-       return losstier4dataList
-   }
+        // 添加四级loss发生的开始时间和结束时间
+        var losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
+        // 封装成前台需要的格式
+        var showAddloss4AfterList = []
+        for(var i = 0;i < losstier4dataList.length;i++){
+            showAddloss4After = await datainputServices.showNameByloss4dataId(
+                losstier4dataList[i],showAddloss4After,req.body.losstier3Id,req.body.twolevName)
+            showAddloss4AfterList.push(showAddloss4After)
+        }
+        return showAddloss4AfterList
+    }
 
 /*
     展示产品名字（最小的产品类）下拉列表
@@ -442,7 +444,7 @@ var showAddPrpductData = {
     编辑添加loss后的三级四级项目时间
     */
     exports.updateObjectimeAfteradd = async function(req , res) {
-        if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == ''
+        if(req.body.losstier4DataidList == null||req.body.losstier4DataidList == ''
             ||req.body.starttime == null||req.body.starttime == ''
             ||req.body.endtime == null||req.body.endtime == '')
            res.end(JSON.stringify(parameterError))

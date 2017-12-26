@@ -581,20 +581,16 @@ return  sproductbigIdList
 /*
     根据四级的id找到二级三级名字
     */
-    exports.showNameByloss4dataId = async function(losstier4Dataid,showAddloss4After) {
+    exports.showNameByloss4dataId = async function(losstier4Data,showAddloss4After,losstier3Id,twolevName) {
 
-        const losstier4Data = await LinebodyLosstier4.findById(losstier4Dataid)
-        showAddloss4After.losstier4Dataid = losstier4Dataid
+        showAddloss4After.losstier4Dataid = losstier4Data.id
         showAddloss4After.starttime = losstier4Data.starttime
         showAddloss4After.endtime = losstier4Data.endtime
         const losstier4 = await Losstier4.findById(losstier4Data.losstier4Tier4id)
         showAddloss4After.losstier4name = losstier4.name
-        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
-        const losstier3 = await Losstier3.findById(losstier3Data.losstier3Lossid)
+        const losstier3 = await Losstier3.findById(losstier3Id)
         showAddloss4After.losstier3name = losstier3.name
-        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
-        const kpitwolev = await Kpitwolev.findById(kpitwolevData.kpitwolevKpitwoid)
-        showAddloss4After.losstier2name = kpitwolev.name
+        showAddloss4After.losstier2name = twolevName
         return showAddloss4After
     }
 
