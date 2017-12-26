@@ -96,7 +96,7 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
 exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
 
 /*
-    根据times和allData过滤Overview中柱状图数据的linebodyKpitwo是否在当天时间段内
+    根据times和allData每天计算OEE中柱状图数据
     startTime:当天开始时间
     endTime:当天结束时间
     */
@@ -107,17 +107,29 @@ async function computeOEETodayByTimes(startTime , endTime ,allData){
         console.log("---yuzhizhe1--->");
         return;
     }
-    const sTime = moment(startTime);
-    //console.log('----sTime-->'+JSON.stringify(sTime , null , 4));
-    const sTime_num = sTime.valueOf();
-    const eTime = moment(endTime);
-    const eTime_num = eTime.valueOf();
-    if (sTime == undefined || sTime == ''|| sTime == null
-    	||eTime == undefined || eTime == ''|| eTime == null
-        ||sTime_num == undefined || sTime_num == ''|| sTime_num == null
-        ||eTime_num == undefined || eTime_num == ''|| eTime_num == null) {
-        console.log("---yuzhizhe2--->");
-    	return;
+    
+    const endTime_num = moment(endTime).valueOf();
+    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    
+    let sTime = moment(startTime);
+    //console.log("---sTime--->"+JSON.stringify(sTime));
+    let eTime = sTime.add(15 , 'minutes');
+    
+    let eTime_num = eTime.valueOf();
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    let returnData = new Array();
+    while(eTime_num <= endTime_num){
+
+        const value =  await this.computeOEETodayByTimes(sTime , eTime , allData);
+        
+        if (value === undefined || value === null || value === '') {
+            console.log("---yuzhizhe0--->");
+        }else{
+            await returnData.push(value);
+        }
+        sTime = sTime.add(15 , 'minutes');
+        console.log("---eTime--->"+JSON.stringify(eTime));
+        eTime_num = eTime.valueOf();
     }
 
     const returnTime = sTime.year() + '/' + Number(sTime.month()+1) + '/' + sTime.date();
@@ -125,52 +137,67 @@ async function computeOEETodayByTimes(startTime , endTime ,allData){
     //console.log("---returnTime--->"+JSON.stringify(returnTime));
     let data = new Array();
     await data.push(returnTime);
+}
+exports.computeOEETodayByTimes = computeOEETodayByTimes;
+
+/*
+    根据times和allData每15分钟计算OEE中柱状图数据
+    startTime:15分钟开始时间
+    endTime:15分钟结束时间
+    */
+async function computeOEEQuarterByTimes(startTime , endTime ,allData , Ids , type){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||allData == undefined || allData == ''|| allData == null
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||type == undefined || type == ''|| type == null) {
+        console.log("---yuzhizhe1--->");
+        return 0;
+    }
+    const startTime_num = moment(startTime).valueOf();
+    const endTime_num = moment(endTime).valueOf();
+    let returnData = new Array();
 
     let valueSum = 0;
     let weightSum = 0;
-    let weightMap = new Map();
+    for (var i = Ids.length - 1; i >= 0; i--) {
+        const linebody = await Linebody.findById(Ids[i]);
+        if (linebody === undefined || linebody === null || linebody === '') {
+            continue;
+        }
+        const classflag = await ;
+        weightSum += Number(linebody.weight) * Number(classflag);
+    }
     for (var i = allData.length - 1; i >= 0; i--) {
         const kpitwo = await Kpitwolev.findById(allData[i].kpitwolevKpitwoid);
         if (kpitwo == undefined || kpitwo == ''|| kpitwo == null) {
             //console.log('yuzhizhe02');
             continue;
         }else{
-            if (kpitwo.name == 'OEE') {
-                const csTime = new Date(allData[i].starttime).getTime();
-                const ceTime = new Date(allData[i].endtime).getTime();
+            if (kpitwo.name == type) {
+                const csTime = moment(allData[i].starttime).valueOf();
+                const ceTime = moment(allData[i].endtime).valueOf();
                 //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
-                console.log('----csTime-->'+JSON.stringify(new Date(allData[i].starttime) , null , 4));
                 if (csTime == undefined || csTime == ''|| csTime == null
                     ||ceTime == undefined || ceTime == ''|| ceTime == null) {
                     //console.log('yuzhizhe03');
                     continue;
                 }
-                if (csTime > eTime_num || ceTime < sTime_num) {
-                    //console.log('yuzhizhe04');
-                    continue;
-                }else{
+                if (csTime >= startTime_num && ceTime <= endTime_num) {
                     const linebody = await Linebody.findById(allData[i].linebodyLinebodyid,{'attributes': ['weight']});
                     console.log('----linebody.weight-->'+JSON.stringify(linebody.weight , null , 4));
                     //weight_sum += linebody.weight;
                     valueSum += Number(allData[i].value) * Number(linebody.weight) * Number(allData[i].classflag);
-                    let mapWeightEle = weightMap.get(allData[i].linebodyLinebodyid);
-                    if (!mapWeightEle)
-                    {
-                        mapWeightEle = new Array ();
-                    }
-                    mapWeightEle.push (linebody.weight);
-                    weightMap.set(allData[i].linebodyLinebodyid , mapWeightEle);
+                    
+                }else{
+                    
                 }
             }
         }
-    	
     }
-    console.log('yuzhizhe01');
-    console.log('-----data--->'+data);
-    console.log('\n');
     return valueSum;
 }
-exports.computeOEETodayByTimes = computeOEETodayByTimes;
+exports.computeOEEQuarterByTimes = computeOEEQuarterByTimes;
 
 /*
     根据times和linebodyKpitwo过滤Overview中柱状图数据的linebodyKpitwo是否在时间段内
