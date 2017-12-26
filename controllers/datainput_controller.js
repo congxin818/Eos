@@ -92,22 +92,22 @@ var showAddPrpductData = {
                     losstier4List = losstier4NameList
                     flag = false
                 }else{
-                   losstier4List = await losstier4List.concat(losstier4NameList)
-               }
-           }
-       }
-       showLosstier34.losstier4 = losstier4List
-       showLosstier34.losstier3 = losstier3DataList
-       dataSuccess.data = showLosstier34
-       res.end(JSON.stringify(dataSuccess))     
-   }
+                 losstier4List = await losstier4List.concat(losstier4NameList)
+             }
+         }
+     }
+     showLosstier34.losstier4 = losstier4List
+     showLosstier34.losstier3 = losstier3DataList
+     dataSuccess.data = showLosstier34
+     res.end(JSON.stringify(dataSuccess))     
+ }
 
 
 /*
     点击确定按钮，创建一条数据并添加时间
     */
     exports.addLosstier4time2 = async function(req , res) {
-       if(req.body.classinfIdList == null||req.body.classinfIdList == ''
+     if(req.body.classinfIdList == null||req.body.classinfIdList == ''
         ||req.body.twolevName == null||req.body.twolevName == ''
         ||req.body.losstier3Id == null||req.body.losstier3Id == ''
         ||req.body.losstier4Id == null||req.body.losstier4Id == ''
@@ -217,21 +217,27 @@ var showAddPrpductData = {
        //          losstier4Data = null
        //      }
 
-
-       //      // 封装成前台需要的格式
-       //      showAddloss4After = await datainputServices.showNameByloss4dataId(losstier4Data.id,showAddloss4After)
-       //      losstier4Data = showAddloss4After
-
        //  }else{
 
        //     // 四级loss数据重复
        //     losstier4Data = 1
        // }
 
-       // 添加四级loss发生的开始时间和结束时间
-       const losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
-       return losstier4dataList
-   }
+        // 添加四级loss发生的开始时间和结束时间
+        var losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
+        
+        // 封装成前台需要的格式
+        for(var i = 0;i < losstier4dataList.length;i++){
+            showAddloss4After.losstier4Dataid = showAddloss4After.losstier4Dataid +','+ losstier4dataList[i].id
+        }
+        // 把多余的 ，去掉
+        showAddloss4After.losstier4Dataid =  showAddloss4After.losstier4Dataid.slice(1,)
+        showAddloss4After.starttime = req.body.starttime
+        showAddloss4After.endtime = req.body.endtime
+        showAddloss4After = await datainputServices.showNameByloss4dataId(
+            showAddloss4After,req.body.losstier4Id,req.body.losstier3Id,req.body.twolevName)
+        return showAddloss4After
+    }
 
 /*
     展示产品名字（最小的产品类）下拉列表
@@ -240,11 +246,11 @@ var showAddPrpductData = {
         if(req.body.linebodyId == null||req.body.linebodyId == '')
             res.end(JSON.stringify(parameterError))
         else{
-         const data = await datainputServices.selectProductnameById(req.body.linebodyId)
-         dataSuccess.data = data
-         res.end(JSON.stringify(dataSuccess))
-     }
- }
+            const data = await datainputServices.selectProductnameById(req.body.linebodyId)
+            dataSuccess.data = data
+            res.end(JSON.stringify(dataSuccess))
+        }
+    }
 
 /*
     增加产品信息
@@ -303,11 +309,11 @@ var showAddPrpductData = {
                             samenamedata = smdata
                             flag = false
                         }else{
-                           samenamedata = await samenamedata.concat(smdata)
-                       }
-                   }
-               }
-               var showAddPrpductData = {
+                         samenamedata = await samenamedata.concat(smdata)
+                     }
+                 }
+             }
+             var showAddPrpductData = {
                 productid:'',
                 productname:'',
                 conformproduct:'',
@@ -318,15 +324,15 @@ var showAddPrpductData = {
                     showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                     var flag = true
                     if(flag == true){
-                       const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
-                       showAddPrpductData.productname = concatName
-                       showAddPrpductData.conformproduct = samenamedata[k].conformproduct
-                       const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
-                       showAddPrpductData.normalcycletime = lineproname.normalcycletime
-                       flag = false
-                   }
+                     const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
+                     showAddPrpductData.productname = concatName
+                     showAddPrpductData.conformproduct = samenamedata[k].conformproduct
+                     const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
+                     showAddPrpductData.normalcycletime = lineproname.normalcycletime
+                     flag = false
+                 }
 
-               }
+             }
                 // 把多余的 ，去掉
                 showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
                 showProduct.push(showAddPrpductData)
@@ -369,8 +375,8 @@ var showAddPrpductData = {
             ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
-         var productIdList = req.body.productIdList.split(",")
-         for(var i = 0;i < productIdList.length;i++){
+           var productIdList = req.body.productIdList.split(",")
+           for(var i = 0;i < productIdList.length;i++){
                 // 删除一条产品信息
                 const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
                 if (deleteReturn == null||deleteReturn == '' ){
@@ -442,11 +448,11 @@ var showAddPrpductData = {
     编辑添加loss后的三级四级项目时间
     */
     exports.updateObjectimeAfteradd = async function(req , res) {
-        if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == ''
+        if(req.body.losstier4DataidList == null||req.body.losstier4DataidList == ''
             ||req.body.starttime == null||req.body.starttime == ''
             ||req.body.endtime == null||req.body.endtime == '')
-           res.end(JSON.stringify(parameterError))
-       else{
+         res.end(JSON.stringify(parameterError))
+     else{
             // 编辑四级data
             const updateReturn = await datainputServices.addLosstier4datatime(req , res)
 
@@ -464,9 +470,9 @@ var showAddPrpductData = {
     删除loss信息
     */
     exports.deleteLoss4data = async function(req , res) {
-     if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == '')
-         res.end(JSON.stringify(parameterError))
-     else{
+       if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == '')
+           res.end(JSON.stringify(parameterError))
+       else{
         const deleteReturn = await datainputServices.deleteLoss4data(req.body.losstier4Dataid)
         if(deleteReturn!=null){
             dataSuccess.data = deleteReturn
