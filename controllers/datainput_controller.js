@@ -8,6 +8,7 @@
 const twolevServices = require('../services/kpitwolev_service');
 const lossstatusServices = require('../services/lossstatus_service');
 const datainputServices = require('../services/datainput_service');
+const textServices = require('../services/linebody_extend_service');
 const Kpitwolev = require('../models').Kpitwolev;
 const Losscategory = require('../models').Losscategory;
 const errorUtil = require('../utils/errorUtil');
@@ -125,6 +126,7 @@ var showAddPrpductData = {
             const endtimeday =  moment(req.body.endtime).dayOfYear()
             if((moment(req.body.starttime).isAfter(classinforData.classstarttime)||
                 moment(req.body.starttime).isSame(classinforData.classstarttime))
+
                 && (moment(req.body.endtime).isBefore(classinforData.classendtime)
                     ||moment(req.body.endtime).isSame(classinforData.classendtime))){
                     // loss四级时间在这一天的开班时间内
@@ -225,7 +227,7 @@ var showAddPrpductData = {
 
         // 添加四级loss发生的开始时间和结束时间
         var losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
-        
+
         // 封装成前台需要的格式
         for(var i = 0;i < losstier4dataList.length;i++){
             showAddloss4After.losstier4Dataid = showAddloss4After.losstier4Dataid +','+ losstier4dataList[i].id
@@ -453,6 +455,7 @@ var showAddPrpductData = {
             ||req.body.endtime == null||req.body.endtime == '')
          res.end(JSON.stringify(parameterError))
      else{
+            var losstier4DataidList = req.body.losstier4DataidList.split(",")
             // 编辑四级data
             const updateReturn = await datainputServices.addLosstier4datatime(req , res)
 
@@ -481,4 +484,10 @@ var showAddPrpductData = {
             // 删除失败
         }     
     }
+}
+
+exports.getClassflag = async function(req , res){
+   var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
+    dataSuccess.data = classflag
+    res.end(JSON.stringify(dataSuccess))
 }

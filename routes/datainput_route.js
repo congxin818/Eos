@@ -87,4 +87,11 @@ router.post('/updateObjectimeAfteradd', function(req, res, next) {
 router.post('/deleteLoss4data', function(req, res, next) {
     controller.deleteLoss4data(req , res , next);
 });
+
+/*
+	test
+ */
+router.post('/getClassflag', function(req, res, next) {
+    controller.getClassflag(req , res , next);
+});
 module.exports = router;
