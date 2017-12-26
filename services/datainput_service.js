@@ -118,8 +118,6 @@ const moment = require('moment');
     exports.addLosstier4datavalue = async function(req , res) {
         const starttime = new Date(req.body.starttime)
         const endtime = new Date(req.body.endtime)
-        // 持续时间（毫秒）
-        const duration = endtime.getTime() - starttime.getTime()
         //中间有多少个完整的15分钟
 
         var ccyTimeindex    //完整的15分钟个数
@@ -233,7 +231,7 @@ const moment = require('moment');
 
                 }else{
                     // 这个四级loss的时间在三级loss，把四级的value值加到三级上
-                    const newValue = linebodyLosstier4List[i].value + losstier3Data.value
+                    var newValue = linebodyLosstier4List[i].value + losstier3Data.value
                     if(newValue > 1) {
                         newValue = 1
                     }
@@ -328,7 +326,7 @@ const moment = require('moment');
                     await addKpitwolevdata.addKpitwolevLosstier3Data(linebodyLosstier3List[i])
                 }else{
                     // 这个三级loss的时间在二级loss，把三级的value值加到二级上
-                    const newValue = linebodyLosstier3List[i].value + kpitwolevData.value
+                    var newValue = linebodyLosstier3List[i].value + kpitwolevData.value
                     if(newValue > 1) {
                         newValue = 1
                     }
