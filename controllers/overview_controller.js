@@ -19,6 +19,9 @@ var dataSuccess = {
     根据times和linebodys查询Overview数据
     */
 async function selectOverviewByTimesAndLinebodys(req , res , next){
+    console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
+    console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
+    console.log("---req.body.linebodIds--->"+JSON.stringify(req.body.linebodIds));
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
     	||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
     	||req.body.linebodIds == undefined || req.body.linebodIds == ''|| req.body.linebodIds == null) {
@@ -26,6 +29,7 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         return;
     }
     const Ids = req.body.linebodIds.split(',');
+    console.log("---Ids.length--->"+JSON.stringify(Ids.length));
     if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
