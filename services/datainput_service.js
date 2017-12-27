@@ -27,7 +27,7 @@ const moment = require('moment');
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-           where:{userUserid: userId},order: [['sequence','ASC']]})
+         where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -77,6 +77,13 @@ const moment = require('moment');
     }
 
 /*
+    根据四级数据id查到这个四级数据
+    */
+    exports.selectLosstier4DataByid = async function(losstier4Dataid) {
+        return LinebodyLosstier4.findById(losstier4Dataid)
+    }
+
+/*
     根据二级loss数据创建一条三级loss数据
     */
     exports.addLosstier3data = async function(losstier3Id,linebodyId) {
@@ -106,11 +113,11 @@ const moment = require('moment');
     添加四级三级二级loss结构及value值
     */
     exports.addLosstier4datatime = async function(req , res) {
-     const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
-     const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
-     await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List)
-     return LinebodyLosstier4List
- }
+       const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
+       const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
+       // await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List,LinebodyLosstier4List)
+       return LinebodyLosstier4List
+   }
 
 /*
     添加四级数据value值
@@ -182,15 +189,6 @@ const moment = require('moment');
         return LinebodyLosstier4List
     }
 
-
-
-/*
-    根据四级数据id查到这个四级数据
-    */
-    exports.selectLosstier4DataByid = async function(losstier4Dataid) {
-        return LinebodyLosstier4.findById(losstier4Dataid)
-    }
-
 /*
     添加三级数据value值
     */
@@ -229,20 +227,44 @@ const moment = require('moment');
                     // 在四级data中更新所属的三级data
                     await addLosstier3data.addLosstier3Losstier4Data(linebodyLosstier4List[i])
 
+                    // 新建二级loss data
+                    const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
+                    const kpitwolevData =  await LinebodyKpitwolev.findById(addLosstier3data.linebodyKpitwolevId)
+                    var kpitwolevdata = {
+                        value: addLosstier3data.value,
+                        starttime: formatTimeReturn.formatStarttime,
+                        endtime: formatTimeReturn.formatEndtime
+                    }
+                    var addKpitwolevdata= await exports.addKpitwolevByname(kpitwolev,req.body.linebodyId,req.body.classinfId)
+                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:addKpitwolevdata.id}})
+
+                    // 在三级data中更新所属的二级data
+                    await addKpitwolevdata.addKpitwolevLosstier3Data(addLosstier3data)
+
+                    
+
                 }else{
                     // 这个四级loss的时间在三级loss，把四级的value值加到三级上
                     var newValue = linebodyLosstier4List[i].value + losstier3Data.value
                     if(newValue > 1) {
                         newValue = 1
                     }
-                    //-----------------------------
+                    losstier3Data.addValue = linebodyLosstier4List[i].value
+                    //newValue-----------------
                     var losstier3data = {value: newValue}
                     await LinebodyLosstier3.update(losstier3data,{where:{id:losstier3Data.id}})
                     addLosstier3data = await LinebodyLosstier3.findById(losstier3Data.id)
                     linebodyLosstier3List.push(addLosstier3data)
 
-                    // 在四级data中更新所属的三级data
-                    await losstier3Data.addLosstier3Losstier4Data(linebodyLosstier4List[i])
+                    // 更新二级value
+                    const kpitwolevData =  await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
+                    var newloss2Value = linebodyLosstier4List[i].value + kpitwolevData.value
+                    if(newloss2Value > 1) {
+                        newloss2Value = 1
+                    }
+                    // newloss2Value-----------
+                    var kpitwolevdata = {value: newloss2Value}
+                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
                 }
             }
         }
@@ -287,61 +309,6 @@ const moment = require('moment');
     }
 }
 
-
-/*
-    添加二级数据value值
-    */
-    exports.addLosstier2datavalue = async function(req , res , linebodyLosstier3List) {
-
-        if(linebodyLosstier3List != null){
-            for(var i = 0;i < linebodyLosstier3List.length;i++){
-                // 四级loss 的时间是否格式化
-                var formatTimeReturn ={
-                    formatStarttime : '',
-                    formatEndtime : ''
-                }
-                // 格式化传来的三级loss data开始和结束时间
-                if(linebodyLosstier3List[i].starttime.getTime()%(15*6000)==0 &&linebodyLosstier3List[i].endtime.getTime()%(15*6000)==0){
-                    formatTimeReturn.formatStarttime = linebodyLosstier3List[i].starttime
-                    formatTimeReturn.formatEndtime = linebodyLosstier3List[i].endtime
-                }else{
-                    formatTimeReturn = await exports.formatTime(linebodyLosstier3List[i].starttime,linebodyLosstier3List[i].endtime)
-                }
-                const kpitwolev = await Kpitwolev.findOne({where:{name:req.body.twolevName}})
-                const kpitwolevData =  await LinebodyKpitwolev.findOne({
-                    where:{starttime : formatTimeReturn.formatStarttime,
-                        endtime : formatTimeReturn.formatEndtime,
-                        kpitwolevKpitwoid : kpitwolev.kpitwoid}})
-                if(kpitwolevData == null){
-                    // 这个三级loss的时间在二级loss不存在，新建三级lossdata
-                    var kpitwolevdata = {
-                        value: linebodyLosstier3List[i].value,
-                        starttime: formatTimeReturn.formatStarttime,
-                        endtime: formatTimeReturn.formatEndtime
-                    }
-                    var addKpitwolevdata= await exports.addKpitwolevByname(kpitwolev,req.body.linebodyId,req.body.classinfId)
-                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:addKpitwolevdata.id}})
-
-                    // 在三级data中更新所属的二级data
-                    await addKpitwolevdata.addKpitwolevLosstier3Data(linebodyLosstier3List[i])
-                }else{
-                    // 这个三级loss的时间在二级loss，把三级的value值加到二级上
-                    var newValue = linebodyLosstier3List[i].value + kpitwolevData.value
-                    if(newValue > 1) {
-                        newValue = 1
-                    }
-                    // ------------------
-                    var kpitwolevdata = {value: newValue}
-                    await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
-
-                    // 在三级data中更新所属的二级data
-                    await kpitwolevData.addKpitwolevLosstier3Data(linebodyLosstier3List[i])
-                }
-            }
-        }
-
-    }
-
 /*
     验证添加的这个二级loss数据是否重复
     */
@@ -381,26 +348,26 @@ const moment = require('moment');
     展示产品名字（最小的产品类）下拉列表
     */
     exports.selectProductnameById = async function(linebodyId) {
-     const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
+        const lineproductnameList = await LinebodyProductname.findAll({where:{linebodyLinebodyid:linebodyId}})
 
-     var productnameIdList = []
-     var productsubIdList = []
-     var productbigIdList = []
+        var productnameIdList = []
+        var productsubIdList = []
+        var productbigIdList = []
 
-     var sproductbigIdList = []
-     if(lineproductnameList != null){
-        for(var i = 0;i < lineproductnameList.length;i++){
+        var sproductbigIdList = []
+        if(lineproductnameList != null){
+            for(var i = 0;i < lineproductnameList.length;i++){
 
-            const productname = await Productname.findById(lineproductnameList[i].productnameId)
-            productnameIdList.push(productname.id)
+                const productname = await Productname.findById(lineproductnameList[i].productnameId)
+                productnameIdList.push(productname.id)
 
-            const productsubclass = await Productsubclass.findById(productname.productsubclassId)
-            productsubIdList.push(productsubclass.id)
+                const productsubclass = await Productsubclass.findById(productname.productsubclassId)
+                productsubIdList.push(productsubclass.id)
 
-            const productbigclass = await Productbigclass.findById(productsubclass.productbigclassId)
-            productbigIdList.push(productbigclass.id)
+                const productbigclass = await Productbigclass.findById(productsubclass.productbigclassId)
+                productbigIdList.push(productbigclass.id)
+            }
         }
-    }
 
     // 查重后的数组
     var productnameIdListNo = await exports.unique2(productnameIdList)
@@ -421,7 +388,7 @@ const moment = require('moment');
         // 查询大类下的产品小类
         const productsubclass = await Productsubclass.findAll({where:{productbigclassId:productbigIdListNo[i]}})
         if(productsubclass != null){
-         for(var j = 0;j < productsubclass.length;j++){
+           for(var j = 0;j < productsubclass.length;j++){
             var sproductnameIdList = []
             var childsubData ={
                 value : '',
@@ -469,11 +436,11 @@ return  sproductbigIdList
         var res = [thisList[0]];
         for(var i = 1; i < thisList.length; i++){
           if(thisList[i] !== res[res.length - 1]){
-             res.push(thisList[i]);
-         }
-     }
-     return res
- }
+           res.push(thisList[i]);
+       }
+   }
+   return res
+}
 
 /*
     展示产品数据信息数据
@@ -523,8 +490,8 @@ return  sproductbigIdList
     根据线体id和产品名称id查找产品ccy时间
     */
     exports.selectCCYtimeById = async function(linebodyproductnameId) {
-     return await LinebodyProductname.findById(linebodyproductnameId)  
- }
+       return await LinebodyProductname.findById(linebodyproductnameId)  
+   }
 
 /*
     根据productnameId查找产品数据
@@ -575,8 +542,8 @@ return  sproductbigIdList
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-       return classinforData =  await Classinformation.findById(classinfId)
-   }
+     return classinforData =  await Classinformation.findById(classinfId)
+ }
 
 /*
     根据四级的id找到二级三级名字
@@ -591,6 +558,24 @@ return  sproductbigIdList
     }
 
 /*
+    根据四级的id找到二级三级名字
+    */
+    exports.selectreqByloss4data = async function(losstier4Data) {
+        var lossreq ={
+            losstier3Id:'',
+            classinfIdList:'',
+            losstier2name:''
+        }
+        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
+        lossreq.losstier3Id = losstier3Data.losstier3Lossid
+        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
+        lossreq.classinfIdList = kpitwolevData.classinformationClassinfid
+        const kpitwolev = await Kpitwolev.findById(kpitwolevData.kpitwolevKpitwoid)
+        lossreq.losstier2name = kpitwolev.name
+        return lossreq
+    }
+
+/*
     删除loss4级data
     */
     exports.deleteLoss4data = async function(losstier4Dataid) {
@@ -598,4 +583,29 @@ return  sproductbigIdList
         const loss4data =  await LinebodyLosstier4.findById(losstier4Dataid)
         var data =  await loss4data.destroy();
         return data
+    }
+/*
+    删除loss4级data - 减少二级和三级lossvalue值
+    */
+    exports.deleteLoss32data = async function(losstier4Dataid) {
+        const losstier4Data = await LinebodyLosstier4.findById(losstier4Dataid)
+        // 更改三级loss
+        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
+        newloss3Value = losstier3Data.value - losstier4Data.value
+        if(newloss3Value == 0){
+            await losstier3Data.destroy();
+        }else{
+            losstier3data = {value:newloss3Value}
+            const updateloss3Return =  await LinebodyLosstier3.update(losstier3data,{where:{id:losstier3Data.id}})
+        }
+        // 更改二级loss
+        const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
+        newloss2Value = kpitwolevData.value - losstier4Data.value
+        if(newloss2Value ==0){
+            await kpitwolevData.destroy();
+        }else{
+            kpitwolevdata = {value:newloss2Value}
+            const updateloss2Return =  await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
+        }
+        return 
     }

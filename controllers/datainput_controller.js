@@ -453,9 +453,56 @@ var showAddPrpductData = {
         if(req.body.losstier4DataidList == null||req.body.losstier4DataidList == ''
             ||req.body.starttime == null||req.body.starttime == ''
             ||req.body.endtime == null||req.body.endtime == '')
-         res.end(JSON.stringify(parameterError))
-     else{
-            var losstier4DataidList = req.body.losstier4DataidList.split(",")
+          res.end(JSON.stringify(parameterError))
+      else{
+        var losstier4DataidList = req.body.losstier4DataidList.split(",")
+            // 判断是否跨15分钟
+            if(losstier4DataidList < 2){
+                // 判断是否扩大范围
+                const losstier4Data0 = await datainputServices.selectLosstier4DataByid(losstier4DataidList[0])         
+                if(req.body.starttime < losstier4Data0.starttime||req.body.endtime > losstier4Data0.endtime){
+                    if(req.body.starttime < losstier4Data0.starttime){
+                        // 参数设定
+                        req.body.starttime = req.body.starttime
+                        req.body.endtime = losstier4Data0.starttime
+                    }else{
+
+                        // 参数设定
+                        req.body.starttime = losstier4Data0.endtime
+                        req.body.endtime = req.body.endtime
+                    }
+                    req.body.linebodyId = losstier4Data0.linebodyLinebodyid
+                    req.body.losstier4Id = losstier4Data0.losstier4Tier4id
+                    var lossreq = await datainputServices.selectreqByloss4data(losstier4Data0)
+                    req.body.losstier3Id = lossreq.losstier3Id
+                    req.body.classinfIdList = lossreq.linebodyLinebodyid
+                    req.body.losstier2name = lossreq.losstier4Tier4id
+                    showAddloss4After = await exports.addLosstierData(req , res)
+                }else{
+                    if(req.body.starttime > losstier4Data0.starttime||req.body.endtime < losstier4Data0.endtime){
+                        if(req.body.starttime > losstier4Data0.starttime){
+                            // 参数设定
+                            req.body.starttime = losstier4Data0.starttime
+                            req.body.endtime = req.body.starttime
+                        }else{
+                            // 参数设定
+                            req.body.starttime = req.body.endtime
+                            req.body.endtime = losstier4Data0.endtime
+                        }
+                        req.body.linebodyId = losstier4Data0.linebodyLinebodyid
+                        req.body.losstier4Id = losstier4Data0.losstier4Tier4id
+                        var lossreq = await datainputServices.selectreqByloss4data(losstier4Data0)
+                        req.body.losstier3Id = lossreq.losstier3Id
+                        req.body.classinfIdList = lossreq.linebodyLinebodyid
+                        req.body.losstier2name = lossreq.losstier4Tier4id
+                        showAddloss4After = await exports.addLosstierData(req , res)   
+                    }else{
+
+                    }
+                }
+            }else{
+
+            }
             // 编辑四级data
             const updateReturn = await datainputServices.addLosstier4datatime(req , res)
 
@@ -473,14 +520,19 @@ var showAddPrpductData = {
     删除loss信息
     */
     exports.deleteLoss4data = async function(req , res) {
-       if(req.body.losstier4Dataid == null||req.body.losstier4Dataid == '')
-           res.end(JSON.stringify(parameterError))
-       else{
-        const deleteReturn = await datainputServices.deleteLoss4data(req.body.losstier4Dataid)
-        if(deleteReturn!=null){
-            dataSuccess.data = deleteReturn
-            res.end(JSON.stringify(dataSuccess))
+        if(req.body.losstier4DataidList == null||req.body.losstier4DataidList == ''){
+            res.end(JSON.stringify(parameterError))
         }else{
+            var deleteReturn
+            var losstier4DataidList = req.body.losstier4DataidList.split(",")
+            for(var i = 0;i < losstier4DataidList.length;i++){
+                await datainputServices.deleteLoss32data(losstier4DataidList[i])
+                deleteReturn = await datainputServices.deleteLoss4data(losstier4DataidList[i])
+            }
+            if(deleteReturn!=null){
+                dataSuccess.data = ''
+                res.end(JSON.stringify(dataSuccess))
+            }else{
             // 删除失败
         }     
     }
@@ -488,6 +540,6 @@ var showAddPrpductData = {
 
 exports.getClassflag = async function(req , res){
    var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
-    dataSuccess.data = classflag
-    res.end(JSON.stringify(dataSuccess))
+   dataSuccess.data = classflag
+   res.end(JSON.stringify(dataSuccess))
 }
