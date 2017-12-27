@@ -50,6 +50,7 @@ const moment = require('moment');
         var classidList2 =[]
         if(classidList == null){
             classflag = 0
+            return classflag;
         }else{
             for(var i=0; i< classidList.length;i++){
                 classidList2.push(classidList[i].classinformationClassinfid)  
