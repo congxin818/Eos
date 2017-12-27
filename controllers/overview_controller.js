@@ -1,7 +1,7 @@
 
 
 
-var service = require('../services/user_service');
+var linebody_extend_service = require('../services/linebody_extend_service');
 var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
 var Classinformation = require('../models').Classinformation;//引入数据库Classinformation模块
@@ -68,30 +68,30 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     	}
     }
 
-    const endTime_num = moment(endTime).valueOf();
-    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    const endTime_num = new Date(endTime).getTime();
+    //console.log("---endTime_num--->"+JSON.stringify(moment(endTime)));
     
-    let sTime = moment(startTime);
-    //console.log("---sTime--->"+JSON.stringify(sTime));
-    let eTime = sTime.endOf('day');
-    
-    let eTime_num = eTime.valueOf();
-    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    let sTime_num = new Date(startTime).getTime();
+    console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+    let eTime_num = Number(sTime_num) + 86400000;
+    console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let returnData = new Array();
     while(eTime_num <= endTime_num){
-
-        const value =  await this.computeOEETodayByTimes(sTime , eTime , allData);
+        //console.log("---sTime--1->"+JSON.stringify(sTime));
+        //console.log("---eTime--1->"+JSON.stringify(eTime));
+        const value =  await this.computeOEETodayByTimes(sTime_num , eTime_num , allData , Ids , 'OEE');
         
         if (value === undefined || value === null || value === '') {
             console.log("---yuzhizhe0--->");
         }else{
             await returnData.push(value);
         }
-        sTime = sTime.add(1 , 'days');
-        console.log("---eTime--->"+JSON.stringify(eTime));
-        eTime_num = eTime.valueOf();
+        //console.log("---eTime--->"+JSON.stringify(eTime));
+        sTime_num = Number(sTime_num) + 86400000;
+        eTime_num = Number(eTime_num) + 86400000;
     }
-    return allData;
+
+    return returnData;
 }
 exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
 
@@ -100,43 +100,58 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeOEETodayByTimes(startTime , endTime ,allData){
+async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type){
 	if (startTime == undefined || startTime == ''|| startTime == null
     	||endTime == undefined || endTime == ''|| endTime == null
-    	||allData == undefined || allData == ''|| allData == null) {
+    	||allData == undefined || allData == ''|| allData == null
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||type == undefined || type == ''|| type == null) {
         console.log("---yuzhizhe1--->");
         return;
     }
+    //console.log("---startTime--2->"+JSON.stringify(startTime));
+    //console.log("---endTime--2->"+JSON.stringify(endTime));
     
-    const endTime_num = moment(endTime).valueOf();
-    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
-    
-    let sTime = moment(startTime);
+    const sTime = new Date(startTime);
+    let sTime_num = startTime;
     //console.log("---sTime--->"+JSON.stringify(sTime));
-    let eTime = sTime.add(15 , 'minutes');
+    const returnTime = sTime.getFullYear() + '/' + Number(sTime.getMonth()+1) + '/' + sTime.getDate();
+    //console.log("---eTime--->"+JSON.stringify(eTime));
+    let eTime_num = Number(sTime_num) + 900000;
     
-    let eTime_num = eTime.valueOf();
-    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let returnData = new Array();
-    while(eTime_num <= endTime_num){
-
-        const value =  await this.computeOEETodayByTimes(sTime , eTime , allData);
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    while(eTime_num <= endTime){
+        //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+        //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+        const value =  await this.computeOEEQuarterByTimes(sTime_num , eTime_num , allData  ,  Ids , type);
         
-        if (value === undefined || value === null || value === '') {
+        if (value === undefined || value === null || value === '' || value === -1) {
             console.log("---yuzhizhe0--->");
         }else{
+            console.log("---value--->"+JSON.stringify(value));
             await returnData.push(value);
         }
-        sTime = sTime.add(15 , 'minutes');
-        console.log("---eTime--->"+JSON.stringify(eTime));
-        eTime_num = eTime.valueOf();
+        sTime_num = Number(sTime_num) + 900000;
+        eTime_num = Number(eTime_num) + 900000;
+        //console.log("---eTime--->"+JSON.stringify(eTime));
     }
-
-    const returnTime = sTime.year() + '/' + Number(sTime.month()+1) + '/' + sTime.date();
+    let sum = 0;
+    let average = 0;
+    if (returnData.length !=0) {
+        sum = await returnData.map(a => a).reduce ((pre, cur) => pre + cur);
+        console.log("---sum--->"+JSON.stringify(sum));
+        average = sum / returnData.length;
+    }
     //const returnTime = sTime.date();
-    //console.log("---returnTime--->"+JSON.stringify(returnTime));
+    console.log("---returnData.length--->"+JSON.stringify(returnData.length));
     let data = new Array();
     await data.push(returnTime);
+    const returnValue = Number(1 - average) * 100;
+    await data.push(returnValue.toFixed(2));
+    console.log('\n\n')
+    return data;
 }
 exports.computeOEETodayByTimes = computeOEETodayByTimes;
 
@@ -151,11 +166,11 @@ async function computeOEEQuarterByTimes(startTime , endTime ,allData , Ids , typ
         ||allData == undefined || allData == ''|| allData == null
         ||Ids == undefined || Ids == ''|| Ids == null
         ||type == undefined || type == ''|| type == null) {
-        console.log("---yuzhizhe1--->");
+        //console.log("---yuzhizhe1--->");
         return 0;
     }
-    const startTime_num = moment(startTime).valueOf();
-    const endTime_num = moment(endTime).valueOf();
+    const sTime_num = startTime;
+    const eTime_num = endTime;
     let returnData = new Array();
 
     let valueSum = 0;
@@ -165,8 +180,13 @@ async function computeOEEQuarterByTimes(startTime , endTime ,allData , Ids , typ
         if (linebody === undefined || linebody === null || linebody === '') {
             continue;
         }
-        const classflag = await ;
+        console.log("---sTime_num--->"+JSON.stringify(new Date(sTime_num)));
+        console.log("---eTime_num--->"+JSON.stringify(new Date(eTime_num)));
+        const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
         weightSum += Number(linebody.weight) * Number(classflag);
+    }
+    if (weightSum === 0) {
+        return -1;
     }
     for (var i = allData.length - 1; i >= 0; i--) {
         const kpitwo = await Kpitwolev.findById(allData[i].kpitwolevKpitwoid);
@@ -175,27 +195,31 @@ async function computeOEEQuarterByTimes(startTime , endTime ,allData , Ids , typ
             continue;
         }else{
             if (kpitwo.name == type) {
-                const csTime = moment(allData[i].starttime).valueOf();
-                const ceTime = moment(allData[i].endtime).valueOf();
+                const csTime = new Date(allData[i].starttime).getTime();
+                const ceTime = new Date(allData[i].endtime).getTime();
                 //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
                 if (csTime == undefined || csTime == ''|| csTime == null
                     ||ceTime == undefined || ceTime == ''|| ceTime == null) {
                     //console.log('yuzhizhe03');
                     continue;
                 }
-                if (csTime >= startTime_num && ceTime <= endTime_num) {
+                if (csTime >= sTime_num && ceTime <= eTime_num) {
                     const linebody = await Linebody.findById(allData[i].linebodyLinebodyid,{'attributes': ['weight']});
                     console.log('----linebody.weight-->'+JSON.stringify(linebody.weight , null , 4));
+                    const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , allData[i].linebodyLinebodyid);
                     //weight_sum += linebody.weight;
-                    valueSum += Number(allData[i].value) * Number(linebody.weight) * Number(allData[i].classflag);
-                    
+                    valueSum += Number(allData[i].value) * Number(linebody.weight) * Number(classflag);
                 }else{
-                    
+                    console.log('yuzhizhe04');
+                    continue;
                 }
             }
         }
     }
-    return valueSum;
+    const average = valueSum/weightSum;
+    console.log("---valueSum--->"+JSON.stringify(valueSum));
+    console.log("---weightSum--->"+JSON.stringify(weightSum));
+    return average;
 }
 exports.computeOEEQuarterByTimes = computeOEEQuarterByTimes;
 

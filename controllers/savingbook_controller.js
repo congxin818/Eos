@@ -46,7 +46,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
 	    	}
     	}
     }
-    const endTime_num = moment(req.body.endTime);
+    const endTime = moment(req.body.endTime);
     //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
     let sTime = moment(req.body.startTime);
     
@@ -54,7 +54,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     let eTime_num = eTime.valueOf();
 
     let returnData = new Array();
-    while(eTime_num <= endTime_num.valueOf()){
+    while(eTime_num <= endTime.valueOf()){
     	const value =  await this.computeByTimes(sTime , eTime , allData);
     	//console.log("---value--->"+JSON.stringify(value));
     	if (value == undefined || value == null || value == '') {
