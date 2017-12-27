@@ -21,14 +21,14 @@ var dataSuccess = {
 async function selectOverviewByTimesAndLinebodys(req , res , next){
     console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
     console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
-    console.log("---req.body.linebodIds--->"+JSON.stringify(req.body.linebodIds));
+    console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
     	||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
-    	||req.body.linebodIds == undefined || req.body.linebodIds == ''|| req.body.linebodIds == null) {
+    	||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
-    const Ids = req.body.linebodIds.split(',');
+    const Ids = req.body.linebodyIds.split(',');
     console.log("---Ids.length--->"+JSON.stringify(Ids.length));
     if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
         res.end(JSON.stringify(errorUtil.parameterError));
