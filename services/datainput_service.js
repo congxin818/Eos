@@ -255,6 +255,8 @@ const moment = require('moment');
                     await LinebodyLosstier3.update(losstier3data,{where:{id:losstier3Data.id}})
                     addLosstier3data = await LinebodyLosstier3.findById(losstier3Data.id)
                     linebodyLosstier3List.push(addLosstier3data)
+                    // 在四级data中更新所属的三级data
+                    await addLosstier3data.addLosstier3Losstier4Data(linebodyLosstier4List[i])
 
                     // 更新二级value
                     const kpitwolevData =  await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
