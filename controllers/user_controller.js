@@ -64,7 +64,7 @@ async function userLogin(req , res , next) {
                 status: '0', 
                 msg: '请求成功',
                 data:'fas',
-                falg:'001'
+                flag:'001'
             };
             SuccessFalg.data = data;
             res.end(JSON.stringify(SuccessFalg));  

@@ -112,10 +112,10 @@ exports.adminLogin = function(req , res ,next) {
                 status: '0', 
                 msg: '请求成功',
                 data:'fas',
-                falg:'002'
+                flag:'002'
             };
             SuccessFalg.data = data;
-            res.end(JSON.stringify(SuccessFalg));   
+            res.end(JSON.stringify(SuccessFalg));
         }else{
             res.end(JSON.stringify(loginError));
         }
