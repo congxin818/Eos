@@ -117,15 +117,15 @@ async function computeByTimes(startTime , endTime , allData){
                 } 
             }
             //console.log("---sTime--->"+JSON.stringify(moment(allData[i].updatedAt)));
-            const csTime = moment(allData[i].planendtime).add(1, 'months').startOf('month');
-            const csTime_num = csTime.valueOf();
+            const csTime_ = moment(allData[i].planendtime).add(1, 'months').startOf('month');
+            const csTime_num_ = csTime_.valueOf();
 
             //console.log("---csTime--->"+JSON.stringify(csTime.valueOf()));
 
-            const ceTime = csTime.add(12, 'months');
-            const ceTime_num = ceTime.valueOf();
+            const ceTime_ = csTime_.add(12, 'months');
+            const ceTime_num_ = ceTime_.valueOf();
 
-            if (sTime_num > ceTime_num || eTime_num < csTime_num) {
+            if (sTime_num > ceTime_num_ || eTime_num < csTime_num_) {
                 //console.log("---yuzhizhe--->");
                 continue;
             }else{
