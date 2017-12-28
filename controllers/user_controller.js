@@ -60,8 +60,14 @@ async function userLogin(req , res , next) {
             return;
         }
         if (userpsd == data.userpsd) {
-            dataSuccess.data = data;
-            res.end(JSON.stringify(dataSuccess));  
+            let SuccessFalg = {
+                status: '0', 
+                msg: '请求成功',
+                data:'fas',
+                falg:'001'
+            };
+            SuccessFalg.data = data;
+            res.end(JSON.stringify(SuccessFalg));  
         }else{
             res.end(JSON.stringify(loginError));
         }

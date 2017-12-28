@@ -108,8 +108,14 @@ exports.adminLogin = function(req , res ,next) {
             return;
         }
         if (adminPsd == data.adminpsd) {
-            dataSuccess.data = data;
-            res.end(JSON.stringify(dataSuccess));  
+            let SuccessFalg = {
+                status: '0', 
+                msg: '请求成功',
+                data:'fas',
+                falg:'002'
+            };
+            SuccessFalg.data = data;
+            res.end(JSON.stringify(SuccessFalg));   
         }else{
             res.end(JSON.stringify(loginError));
         }
