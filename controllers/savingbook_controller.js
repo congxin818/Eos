@@ -109,12 +109,11 @@ async function computeByTimes(startTime , endTime , allData){
                 const ceTime_num = ceTime.valueOf();
 
                 if (sTime_num > ceTime_num || eTime_num < csTime_num) {
-                    //console.log("---yuzhizhe--->");
-                    continue;
+                    
                 }else{
                     //expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
                     actualSum += Number(allData[i].startperformance - allData[i].performance) * 168000;
-                } 
+                }
             }
             //console.log("---sTime--->"+JSON.stringify(moment(allData[i].updatedAt)));
             const csTime_ = moment(allData[i].planendtime).add(1, 'months').startOf('month');
