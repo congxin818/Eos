@@ -61,20 +61,20 @@ const moment = require('moment');
         classidList2 = await exports.unique2(classidList2)
 
         for(var i=0; i< classidList2.length;i++){
-           
-            const classinfdata = await Classinformation.findById( classidList2[i])
+         
+            const classinfdata = await Classinformation.findById(classidList2[i])
 
             // 传来的时间是否在开班时间内
             if( moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix()
                 && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix() + 1){
                 classflag = 1
-            }else{
-                classflag = 0
-            }
-
+        }else{
+            classflag = 0
         }
-        return classflag
+
     }
+    return classflag
+}
 
 /*
     数组查重

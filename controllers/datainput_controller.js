@@ -40,15 +40,6 @@ const showLosstier34 = {
     losstier4:''
 }
 
-var showAddloss4After = {
-    losstier2name:'',
-    losstier3name:'',
-    losstier4name:'',
-    losstier4Dataid:'',
-    starttime:'',
-    endtime:'',
-}
-
 var showAddPrpductData = {
     productid:'',
     productname:'',
@@ -93,22 +84,22 @@ var showAddPrpductData = {
                     losstier4List = losstier4NameList
                     flag = false
                 }else{
-                 losstier4List = await losstier4List.concat(losstier4NameList)
-             }
-         }
-     }
-     showLosstier34.losstier4 = losstier4List
-     showLosstier34.losstier3 = losstier3DataList
-     dataSuccess.data = showLosstier34
-     res.end(JSON.stringify(dataSuccess))     
- }
+                   losstier4List = await losstier4List.concat(losstier4NameList)
+               }
+           }
+       }
+       showLosstier34.losstier4 = losstier4List
+       showLosstier34.losstier3 = losstier3DataList
+       dataSuccess.data = showLosstier34
+       res.end(JSON.stringify(dataSuccess))     
+   }
 
 
 /*
     点击确定按钮，创建一条数据并添加时间
     */
     exports.addLosstier4time2 = async function(req , res) {
-     if(req.body.classinfIdList == null||req.body.classinfIdList == ''
+       if(req.body.classinfIdList == null||req.body.classinfIdList == ''
         ||req.body.twolevName == null||req.body.twolevName == ''
         ||req.body.losstier3Id == null||req.body.losstier3Id == ''
         ||req.body.losstier4Id == null||req.body.losstier4Id == ''
@@ -227,6 +218,14 @@ var showAddPrpductData = {
 
         // 添加四级loss发生的开始时间和结束时间
         var losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
+        var showAddloss4After = {
+            losstier2name:'',
+            losstier3name:'',
+            losstier4name:'',
+            losstier4Dataid:'',
+            starttime:'',
+            endtime:'',
+        }
 
         // 封装成前台需要的格式
         for(var i = 0;i < losstier4dataList.length;i++){
@@ -311,11 +310,11 @@ var showAddPrpductData = {
                             samenamedata = smdata
                             flag = false
                         }else{
-                         samenamedata = await samenamedata.concat(smdata)
-                     }
-                 }
-             }
-             var showAddPrpductData = {
+                           samenamedata = await samenamedata.concat(smdata)
+                       }
+                   }
+               }
+               var showAddPrpductData = {
                 productid:'',
                 productname:'',
                 conformproduct:'',
@@ -326,15 +325,15 @@ var showAddPrpductData = {
                     showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                     var flag = true
                     if(flag == true){
-                     const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
-                     showAddPrpductData.productname = concatName
-                     showAddPrpductData.conformproduct = samenamedata[k].conformproduct
-                     const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
-                     showAddPrpductData.normalcycletime = lineproname.normalcycletime
-                     flag = false
-                 }
+                       const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
+                       showAddPrpductData.productname = concatName
+                       showAddPrpductData.conformproduct = samenamedata[k].conformproduct
+                       const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
+                       showAddPrpductData.normalcycletime = lineproname.normalcycletime
+                       flag = false
+                   }
 
-             }
+               }
                 // 把多余的 ，去掉
                 showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
                 showProduct.push(showAddPrpductData)
@@ -377,8 +376,8 @@ var showAddPrpductData = {
             ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
-           var productIdList = req.body.productIdList.split(",")
-           for(var i = 0;i < productIdList.length;i++){
+         var productIdList = req.body.productIdList.split(",")
+         for(var i = 0;i < productIdList.length;i++){
                 // 删除一条产品信息
                 const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
                 if (deleteReturn == null||deleteReturn == '' ){
@@ -497,7 +496,7 @@ var showAddPrpductData = {
                         req.body.losstier2name = lossreq.losstier4Tier4id
                         showAddloss4After = await exports.addLosstierData(req , res)   
                     }else{
-
+                        // 等于，没有更改
                     }
                 }
             }else{
@@ -539,7 +538,7 @@ var showAddPrpductData = {
 }
 
 exports.getClassflag = async function(req , res){
-   var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
-   dataSuccess.data = classflag
-   res.end(JSON.stringify(dataSuccess))
+ var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
+ dataSuccess.data = classflag
+ res.end(JSON.stringify(dataSuccess))
 }
