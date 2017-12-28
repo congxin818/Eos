@@ -50,13 +50,12 @@ const moment = require('moment');
         var classidList2 =[]
         if(classidList == null){
             classflag = 0
-            return classflag;
+            return classflag;   
         }else{
             for(var i=0; i< classidList.length;i++){
                 classidList2.push(classidList[i].classinformationClassinfid)  
             }
         }
-
         // 查重后的class数组
         classidList2 = await exports.unique2(classidList2)
 
