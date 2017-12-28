@@ -132,7 +132,7 @@ async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type
         const value =  await this.computeOEEQuarterByTimes(sTime_num , eTime_num , allData  ,  Ids , type);
         
         if (value === undefined || value === null || value === '' || value === -1) {
-            console.log("---yuzhizhe0--->");
+            //console.log("---yuzhizhe0--->");
         }else{
             console.log("---value--->"+JSON.stringify(value));
             await returnData.push(value);
