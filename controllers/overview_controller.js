@@ -83,7 +83,7 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     while(eTime_num <= endTime_num){
         //console.log("---sTime--1->"+JSON.stringify(sTime));
         //console.log("---eTime--1->"+JSON.stringify(eTime));
-        const value =  await this.computeOEETodayByTimes(sTime_num , eTime_num , allData , Ids , 'OEE');
+        const value =  await this.computeTodayByTimes(sTime_num , eTime_num , allData , Ids , 'OEE');
         
         if (value === undefined || value === null || value === '') {
             console.log("---yuzhizhe0--->");
@@ -104,7 +104,7 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type){
+async function computeTodayByTimes(startTime , endTime ,allData ,  Ids , type){
 	if (startTime == undefined || startTime == ''|| startTime == null
     	||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null
@@ -114,6 +114,9 @@ async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type
     }
     //console.log("---startTime--2->"+JSON.stringify(startTime));
     //console.log("---endTime--2->"+JSON.stringify(endTime));
+    const Target = await this.computeTodayTargetByTimes(startTime , endTime , Ids);
+    const Vision = await this.computeTodayVisionByTimes(startTime , endTime , Ids);
+    const Ideal = await this.computeTodayIdealByTimes(startTime , endTime , Ids);
     
     const sTime = new Date(startTime);
     let sTime_num = startTime;
@@ -128,7 +131,7 @@ async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type
     while(eTime_num <= endTime){
         //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
         //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
-        const value =  await this.computeOEEQuarterByTimes(sTime_num , eTime_num , allData  ,  Ids , type);
+        const value =  await this.computeQuarterByTimes(sTime_num , eTime_num , allData  ,  Ids , type);
         
         if (value === undefined || value === null || value === '' || value === -1) {
             //console.log("---yuzhizhe0--->");
@@ -142,9 +145,9 @@ async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type
     }
     let sum = 0;
     let average = 0;
+    console.log("---returnData--->"+JSON.stringify(returnData));
     if (returnData.length !=0) {
         sum = await returnData.map(a => a).reduce ((pre, cur) => pre + cur);
-        console.log("---sum--->"+JSON.stringify(sum));
         average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
@@ -153,17 +156,20 @@ async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type
     await data.push(returnTime);
     const returnValue = Number(1 - average) * 100;
     await data.push(returnValue.toFixed(2));
+    await data.push(await (Number(Target) * 100).toFixed(2));
+    await data.push(await (Number(Vision) * 100).toFixed(2));
+    await data.push(await (Number(Ideal) * 100).toFixed(2));
     console.log('\n\n')
     return data;
 }
-exports.computeOEETodayByTimes = computeOEETodayByTimes;
+exports.computeTodayByTimes = computeTodayByTimes;
 
 /*
     根据times和allData每15分钟计算OEE中柱状图数据
     startTime:15分钟开始时间
     endTime:15分钟结束时间
     */
-async function computeOEEQuarterByTimes(startTime , endTime ,allData , Ids , type){
+async function computeQuarterByTimes(startTime , endTime ,allData , Ids , type){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
         ||allData == undefined || allData == ''|| allData == null
@@ -224,7 +230,7 @@ async function computeOEEQuarterByTimes(startTime , endTime ,allData , Ids , typ
     console.log("---weightSum--->"+JSON.stringify(weightSum));
     return average;
 }
-exports.computeOEEQuarterByTimes = computeOEEQuarterByTimes;
+exports.computeQuarterByTimes = computeQuarterByTimes;
 
 /*
     根据times和linebodyKpitwo过滤Overview中柱状图数据的linebodyKpitwo是否在时间段内
@@ -253,3 +259,117 @@ async function computeByTimes(startTime , endTime ,linebodyKpitwo){
     }
 }
 exports.computeByTimes = computeByTimes;
+
+/*
+    根据times和allData每天计算OEE中柱状图Target数据
+    startTime:当天开始时间
+    endTime:当天结束时间
+    */
+async function computeTodayTargetByTimes(startTime , endTime ,Ids){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null) {
+        console.log("---参数错误--->");
+        return 0;
+    }
+    
+    let sTime_num = startTime;
+    //console.log("---sTime--->"+JSON.stringify(sTime));
+    let eTime_num = endTime;
+
+    let valueSum = 0;
+    let weightSum = 0;
+    for (var i = Ids.length - 1; i >= 0; i--) {
+        const linebody = await Linebody.findById(Ids[i]);
+        if (linebody === undefined || linebody === null || linebody === '') {
+            continue;
+        }
+        const csTime_num = new Date(linebody.targetstrattime).getTime();
+        const ceTime_num = new Date(linebody.targetendtime).getTime();
+        if (sTime_num >= csTime_num && eTime_num < ceTime_num) {
+            valueSum += Number(linebody.targetvalue) * Number(linebody.weight);
+        }else{
+            valueSum += 0;
+        }
+        weightSum += Number(linebody.weight);
+    }
+    const average = valueSum / weightSum;
+    return average;
+}
+exports.computeTodayTargetByTimes = computeTodayTargetByTimes;
+
+/*
+    根据times和allData每天计算OEE中柱状图vision数据
+    startTime:当天开始时间
+    endTime:当天结束时间
+    */
+async function computeTodayVisionByTimes(startTime , endTime ,Ids){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null) {
+        console.log("---参数错误--->");
+        return 0;
+    }
+    
+    let sTime_num = startTime;
+    //console.log("---sTime--->"+JSON.stringify(sTime));
+    let eTime_num = endTime;
+
+    let valueSum = 0;
+    let weightSum = 0;
+    for (var i = Ids.length - 1; i >= 0; i--) {
+        const linebody = await Linebody.findById(Ids[i]);
+        if (linebody === undefined || linebody === null || linebody === '') {
+            continue;
+        }
+        const csTime_num = new Date(linebody.visionstrattime).getTime();
+        const ceTime_num = new Date(linebody.visionendtime).getTime();
+        if (sTime_num >= csTime_num && eTime_num < ceTime_num) {
+            valueSum += Number(linebody.visionvalue) * Number(linebody.weight);
+        }else{
+            valueSum += 0;
+        }
+        weightSum += Number(linebody.weight);
+    }
+    const average = valueSum / weightSum;
+    return average;
+}
+exports.computeTodayVisionByTimes = computeTodayVisionByTimes;
+
+/*
+    根据times和allData每天计算OEE中柱状图ideal数据
+    startTime:当天开始时间
+    endTime:当天结束时间
+    */
+async function computeTodayIdealByTimes(startTime , endTime ,Ids){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null) {
+        console.log("---参数错误--->");
+        return 0;
+    }
+    
+    let sTime_num = startTime;
+    //console.log("---sTime--->"+JSON.stringify(sTime));
+    let eTime_num = endTime;
+
+    let valueSum = 0;
+    let weightSum = 0;
+    for (var i = Ids.length - 1; i >= 0; i--) {
+        const linebody = await Linebody.findById(Ids[i]);
+        if (linebody === undefined || linebody === null || linebody === '') {
+            continue;
+        }
+        const csTime_num = new Date(linebody.idealstrattime).getTime();
+        const ceTime_num = new Date(linebody.idealendtime).getTime();
+        if (sTime_num >= csTime_num && eTime_num < ceTime_num) {
+            valueSum += Number(linebody.idealvalue) * Number(linebody.weight);
+        }else{
+            valueSum += 0;
+        }
+        weightSum += Number(linebody.weight);
+    }
+    const average = valueSum / weightSum;
+    return average;
+}
+exports.computeTodayIdealByTimes = computeTodayIdealByTimes;
