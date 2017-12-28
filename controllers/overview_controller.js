@@ -107,7 +107,6 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
 async function computeOEETodayByTimes(startTime , endTime ,allData ,  Ids , type){
 	if (startTime == undefined || startTime == ''|| startTime == null
     	||endTime == undefined || endTime == ''|| endTime == null
-    	||allData == undefined || allData == ''|| allData == null
         ||Ids == undefined || Ids == ''|| Ids == null
         ||type == undefined || type == ''|| type == null) {
         console.log("---yuzhizhe1--->");
