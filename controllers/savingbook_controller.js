@@ -36,7 +36,7 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     	if (linebody == undefined || linebody == '' || linebody == null) {
     		continue;
     	}
-    	const lossstatus = await linebody.getLinebodyLossstatus({where:{status:3}});
+    	const lossstatus = await linebody.getLinebodyLossstatus();
     	//console.log("------>"+JSON.stringify(lossstatus));
     	for (var k = lossstatus.length - 1; k >= 0; k--) {
     		if (lossstatus[k] == undefined || lossstatus[k] == null || lossstatus[k] == '') {
@@ -94,22 +94,46 @@ async function computeByTimes(startTime , endTime , allData){
  	let expectSum = 0;
  	let actualSum = 0;
     for (var i = allData.length - 1; i >= 0; i--) {
-    	//console.log("---sTime--->"+JSON.stringify(moment(allData[i].updatedAt)));
-    	const csTime = moment(allData[i].updatedAt).add(1, 'months').startOf('month');
-    	const csTime_num = csTime.valueOf();
+        const status = allData[i].status;
+        if (status === 4 || status === null || status === '') {
+            continue;
+        }else{
+            if (status === 3) {
+                //console.log("---sTime--->"+JSON.stringify(moment(allData[i].updatedAt)));
+                const csTime = moment(allData[i].updatedAt).add(1, 'months').startOf('month');
+                const csTime_num = csTime.valueOf();
 
-    	//console.log("---csTime--->"+JSON.stringify(csTime.valueOf()));
+                //console.log("---csTime--->"+JSON.stringify(csTime.valueOf()));
 
-    	const ceTime = csTime.add(12, 'months');
-    	const ceTime_num = ceTime.valueOf();
+                const ceTime = csTime.add(12, 'months');
+                const ceTime_num = ceTime.valueOf();
 
-    	if (sTime_num > ceTime_num || eTime_num < csTime_num) {
-    		//console.log("---yuzhizhe--->");
-    		continue;
-    	}else{
-    		expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
-    		actualSum += Number(allData[i].startperformance - allData[i].performance) * 168000;
-    	}
+                if (sTime_num > ceTime_num || eTime_num < csTime_num) {
+                    //console.log("---yuzhizhe--->");
+                    continue;
+                }else{
+                    //expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
+                    actualSum += Number(allData[i].startperformance - allData[i].performance) * 168000;
+                } 
+            }
+            //console.log("---sTime--->"+JSON.stringify(moment(allData[i].updatedAt)));
+            const csTime = moment(allData[i].planendtime).add(1, 'months').startOf('month');
+            const csTime_num = csTime.valueOf();
+
+            //console.log("---csTime--->"+JSON.stringify(csTime.valueOf()));
+
+            const ceTime = csTime.add(12, 'months');
+            const ceTime_num = ceTime.valueOf();
+
+            if (sTime_num > ceTime_num || eTime_num < csTime_num) {
+                //console.log("---yuzhizhe--->");
+                continue;
+            }else{
+                expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
+                //actualSum += Number(allData[i].startperformance - allData[i].performance) * 168000;
+            }
+        }
+    	
 
     	//console.log("---ceTime--->"+JSON.stringify(ceTime));
     }

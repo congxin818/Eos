@@ -64,9 +64,9 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     		continue;
     	}
     	for (var h = linebodyKpitwo.length - 1; h >= 0; h--) {
-    	 	const falg = await this.computeByTimes(startTime , endTime , linebodyKpitwo[h]);//判断在不在所选时间区间里
+    	 	const flag = await this.computeByTimes(startTime , endTime , linebodyKpitwo[h]);//判断在不在所选时间区间里
 	     	//console.log("----falg-->"+JSON.stringify(falg , null , 4));
-	     	if (falg) {
+	     	if (flag) {
 	     		await allData.push(linebodyKpitwo[h]);
 	     	}
     	}

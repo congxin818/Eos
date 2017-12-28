@@ -586,14 +586,14 @@ async function computeKpitwoBytime(allKpitwo , startTimeValue , endTimeValue){
 				// console.log('==================');
 				// console.log('========>'+allKpitwo[i][j].id);
 				if (!(mStartTime < startTime) && !(mEndTime>endTime)) {
-					allKpitwo[i][j]['falg'] = 1;
+					allKpitwo[i][j]['flag'] = 1;
 				}else{
 					if (mStartTime < startTime) {
 						const minTime = mEndTime-startTime;//的时间段,单位为毫秒
-						allKpitwo[i][j].falg = minTime / mTime;
+						allKpitwo[i][j].flag = minTime / mTime;
 					}else{
 						const minTime = endTime-mStartTime;//所在的时间段,单位为毫秒
-						allKpitwo[i][j].falg = minTime / mTime;
+						allKpitwo[i][j].flag = minTime / mTime;
 					}
 				}
 			}
