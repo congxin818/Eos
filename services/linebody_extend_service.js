@@ -48,7 +48,7 @@ const moment = require('moment');
         var classidList = await LinebodyKpitwolev.findAll({
             'attributes': ['classinformationClassinfid'],where:{linebodyLinebodyid:linebodyid}})
         var classidList2 =[]
-        if(classidList == null){
+        if(classidList == null||classidList == ''){
             classflag = 0
             return classflag
         }else{
