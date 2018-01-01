@@ -229,7 +229,7 @@ async function computeQuarter4ByTimes(startTime , endTime , Ids , typeId){
         //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
         const linebodyLosstier4 = await linebody.getLinebodyLosstier4({where:{losstier4Tier4id:typeId}});
-        console.log("---linebodyLosstier4--->"+JSON.stringify(linebodyLosstier4 , null , 4));
+        //console.log("---linebodyLosstier4--->"+JSON.stringify(linebodyLosstier4 , null , 4));
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier4);
 
         const weight = linebody.weight;
@@ -347,9 +347,9 @@ async function computeQuarter3ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier3);
 
         const weight = linebody.weight;
-        console.log("---classflag--->"+JSON.stringify(classflag));
-        console.log("---weight--->"+JSON.stringify(weight));
-        console.log("---valuedfsd--->"+JSON.stringify(value));
+        //console.log("---classflag--->"+JSON.stringify(classflag));
+        //console.log("---weight--->"+JSON.stringify(weight));
+        //console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
   //       const data = {
@@ -466,7 +466,7 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
         //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
         const kinebodyKpitwolev = await linebody.getLinebodyKpitwolev({where:{kpitwolevKpitwoid:typeId}});
-        console.log("---kinebodyKpitwolev--->"+JSON.stringify(kinebodyKpitwolev , null , 4));
+        //console.log("---kinebodyKpitwolev--->"+JSON.stringify(kinebodyKpitwolev , null , 4));
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
 
         const weight = linebody.weight;
