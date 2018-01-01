@@ -63,7 +63,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
     		continue;
     	}
     	const tier2Value = await this.computeAll2ByTimes(req.body.startTime , req.body.endTime , Ids , userKpitwo[i].kpitwoid);
-    	if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0) {
+    	if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0 || tier2Value == 'NaN') {
     		continue;
     	}
     	let tier2 = {
@@ -88,7 +88,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 	    		continue;
 	    	}
 	    	const tier3Value = await this.computeAll3ByTimes(req.body.startTime , req.body.endTime , Ids , losstier3All[j].lossid);
-	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0) {
+	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0 || tier2Value == 'NaN') {
 	    		continue;
 	    	}
 	    	const tier3Data = {
@@ -113,7 +113,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 		    		continue;
 		    	}
 		    	const tier4Value = await this.computeAll4ByTimes(req.body.startTime , req.body.endTime , Ids , losstier4All[k].lossid);
-		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0) {
+		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0 || tier2Value == 'NaN') {
 		    		continue;
 		    	}
 		    	const tier4Data = {
