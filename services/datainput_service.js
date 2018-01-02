@@ -177,7 +177,7 @@ const moment = require('moment');
         }else{
             // 持续时间不到15分钟
             var losstier4data = {
-                value: (endtime.getTime() - starttime.getTime())/(15*60000),
+                value: (moment(endtime).unix() - moment(starttime).unix())/(15*60),
                 starttime: starttime,
                 endtime: endtime
             }
@@ -610,4 +610,62 @@ return  sproductbigIdList
             const updateloss2Return =  await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
         }
         return 
+    }
+
+/*
+    更新4级3级2级lossdata
+    */
+    exports.updateLoss4data = async function(losstier4Data,starttime,endtime){
+ 
+        // 更新四级lossdata
+        var updateLoss4dataReturn = false
+        const oldLoss4value = losstier4Data.value  //保存loss4改之前的value
+        var losstier4data = {
+            value: (moment(endtime).unix() - moment(starttime).unix())/(15*60),
+            starttime: starttime,
+            endtime: endtime
+        }
+        const updatelosstier4 = await LinebodyLosstier4.update(losstier4data,{where:{id:losstier4Data.id}})
+        const sLosstier4data = await LinebodyLosstier4.findById(losstier4Data.id)
+
+        // 更新三级lossdata
+        const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
+        var newValue = losstier3Data.value - oldLoss4value + sLosstier4data.value
+        if(newValue < 0) {
+            losstier3Data.destroy()
+        }
+        //newValue-----------------
+        var losstier3data = {value: newValue}
+        const updatelosstier3 = await LinebodyLosstier3.update(losstier3data,{where:{id:losstier3Data.id}})
+
+        // 更新二级loss
+        const kpitwolevData =  await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
+        var newloss2Value = kpitwolevData.value - oldLoss4value + sLosstier4data.value
+        if(newloss2Value < 0) {
+            kpitwolevData.destroy()
+        }
+        // newloss2Value-----------
+        var kpitwolevdata = {value: newloss2Value}
+        const updatelosstier2 = await LinebodyKpitwolev.update(kpitwolevdata,{where:{id:kpitwolevData.id}})
+
+        if(updatelosstier4 == 1 && updatelosstier3 == 1 && updatelosstier2 == 1){
+            updateLoss4dataReturn = true
+        }
+        return updateLoss4dataReturn
+    }
+
+/*
+    不更新lossdata返回值设定
+    */
+    exports.updateNoLossdataReturn = async function(losstier4data,showAddloss4After){
+        showAddloss4After.losstier4Dataid = losstier4data.id
+        const losstier4 = await Losstier4.findById(losstier4data.losstier4Tier4id)
+        showAddloss4After.losstier4name = losstier4.name
+        const losstier3data = await LinebodyLosstier3.findById(losstier4data.linebodylosstier3Id)
+        const losstier3 = await Losstier3.findById(losstier3data.losstier3Lossid)
+        showAddloss4After.losstier3name = losstier3.name
+        const losstier2data = await LinebodyKpitwolev.findById(losstier3data.linebodyKpitwolevId)
+        const kpitwolev = await Kpitwolev.findById(losstier2data.kpitwolevKpitwoid)
+        showAddloss4After.losstier2name = kpitwolev.name
+        return showAddloss4After
     }

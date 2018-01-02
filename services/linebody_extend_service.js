@@ -49,7 +49,6 @@ const moment = require('moment');
             'attributes': ['classinformationClassinfid'],where:{linebodyLinebodyid:linebodyid}})
         var classidList2 =[]
         if(classidList == null||classidList == ''){
-            console.log('--------------->')
             classflag = 0
             return classflag;   
         }else{
