@@ -7,5 +7,5 @@ mysql: {
           database: 'db_node',
           charset:'utf8',
           collate:'utf8_general_ci'
-       }
+      }
 }
