@@ -114,7 +114,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 	    		if (losstier4 == undefined || losstier4 == null || losstier4 == '') {
 		    		continue;
 		    	}
-		    	const tier4Value = await this.computeAll4ByTimes(req.body.startTime , req.body.endTime , Ids , losstier4All[k].lossid);
+		    	const tier4Value = await this.computeAll4ByTimes(req.body.startTime , req.body.endTime , Ids , losstier4All[k].tier4id);
 		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0) {
 		    		continue;
 		    	}
