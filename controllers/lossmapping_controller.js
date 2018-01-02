@@ -105,6 +105,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 
 	    	const losstier4All = await losstier3.getLosscategoryLosstier4();
 	    	for (var k = losstier4All.length - 1; k >= 0; k--) {
+                console.log("---yuzhizhe1-----");
 	    		if (losstier4All[k] == undefined || losstier4All[k] == null || losstier4All[k] == '') {
 	    			continue;
 	    		}
