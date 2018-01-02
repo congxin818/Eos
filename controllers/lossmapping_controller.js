@@ -192,8 +192,8 @@ async function computeAll4ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    // console.log("---sum--->"+JSON.stringify(sum));
-    // console.log("---weight--->"+JSON.stringify(weight));
+    console.log("---sum--->"+JSON.stringify(sum));
+    console.log("---weight--->"+JSON.stringify(weight));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
@@ -235,9 +235,9 @@ async function computeQuarter4ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier4);
 
         const weight = linebody.weight;
-        //console.log("---classflag--->"+JSON.stringify(classflag));
-        //console.log("---weight--->"+JSON.stringify(weight));
-        //console.log("---valuedfsd--->"+JSON.stringify(value));
+        console.log("---classflag--->"+JSON.stringify(classflag));
+        console.log("---weight--->"+JSON.stringify(weight));
+        console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }
@@ -349,9 +349,9 @@ async function computeQuarter3ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier3);
 
         const weight = linebody.weight;
-        console.log("---classflag--->"+JSON.stringify(classflag));
-        console.log("---weight--->"+JSON.stringify(weight));
-        console.log("---valuedfsd--->"+JSON.stringify(value));
+        //console.log("---classflag--->"+JSON.stringify(classflag));
+        //console.log("---weight--->"+JSON.stringify(weight));
+        //console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
   //       const data = {
@@ -408,7 +408,7 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         const value = await this.computeQuarter2ByTimes(sTime_num , eTime_num , Ids , typeId);
         
         if (value === undefined || value === null || value === '' || value === -1) {
-            console.log("---yuzhizhe0--->");
+            //console.log("---yuzhizhe0--->");
         }else{
             //console.log("---value--->"+JSON.stringify(value));
             await returnData.push(value);
@@ -426,8 +426,8 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    console.log("---sum--->"+JSON.stringify(sum));
-    console.log("---weight--->"+JSON.stringify(weight));
+    //console.log("---sum--->"+JSON.stringify(sum));
+    //console.log("---weight--->"+JSON.stringify(weight));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
