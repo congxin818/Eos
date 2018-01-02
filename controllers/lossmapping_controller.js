@@ -88,7 +88,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 	    		continue;
 	    	}
 	    	const tier3Value = await this.computeAll3ByTimes(req.body.startTime , req.body.endTime , Ids , losstier3All[j].lossid);
-	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0 || tier2Value == 'NaN') {
+	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0 || tier3Value == 'NaN') {
 	    		continue;
 	    	}
 	    	const tier3Data = {
@@ -104,7 +104,9 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 	    	await tier2.link.push(tier3Link);
 
 	    	const losstier4All = await losstier3.getLosscategoryLosstier4();
+            //console.log("---yuzhizhe1111-----" + JSON.stringify(losstier4All , null , 4));
 	    	for (var k = losstier4All.length - 1; k >= 0; k--) {
+                //console.log("---yuzhizhe1-----");
 	    		if (losstier4All[k] == undefined || losstier4All[k] == null || losstier4All[k] == '') {
 	    			continue;
 	    		}
@@ -113,7 +115,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 		    		continue;
 		    	}
 		    	const tier4Value = await this.computeAll4ByTimes(req.body.startTime , req.body.endTime , Ids , losstier4All[k].lossid);
-		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0 || tier2Value == 'NaN') {
+		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0 || tier4Value == 'NaN') {
 		    		continue;
 		    	}
 		    	const tier4Data = {
@@ -127,6 +129,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 		    	};
 		    	await tier2.data.push(tier4Data);
 		    	await tier2.link.push(tier4Link);
+                //console.log("---yuzhizhe22-----");
 	    	}
     	}
     	await returnData.push(tier2);
@@ -190,8 +193,8 @@ async function computeAll4ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    // console.log("---sum--->"+JSON.stringify(sum));
-    // console.log("---weight--->"+JSON.stringify(weight));
+    console.log("---sum--->"+JSON.stringify(sum));
+    console.log("---weight--->"+JSON.stringify(weight));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
@@ -233,9 +236,9 @@ async function computeQuarter4ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier4);
 
         const weight = linebody.weight;
-        //console.log("---classflag--->"+JSON.stringify(classflag));
-        //console.log("---weight--->"+JSON.stringify(weight));
-        //console.log("---valuedfsd--->"+JSON.stringify(value));
+        console.log("---classflag--->"+JSON.stringify(classflag));
+        console.log("---weight--->"+JSON.stringify(weight));
+        console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }
@@ -406,7 +409,7 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         const value = await this.computeQuarter2ByTimes(sTime_num , eTime_num , Ids , typeId);
         
         if (value === undefined || value === null || value === '' || value === -1) {
-            console.log("---yuzhizhe0--->");
+            //console.log("---yuzhizhe0--->");
         }else{
             //console.log("---value--->"+JSON.stringify(value));
             await returnData.push(value);
@@ -424,8 +427,8 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    console.log("---sum--->"+JSON.stringify(sum));
-    console.log("---weight--->"+JSON.stringify(weight));
+    //console.log("---sum--->"+JSON.stringify(sum));
+    //console.log("---weight--->"+JSON.stringify(weight));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
