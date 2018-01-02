@@ -104,9 +104,9 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 	    	await tier2.link.push(tier3Link);
 
 	    	const losstier4All = await losstier3.getLosscategoryLosstier4();
-            console.log("---yuzhizhe1111-----" + JSON.stringify(losstier4All , null , 4));
+            //console.log("---yuzhizhe1111-----" + JSON.stringify(losstier4All , null , 4));
 	    	for (var k = losstier4All.length - 1; k >= 0; k--) {
-                console.log("---yuzhizhe1-----");
+                //console.log("---yuzhizhe1-----");
 	    		if (losstier4All[k] == undefined || losstier4All[k] == null || losstier4All[k] == '') {
 	    			continue;
 	    		}
@@ -129,7 +129,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 		    	};
 		    	await tier2.data.push(tier4Data);
 		    	await tier2.link.push(tier4Link);
-                console.log("---yuzhizhe22-----");
+                //console.log("---yuzhizhe22-----");
 	    	}
     	}
     	await returnData.push(tier2);
