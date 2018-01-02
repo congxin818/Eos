@@ -129,6 +129,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 		    	};
 		    	await tier2.data.push(tier4Data);
 		    	await tier2.link.push(tier4Link);
+                console.log("---yuzhizhe22-----");
 	    	}
     	}
     	await returnData.push(tier2);
