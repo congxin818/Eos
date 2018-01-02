@@ -412,11 +412,11 @@ var showAddPrpductData = {
                     req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
                 showdataList.push(addReturn)
             }else{
-                for(var i = classStartDay;i <= classEndDay;i++){
+                for(var i = classStartDay;i < classEndDay;i++){
                     if(i == classStartDay){
                         // 第一天
                         // 开班结束时间
-                        var classEndtime = moment(req.body.classStarttime).set({'hour': 23, 'minute': 59 ,'second': 59})
+                        var classEndtime = moment(req.body.classStarttime).set({'hour': 24, 'minute': 00 ,'second': 00})
                         // 增加一条产品信息数据
                         const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
                             classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
@@ -432,7 +432,7 @@ var showAddPrpductData = {
                     }else{
                         // 中间的那些天
                         var classStarttime = moment(req.body.classStarttime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
-                        var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 23, 'minute': 59 ,'second': 59})
+                        var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 24, 'minute': 00 ,'second': 00})
                         // 增加一条产品信息数据
                         const addReturn = await datainputServices.addClassinf(classStarttime,
                             classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
