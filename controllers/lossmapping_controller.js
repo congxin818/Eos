@@ -466,7 +466,7 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
         //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
         const kinebodyKpitwolev = await linebody.getLinebodyKpitwolev({where:{kpitwolevKpitwoid:typeId}});
-        console.log("---kinebodyKpitwolev--->"+JSON.stringify(kinebodyKpitwolev , null , 4));
+        //console.log("---kinebodyKpitwolev--->"+JSON.stringify(kinebodyKpitwolev , null , 4));
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
 
         const weight = linebody.weight;
