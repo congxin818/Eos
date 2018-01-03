@@ -100,4 +100,19 @@
 	router.post('/showClassinfHistory', function(req, res, next) {
 		controller.showClassinfHistory(req , res , next);
 	});
+
+/*
+	删除开班历史信息
+	*/
+	router.post('/deleteClassinfHistory', function(req, res, next) {
+		controller.deleteClassinfHistory(req , res , next);
+	});
+
+/*
+	删除开班历史信息
+	*/
+	router.post('/showClassinfHisRight', function(req, res, next) {
+		controller.showClassinfHisRight(req , res , next);
+	});
+	
 	module.exports = router;

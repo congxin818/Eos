@@ -136,7 +136,7 @@ async function computeTodayByTimes(startTime , endTime , Ids , type){
     await data.push(await (Number(Target) * 100).toFixed(2));
     await data.push(await (Number(Vision) * 100).toFixed(2));
     await data.push(await (Number(Ideal) * 100).toFixed(2));
-    console.log('\n\n')
+    console.log('\n')
     return data;
 }
 exports.computeTodayByTimes = computeTodayByTimes;
@@ -195,7 +195,6 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
     //const returnTime = sTime.date();
     console.log("---sum--->"+JSON.stringify(sum));
     console.log("---weight--->"+JSON.stringify(weight));
-    console.log('\n');
     return average.toFixed(4);
 }
 exports.computeAll2ByTimes = computeAll2ByTimes;
@@ -238,9 +237,9 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
 
         const weight = linebody.weight;
-        console.log("---classflag--->"+JSON.stringify(classflag));
-        console.log("---weight--->"+JSON.stringify(weight));
-        console.log("---valuedfsd--->"+JSON.stringify(value));
+        //console.log("---classflag--->"+JSON.stringify(classflag));
+        //console.log("---weight--->"+JSON.stringify(weight));
+        //console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }

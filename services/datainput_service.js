@@ -84,6 +84,13 @@ const moment = require('moment');
     }
 
 /*
+    根据classid找到开班数据
+    */
+    exports.classinforSelectById = async function(classinfId) {
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
+
+/*
     根据二级loss数据创建一条三级loss数据
     */
     exports.addLosstier3data = async function(losstier3Id,linebodyId) {
@@ -397,7 +404,7 @@ const moment = require('moment');
                 checkFlag = 0
             }
         }else{
-                    checkFlag = 1
+            checkFlag = 1
             checkFlag = 1
             break
         }
@@ -602,13 +609,6 @@ return  sproductbigIdList
     }
 
 /*
-    根据classid找到开班数据
-    */
-    exports.classinforSelectById = async function(classinfId) {
-       return classinforData =  await Classinformation.findById(classinfId)
-   }
-
-/*
     根据四级的id找到二级三级名字
     */
     exports.showNameByloss4dataId = async function(showAddloss4After,losstier4Tier4id,losstier3Id,twolevName) {
@@ -732,7 +732,7 @@ return  sproductbigIdList
     }
 
 /*
-    按照开始时间顺序查找class表
+    开班历史信息展示接口
     */
     exports.selectClassinfBylineby = async function(linebodyId){
         const classinfidList = await Classinformation.findAll({attributes: ['classinfid'],
@@ -752,12 +752,12 @@ return  sproductbigIdList
             const classinfData = await Classinformation.findById(classinfidList[i].classinfid)
             if (thelastYear == moment(classinfData.classstarttime).format('YYYY-MM-DD')) {
                 const maxIndex = showClassinfdata.length - 1
-                timeListJs.time = moment(classinfData.classstarttime).format('hh:mm:ss') + '-' + moment(classinfData.endtime).format('hh:mm:ss')
+                timeListJs.time = moment(classinfData.classstarttime).format('HH:mm:ss') + '-' + moment(classinfData.classendtime).format('HH:mm:ss')
                 timeListJs.id = classinfData.classinfid
                 showClassinfdata[maxIndex].timeInfo.push(timeListJs)
             }else{
                 thelastYear = moment(classinfData.classstarttime).format('YYYY-MM-DD')
-                timeListJs.time = moment(classinfData.classstarttime).format('hh:mm:ss') + '-' + moment(classinfData.endtime).format('hh:mm:ss')
+                timeListJs.time = moment(classinfData.classstarttime).format('HH:mm:ss') + '-' + moment(classinfData.classendtime).format('HH:mm:ss')
                 timeListJs.id = classinfData.classinfid
                 timeList.push(timeListJs)
                 showyear.year = thelastYear
@@ -767,4 +767,22 @@ return  sproductbigIdList
 
         }
         return showClassinfdata
+    }
+
+/*
+    开班历史信息删除
+    */
+    exports.deleteClassinfHistory = async function(classinfId){
+        const classinfData =   await Classinformation.findById(classinfId)
+        const deleteReturn = await classinfData.destroy()
+        return deleteReturn 
+    }
+
+/*
+    展示某个二级所有的四级loss信息
+*/
+exports.showloss4inf = async function(classinfId,linebodyId,losstier2name){
+        const kpitwolev = await Kpitwolev.findOne({where:{name:losstier2name}})
+        const deleteReturn = await classinfData.destroy()
+        return deleteReturn 
     }

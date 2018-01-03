@@ -702,3 +702,61 @@ exports.getClassflag = async function(req , res){
             res.end(JSON.stringify(dataSuccess))
         }
     }
+
+/*
+    开班历史信息删除接口
+    */
+    exports.deleteClassinfHistory = async function(req , res) {
+        if(req.body.classinfId == null||req.body.classinfId == '')
+            res.end(JSON.stringify(parameterError))
+        else{
+            // 删除一条开班历史信息
+            const deleteReturn = await datainputServices.deleteClassinfHistory(req.body.classinfId)
+            if (deleteReturn == null||deleteReturn == '' ){
+                res.end(JSON.stringify(updateError))
+            }else{
+                dataSuccess.data = deleteReturn
+                res.end(JSON.stringify(dataSuccess))
+            }
+        }
+    }
+
+/*
+    展示右侧产品loss班次
+    */
+    exports.showClassinfHisRight = async function(req , res) {
+        if(req.body.classinfId == null||req.body.classinfId == ''
+            ||req.body.userId == null||req.body.userId == ''
+            ||req.body.linebodyId == null||req.body.linebodyId == ''){
+
+        }else{
+            var classinfHisRight = {
+                classstarttime : '',
+                classendtime : '',
+                shouldattendance : '',
+                actualattendance : '',
+                product : '',
+                loss : ''
+            }
+            // 查找班次信息
+            const classinfData =  await datainputServices.classinforSelectById(req.body.classinfId)
+            classinfHisRight.classstarttime = classinfData.classstarttime
+            classinfHisRight.classendtime = classinfData.classendtime
+            classinfHisRight.shouldattendance = classinfData.shouldattendance
+            classinfHisRight.actualattendance = classinfData.actualattendance
+            // 查找产品信息
+            const productinf = await datainputServices.selectProductnameById(req.body.linebodyId)
+            classinfHisRight.product = productinf
+            // 查找loss信息
+            var lossinf = {}
+            const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
+            for(var i = 0; i < kpitwolevidList.length ; i++){
+              var kpitwolev =  await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
+              lossinf[kpitwolev.name] = '';
+          }
+          classinfHisRight.loss = lossinf
+          // 展示四级loss信息
+          dataSuccess.data = classinfHisRight
+          res.end(JSON.stringify(dataSuccess))
+      }   
+  }
