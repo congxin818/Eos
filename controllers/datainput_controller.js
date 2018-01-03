@@ -84,22 +84,22 @@ var showAddPrpductData = {
                     losstier4List = losstier4NameList
                     flag = false
                 }else{
-                 losstier4List = await losstier4List.concat(losstier4NameList)
-             }
-         }
-     }
-     showLosstier34.losstier4 = losstier4List
-     showLosstier34.losstier3 = losstier3DataList
-     dataSuccess.data = showLosstier34
-     res.end(JSON.stringify(dataSuccess))     
- }
+                   losstier4List = await losstier4List.concat(losstier4NameList)
+               }
+           }
+       }
+       showLosstier34.losstier4 = losstier4List
+       showLosstier34.losstier3 = losstier3DataList
+       dataSuccess.data = showLosstier34
+       res.end(JSON.stringify(dataSuccess))     
+   }
 
 
 /*
     点击确定按钮，创建一条数据并添加时间
     */
     exports.addLosstier4time2 = async function(req , res) {
-     if(req.body.classinfIdList == null||req.body.classinfIdList == ''
+       if(req.body.classinfIdList == null||req.body.classinfIdList == ''
         ||req.body.twolevName == null||req.body.twolevName == ''
         ||req.body.losstier3Id == null||req.body.losstier3Id == ''
         ||req.body.losstier4Id == null||req.body.losstier4Id == ''
@@ -133,7 +133,7 @@ var showAddPrpductData = {
                 const thisendtime = req.body.endtime //把req.body.endtime保存下来
                 // 这一天的添加loss四级时间
                 req.body.classinfId = classinfIdList[i]
-                req.body.endtime = moment(req.body.starttime).set({'hour': 23, 'minute': 59 ,'second': 59})
+                req.body.endtime = moment(req.body.starttime).set({'hour': 24, 'minute': 00 ,'second': 00})
                 addReturn1 = await exports.addLosstierData(req , res)
 
                 //下一天的添加loss四级时间
@@ -197,8 +197,8 @@ var showAddPrpductData = {
         // 验证添加的这个四级loss数据是否重复
         var checkFlag = await datainputServices.selectLosstier4DataBy(req , res)
         if(checkFlag == 1){
-           return checkFlag
-       }
+         return checkFlag
+     }
      //----------------------------------------------------------------------01/02
 
         // 添加四级loss发生的开始时间和结束时间
@@ -295,11 +295,11 @@ var showAddPrpductData = {
                             samenamedata = smdata
                             flag = false
                         }else{
-                         samenamedata = await samenamedata.concat(smdata)
-                     }
-                 }
-             }
-             var showAddPrpductData = {
+                           samenamedata = await samenamedata.concat(smdata)
+                       }
+                   }
+               }
+               var showAddPrpductData = {
                 productid:'',
                 productname:'',
                 conformproduct:'',
@@ -310,15 +310,15 @@ var showAddPrpductData = {
                     showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                     var flag = true
                     if(flag == true){
-                     const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
-                     showAddPrpductData.productname = concatName
-                     showAddPrpductData.conformproduct = samenamedata[k].conformproduct
-                     const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
-                     showAddPrpductData.normalcycletime = lineproname.normalcycletime
-                     flag = false
-                 }
+                       const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
+                       showAddPrpductData.productname = concatName
+                       showAddPrpductData.conformproduct = samenamedata[k].conformproduct
+                       const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
+                       showAddPrpductData.normalcycletime = lineproname.normalcycletime
+                       flag = false
+                   }
 
-             }
+               }
                 // 把多余的 ，去掉
                 showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
                 showProduct.push(showAddPrpductData)
@@ -361,8 +361,8 @@ var showAddPrpductData = {
             ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
-           var productIdList = req.body.productIdList.split(",")
-           for(var i = 0;i < productIdList.length;i++){
+         var productIdList = req.body.productIdList.split(",")
+         for(var i = 0;i < productIdList.length;i++){
                 // 删除一条产品信息
                 const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
                 if (deleteReturn == null||deleteReturn == '' ){
@@ -661,6 +661,7 @@ var showAddPrpductData = {
         }
     }
 }
+
 /*
     删除loss信息
     */
@@ -684,7 +685,20 @@ var showAddPrpductData = {
 }
 
 exports.getClassflag = async function(req , res){
-   var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
-   dataSuccess.data = classflag
-   res.end(JSON.stringify(dataSuccess))
+    var  classflag =  await textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
+    dataSuccess.data = classflag
+    res.end(JSON.stringify(dataSuccess))
 }
+
+/*
+    开班历史信息展示接口
+    */
+    exports.showClassinfHistory = async function(req , res) {
+        if(req.body.linebodyId == null||req.body.linebodyId == ''){
+            res.end(JSON.stringify(parameterError))
+        }else{
+            const showClassinfdata = await datainputServices.selectClassinfBylineby(req.body.linebodyId)
+            dataSuccess.data = showClassinfdata
+            res.end(JSON.stringify(dataSuccess))
+        }
+    }
