@@ -484,9 +484,9 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
 
         const weight = linebody.weight;
-        //console.log("---classflag--->"+JSON.stringify(classflag));
-        //console.log("---weight--->"+JSON.stringify(weight));
-        //console.log("---valuedfsd--->"+JSON.stringify(value));
+        console.log("---classflag--->"+JSON.stringify(classflag));
+        console.log("---weight--->"+JSON.stringify(weight));
+        console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }
