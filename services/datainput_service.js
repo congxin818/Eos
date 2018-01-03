@@ -387,12 +387,11 @@ const moment = require('moment');
         for(var i=0; i< classdataList2.length;i++){
 
             const classinfData = await Classinformation.findById(classdataList2[i])
-
             // 传来的时间是否重合
             if( moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
                 || moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()){
                 if(moment(classstarttime).unix() == moment(classinfData.classstarttime).unix() 
-                    && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
+                 && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
                     checkFlag = 1
                 break
             }else{

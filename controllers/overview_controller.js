@@ -1,3 +1,6 @@
+
+
+
 var linebody_extend_service = require('../services/linebody_extend_service');
 var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
@@ -21,10 +24,18 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     //console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
         ||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
-        ||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null) {
+        ||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null
+        //||req.body.userId == undefined || req.body.userId == ''|| req.body.userId == null
+        ) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
+    // const user = await User.findById(req.body.userId);
+    // if (user == undefined || user == ''|| user == null) {
+    //     res.end(JSON.stringify(errorUtil.noExistError));
+    //     return;
+    // }
+    // const userKpitwo = await user.getUserKpitwolevs();
     const Ids = req.body.linebodyIds.split(',');
    // console.log("---Ids.length--->"+JSON.stringify(Ids.length));
     if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
@@ -32,7 +43,16 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         return;
     }
     //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
-    const data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids);
+    // for (var i = userKpitwo.length - 1; i >= 0; i--) {
+    //     if (userKpitwo[i] == undefined || userKpitwo[i] == null || userKpitwo[i] == '') {
+    //         continue;
+    //     }
+    //     const kpitwo = await Kpitwolev.findById(userKpitwo[i].kpitwoid);
+    //     if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
+    //         continue;
+    //     }
+    // }
+    const data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE');
     res.end(JSON.stringify(data));
 
 }
@@ -41,32 +61,12 @@ exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
 /*
     根据times和linebodys查询Overview中柱状图数据
     */
-async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
+async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids , type){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null) {
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||type == undefined || type == ''|| type == null) {
         return;
-    }
-    let allData = new Array();
-    for (var i = Ids.length - 1; i >= 0; i--) {
-        if (Ids[i] == null) {
-            continue;
-        }
-        const linebody = await Linebody.findById(Ids[i]);
-        //const linebodyKpitwo = await linebody.getLinebodyKpitwolev({where:{kpitwolevKpitwoid:2}});
-        const linebodyKpitwo = await linebody.getLinebodyKpitwolev();
-        //console.log(Ids[i]+"----falg-->"+JSON.stringify(linebodyKpitwo , null , 4));
-        if (linebody == null || linebody == ''|| linebody == undefined
-            ||linebodyKpitwo == null || linebodyKpitwo == '' || linebodyKpitwo == undefined) {
-            continue;
-        }
-        for (var h = linebodyKpitwo.length - 1; h >= 0; h--) {
-            const flag = await this.computeByTimes(startTime , endTime , linebodyKpitwo[h]);//判断在不在所选时间区间里
-            //console.log("----falg-->"+JSON.stringify(falg , null , 4));
-            if (flag) {
-                await allData.push(linebodyKpitwo[h]);
-            }
-        }
     }
 
     const endTime_num = new Date(endTime).getTime();
@@ -80,7 +80,7 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
     while(eTime_num <= endTime_num){
         //console.log("---sTime--1->"+JSON.stringify(sTime));
         //console.log("---eTime--1->"+JSON.stringify(eTime));
-        const value =  await this.computeTodayByTimes(sTime_num , eTime_num , allData , Ids , 'OEE');
+        const value =  await this.computeTodayByTimes(sTime_num , eTime_num , Ids , type);
         
         if (value === undefined || value === null || value === '') {
             console.log("---yuzhizhe0--->");
@@ -101,7 +101,7 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeTodayByTimes(startTime , endTime ,allData ,  Ids , type){
+async function computeTodayByTimes(startTime , endTime , Ids , type){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null
@@ -116,42 +116,14 @@ async function computeTodayByTimes(startTime , endTime ,allData ,  Ids , type){
     const Ideal = await this.computeTodayIdealByTimes(startTime , endTime , Ids);
     
     const sTime = new Date(startTime);
-    let sTime_num = startTime;
+    const sTime_num = startTime;
+    const eTime_num = endTime;
     //console.log("---sTime--->"+JSON.stringify(sTime));
     const returnTime = sTime.getFullYear() + '/' + Number(sTime.getMonth()+1) + '/' + sTime.getDate();
-    //console.log("---eTime--->"+JSON.stringify(eTime));
-    let eTime_num = Number(sTime_num) + 900000;
-    
-    let returnData = new Array();
-    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
-    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
-    while(eTime_num <= endTime){
-        //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
-        //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
-        const value =  await this.computeQuarterByTimes(sTime_num , eTime_num , allData  ,  Ids , type);
-        
-        if (value === undefined || value === null || value === '' || value === -1) {
-            //console.log("---yuzhizhe0--->");
-        }else{
-            console.log("---value--->"+JSON.stringify(value));
-            await returnData.push(value);
-        }
-        sTime_num = Number(sTime_num) + 900000;
-        eTime_num = Number(eTime_num) + 900000;
-        //console.log("---eTime--->"+JSON.stringify(eTime));
-    }
-    let sum = 0;
-    let average = 0;
-    console.log("---returnData--->"+JSON.stringify(returnData));
-    if (returnData.length !=0) {
-        sum = await returnData.map(a => a).reduce ((pre, cur) => pre + cur);
-        average = sum / returnData.length;
-    }
-    //const returnTime = sTime.date();
-    console.log("---returnData.length--->"+JSON.stringify(returnData.length));
+    const value =  await this.computeAll2ByTimes(sTime_num , eTime_num ,Ids , type);
     let data = new Array();
     await data.push(returnTime);
-    const returnValue = Number(1 - average) * 100;
+    const returnValue = Number(1 - value) * 100;
     await data.push(returnValue.toFixed(2));
     await data.push(await (Number(Target) * 100).toFixed(2));
     await data.push(await (Number(Vision) * 100).toFixed(2));
@@ -162,100 +134,150 @@ async function computeTodayByTimes(startTime , endTime ,allData ,  Ids , type){
 exports.computeTodayByTimes = computeTodayByTimes;
 
 /*
-    根据times和allData每15分钟计算OEE中柱状图数据
-    startTime:15分钟开始时间
-    endTime:15分钟结束时间
+    根据times和allData时间区域内计算tire2级
+    startTime:当天开始时间
+    endTime:当天结束时间
     */
-async function computeQuarterByTimes(startTime , endTime ,allData , Ids , type){
+async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
-        ||allData == undefined || allData == ''|| allData == null
         ||Ids == undefined || Ids == ''|| Ids == null
-        ||type == undefined || type == ''|| type == null) {
+        ||typeId == undefined || typeId == ''|| typeId == null) {
+        console.log("---yuzhizhe1--->");
+        return;
+    }
+    
+    let sTime_num = startTime;
+    let eTime_num = Number(sTime_num) + 900000;
+
+    const endTime_num = endTime;
+    
+    let returnData = new Array();
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    while(eTime_num <= endTime_num){
+        //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+        //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+        const value = await this.computeQuarter2ByTimes(sTime_num , eTime_num , Ids , typeId);
+        
+        if (value === undefined || value === null || value === '' || value === -1) {
+            //console.log("---yuzhizhe0--->");
+        }else{
+            //console.log("---value--->"+JSON.stringify(value));
+            await returnData.push(value);
+        }
+        sTime_num = Number(sTime_num) + 900000;
+        eTime_num = Number(eTime_num) + 900000;
+        //console.log("---eTime--->"+JSON.stringify(eTime));
+    }
+    //console.log("---returnData--->"+JSON.stringify(returnData));
+    let sum = 0;
+    let weight = 0;
+    if (returnData.length !=0) {
+        sum = await returnData.map(a => a.value).reduce ((pre, cur) => pre + cur);
+        weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
+        //average = sum / returnData.length;
+    }
+    //const returnTime = sTime.date();
+    console.log("---sum--->"+JSON.stringify(sum));
+    console.log("---weight--->"+JSON.stringify(weight));
+    //console.log('\n\n')
+    const average = Number(sum) / Number(weight);
+    return average.toFixed(4);
+}
+exports.computeAll2ByTimes = computeAll2ByTimes;
+
+/*
+    根据times和allData每15分钟计算tire2级
+    startTime:15分钟开始时间
+    endTime:15分钟结束时间
+*/
+async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||typeId == undefined || typeId == ''|| typeId == null) {
         //console.log("---yuzhizhe1--->");
         return 0;
     }
     const sTime_num = startTime;
     const eTime_num = endTime;
     let returnData = new Array();
-
+    //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let valueSum = 0;
     let weightSum = 0;
+    // let value = 0;
+    // let weight = 0;
+    // let classflag = 0;
+    const kpitwo = await Kpitwolev.findOne({where:{name:typeId}});
+    //console.log("---losstier4--->"+JSON.stringify(losstier4 , null , 4));
     for (var i = Ids.length - 1; i >= 0; i--) {
         const linebody = await Linebody.findById(Ids[i]);
         if (linebody === undefined || linebody === null || linebody === '') {
             continue;
         }
-        console.log("---sTime_num--->"+JSON.stringify(new Date(sTime_num)));
-        console.log("---eTime_num--->"+JSON.stringify(new Date(eTime_num)));
+        // console.log("---sTime_num--->"+JSON.stringify(new Date(sTime_num)));
+        //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
-        weightSum += Number(linebody.weight) * Number(classflag);
+        const kinebodyKpitwolev = await linebody.getLinebodyKpitwolev({where:{kpitwolevKpitwoid:kpitwo.kpitwoid}});
+        //console.log("---kinebodyKpitwolev--->"+JSON.stringify(kinebodyKpitwolev , null , 4));
+        const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
+
+        const weight = linebody.weight;
+        //console.log("---classflag--->"+JSON.stringify(classflag));
+        //console.log("---weight--->"+JSON.stringify(weight));
+        //console.log("---valuedfsd--->"+JSON.stringify(value));
+        valueSum += Number(classflag) * Number(value) * Number(weight);
+        weightSum += Number(classflag) * Number(weight);
     }
-    if (weightSum === 0) {
-        return -1;
+    const data = {
+        value:valueSum,
+        weight:weightSum
+        // ,
+        // classflag:classflag
     }
-    for (var i = allData.length - 1; i >= 0; i--) {
-        const kpitwo = await Kpitwolev.findById(allData[i].kpitwolevKpitwoid);
-        if (kpitwo == undefined || kpitwo == ''|| kpitwo == null) {
-            //console.log('yuzhizhe02');
-            continue;
-        }else{
-            if (kpitwo.name == type) {
-                const csTime = new Date(allData[i].starttime).getTime();
-                const ceTime = new Date(allData[i].endtime).getTime();
-                //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
-                if (csTime == undefined || csTime == ''|| csTime == null
-                    ||ceTime == undefined || ceTime == ''|| ceTime == null) {
-                    //console.log('yuzhizhe03');
-                    continue;
-                }
-                if (csTime >= sTime_num && ceTime <= eTime_num) {
-                    const linebody = await Linebody.findById(allData[i].linebodyLinebodyid,{'attributes': ['weight']});
-                    console.log('----linebody.weight-->'+JSON.stringify(linebody.weight , null , 4));
-                    const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , allData[i].linebodyLinebodyid);
-                    //weight_sum += linebody.weight;
-                    valueSum += Number(allData[i].value) * Number(linebody.weight) * Number(classflag);
-                }else{
-                    console.log('yuzhizhe04');
-                    continue;
-                }
-            }
-        }
-    }
-    const average = valueSum/weightSum;
-    console.log("---valueSum--->"+JSON.stringify(valueSum));
-    console.log("---weightSum--->"+JSON.stringify(weightSum));
-    return average;
+    return data;
 }
-exports.computeQuarterByTimes = computeQuarterByTimes;
+exports.computeQuarter2ByTimes = computeQuarter2ByTimes;
 
 /*
-    根据times和linebodyKpitwo过滤Overview中柱状图数据的linebodyKpitwo是否在时间段内
-*/
-async function computeByTimes(startTime , endTime ,linebodyKpitwo){
+    根据times和allData每15分钟计算tire2级值
+    startTime:15分钟开始时间
+    endTime:15分钟结束时间
+    */
+async function computeQuarterValueByTimes(startTime , endTime , allData){
     if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||linebodyKpitwo == undefined || linebodyKpitwo == ''|| linebodyKpitwo == null) {
-        return false;
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||allData == undefined || allData == ''|| allData == null) {
+            //console.log("---allData为空--->");
+            return 0;
     }
-    const sTime = new Date(startTime).getTime();
-    const eTime = new Date(endTime).getTime();
-
-    const csTime = new Date(linebodyKpitwo.starttime).getTime();
-    const ceTime = new Date(linebodyKpitwo.endtime).getTime();
-    if (sTime == undefined || sTime == ''|| sTime == null
-        ||eTime == undefined || eTime == ''|| eTime == null
-        ||csTime == undefined || csTime == ''|| csTime == null
-        ||ceTime == undefined || ceTime == ''|| ceTime == null) {
-        return false;
+    const sTime_num = startTime;
+    const eTime_num = endTime;
+    let valueSum = 0;
+    for (var i = allData.length - 1; i >= 0; i--) {
+        if (allData[i] === null || allData[i] === '') {
+            continue;
+        }
+        const csTime = new Date(allData[i].starttime).getTime();
+        const ceTime = new Date(allData[i].endtime).getTime();
+        //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
+        if (csTime == undefined || csTime == ''|| csTime == null
+            ||ceTime == undefined || ceTime == ''|| ceTime == null) {
+            //console.log('yuzhizhe03');
+            continue;
+        }
+        if (csTime >= sTime_num && ceTime <= eTime_num) {
+            valueSum += Number(allData[i].value);
+        }else{
+            //console.log('yuzhizhe04');
+            continue;
+        }
     }
-    if (eTime < csTime || sTime > ceTime) {
-        return false;
-    }else{
-        return true;
-    }
+    return valueSum;
 }
-exports.computeByTimes = computeByTimes;
+exports.computeQuarterValueByTimes = computeQuarterValueByTimes;
 
 /*
     根据times和allData每天计算OEE中柱状图Target数据
