@@ -333,6 +333,7 @@ const moment = require('moment');
             linebodyKpitwolevId: twolevDataid
         }})
     }
+
 /*
     验证添加的这个四级loss数据是否重复
     */
@@ -359,48 +360,50 @@ const moment = require('moment');
             if( moment(req.body.starttime).unix() >= moment(losstier4Data.starttime).unix()
                 && moment(req.body.endtime).unix() <= moment(losstier4Data.endtime).unix()){
                 checkFlag = 1
-                break
-            }else{
-                checkFlag = 0
-            }
+            break
+        }else{
+            checkFlag = 0
         }
+    }
     return checkFlag
 }
 
 /*
-    得到开班系数
+    判断开班时间是否重合
     */
-    exports.getClassflag = async function(classstarttime , classendtime , linebodyid) {
-        var classflag
-        var classidList = await LinebodyKpitwolev.findAll({
-            'attributes': ['classinformationClassinfid'],where:{linebodyLinebodyid:linebodyid}})
-        var classidList2 =[]
-        if(classidList == null||classidList == ''){
-            classflag = 0
-            return classflag
+    exports.checkClassData = async function(linebodyId , classstarttime ,classendtime) {
+        var checkFlag = 0
+        var classdataList = await Classinformation.findAll({'attributes': ['classinfid'],
+            where:{linebodyLinebodyid: linebodyId}})
+        var classdataList2 =[]
+        if(classdataList == null||classdataList == ''){
+            checkFlag = 0
+            return checkFlag
         }else{
-            for(var i=0; i< classidList.length;i++){
-                classidList2.push(classidList[i].classinformationClassinfid)  
+            for(var i=0; i< classdataList.length;i++){
+                classdataList2.push(classdataList[i].classinfid)  
             }
         }
+        for(var i=0; i< classdataList2.length;i++){
 
-        // 查重后的class数组
-        classidList2 = await exports.unique2(classidList2)
+            const classinfData = await Classinformation.findById(classdataList2[i])
 
-        for(var i=0; i< classidList2.length;i++){
-
-            const classinfdata = await Classinformation.findById(classidList2[i])
-
-            // 传来的时间是否在开班时间内
-            if( moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix()
-                && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix() + 1){
-                classflag = 1
+            // 传来的时间是否重合
+            if( moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
+                || moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()){
+                if(moment(classstarttime).unix() == moment(classinfData.classstarttime).unix() 
+                    && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
+                    checkFlag = 1
+                break
+            }else{
+                checkFlag = 0
+            }
         }else{
-            classflag = 0
+            checkFlag = 1
+            break
         }
-
     }
-    return classflag
+    return checkFlag
 }
 
 /*
