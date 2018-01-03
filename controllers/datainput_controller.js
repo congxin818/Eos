@@ -388,6 +388,7 @@ var showAddPrpductData = {
         else{
             // 判断开班时间是否重合
             var checkFlag = await datainputServices.checkClassData(req.body.linebodyId , req.body.classStarttime , req.body.classEndtime)
+            console.log('--------->'+checkFlag);
             if(checkFlag == 1){
                 res.end(JSON.stringify(errorUtil.existError))
             }else{

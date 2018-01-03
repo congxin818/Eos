@@ -391,8 +391,8 @@ const moment = require('moment');
             // 传来的时间是否重合
             if( moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
                 || moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()){
-                if(moment(classstarttime).unix() == moment(classinfData.classendtime).unix() 
-                    && moment(classendtime).unix() == moment(classinfData.classstarttime).unix()){
+                if(moment(classstarttime).unix() == moment(classinfData.classstarttime).unix() 
+                    && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
                     checkFlag = 1
                 break
             }else{
