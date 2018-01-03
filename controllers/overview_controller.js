@@ -1,6 +1,3 @@
-
-
-
 var linebody_extend_service = require('../services/linebody_extend_service');
 var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
@@ -23,8 +20,8 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     //console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
     //console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
-    	||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
-    	||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null) {
+        ||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
+        ||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
@@ -45,31 +42,31 @@ exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
     根据times和linebodys查询Overview中柱状图数据
     */
 async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids){
-	if (startTime == undefined || startTime == ''|| startTime == null
-    	||endTime == undefined || endTime == ''|| endTime == null
-    	||Ids == undefined || Ids == ''|| Ids == null) {
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null) {
         return;
     }
     let allData = new Array();
     for (var i = Ids.length - 1; i >= 0; i--) {
-    	if (Ids[i] == null) {
-    		continue;
-    	}
-    	const linebody = await Linebody.findById(Ids[i]);
-    	//const linebodyKpitwo = await linebody.getLinebodyKpitwolev({where:{kpitwolevKpitwoid:2}});
+        if (Ids[i] == null) {
+            continue;
+        }
+        const linebody = await Linebody.findById(Ids[i]);
+        //const linebodyKpitwo = await linebody.getLinebodyKpitwolev({where:{kpitwolevKpitwoid:2}});
         const linebodyKpitwo = await linebody.getLinebodyKpitwolev();
-    	//console.log(Ids[i]+"----falg-->"+JSON.stringify(linebodyKpitwo , null , 4));
-    	if (linebody == null || linebody == ''|| linebody == undefined
-    		||linebodyKpitwo == null || linebodyKpitwo == '' || linebodyKpitwo == undefined) {
-    		continue;
-    	}
-    	for (var h = linebodyKpitwo.length - 1; h >= 0; h--) {
-    	 	const flag = await this.computeByTimes(startTime , endTime , linebodyKpitwo[h]);//判断在不在所选时间区间里
-	     	//console.log("----falg-->"+JSON.stringify(falg , null , 4));
-	     	if (flag) {
-	     		await allData.push(linebodyKpitwo[h]);
-	     	}
-    	}
+        //console.log(Ids[i]+"----falg-->"+JSON.stringify(linebodyKpitwo , null , 4));
+        if (linebody == null || linebody == ''|| linebody == undefined
+            ||linebodyKpitwo == null || linebodyKpitwo == '' || linebodyKpitwo == undefined) {
+            continue;
+        }
+        for (var h = linebodyKpitwo.length - 1; h >= 0; h--) {
+            const flag = await this.computeByTimes(startTime , endTime , linebodyKpitwo[h]);//判断在不在所选时间区间里
+            //console.log("----falg-->"+JSON.stringify(falg , null , 4));
+            if (flag) {
+                await allData.push(linebodyKpitwo[h]);
+            }
+        }
     }
 
     const endTime_num = new Date(endTime).getTime();
@@ -105,8 +102,8 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
     endTime:当天结束时间
     */
 async function computeTodayByTimes(startTime , endTime ,allData ,  Ids , type){
-	if (startTime == undefined || startTime == ''|| startTime == null
-    	||endTime == undefined || endTime == ''|| endTime == null
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null
         ||type == undefined || type == ''|| type == null) {
         console.log("---yuzhizhe1--->");
@@ -236,26 +233,26 @@ exports.computeQuarterByTimes = computeQuarterByTimes;
     根据times和linebodyKpitwo过滤Overview中柱状图数据的linebodyKpitwo是否在时间段内
 */
 async function computeByTimes(startTime , endTime ,linebodyKpitwo){
-	if (startTime == undefined || startTime == ''|| startTime == null
-    	||endTime == undefined || endTime == ''|| endTime == null
-    	||linebodyKpitwo == undefined || linebodyKpitwo == ''|| linebodyKpitwo == null) {
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||linebodyKpitwo == undefined || linebodyKpitwo == ''|| linebodyKpitwo == null) {
         return false;
     }
     const sTime = new Date(startTime).getTime();
     const eTime = new Date(endTime).getTime();
 
-   	const csTime = new Date(linebodyKpitwo.starttime).getTime();
+    const csTime = new Date(linebodyKpitwo.starttime).getTime();
     const ceTime = new Date(linebodyKpitwo.endtime).getTime();
     if (sTime == undefined || sTime == ''|| sTime == null
-    	||eTime == undefined || eTime == ''|| eTime == null
-    	||csTime == undefined || csTime == ''|| csTime == null
-    	||ceTime == undefined || ceTime == ''|| ceTime == null) {
+        ||eTime == undefined || eTime == ''|| eTime == null
+        ||csTime == undefined || csTime == ''|| csTime == null
+        ||ceTime == undefined || ceTime == ''|| ceTime == null) {
         return false;
     }
     if (eTime < csTime || sTime > ceTime) {
-    	return false;
+        return false;
     }else{
-    	return true;
+        return true;
     }
 }
 exports.computeByTimes = computeByTimes;
