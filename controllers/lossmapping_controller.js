@@ -47,7 +47,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
     const userKpitwo = await user.getUserKpitwolevs();
 
     const Ids = req.body.linebodyIds.split(',');
-    console.log("---Ids.length--->"+JSON.stringify(userKpitwo));
+    //console.log("---Ids.length--->"+JSON.stringify(userKpitwo));
     if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
@@ -95,7 +95,6 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
             console.log("---tier3Value--->"+JSON.stringify(tier3Value , null , 4));
             console.log('\n');
 	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0 || tier3Value == 'NaN') {
-
 	    		continue;
 	    	}
 	    	const tier3Data = {
@@ -188,7 +187,7 @@ async function computeAll4ByTimes(startTime , endTime ,Ids , typeId){
         if (value === undefined || value === null || value === '' || value === -1) {
             console.log("---yuzhizhe0--->");
         }else{
-            console.log("---value--->"+JSON.stringify(value));
+            //console.log("---value--->"+JSON.stringify(value));
             await returnData.push(value);
         }
         sTime_num = Number(sTime_num) + 900000;
@@ -206,7 +205,7 @@ async function computeAll4ByTimes(startTime , endTime ,Ids , typeId){
     //const returnTime = sTime.date();
     console.log("---sum4--->"+JSON.stringify(sum));
     console.log("---weight4--->"+JSON.stringify(weight));
-    //console.log('\n\n')
+    console.log('\n');
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
 }
@@ -247,9 +246,9 @@ async function computeQuarter4ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier4);
 
         const weight = linebody.weight;
-        console.log("---classflag--->"+JSON.stringify(classflag));
-        console.log("---weight--->"+JSON.stringify(weight));
-        console.log("---valuedfsd--->"+JSON.stringify(value));
+        //console.log("---classflag--->"+JSON.stringify(classflag));
+        //console.log("---weight--->"+JSON.stringify(weight));
+        //console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }
@@ -317,7 +316,7 @@ async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
     console.log("---sum3--->"+JSON.stringify(sum));
     console.log("---weight3--->"+JSON.stringify(weight));
     // console.log("---classflag--->"+JSON.stringify(classflag));
-    //console.log('\n\n')
+    console.log('\n');
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
 }
@@ -440,7 +439,7 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
     //const returnTime = sTime.date();
     console.log("---sum2--->"+JSON.stringify(sum));
     console.log("---weight2--->"+JSON.stringify(weight));
-    //console.log('\n\n')
+    console.log('\n');
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
 }
@@ -484,9 +483,9 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
 
         const weight = linebody.weight;
-        console.log("---classflag--->"+JSON.stringify(classflag));
-        console.log("---weight--->"+JSON.stringify(weight));
-        console.log("---valuedfsd--->"+JSON.stringify(value));
+        //console.log("---classflag--->"+JSON.stringify(classflag));
+        //console.log("---weight--->"+JSON.stringify(weight));
+        //console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }
