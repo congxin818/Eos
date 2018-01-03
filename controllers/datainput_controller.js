@@ -195,8 +195,10 @@ var showAddPrpductData = {
        //  }
 
         // 验证添加的这个四级loss数据是否重复
-        // var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
-     
+        var checkFlag = await datainputServices.selectLosstier4DataBy(req , res)
+        if(checkFlag == 1){
+           return checkFlag
+       }
      //----------------------------------------------------------------------01/02
 
         // 添加四级loss发生的开始时间和结束时间
@@ -384,48 +386,60 @@ var showAddPrpductData = {
             ||req.body.linebodyId == null||req.body.linebodyId == '')
             res.end(JSON.stringify(parameterError))
         else{
-            // 开班开始---天
-            const classStartDay = moment(req.body.classStarttime).date()
-            // 开班结束---天
-            const classEndDay = moment(req.body.classEndtime).date()
-            var showdataList = []
-
-            if(classStartDay == classEndDay){
-                // 增加一条产品信息数据
-                const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
-                    req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
-                showdataList.push(addReturn)
+            // 判断开班时间是否重合
+            var checkFlag = await datainputServices.checkClassData(req.body.linebodyId , req.body.classStarttime , req.body.classEndtime)
+            if(checkFlag == 1){
+                res.end(JSON.stringify(errorUtil.existError))
             }else{
-                for(var i = classStartDay;i < classEndDay;i++){
-                    if(i == classStartDay){
-                        // 第一天
-                        // 开班结束时间
-                        var classEndtime = moment(req.body.classStarttime).set({'hour': 24, 'minute': 00 ,'second': 00})
-                        // 增加一条产品信息数据
-                        const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
-                            classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
-                        showdataList.push(addReturn)
-                    } else if(i == classEndDay){
-                        // 最后一天
-                        // 开班开始时间
-                        var classStarttime = moment(req.body.classEndtime).set({'hour': 00, 'minute': 00 ,'second': 00})
-                        // 增加一条产品信息数据
-                        const addReturn = await datainputServices.addClassinf(classStarttime,
-                            req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
-                        showdataList.push(addReturn)
-                    }else{
-                        // 中间的那些天
-                        var classStarttime = moment(req.body.classStarttime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
-                        var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 24, 'minute': 00 ,'second': 00})
-                        // 增加一条产品信息数据
-                        const addReturn = await datainputServices.addClassinf(classStarttime,
-                            classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
-                        showdataList.push(addReturn)
-                    }
-                }          
+                // 开班开始---天
+                const classStartDay = moment(req.body.classStarttime).date()
+                // 开班结束---天
+                const classEndDay = moment(req.body.classEndtime).date()
+                var showdataList = []
+
+                if(classStartDay == classEndDay){
+                    // 增加一条产品信息数据
+                    const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
+                        req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
+                    showdataList.push(addReturn)
+                }else{
+                    // 循环次数
+                    var loopindex = classEndDay + 1
+                    if(moment(req.body.classEndtime).hour() == 0 &&moment(req.body.classEndtime).minute() ==0
+                        && moment(req.body.classEndtime).second() == 0){
+                        loopindex = classEndDay}
+
+                    for(var i = classStartDay;i < loopindex;i++){
+                        if(i == classStartDay){
+                            // 第一天
+                            // 开班结束时间
+                            var classEndtime = moment(req.body.classStarttime).set({'hour': 24, 'minute': 00 ,'second': 00})
+                            // 增加一条产品信息数据
+                            const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
+                                classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
+                            showdataList.push(addReturn)
+                        } else if(i == classEndDay){
+                            // 最后一天
+                            // 开班开始时间
+                            var classStarttime = moment(req.body.classEndtime).set({'hour': 00, 'minute': 00 ,'second': 00})
+                            // 增加一条产品信息数据
+                            const addReturn = await datainputServices.addClassinf(classStarttime,
+                                req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
+                            showdataList.push(addReturn)
+                        }else{
+                            // 中间的那些天
+                            var classStarttime = moment(req.body.classStarttime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
+                            var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 24, 'minute': 00 ,'second': 00})
+                            // 增加一条产品信息数据
+                            const addReturn = await datainputServices.addClassinf(classStarttime,
+                                classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
+                            showdataList.push(addReturn)
+                        }
+                    }          
+                }
+                dataSuccess.data = showdataList
+                res.end(JSON.stringify(dataSuccess))
             }
-            dataSuccess.data = showdataList
-            res.end(JSON.stringify(dataSuccess))
         }  
     }
 
