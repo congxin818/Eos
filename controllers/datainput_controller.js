@@ -392,6 +392,7 @@ var showAddPrpductData = {
             if(checkFlag == 1){
                 res.end(JSON.stringify(errorUtil.existError))
             }else{
+                console.log('11-------->')
                 // 开班开始---天
                 const classStartDay = moment(req.body.classStarttime).date()
                 // 开班结束---天
