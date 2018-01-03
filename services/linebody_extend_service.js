@@ -45,8 +45,8 @@ const moment = require('moment');
     */
     exports.getClassflag = async function(classstarttime , classendtime , linebodyid) {
         var classflag
-        var classidList = await LinebodyKpitwolev.findAll({
-            'attributes': ['classinformationClassinfid'],where:{linebodyLinebodyid:linebodyid}})
+        var classidList = await Classinformation.findAll({
+            'attributes': ['classinfid'],where:{linebodyLinebodyid:linebodyid}})
         var classidList2 =[]
         if(classidList == null||classidList == ''){
             classflag = 0

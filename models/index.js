@@ -107,6 +107,8 @@ Productbigclass.hasMany(Productsubclass, {as:'ProductbigSubclass' , constraints:
 Productsubclass.hasMany(Productname, {as:'ProductsubclassName' , constraints:true});
 //产品名字线体关联表和产品数据建立1:N关系
 LinebodyProductname.hasMany(Productdata, {as:'LineProductnameproductdata' , constraints:true});
+//线体表和班次表建立1:N关系
+Linebody.hasMany(Classinformation, {as:'LinebodyClassinf' , constraints:true});
 
 sequelize.sync();
 
