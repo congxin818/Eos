@@ -391,51 +391,49 @@ var showAddPrpductData = {
             if(checkFlag == 1){
                 res.end(JSON.stringify(errorUtil.existError))
             }else{
-                // 开班开始---天
-                const classStartDay = moment(req.body.classStarttime).date()
-                // 开班结束---天
-                const classEndDay = moment(req.body.classEndtime).date()
+                // 格式化开始时间和结束时间
+                const formatStartDay = moment(req.body.classStarttime).set({'hour': 00, 'minute': 00 ,'second': 00})
+                const formatEndDay = moment(req.body.classEndtime).set({'hour': 00, 'minute': 00 ,'second': 00})
+                // 格式化的时间戳
+                const classStartDay = moment(formatStartDay).unix()
+                const classEndDay = moment(formatStartDay).unix()
+
                 var showdataList = []
 
-                if(classStartDay == classEndDay){
+                if(classStartDay == classStartDay){
                     // 增加一条产品信息数据
                     const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
                         req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
                     showdataList.push(addReturn)
                 }else{
-                    // 循环次数
-                    var loopindex = classEndDay + 1
+                    // 添加班级的个数 
+                    var loopindex = (classEndDay - classStartDay)/(24*60*60) + 1
                     if(moment(req.body.classEndtime).hour() == 0 &&moment(req.body.classEndtime).minute() ==0
                         && moment(req.body.classEndtime).second() == 0){
-                        loopindex = classEndDay}
+                        loopindex = (classEndDay - classStartDay)/(24*60*60)}
 
-                    for(var i = classStartDay;i < loopindex;i++){
-                        if(i == classStartDay){
-                            // 第一天
-                            // 开班结束时间
-                            var classEndtime = moment(req.body.classStarttime).set({'hour': 24, 'minute': 00 ,'second': 00})
-                            // 增加一条产品信息数据
-                            const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
-                                classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
-                            showdataList.push(addReturn)
-                        } else if(i == classEndDay){
-                            // 最后一天
-                            // 开班开始时间
-                            var classStarttime = moment(req.body.classEndtime).set({'hour': 00, 'minute': 00 ,'second': 00})
-                            // 增加一条产品信息数据
-                            const addReturn = await datainputServices.addClassinf(classStarttime,
-                                req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
-                            showdataList.push(addReturn)
-                        }else{
+                    // 第一天
+                    var classEndtime = moment(req.body.classStarttime).set({'hour': 24, 'minute': 00 ,'second': 00})
+                    var addReturn = await datainputServices.addClassinf(req.body.classStarttime,
+                        classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
+                    showdataList.push(addReturn)
+                    // 最后一天
+                    var classStarttime = moment(req.body.classEndtime).set({'hour': 00, 'minute': 00 ,'second': 00})
+                    addReturn = await datainputServices.addClassinf(classStarttime,
+                        req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
+                    showdataList.push(addReturn)
+
+                    if(loopindex > 2){
+                        for(var i = 0;i < loopindex - 2;i++ ){
                             // 中间的那些天
                             var classStarttime = moment(req.body.classStarttime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
                             var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 24, 'minute': 00 ,'second': 00})
                             // 增加一条产品信息数据
-                            const addReturn = await datainputServices.addClassinf(classStarttime,
+                            addReturn = await datainputServices.addClassinf(classStarttime,
                                 classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
                             showdataList.push(addReturn)
                         }
-                    }          
+                    }         
                 }
                 dataSuccess.data = showdataList
                 res.end(JSON.stringify(dataSuccess))
