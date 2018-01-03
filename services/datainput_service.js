@@ -27,7 +27,7 @@ const moment = require('moment');
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-         where:{userUserid: userId},order: [['sequence','ASC']]})
+           where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -113,8 +113,8 @@ const moment = require('moment');
     添加四级三级二级loss结构及value值
     */
     exports.addLosstier4datatime = async function(req , res) {
-       const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
-       const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
+     const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
+     const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
        // await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List,LinebodyLosstier4List)
        return LinebodyLosstier4List
    }
@@ -337,14 +337,71 @@ const moment = require('moment');
     验证添加的这个四级loss数据是否重复
     */
     exports.selectLosstier4DataBy = async function(req , res) {
-        return await LinebodyLosstier4.findOne({where:{
-            starttime: req.body.starttime,
-            endtime: req.body.endtime,
-            linebodyLinebodyid: req.body.linebodyId,
-            losstier4Tier4id: req.body.losstier4Id,
-            linebodylosstier3Id: req.body.losstier3Dataid
-        }})
+        var checkFlag = 0
+        var loss4idList = await LinebodyLosstier4.findAll({'attributes': ['id'],
+            where:{linebodyLinebodyid: req.body.linebodyId,
+                losstier4Tier4id: req.body.losstier4Id
+            }})
+        var loss4idList2 =[]
+        if(loss4idList == null||loss4idList == ''){
+            checkFlag = 0
+            return checkFlag
+        }else{
+            for(var i=0; i< loss4idList.length;i++){
+                loss4idList2.push(loss4idList[i].id)  
+            }
+        }
+        for(var i=0; i< loss4idList2.length;i++){
+
+            const losstier4Data = await LinebodyLosstier4.findById(loss4idList2[i])
+
+            // 传来的时间是否在四级loss内
+            if( moment(req.body.starttime).unix() >= moment(losstier4Data.starttime).unix()
+                && moment(req.body.endtime).unix() <= moment(losstier4Data.endtime).unix()){
+                checkFlag = 1
+                break
+            }else{
+                checkFlag = 0
+            }
+        }
+    return checkFlag
+}
+
+/*
+    得到开班系数
+    */
+    exports.getClassflag = async function(classstarttime , classendtime , linebodyid) {
+        var classflag
+        var classidList = await LinebodyKpitwolev.findAll({
+            'attributes': ['classinformationClassinfid'],where:{linebodyLinebodyid:linebodyid}})
+        var classidList2 =[]
+        if(classidList == null||classidList == ''){
+            classflag = 0
+            return classflag
+        }else{
+            for(var i=0; i< classidList.length;i++){
+                classidList2.push(classidList[i].classinformationClassinfid)  
+            }
+        }
+
+        // 查重后的class数组
+        classidList2 = await exports.unique2(classidList2)
+
+        for(var i=0; i< classidList2.length;i++){
+
+            const classinfdata = await Classinformation.findById(classidList2[i])
+
+            // 传来的时间是否在开班时间内
+            if( moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix()
+                && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix() + 1){
+                classflag = 1
+        }else{
+            classflag = 0
+        }
+
     }
+    return classflag
+}
 
 /*
     展示产品名字（最小的产品类）下拉列表
@@ -390,7 +447,7 @@ const moment = require('moment');
         // 查询大类下的产品小类
         const productsubclass = await Productsubclass.findAll({where:{productbigclassId:productbigIdListNo[i]}})
         if(productsubclass != null){
-           for(var j = 0;j < productsubclass.length;j++){
+         for(var j = 0;j < productsubclass.length;j++){
             var sproductnameIdList = []
             var childsubData ={
                 value : '',
@@ -438,11 +495,11 @@ return  sproductbigIdList
         var res = [thisList[0]];
         for(var i = 1; i < thisList.length; i++){
           if(thisList[i] !== res[res.length - 1]){
-           res.push(thisList[i]);
-       }
-   }
-   return res
-}
+             res.push(thisList[i]);
+         }
+     }
+     return res
+ }
 
 /*
     展示产品数据信息数据
@@ -492,8 +549,8 @@ return  sproductbigIdList
     根据线体id和产品名称id查找产品ccy时间
     */
     exports.selectCCYtimeById = async function(linebodyproductnameId) {
-       return await LinebodyProductname.findById(linebodyproductnameId)  
-   }
+     return await LinebodyProductname.findById(linebodyproductnameId)  
+ }
 
 /*
     根据productnameId查找产品数据
@@ -529,7 +586,7 @@ return  sproductbigIdList
     添加开班时间详细信息数据
     */
     exports.addClassinf = async function(classStarttime,classEndtime,
-        shouldAttendance,actualAttendance) {
+        shouldAttendance,actualAttendance,linebodyId) {
         var classinforData = {
             classstarttime : classStarttime,
             classendtime : classEndtime,
@@ -537,6 +594,8 @@ return  sproductbigIdList
             actualattendance : actualAttendance
         }
         classinforData =  await Classinformation.create(classinforData)
+        const linebody = await Linebody.findById(linebodyId)
+        await linebody.addLinebodyClassinf(classinforData)
         return classinforData
     }
 
@@ -544,8 +603,8 @@ return  sproductbigIdList
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-     return classinforData =  await Classinformation.findById(classinfId)
- }
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
 
 /*
     根据四级的id找到二级三级名字
@@ -616,7 +675,7 @@ return  sproductbigIdList
     更新4级3级2级lossdata
     */
     exports.updateLoss4data = async function(losstier4Data,starttime,endtime){
- 
+
         // 更新四级lossdata
         var updateLoss4dataReturn = false
         const oldLoss4value = losstier4Data.value  //保存loss4改之前的value

@@ -84,22 +84,22 @@ var showAddPrpductData = {
                     losstier4List = losstier4NameList
                     flag = false
                 }else{
-                   losstier4List = await losstier4List.concat(losstier4NameList)
-               }
-           }
-       }
-       showLosstier34.losstier4 = losstier4List
-       showLosstier34.losstier3 = losstier3DataList
-       dataSuccess.data = showLosstier34
-       res.end(JSON.stringify(dataSuccess))     
-   }
+                 losstier4List = await losstier4List.concat(losstier4NameList)
+             }
+         }
+     }
+     showLosstier34.losstier4 = losstier4List
+     showLosstier34.losstier3 = losstier3DataList
+     dataSuccess.data = showLosstier34
+     res.end(JSON.stringify(dataSuccess))     
+ }
 
 
 /*
     点击确定按钮，创建一条数据并添加时间
     */
     exports.addLosstier4time2 = async function(req , res) {
-       if(req.body.classinfIdList == null||req.body.classinfIdList == ''
+     if(req.body.classinfIdList == null||req.body.classinfIdList == ''
         ||req.body.twolevName == null||req.body.twolevName == ''
         ||req.body.losstier3Id == null||req.body.losstier3Id == ''
         ||req.body.losstier4Id == null||req.body.losstier4Id == ''
@@ -194,27 +194,10 @@ var showAddPrpductData = {
        //          req.body.losstier3Id,req.body.linebodyId)
        //  }
 
-       //  // 验证添加的这个四级loss数据是否重复
-       //  req.body.losstier3Dataid = losstier3Data.id
-       //  var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
-       //  var addReturn = null
-       //  if(losstier4Data == null){
-       //      // 添加一条四级loss数据
-       //      losstier4Data = await datainputServices.addLosstier4data(losstier3Data.id,
-       //          req.body.losstier4Id,req.body.linebodyId)
-
-       //      // 添加四级loss发生的开始时间和结束时间
-       //      req.body.losstier4Dataid = losstier4Data.id
-       //      addReturn = await datainputServices.addLosstier4datatime(req , res)
-       //      if(addReturn != 1){
-       //          losstier4Data = null
-       //      }
-
-       //  }else{
-
-       //     // 四级loss数据重复
-       //     losstier4Data = 1
-       // }
+        // 验证添加的这个四级loss数据是否重复
+        // var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
+     
+     //----------------------------------------------------------------------01/02
 
         // 添加四级loss发生的开始时间和结束时间
         var losstier4dataList =  await datainputServices.addLosstier4datatime(req , res)
@@ -310,11 +293,11 @@ var showAddPrpductData = {
                             samenamedata = smdata
                             flag = false
                         }else{
-                           samenamedata = await samenamedata.concat(smdata)
-                       }
-                   }
-               }
-               var showAddPrpductData = {
+                         samenamedata = await samenamedata.concat(smdata)
+                     }
+                 }
+             }
+             var showAddPrpductData = {
                 productid:'',
                 productname:'',
                 conformproduct:'',
@@ -325,15 +308,15 @@ var showAddPrpductData = {
                     showAddPrpductData.productid = showAddPrpductData.productid +','+ samenamedata[k].productid
                     var flag = true
                     if(flag == true){
-                       const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
-                       showAddPrpductData.productname = concatName
-                       showAddPrpductData.conformproduct = samenamedata[k].conformproduct
-                       const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
-                       showAddPrpductData.normalcycletime = lineproname.normalcycletime
-                       flag = false
-                   }
+                     const concatName = await datainputServices.selectconcatNameById(samenamedata[k].linebodyproductnameId)
+                     showAddPrpductData.productname = concatName
+                     showAddPrpductData.conformproduct = samenamedata[k].conformproduct
+                     const lineproname = await datainputServices.selectCCYtimeById(samenamedata[k].linebodyproductnameId)
+                     showAddPrpductData.normalcycletime = lineproname.normalcycletime
+                     flag = false
+                 }
 
-               }
+             }
                 // 把多余的 ，去掉
                 showAddPrpductData.productid = await showAddPrpductData.productid.slice(1,)
                 showProduct.push(showAddPrpductData)
@@ -376,8 +359,8 @@ var showAddPrpductData = {
             ||req.body.classinfIdList == null||req.body.classinfIdList == '')
             res.end(JSON.stringify(parameterError))
         else{
-         var productIdList = req.body.productIdList.split(",")
-         for(var i = 0;i < productIdList.length;i++){
+           var productIdList = req.body.productIdList.split(",")
+           for(var i = 0;i < productIdList.length;i++){
                 // 删除一条产品信息
                 const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
                 if (deleteReturn == null||deleteReturn == '' ){
@@ -397,7 +380,8 @@ var showAddPrpductData = {
         if(req.body.classStarttime == null||req.body.classStarttime == ''
             ||req.body.classEndtime == null||req.body.classEndtime == ''
             ||req.body.shouldAttendance == null||req.body.shouldAttendance == ''
-            ||req.body.actualAttendance == null||req.body.actualAttendance == '')
+            ||req.body.actualAttendance == null||req.body.actualAttendance == ''
+            ||req.body.linebodyId == null||req.body.linebodyId == '')
             res.end(JSON.stringify(parameterError))
         else{
             // 开班开始---天
@@ -409,17 +393,17 @@ var showAddPrpductData = {
             if(classStartDay == classEndDay){
                 // 增加一条产品信息数据
                 const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
-                    req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
+                    req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
                 showdataList.push(addReturn)
             }else{
-                for(var i = classStartDay;i <= classEndDay;i++){
+                for(var i = classStartDay;i < classEndDay;i++){
                     if(i == classStartDay){
                         // 第一天
                         // 开班结束时间
-                        var classEndtime = moment(req.body.classStarttime).set({'hour': 23, 'minute': 59 ,'second': 59})
+                        var classEndtime = moment(req.body.classStarttime).set({'hour': 24, 'minute': 00 ,'second': 00})
                         // 增加一条产品信息数据
                         const addReturn = await datainputServices.addClassinf(req.body.classStarttime,
-                            classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
+                            classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
                         showdataList.push(addReturn)
                     } else if(i == classEndDay){
                         // 最后一天
@@ -427,15 +411,15 @@ var showAddPrpductData = {
                         var classStarttime = moment(req.body.classEndtime).set({'hour': 00, 'minute': 00 ,'second': 00})
                         // 增加一条产品信息数据
                         const addReturn = await datainputServices.addClassinf(classStarttime,
-                            req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
+                            req.body.classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
                         showdataList.push(addReturn)
                     }else{
                         // 中间的那些天
                         var classStarttime = moment(req.body.classStarttime).set({'date': i,'hour': 00, 'minute': 00 ,'second': 00})
-                        var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 23, 'minute': 59 ,'second': 59})
+                        var classEndtime = moment(req.body.classEndtime).set({'date': i,'hour': 24, 'minute': 00 ,'second': 00})
                         // 增加一条产品信息数据
                         const addReturn = await datainputServices.addClassinf(classStarttime,
-                            classEndtime,req.body.shouldAttendance,req.body.actualAttendance)
+                            classEndtime,req.body.shouldAttendance,req.body.actualAttendance,req.body.linebodyId)
                         showdataList.push(addReturn)
                     }
                 }          
@@ -619,7 +603,7 @@ var showAddPrpductData = {
                 const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[ccyTimeindex])
                 const updateReturn = await datainputServices.updateLoss4data(
                     losstier4Data,reqStarttime,losstier4Data.endtime)
-                 showAddloss4After = await datainputServices.updateNoLossdataReturn(losstier4Data,showAddloss4After)
+                showAddloss4After = await datainputServices.updateNoLossdataReturn(losstier4Data,showAddloss4After)
             }
             if(moment(reqEndtime).unix() < moment(losstier4Data1.endtime).unix()){
                 console.log('4------------------>')
@@ -688,7 +672,7 @@ var showAddPrpductData = {
 }
 
 exports.getClassflag = async function(req , res){
- var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
- dataSuccess.data = classflag
- res.end(JSON.stringify(dataSuccess))
+   var  classflag =  textServices.getClassflag(req.body.classStarttime , req.body.classEndtime , req.body.linebodyId);
+   dataSuccess.data = classflag
+   res.end(JSON.stringify(dataSuccess))
 }
