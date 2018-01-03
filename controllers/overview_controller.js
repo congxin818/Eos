@@ -12,7 +12,8 @@ var moment = require('moment');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
-    data:'fas'
+    data:'fas',
+    value:''
 };
 
 /*
@@ -53,7 +54,13 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     //     }
     // }
     const data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE');
-    res.end(JSON.stringify(data));
+    dataSuccess.data = data;
+    let data2 = new Array();
+    for (var i = 0; i < data.length; i++) {
+        data2.push(data[i]);
+    }
+    dataSuccess.value = await data2.pop().slice(1);
+    res.end(JSON.stringify(dataSuccess));
 
 }
 exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
@@ -121,6 +128,7 @@ async function computeTodayByTimes(startTime , endTime , Ids , type){
     //console.log("---sTime--->"+JSON.stringify(sTime));
     const returnTime = sTime.getFullYear() + '/' + Number(sTime.getMonth()+1) + '/' + sTime.getDate();
     const value =  await this.computeAll2ByTimes(sTime_num , eTime_num ,Ids , type);
+    console.log("---value--->"+JSON.stringify(value));
     let data = new Array();
     await data.push(returnTime);
     const returnValue = Number(1 - value) * 100;
@@ -173,16 +181,21 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
     //console.log("---returnData--->"+JSON.stringify(returnData));
     let sum = 0;
     let weight = 0;
+    let average = 0;
     if (returnData.length !=0) {
         sum = await returnData.map(a => a.value).reduce ((pre, cur) => pre + cur);
         weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
         //average = sum / returnData.length;
     }
+    if (weight == 0) {
+        average = 0;
+    }else{
+        average = Number(sum) / Number(weight);
+    }
     //const returnTime = sTime.date();
     console.log("---sum--->"+JSON.stringify(sum));
     console.log("---weight--->"+JSON.stringify(weight));
-    //console.log('\n\n')
-    const average = Number(sum) / Number(weight);
+    console.log('\n');
     return average.toFixed(4);
 }
 exports.computeAll2ByTimes = computeAll2ByTimes;
@@ -225,9 +238,9 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
         const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , kinebodyKpitwolev);
 
         const weight = linebody.weight;
-        //console.log("---classflag--->"+JSON.stringify(classflag));
-        //console.log("---weight--->"+JSON.stringify(weight));
-        //console.log("---valuedfsd--->"+JSON.stringify(value));
+        console.log("---classflag--->"+JSON.stringify(classflag));
+        console.log("---weight--->"+JSON.stringify(weight));
+        console.log("---valuedfsd--->"+JSON.stringify(value));
         valueSum += Number(classflag) * Number(value) * Number(weight);
         weightSum += Number(classflag) * Number(weight);
     }
