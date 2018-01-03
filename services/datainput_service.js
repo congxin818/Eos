@@ -385,7 +385,6 @@ const moment = require('moment');
             }
         }
         for(var i=0; i< classdataList2.length;i++){
-
             const classinfData = await Classinformation.findById(classdataList2[i])
             // 传来的时间是否重合
             if( moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
@@ -398,6 +397,7 @@ const moment = require('moment');
                 checkFlag = 0
             }
         }else{
+                    checkFlag = 1
             checkFlag = 1
             break
         }
@@ -729,4 +729,42 @@ return  sproductbigIdList
         const kpitwolev = await Kpitwolev.findById(losstier2data.kpitwolevKpitwoid)
         showAddloss4After.losstier2name = kpitwolev.name
         return showAddloss4After
+    }
+
+/*
+    按照开始时间顺序查找class表
+    */
+    exports.selectClassinfBylineby = async function(linebodyId){
+        const classinfidList = await Classinformation.findAll({attributes: ['classinfid'],
+           where:{linebodyLinebodyid: linebodyId},order: [['classstarttime','ASC']]})
+        var showClassinfdata =[]
+        var thelastYear
+        for(var i = 0;i< classinfidList.length;i++){
+            var showyear ={
+                year : '',
+                timeInfo : ''
+            }
+            var timeList =[]
+            var timeListJs= {
+                time : '',
+                id : ''
+            }
+            const classinfData = await Classinformation.findById(classinfidList[i].classinfid)
+            if (thelastYear == moment(classinfData.classstarttime).format('YYYY-MM-DD')) {
+                const maxIndex = showClassinfdata.length - 1
+                timeListJs.time = moment(classinfData.classstarttime).format('hh:mm:ss') + '-' + moment(classinfData.endtime).format('hh:mm:ss')
+                timeListJs.id = classinfData.classinfid
+                showClassinfdata[maxIndex].timeInfo.push(timeListJs)
+            }else{
+                thelastYear = moment(classinfData.classstarttime).format('YYYY-MM-DD')
+                timeListJs.time = moment(classinfData.classstarttime).format('hh:mm:ss') + '-' + moment(classinfData.endtime).format('hh:mm:ss')
+                timeListJs.id = classinfData.classinfid
+                timeList.push(timeListJs)
+                showyear.year = thelastYear
+                showyear.timeInfo = timeList
+                showClassinfdata.push(showyear)
+            }
+
+        }
+        return showClassinfdata
     }
