@@ -66,9 +66,8 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 
         console.log("---tier2Value--->"+JSON.stringify(tier2Value , null , 4));
         console.log('\n');
-    	if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0) {
-
-    		continue;
+    	if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0 || tier2Value == 'NaN') {
+            continue;
     	}
     	let tier2 = {
     		title:userKpitwo[i].name,
@@ -95,7 +94,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 
             console.log("---tier3Value--->"+JSON.stringify(tier3Value , null , 4));
             console.log('\n');
-	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0) {
+	    	if (tier3Value == undefined || tier3Value == null || tier3Value == '' || tier3Value == 0 || tier3Value == 'NaN') {
 
 	    		continue;
 	    	}
@@ -126,7 +125,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 
                 console.log("---tier4Value--->"+JSON.stringify(tier4Value , null , 4));
                 console.log('\n');
-		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0) {
+		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0 || tier4Value == 'NaN') {
 
 		    		continue;
 		    	}
@@ -205,8 +204,8 @@ async function computeAll4ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    console.log("---sum--->"+JSON.stringify(sum));
-    console.log("---weight--->"+JSON.stringify(weight));
+    console.log("---sum4--->"+JSON.stringify(sum));
+    console.log("---weight4--->"+JSON.stringify(weight));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
@@ -315,8 +314,8 @@ async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    // console.log("---sum--->"+JSON.stringify(sum));
-    // console.log("---weight--->"+JSON.stringify(weight));
+    console.log("---sum3--->"+JSON.stringify(sum));
+    console.log("---weight3--->"+JSON.stringify(weight));
     // console.log("---classflag--->"+JSON.stringify(classflag));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
@@ -439,8 +438,8 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    //console.log("---sum--->"+JSON.stringify(sum));
-    //console.log("---weight--->"+JSON.stringify(weight));
+    console.log("---sum2--->"+JSON.stringify(sum));
+    console.log("---weight2--->"+JSON.stringify(weight));
     //console.log('\n\n')
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
