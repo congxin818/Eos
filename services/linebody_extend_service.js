@@ -43,36 +43,43 @@ const moment = require('moment');
 /*
     得到开班系数
     */
-    exports.getClassflag = async function(classstarttime , classendtime , linebodyid) {
+exports.getClassflag = async function(classstarttime , classendtime , linebodyid) {
         var classflag
         var classidList = await Classinformation.findAll({
             'attributes': ['classinfid'],where:{linebodyLinebodyid:linebodyid}})
         var classidList2 =[]
         if(classidList == null||classidList == ''){
-            classflag = 0
+            classflag = 0;
             return classflag;   
         }else{
             for(var i=0; i< classidList.length;i++){
-                classidList2.push(classidList[i].classinfid)  
+                classidList2.push(classidList[i].classinfid);
             }
         }
-        // 查重后的class数组
-        classidList2 = await exports.unique2(classidList2)
 
         for(var i=0; i< classidList2.length;i++){
          
-            const classinfdata = await Classinformation.findById(classidList2[i])
+            const classinfdata = await Classinformation.findById(classidList2[i]);
 
             // 传来的时间是否在开班时间内
             if( moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix()
                 && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix()){
-                classflag = 1
+                classflag = 1;
+                break;
         }else{
-            classflag = 0
+            classflag = 0;
         }
     }
-    return classflag
+    return classflag;
 }
+
+// async function getClassflag1(classstarttime , classendtime , linebodyid){
+//     if (classstarttime == undefined || classstarttime == null || classstarttime == ''
+//         ||classendtime == undefined || classendtime == null || classendtime == ''
+//         ||linebodyid == undefined || linebodyid == null || linebodyid == '') {
+//         return 0;
+//     }
+// }
 
 /*
     数组查重
