@@ -53,7 +53,7 @@ const moment = require('moment');
             return classflag;   
         }else{
             for(var i=0; i< classidList.length;i++){
-                classidList2.push(classidList[i].classinformationClassinfid)  
+                classidList2.push(classidList[i].classinfid)  
             }
         }
         // 查重后的class数组
