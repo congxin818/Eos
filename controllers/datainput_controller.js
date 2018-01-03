@@ -195,7 +195,7 @@ var showAddPrpductData = {
        //  }
 
         // 验证添加的这个四级loss数据是否重复
-        var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
+        // var losstier4Data = await datainputServices.selectLosstier4DataBy(req , res)
      
      //----------------------------------------------------------------------01/02
 
