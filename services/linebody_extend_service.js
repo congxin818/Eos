@@ -65,7 +65,7 @@ const moment = require('moment');
 
             // 传来的时间是否在开班时间内
             if( moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix()
-                && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix() + 1){
+                && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix()){
                 classflag = 1
         }else{
             classflag = 0
