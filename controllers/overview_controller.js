@@ -13,7 +13,8 @@ var dataSuccess = {
     status: '0', 
     msg: '请求成功',
     data:'fas',
-    value:''
+    value:'',
+    losstier3:''
 };
 
 /*
@@ -60,10 +61,42 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         data2.push(data[i]);
     }
     dataSuccess.value = await data2.pop().slice(1);
+    dataSuccess.losstier3 = await this.selectLosstier3Top3ByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE')
     res.end(JSON.stringify(dataSuccess));
-
 }
 exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
+
+/*
+    根据times和linebodys查询losstier3的TOP3
+ */
+async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids , type){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||type == undefined || type == ''|| type == null) {
+        return;
+    }
+    const kpitwo = await Kpitwolev.findOne({where:{name:typeId}});
+    if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
+        return;
+    }
+    const returnData = Array();
+    const tier3 = await kpitwo.getKpitwolevLosscategory();
+    for (var i = tier3.length - 1; i >= 0; i--) {
+        if (tier3[i] == undefined || tier3[i] == null || tier3[i] == '') {
+            continue;
+        }
+        const value = await this.computeAll3ByTimes(startTime , endTime , Ids , tier3[i].lossid);
+        let tier3Data = {
+            name:tier3[i].name,
+            value:value
+        };
+        returnData.push(tier3Data);
+    }
+    await returnData.sort((m, n) => n.value - m.value);
+    return returnData.slice(0,3);
+}
+exports.selectLosstier3Top3ByTimesAndLinebodys = selectLosstier3Top3ByTimesAndLinebodys;
 
 /*
     根据times和linebodys查询Overview中柱状图数据
@@ -252,6 +285,105 @@ async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
     return data;
 }
 exports.computeQuarter2ByTimes = computeQuarter2ByTimes;
+
+/*
+    根据times和allData时间区域内计算tire3级
+    startTime:当天开始时间
+    endTime:当天结束时间
+    */
+async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||typeId == undefined || typeId == ''|| typeId == null) {
+        console.log("---yuzhizhe1--->");
+        return -1;
+    }
+    //console.log("---startTime--2->"+JSON.stringify(startTime));
+    //console.log("---endTime--2->"+JSON.stringify(endTime));
+    const sTime = new Date(startTime);
+    let sTime_num = sTime.getTime();
+    //console.log("---sTime--->"+JSON.stringify(sTime));
+    //console.log("---eTime--->"+JSON.stringify(eTime));
+    let eTime_num = Number(sTime_num) + 900000;
+
+    const endTime_num = new Date(endTime).getTime()
+    
+    let returnData = new Array();
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
+    while(eTime_num <= endTime_num){
+        //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+        //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+        const value = await this.computeQuarter3ByTimes(sTime_num , eTime_num , Ids , typeId);
+        
+        if (value === undefined || value === null || value === '' || value === -1) {
+            //console.log("---yuzhizhe0--->");
+        }else{
+            //console.log("---value--->"+JSON.stringify(value));
+            await returnData.push(value);
+        }
+        sTime_num = Number(sTime_num) + 900000;
+        eTime_num = Number(eTime_num) + 900000;
+        //console.log("---eTime--->"+JSON.stringify(eTime));
+    }
+    let sum = 0;
+    let weight = 0;
+    //let classflag = 0;
+    if (returnData.length !=0) {
+        sum = await returnData.map(a => a.value).reduce ((pre, cur) => pre + cur);
+        weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
+        //classflag = await returnData.map(a => a.classflag).reduce ((pre, cur) => pre + cur);
+        //average = sum / returnData.length;
+    }
+    //const returnTime = sTime.date();
+    console.log("---sum3--->"+JSON.stringify(sum));
+    console.log("---weight3--->"+JSON.stringify(weight));
+    // console.log("---classflag--->"+JSON.stringify(classflag));
+    console.log('\n');
+    const average = Number(sum) / Number(weight);
+    return average.toFixed(4);
+}
+exports.computeAll3ByTimes = computeAll3ByTimes;
+
+/*
+    根据times和allData每15分钟计算tire3级
+    startTime:15分钟开始时间
+    endTime:15分钟结束时间
+*/
+async function computeQuarter3ByTimes(startTime , endTime , Ids , typeId){
+    if (startTime == undefined || startTime == ''|| startTime == null
+        ||endTime == undefined || endTime == ''|| endTime == null
+        ||Ids == undefined || Ids == ''|| Ids == null
+        ||typeId == undefined || typeId == ''|| typeId == null) {
+        //console.log("---yuzhizhe1--->");
+        return 0;
+    }
+    const sTime_num = startTime;
+    const eTime_num = endTime;
+    let returnData = new Array();
+    let valueSum = 0;
+    let weightSum = 0;
+    for (var i = Ids.length - 1; i >= 0; i--) {
+        const linebody = await Linebody.findById(Ids[i]);
+        if (linebody === undefined || linebody === null || linebody === '') {
+            continue;
+        }
+        const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
+        const linebodyLosstier3 = await linebody.getLinebodyLosstier3({where:{losstier3Lossid:typeId}});
+        const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier3);
+
+        const weight = linebody.weight;
+        valueSum += Number(classflag) * Number(value) * Number(weight);
+        weightSum += Number(classflag) * Number(weight);
+    }
+    const data = {
+        value:valueSum,
+        weight:weightSum
+    }
+    return data;
+}
+exports.computeQuarter3ByTimes = computeQuarter3ByTimes;
 
 /*
     根据times和allData每15分钟计算tire2级值
