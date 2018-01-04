@@ -773,9 +773,52 @@ return  sproductbigIdList
     开班历史信息删除
     */
     exports.deleteClassinfHistory = async function(classinfId){
-        const classinfData =   await Classinformation.findById(classinfId)
+        const classinfData = await Classinformation.findById(classinfId)
         const deleteReturn = await classinfData.destroy()
+        await exports.loss2DataClear()
+        await exports.loss3DataClear()
+        await exports.loss4DataClear()
+        await exports.productClear()
         return deleteReturn 
+    }
+
+/*
+    根据loss3Data为空清理loss4Data
+    */
+    exports.productClear  = async function(){
+        const productdata = await Productdata.findAll({where:{classinformationClassinfid:null}});
+        for (var i = productdata.length - 1; i >= 0; i--) {
+            await productdata[i].destroy();
+        }
+    }
+
+/*
+    根据开班为空清理loss2Data
+    */
+    exports.loss2DataClear  = async function(){
+        const linebodyKpitwolev = await LinebodyKpitwolev.findAll({where:{classinformationClassinfid:null}});
+        for (var i = linebodyKpitwolev.length - 1; i >= 0; i--) {
+            await linebodyKpitwolev[i].destroy();
+        }
+    }
+
+/*
+    根据loss2Data为空清理loss3Data
+    */
+    exports.loss3DataClear  = async function(){
+        const linebodylosstier3 = await LinebodyLosstier3.findAll({where:{linebodyKpitwolevId:null}});
+        for (var i = linebodylosstier3.length - 1; i >= 0; i--) {
+            await linebodylosstier3[i].destroy();
+        }
+    }
+/*
+    根据loss3Data为空清理loss4Data
+    */
+    exports.loss4DataClear  = async function(){
+        const linebodylosstier4 = await LinebodyLosstier4.findAll({where:{linebodylosstier3Id:null}});
+        for (var i = linebodylosstier4.length - 1; i >= 0; i--) {
+            await linebodylosstier4[i].destroy();
+        }
     }
 
 /*
