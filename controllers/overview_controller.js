@@ -54,17 +54,41 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     //         continue;
     //     }
     // }
+    
     const data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE');
     dataSuccess.data = data;
-    let data2 = new Array();
-    for (var i = 0; i < data.length; i++) {
-        data2.push(data[i]);
-    }
-    dataSuccess.value = await data2.pop().slice(1);
+    dataSuccess.value = await this.getWantString(data);
     dataSuccess.losstier3 = await this.selectLosstier3Top3ByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE')
     res.end(JSON.stringify(dataSuccess));
 }
 exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
+
+/*
+    拼接右上方的数据结构
+ */
+async function getWantString(argument) {
+    if (argument == undefined || argument == null || argument == '') {
+        return;
+    }
+    let data2 = new Array();
+    for (var i = 0; i < argument.length; i++) {
+        data2.push(argument[i]);
+    }
+    let data3 = await data2.pop().slice(1);
+    const value1 = ['Current' , 'Target' , 'Vision' , 'Ideal'];
+    const value = ['../assets/images/current.png' , '../assets/images/target.png' , '../assets/images/vision.png' , '../assets/images/ideal.png'];
+    let returnData = new Array();
+    for (var i = 0; i < data3.length; i++) {
+        const data = {
+            img:value[i],
+            name:value1[i],
+            value:data3[i]
+        };
+        returnData.push(data);
+    }
+    return returnData;
+}
+exports.getWantString = getWantString;
 
 /*
     根据times和linebodys查询losstier3的TOP3
@@ -80,7 +104,7 @@ async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids 
     if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
         return;
     }
-    
+
     const returnData = Array();
     const tier3 = await kpitwo.getKpitwolevLosscategory();
     for (var i = tier3.length - 1; i >= 0; i--) {
