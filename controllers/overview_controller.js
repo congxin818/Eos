@@ -57,7 +57,12 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     
     const data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE');
     dataSuccess.data = data;
-    dataSuccess.value = await this.getWantString(data);
+    let data2 = new Array();
+    for (var i = 0; i < data.length; i++) {
+        data2.push(data[i]);
+    }
+    //dataSuccess.value = await this.getWantString(data);
+    dataSuccess.value = await data2.pop().slice(1);
     dataSuccess.losstier3 = await this.selectLosstier3Top3ByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE')
     res.end(JSON.stringify(dataSuccess));
 }
