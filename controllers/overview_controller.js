@@ -80,6 +80,7 @@ async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids 
     if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
         return;
     }
+    
     const returnData = Array();
     const tier3 = await kpitwo.getKpitwolevLosscategory();
     for (var i = tier3.length - 1; i >= 0; i--) {
