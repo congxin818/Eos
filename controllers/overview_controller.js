@@ -76,7 +76,7 @@ async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids 
         ||type == undefined || type == ''|| type == null) {
         return;
     }
-    const kpitwo = await Kpitwolev.findOne({where:{name:typeId}});
+    const kpitwo = await Kpitwolev.findOne({where:{name:type}});
     if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
         return;
     }
