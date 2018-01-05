@@ -756,18 +756,19 @@ exports.getClassflag = async function(req , res){
             const productinf = await exports.showProductinf(req.body.classinfId,req.body.linebodyId)
             classinfHisRight.product = productinf
             // 查找loss信息
-
-            var lossinfW = []
+            var lossinf = {}
             const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
             for(var i = 0; i < kpitwolevidList.length ; i++){
-                var lossinf = {}
-                var kpitwolev =  await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
-                lossinf[kpitwolev.name] = '';
-                var loss4inf = await datainputServices.showloss4inf(req.body.classinfId,req.body.linebodyId,kpitwolev.name)
-                lossinf[kpitwolev.name] = loss4inf
-                lossinfW.push(lossinf)
-            }
-            classinfHisRight.loss = lossinfW
+              var kpitwolev =  await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
+              lossinf[kpitwolev.name] = '';
+              // await datainputServices.showloss4inf(req.body.classinfId,req.body.linebodyId,kpitwolev.name)
+          }
+          classinfHisRight.loss = lossinf
+
+            // // 展示四级loss信息
+            // var loss4inf = await datainputServices.showloss4inf(req.body.classinfId,req.body.linebodyId,'OEE')
+            // classinfHisRight.loss = loss4inf
+
 
             dataSuccess.data = classinfHisRight
             res.end(JSON.stringify(dataSuccess))
