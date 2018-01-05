@@ -291,6 +291,9 @@ const moment = require('moment');
     var timesetFlag = false
     var timeendsetFlag = false
     console.log('formatTime--------->')
+    console.log('starttime--------->'+JSON.stringify(starttime))
+    console.log('endtime--------->'+JSON.stringify(endtime))
+    console.log('unix--------->'+moment(starttime).unix())
     for(var l = 0;l < 4;l++){
         if(moment(starttime).unix()%(15*60) == 0 && timesetFlag == false){
             formatStarttime = moment(starttime)
