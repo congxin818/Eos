@@ -139,8 +139,11 @@ const moment = require('moment');
 
         // 格式化
         var formatTimeReturn = await exports.formatTime(starttime,endtime)
+        console.log('formatTimeReturn----------->'+JSON.stringify(formatTimeReturn,null,4))
         var  formatStarttime = formatTimeReturn.formatStarttime //格式化开始时间
         var formatEndtime = formatTimeReturn.formatEndtime  // 格式化结束时间
+        console.log('formatEndtime----------->'+formatEndtime.unix())
+        console.log('formatStarttime----------->'+formatStarttime.unix())
         ccyTimeindex = (formatEndtime.unix() - formatStarttime.unix())/(15*60) - 2
         // 判断持续时间
         if(ccyTimeindex >= 0){
