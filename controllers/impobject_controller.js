@@ -99,7 +99,6 @@ const kpiTwoShow = {
       if(req.body.lossstatusId == null||req.body.lossstatusId == ''){
         res.end(JSON.stringify(parameterError))
       }
-        console.log('--展示历史信息--')
         // 对项目状态log表进行查找
         const data = await impobjServices.showImpItemhistory(req.body.lossstatusId)
         if(data.length > 0){
