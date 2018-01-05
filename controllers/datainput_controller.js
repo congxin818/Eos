@@ -540,7 +540,7 @@ var showAddPrpductData = {
             const losstier4Data1 = await datainputServices.selectLosstier4DataByid(losstier4DataidList[1])
 
             if(moment(reqStarttime).unix() < moment(losstier4Data0.starttime).unix()){
-                console.log('1------------------>')
+                //console.log('1------------------>')
                 // 参数设定
                 req.body.starttime = reqStarttime
                 req.body.endtime = losstier4Data0.starttime

@@ -122,10 +122,10 @@ var dataSuccess = {
                         if (falg) {
                             await updateAreaArray(allData , ch);
                         }
-                        console.log(JSON.stringify(falg))
+                        //console.log(JSON.stringify(falg))
                     }catch (err) {
-                        console.log ('error ------>')
-                        console.log (err)
+                        // console.log ('error ------>')
+                        // console.log (err)
                         return errorUtil.serviceError;
                     }
 
@@ -145,10 +145,10 @@ var dataSuccess = {
                         if (falg) {
                             await updateAreaArray(allData , ch);
                         }
-                        console.log(JSON.stringify(falg))
+                        //console.log(JSON.stringify(falg))
                     }catch (err) {
-                        console.log ('error ------>')
-                        console.log (err)
+                        // console.log ('error ------>')
+                        // console.log (err)
                         return errorUtil.serviceError;
                     }
 
@@ -168,10 +168,10 @@ var dataSuccess = {
                         if (falg) {
                             await updateAreaArray(allData , ch);
                         }
-                        console.log(JSON.stringify(falg))
+                        //console.log(JSON.stringify(falg))
                     }catch (err) {
-                        console.log ('error ------>')
-                        console.log (err)
+                        // console.log ('error ------>')
+                        // console.log (err)
                         return errorUtil.serviceError;
                     }
 
@@ -191,10 +191,10 @@ var dataSuccess = {
                         if (falg) {
                             await updateAreaArray(allData , ch);
                         }
-                        console.log(JSON.stringify(falg))
+                        //console.log(JSON.stringify(falg))
                     }catch (err) {
-                        console.log ('error ------>')
-                        console.log (err)
+                        //console.log ('error ------>')
+                        //console.log (err)
                         return errorUtil.serviceError;
                     }
                 }
@@ -340,7 +340,7 @@ var dataSuccess = {
         return dataSuccess;
     }
     catch (err) {
-        console.log('yuzhizhe_error------>' + err);
+        //console.log('yuzhizhe_error------>' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
             return errorUtil.existError
         }
@@ -489,7 +489,7 @@ async function updateUserById(req , res , next) {
         return dataSuccess;
     }
     catch (err) {
-        console.log('yuzhizhe_error---->' + err);
+        //console.log('yuzhizhe_error---->' + err);
         return errorUtil.serviceError;
     }
 }
@@ -548,7 +548,7 @@ async function updateUserKpiTwolveById(userId ,kpiTwolevId , newOrder){
         return value;
     }
     catch (err) {
-        console.log (`error --> ${err}`)
+        //console.log (`error --> ${err}`)
     }
 }
 exports.updateUserKpiTwolveById = updateUserKpiTwolveById;
