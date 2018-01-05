@@ -209,7 +209,7 @@ const moment = require('moment');
                     formatEndtime : ''
                 }
                 // 格式化传来的四级loss data开始和结束时间
-                if(linebodyLosstier4List[i].starttime.getTime()%(15*6000)==0 &&linebodyLosstier4List[i].endtime.getTime()%(15*6000)==0){
+                if(linebodyLosstier4List[i].starttime.getTime()%(15*60000)==0 &&linebodyLosstier4List[i].endtime.getTime()%(15*60000)==0){
                     formatTimeReturn.formatStarttime = linebodyLosstier4List[i].starttime
                     formatTimeReturn.formatEndtime = linebodyLosstier4List[i].endtime
                 }else{
