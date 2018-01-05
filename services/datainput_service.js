@@ -143,7 +143,7 @@ const moment = require('moment');
         var formatEndtime = formatTimeReturn.formatEndtime  // 格式化结束时间
         ccyTimeindex = (formatEndtime.unix() - formatStarttime.unix())/(15*60) - 2
         // 判断持续时间
-
+        console.log('12121212121----------->')
         if(ccyTimeindex >= 0){
             // 把开始时间到15分钟添加到表里
             var losstier4data = {
@@ -291,9 +291,7 @@ const moment = require('moment');
     var timesetFlag = false
     var timeendsetFlag = false
     console.log('formatTime--------->')
-    console.log('starttime--------->'+JSON.stringify(starttime))
     console.log('endtime--------->'+JSON.stringify(endtime))
-    console.log('unix--------->'+moment(starttime).unix())
     for(var l = 0;l < 4;l++){
         if(moment(starttime).unix()%(15*60) == 0 && timesetFlag == false){
             formatStarttime = moment(starttime)
@@ -314,6 +312,7 @@ const moment = require('moment');
             break
         }
     }
+    console.log('starttime--------->')
 
     // 返回值设定
     return formatTimeReturn ={
