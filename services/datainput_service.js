@@ -366,6 +366,7 @@ const moment = require('moment');
                 checkFlag = 0
                 break
             }
+            console.log('---yuzhizhe1'+JSON.stringify(losstier4Data,null,4))
             // 传来的时间是否在四级loss内
             if( moment(req.body.starttime).unix() >= moment(losstier4Data.starttime).unix()
                 && moment(req.body.endtime).unix() <= moment(losstier4Data.endtime).unix()){
