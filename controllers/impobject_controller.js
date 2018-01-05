@@ -81,7 +81,7 @@ const kpiTwoShow = {
 
         // 对项目状态log表进行增加
         if(beforStatus != updateData.status||beforStage != updateData.stage){
-          updateDatalog = await impobjServices.addLostatuslog(req , res,beforStatus,beforStage)
+          updateDatalog = await impobjServices.addLostatuslog(req , res,beforStatus,beforStage,updateData.id)
         }
         if(updateData != null && updateDatalog != null){
           dataSuccess.data  = updateData
@@ -96,11 +96,11 @@ const kpiTwoShow = {
     improvment展示历史信息
     */
     exports.showImpItemhistory = async function(req , res) {
-      if(req.body.linebodyId == null||req.body.linebodyId == ''){
+      if(req.body.lossstatusId == null||req.body.lossstatusId == ''){
         res.end(JSON.stringify(parameterError))
       }
         // 对项目状态log表进行查找
-        const data = await impobjServices.showImpItemhistory(req.body.linebodyId)
+        const data = await impobjServices.showImpItemhistory(req.body.lossstatusId)
         if(data.length > 0){
           for(var i = 0;i < data.length;i++){
             data[i].createdAt  = moment(data[i].createdAt).format('YYYY-MM-DD')
