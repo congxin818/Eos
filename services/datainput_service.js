@@ -27,7 +27,7 @@ const moment = require('moment');
     */
     exports.selectKpitwolevidByuser = async function(userId) {      
         return await UserKpitwolev.findAll({attributes: ['kpitwolevKpitwoid'],
-         where:{userUserid: userId},order: [['sequence','ASC']]})
+           where:{userUserid: userId},order: [['sequence','ASC']]})
     }
 
 /*
@@ -87,8 +87,8 @@ const moment = require('moment');
     根据classid找到开班数据
     */
     exports.classinforSelectById = async function(classinfId) {
-     return classinforData =  await Classinformation.findById(classinfId)
- }
+       return classinforData =  await Classinformation.findById(classinfId)
+   }
 
 /*
     根据二级loss数据创建一条三级loss数据
@@ -120,8 +120,8 @@ const moment = require('moment');
     添加四级三级二级loss结构及value值
     */
     exports.addLosstier4datatime = async function(req , res) {
-       const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
-       const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
+     const LinebodyLosstier4List = await exports.addLosstier4datavalue(req , res)
+     const LinebodyLosstier3List = await exports.addLosstier3datavalue(req , res ,LinebodyLosstier4List)
        // await exports.addLosstier2datavalue(req , res ,LinebodyLosstier3List,LinebodyLosstier4List)
        return LinebodyLosstier4List
    }
@@ -362,7 +362,10 @@ const moment = require('moment');
         for(var i=0; i< loss4idList2.length;i++){
 
             const losstier4Data = await LinebodyLosstier4.findById(loss4idList2[i])
-
+            if(losstier4Data == null||losstier4Data == ''){
+                checkFlag = 0
+                break
+            }
             // 传来的时间是否在四级loss内
             if( moment(req.body.starttime).unix() >= moment(losstier4Data.starttime).unix()
                 && moment(req.body.endtime).unix() <= moment(losstier4Data.endtime).unix()){
@@ -397,7 +400,7 @@ const moment = require('moment');
             if( moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
                 || moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()){
                 if(moment(classstarttime).unix() == moment(classinfData.classstarttime).unix() 
-                   && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
+                 && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
                     checkFlag = 1
                 break
             }else{
@@ -456,7 +459,7 @@ const moment = require('moment');
         // 查询大类下的产品小类
         const productsubclass = await Productsubclass.findAll({where:{productbigclassId:productbigIdListNo[i]}})
         if(productsubclass != null){
-           for(var j = 0;j < productsubclass.length;j++){
+         for(var j = 0;j < productsubclass.length;j++){
             var sproductnameIdList = []
             var childsubData ={
                 value : '',
@@ -504,11 +507,11 @@ return  sproductbigIdList
         var res = [thisList[0]];
         for(var i = 1; i < thisList.length; i++){
           if(thisList[i] !== res[res.length - 1]){
-           res.push(thisList[i]);
-       }
-   }
-   return res
-}
+             res.push(thisList[i]);
+         }
+     }
+     return res
+ }
 
 /*
     展示产品数据信息数据
@@ -558,8 +561,8 @@ return  sproductbigIdList
     根据线体id和产品名称id查找产品ccy时间
     */
     exports.selectCCYtimeById = async function(linebodyproductnameId) {
-       return await LinebodyProductname.findById(linebodyproductnameId)  
-   }
+     return await LinebodyProductname.findById(linebodyproductnameId)  
+ }
 
 /*
     根据productnameId查找产品数据
@@ -736,7 +739,7 @@ return  sproductbigIdList
     */
     exports.selectClassinfBylineby = async function(linebodyId){
         const classinfidList = await Classinformation.findAll({attributes: ['classinfid'],
-         where:{linebodyLinebodyid: linebodyId},order: [['classstarttime','ASC']]})
+           where:{linebodyLinebodyid: linebodyId},order: [['classstarttime','ASC']]})
         var showClassinfdata =[]
         var thelastYear
         for(var i = 0;i< classinfidList.length;i++){
