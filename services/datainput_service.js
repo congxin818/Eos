@@ -776,9 +776,52 @@ return  sproductbigIdList
     开班历史信息删除
     */
     exports.deleteClassinfHistory = async function(classinfId){
-        const classinfData =   await Classinformation.findById(classinfId)
+        const classinfData = await Classinformation.findById(classinfId)
         const deleteReturn = await classinfData.destroy()
+        await exports.loss2DataClear()
+        await exports.loss3DataClear()
+        await exports.loss4DataClear()
+        await exports.productClear()
         return deleteReturn 
+    }
+
+/*
+    根据loss3Data为空清理loss4Data
+    */
+    exports.productClear  = async function(){
+        const productdata = await Productdata.findAll({where:{classinformationClassinfid:null}});
+        for (var i = productdata.length - 1; i >= 0; i--) {
+            await productdata[i].destroy();
+        }
+    }
+
+/*
+    根据开班为空清理loss2Data
+    */
+    exports.loss2DataClear  = async function(){
+        const linebodyKpitwolev = await LinebodyKpitwolev.findAll({where:{classinformationClassinfid:null}});
+        for (var i = linebodyKpitwolev.length - 1; i >= 0; i--) {
+            await linebodyKpitwolev[i].destroy();
+        }
+    }
+
+/*
+    根据loss2Data为空清理loss3Data
+    */
+    exports.loss3DataClear  = async function(){
+        const linebodylosstier3 = await LinebodyLosstier3.findAll({where:{linebodyKpitwolevId:null}});
+        for (var i = linebodylosstier3.length - 1; i >= 0; i--) {
+            await linebodylosstier3[i].destroy();
+        }
+    }
+/*
+    根据loss3Data为空清理loss4Data
+    */
+    exports.loss4DataClear  = async function(){
+        const linebodylosstier4 = await LinebodyLosstier4.findAll({where:{linebodylosstier3Id:null}});
+        for (var i = linebodylosstier4.length - 1; i >= 0; i--) {
+            await linebodylosstier4[i].destroy();
+        }
     }
 
 /*
@@ -801,6 +844,7 @@ return  sproductbigIdList
             if(linebodyloss3idList != null && linebodyloss3idList != ''){
                 var linebodyloss4idList =[] // loss四级总idList
                 var losstier4idList = [] // loss四级名字
+                var loss4idLists = []   //四级连续id的总数组
                 for(var i = 0;i< linebodyloss3idList.length;i++){
                     const linebodylosstier42 = await LinebodyLosstier4.findAll({
                         where:{linebodylosstier3Id:linebodyloss3idList[i]},order: [['starttime','ASC']]})
@@ -813,83 +857,75 @@ return  sproductbigIdList
                 }
 
                 for(var i = 0;i< linebodyloss4idList.length;i++){
-                    const linebodyloss4 = LinebodyLosstier4.findById(linebodyloss4idList[i])
-                    if(!losstier4idList.contains(linebodyloss4.losstier4Tier4id)){
+                    const linebodyloss4 = await LinebodyLosstier4.findById(linebodyloss4idList[i])
+                    if(losstier4idList.indexOf(linebodyloss4.losstier4Tier4id) == -1){
                         losstier4idList.push(linebodyloss4.losstier4Tier4id)
                     }
                 }
-                console.log('linebodyloss4idList----------->'+JSON.stringify(linebodyloss4idList,null,4))
-                console.log('losstier4idList----------->'+JSON.stringify(losstier4idList,null,4))
+                console.log('------->'+JSON.stringify(losstier4idList,null,4))
                 for(var i = 0;i< losstier4idList.length;i++){
                     const losstier4 = await Losstier4.findById(losstier4idList[i])
                     const linebodylosstier4 = await LinebodyLosstier4.findAll({
                         where:{losstier4Tier4id:losstier4.tier4id,linebodyLinebodyid:linebodyId},order: [['starttime','ASC']]})
-
                     var thelastlosstier4 // 上一个的data
                     var loss4idStringList = [] //四级连续id的string数组
                     var loss4idDisconList = [] //四级不连续id的数组
-                    var loss4idLists = []   //四级连续id的总数组
-
+                    var loss4idList = []
                     var startflag = false // 连续的开始时间标志
+                    var oldLoss4idstring
+                    var losstier4nameList = []  // 这个四级名字的总数组
+                    console.log('------->'+JSON.stringify(linebodylosstier4,null,4))
+                    if(linebodylosstier4 == null||linebodylosstier4 ==''){
+                        break
+                    }
                     for(var j = 0;j< linebodylosstier4.length;j++){
-                        if(i == 0){
+                        if(linebodyloss4idList.indexOf(linebodylosstier4[j].id) == -1){
+                            continue
+                        }
+                        losstier4nameList.push(linebodylosstier4[j].id)
+                        if(thelastlosstier4 == null||thelastlosstier4 ==''){
+                            startflag = true
                             thelastlosstier4 = linebodylosstier4[j]
                             continue
                         }
-                        if(moment(linebodylosstier4[j].endtime).unix() == moment(thelastlosstier4.starttime).unix() 
-                            && linebodylosstier4[j].losstier4Tier4id == thelastlosstier4.losstier4Tier4id){
+                        if(moment(linebodylosstier4[j].starttime).unix() == moment(thelastlosstier4.endtime).unix()){
                             // 如果是连续的
-                        var loss4idList = []
-                        var losstiern ={
-                            loss4idstring:'',
-                            starttime : '',
-                            endtime : '',
-                            losstier4Id : ''
-                        }
-                        loss4idList.push('') 
-                            loss4idList.push('') //把0 1 数组空出来
-                            if(!loss4idList.contains(thelastlosstier4.id)){
+                            if(startflag == true){
+                                loss4idList = []
+                            }    
+                            if(loss4idList.indexOf(thelastlosstier4.id) == -1){
                                 loss4idList.push(thelastlosstier4.id)
                             }
-                            loss4idList.push(linebodylosstier4[j].id)
-                            console.log('loss4idList----------->'+JSON.stringify(loss4idList,null,4))
+
+                            // 封装成 0 1格式的id 1下标为最大的时间
+                            loss4idList.push(loss4idList[1])
+                            loss4idList.splice(1,1,linebodylosstier4[j].id)
 
                             // 加到四级连续id的总数组里
-                            if(!loss4idLists.contains(thelastlosstier4.id)){
+                            if(loss4idLists.indexOf(thelastlosstier4.id) == -1){
                                 loss4idLists.push(thelastlosstier4.id)
                             }
                             loss4idLists.push(linebodylosstier4[j].id)
-
-                            // 封装成 0 1格式的id 1下标为最大的时间
-                            if(loss4idList.length == 4){
-                                loss4idList.splice(0,2);
+                            // id字符串
+                            var loss4idstring = ''
+                            for(var k = 0;k< loss4idList.length;k++){ 
+                                loss4idstring = loss4idstring  + ',' + loss4idList[k] 
+                            }
+                            loss4idstring = loss4idstring.slice(1,)
+                            if(startflag == true){
+                                loss4idStringList.push(loss4idstring)
                             }else{
-                                loss4idList.splice(0,1,loss4idList[2])
-                                loss4idList.splice(2,1);
-                                maxIndex = loss4idList.length - 1
-                                loss4idList.splice(1,1,loss4idList[maxIndex])
-                                loss4idList.splice(maxIndex,1);
+                                index = loss4idStringList.indexOf(oldLoss4idstring)
+                                loss4idStringList.splice(index,1,loss4idstring)
                             }
-                            for(var k = 0;k< loss4idList.length;k++){
-                                losstiern.loss4idstring = ',' + loss4idList[k] 
-                            }
-                            losstiern.loss4idstring = loss4idstring.slice(1,)
-                            
-                            if(startflag == false){
-                                losstiern.starttime = thelastlosstier4.starttime
-                                startflag = true
-                            }
-                            losstiern.endtime = linebodylosstier4[j].endtime
-                            losstiern.losstier4Id = linebodylosstier4[j].losstier4Tier4id
-
-                            loss4idStringList.push(losstiern)
+                            oldLoss4idstring = loss4idstring
+                            startflag = false
                         }else{
 
-                            startflag = false
+                            startflag = true
                         }
                         thelastlosstier4 = linebodylosstier4[j]
                     }
-
                     // 遍历四级连续id的数组
                     if(loss4idStringList!= null&&loss4idStringList!= ''){
                         for(var j = 0;j< loss4idStringList.length;j++){
@@ -902,13 +938,16 @@ return  sproductbigIdList
                                 endtime:'',
                             }
                             showAddloss4After.losstier2name = losstier2name
-                            const losstier3 = await Losstier3.findById(linebodyloss3idList[i])
+                            const losstier3 = await Losstier3.findById(losstier4.losstier3Lossid)
                             showAddloss4After.losstier3name = losstier3.name
-                            const losstier4 = await Losstier4.findById(loss4idStringList[j].losstier4Id)
                             showAddloss4After.losstier4name = losstier4.name
-                            showAddloss4After.losstier4Dataid = loss4idStringList[j].loss4idstring
-                            showAddloss4After.starttime = loss4idStringList[j].starttime
-                            showAddloss4After.endtime = loss4idStringList[j].endtime
+                            showAddloss4After.losstier4Dataid = loss4idStringList[j]
+                            var loss4idStringls = []
+                            loss4idStringls =  loss4idStringList[j].split(",")
+                            const loss4idStringlsData = await LinebodyLosstier4.findById(loss4idStringls[0])
+                            const loss4idStringlsData1 = await LinebodyLosstier4.findById(loss4idStringls[1])
+                            showAddloss4After.starttime = loss4idStringlsData.starttime
+                            showAddloss4After.endtime = loss4idStringlsData1.endtime
                             lossinf.push(showAddloss4After)
                         }
                     }
@@ -917,9 +956,12 @@ return  sproductbigIdList
                     if(linebodylosstier4.length == 1){
                         loss4idDisconList.push(linebodylosstier4[0].id)
                     }else{
-                        loss4idDisconList = linebodyloss4idList.concat(loss4idLists)
-                        loss4idDisconList = await exports.unique2(loss4idDisconList)
-                    }               
+                        loss4idDisconList  = losstier4nameList
+                        for(var j = 0;j< loss4idLists.length;j++){
+                            index = losstier4nameList.indexOf(loss4idLists[j])
+                            loss4idDisconList.splice(index,1)
+                        }
+                    }              
                     if(loss4idDisconList != null && loss4idDisconList != ''){
                         for(var j = 0;j< loss4idDisconList.length;j++){
                             var showAddloss4After = {
