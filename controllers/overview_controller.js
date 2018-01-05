@@ -116,7 +116,10 @@ async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids 
         if (tier3[i] == undefined || tier3[i] == null || tier3[i] == '') {
             continue;
         }
-        const value = await this.computeAll3ByTimes(startTime , endTime , Ids , tier3[i].lossid);
+        let value = await this.computeAll3ByTimes(startTime , endTime , Ids , tier3[i].lossid);
+        if (value == undefined || value == ''|| value == null || value == 'NaN') {
+            value = 0;
+        }
         let tier3Data = {
             name:tier3[i].name,
             value:value
