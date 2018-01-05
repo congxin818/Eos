@@ -14,13 +14,16 @@ var dataSuccess = {
     msg: '请求成功',
     data:'fas',
     value:'',
-    losstier3:''
+    losstier3:'',
+    impprojectTop:''
 };
+
+const valueUnit = 168000
 
 /*
     根据times和linebodys查询Overview数据
     */
-async function selectOverviewByTimesAndLinebodys(req , res , next){
+    async function selectOverviewByTimesAndLinebodys(req , res , next){
     //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
     //console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
     //console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
@@ -30,8 +33,8 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         //||req.body.userId == undefined || req.body.userId == ''|| req.body.userId == null
         ) {
         res.end(JSON.stringify(errorUtil.parameterError));
-        return;
-    }
+    return;
+}
     // const user = await User.findById(req.body.userId);
     // if (user == undefined || user == ''|| user == null) {
     //     res.end(JSON.stringify(errorUtil.noExistError));
@@ -40,10 +43,10 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     // const userKpitwo = await user.getUserKpitwolevs();
     const Ids = req.body.linebodyIds.split(',');
    // console.log("---Ids.length--->"+JSON.stringify(Ids.length));
-    if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
-        res.end(JSON.stringify(errorUtil.parameterError));
-        return;
-    }
+   if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
+    res.end(JSON.stringify(errorUtil.parameterError));
+    return;
+}
     //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
     // for (var i = userKpitwo.length - 1; i >= 0; i--) {
     //     if (userKpitwo[i] == undefined || userKpitwo[i] == null || userKpitwo[i] == '') {
@@ -64,46 +67,47 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
     //dataSuccess.value = await this.getWantString(data);
     dataSuccess.value = await data2.pop().slice(1);
     dataSuccess.losstier3 = await this.selectLosstier3Top3ByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE')
+    dataSuccess.impprojectTop = await exports.showImpprojectTop(Ids,req.body.endTime)
     res.end(JSON.stringify(dataSuccess));
 }
 exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
 
 /*
     拼接右上方的数据结构
- */
-async function getWantString(argument) {
-    if (argument == undefined || argument == null || argument == '') {
-        return;
+    */
+    async function getWantString(argument) {
+        if (argument == undefined || argument == null || argument == '') {
+            return;
+        }
+        let data2 = new Array();
+        for (var i = 0; i < argument.length; i++) {
+            data2.push(argument[i]);
+        }
+        let data3 = await data2.pop().slice(1);
+        const value1 = ['Current' , 'Target' , 'Vision' , 'Ideal'];
+        const value = ['../assets/images/current.png' , '../assets/images/target.png' , '../assets/images/vision.png' , '../assets/images/ideal.png'];
+        let returnData = new Array();
+        for (var i = 0; i < data3.length; i++) {
+            const data = {
+                img:value[i],
+                name:value1[i],
+                value:data3[i]
+            };
+            returnData.push(data);
+        }
+        return returnData;
     }
-    let data2 = new Array();
-    for (var i = 0; i < argument.length; i++) {
-        data2.push(argument[i]);
-    }
-    let data3 = await data2.pop().slice(1);
-    const value1 = ['Current' , 'Target' , 'Vision' , 'Ideal'];
-    const value = ['../assets/images/current.png' , '../assets/images/target.png' , '../assets/images/vision.png' , '../assets/images/ideal.png'];
-    let returnData = new Array();
-    for (var i = 0; i < data3.length; i++) {
-        const data = {
-            img:value[i],
-            name:value1[i],
-            value:data3[i]
-        };
-        returnData.push(data);
-    }
-    return returnData;
-}
-exports.getWantString = getWantString;
+    exports.getWantString = getWantString;
 
 /*
     根据times和linebodys查询losstier3的TOP3
- */
-async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids , type){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||type == undefined || type == ''|| type == null) {
-        return;
+    */
+    async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids , type){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||type == undefined || type == ''|| type == null) {
+            return;
     }
     const kpitwo = await Kpitwolev.findOne({where:{name:type}});
     if (kpitwo == undefined || kpitwo == null || kpitwo == '') {
@@ -134,12 +138,12 @@ exports.selectLosstier3Top3ByTimesAndLinebodys = selectLosstier3Top3ByTimesAndLi
 /*
     根据times和linebodys查询Overview中柱状图数据
     */
-async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids , type){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||type == undefined || type == ''|| type == null) {
-        return;
+    async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids , type){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||type == undefined || type == ''|| type == null) {
+            return;
     }
 
     const endTime_num = new Date(endTime).getTime();
@@ -174,12 +178,12 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeTodayByTimes(startTime , endTime , Ids , type){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||type == undefined || type == ''|| type == null) {
-        console.log("---yuzhizhe1--->");
+    async function computeTodayByTimes(startTime , endTime , Ids , type){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||type == undefined || type == ''|| type == null) {
+            console.log("---yuzhizhe1--->");
         return;
     }
     //console.log("---startTime--2->"+JSON.stringify(startTime));
@@ -212,12 +216,12 @@ exports.computeTodayByTimes = computeTodayByTimes;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||typeId == undefined || typeId == ''|| typeId == null) {
-        console.log("---yuzhizhe1--->");
+    async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||typeId == undefined || typeId == ''|| typeId == null) {
+            console.log("---yuzhizhe1--->");
         return;
     }
     
@@ -269,18 +273,18 @@ exports.computeAll2ByTimes = computeAll2ByTimes;
     根据times和allData每15分钟计算tire2级
     startTime:15分钟开始时间
     endTime:15分钟结束时间
-*/
-async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||typeId == undefined || typeId == ''|| typeId == null) {
+    */
+    async function computeQuarter2ByTimes(startTime , endTime , Ids , typeId){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||typeId == undefined || typeId == ''|| typeId == null) {
         //console.log("---yuzhizhe1--->");
-        return 0;
-    }
-    const sTime_num = startTime;
-    const eTime_num = endTime;
-    let returnData = new Array();
+    return 0;
+}
+const sTime_num = startTime;
+const eTime_num = endTime;
+let returnData = new Array();
     //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
     //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let valueSum = 0;
@@ -324,12 +328,12 @@ exports.computeQuarter2ByTimes = computeQuarter2ByTimes;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||typeId == undefined || typeId == ''|| typeId == null) {
-        console.log("---yuzhizhe1--->");
+    async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||typeId == undefined || typeId == ''|| typeId == null) {
+            console.log("---yuzhizhe1--->");
         return -1;
     }
     //console.log("---startTime--2->"+JSON.stringify(startTime));
@@ -383,38 +387,38 @@ exports.computeAll3ByTimes = computeAll3ByTimes;
     根据times和allData每15分钟计算tire3级
     startTime:15分钟开始时间
     endTime:15分钟结束时间
-*/
-async function computeQuarter3ByTimes(startTime , endTime , Ids , typeId){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null
-        ||typeId == undefined || typeId == ''|| typeId == null) {
+    */
+    async function computeQuarter3ByTimes(startTime , endTime , Ids , typeId){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null
+            ||typeId == undefined || typeId == ''|| typeId == null) {
         //console.log("---yuzhizhe1--->");
-        return 0;
+    return 0;
+}
+const sTime_num = startTime;
+const eTime_num = endTime;
+let returnData = new Array();
+let valueSum = 0;
+let weightSum = 0;
+for (var i = Ids.length - 1; i >= 0; i--) {
+    const linebody = await Linebody.findById(Ids[i]);
+    if (linebody === undefined || linebody === null || linebody === '') {
+        continue;
     }
-    const sTime_num = startTime;
-    const eTime_num = endTime;
-    let returnData = new Array();
-    let valueSum = 0;
-    let weightSum = 0;
-    for (var i = Ids.length - 1; i >= 0; i--) {
-        const linebody = await Linebody.findById(Ids[i]);
-        if (linebody === undefined || linebody === null || linebody === '') {
-            continue;
-        }
-        const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
-        const linebodyLosstier3 = await linebody.getLinebodyLosstier3({where:{losstier3Lossid:typeId}});
-        const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier3);
+    const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num) , new Date(eTime_num) , Ids[i]);
+    const linebodyLosstier3 = await linebody.getLinebodyLosstier3({where:{losstier3Lossid:typeId}});
+    const value = await this.computeQuarterValueByTimes(sTime_num , eTime_num , linebodyLosstier3);
 
-        const weight = linebody.weight;
-        valueSum += Number(classflag) * Number(value) * Number(weight);
-        weightSum += Number(classflag) * Number(weight);
-    }
-    const data = {
-        value:valueSum,
-        weight:weightSum
-    }
-    return data;
+    const weight = linebody.weight;
+    valueSum += Number(classflag) * Number(value) * Number(weight);
+    weightSum += Number(classflag) * Number(weight);
+}
+const data = {
+    value:valueSum,
+    weight:weightSum
+}
+return data;
 }
 exports.computeQuarter3ByTimes = computeQuarter3ByTimes;
 
@@ -423,12 +427,12 @@ exports.computeQuarter3ByTimes = computeQuarter3ByTimes;
     startTime:15分钟开始时间
     endTime:15分钟结束时间
     */
-async function computeQuarterValueByTimes(startTime , endTime , allData){
-    if (startTime == undefined || startTime == ''|| startTime == null
+    async function computeQuarterValueByTimes(startTime , endTime , allData){
+        if (startTime == undefined || startTime == ''|| startTime == null
             ||endTime == undefined || endTime == ''|| endTime == null
             ||allData == undefined || allData == ''|| allData == null) {
             //console.log("---allData为空--->");
-            return 0;
+        return 0;
     }
     const sTime_num = startTime;
     const eTime_num = endTime;
@@ -443,11 +447,11 @@ async function computeQuarterValueByTimes(startTime , endTime , allData){
         if (csTime == undefined || csTime == ''|| csTime == null
             ||ceTime == undefined || ceTime == ''|| ceTime == null) {
             //console.log('yuzhizhe03');
-            continue;
-        }
-        if (csTime >= sTime_num && ceTime <= eTime_num) {
-            valueSum += Number(allData[i].value);
-        }else{
+        continue;
+    }
+    if (csTime >= sTime_num && ceTime <= eTime_num) {
+        valueSum += Number(allData[i].value);
+    }else{
             //console.log('yuzhizhe04');
             continue;
         }
@@ -461,11 +465,11 @@ exports.computeQuarterValueByTimes = computeQuarterValueByTimes;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeTodayTargetByTimes(startTime , endTime ,Ids){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null) {
-        console.log("---参数错误--->");
+    async function computeTodayTargetByTimes(startTime , endTime ,Ids){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null) {
+            console.log("---参数错误--->");
         return 0;
     }
     
@@ -499,11 +503,11 @@ exports.computeTodayTargetByTimes = computeTodayTargetByTimes;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeTodayVisionByTimes(startTime , endTime ,Ids){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null) {
-        console.log("---参数错误--->");
+    async function computeTodayVisionByTimes(startTime , endTime ,Ids){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null) {
+            console.log("---参数错误--->");
         return 0;
     }
     
@@ -537,11 +541,11 @@ exports.computeTodayVisionByTimes = computeTodayVisionByTimes;
     startTime:当天开始时间
     endTime:当天结束时间
     */
-async function computeTodayIdealByTimes(startTime , endTime ,Ids){
-    if (startTime == undefined || startTime == ''|| startTime == null
-        ||endTime == undefined || endTime == ''|| endTime == null
-        ||Ids == undefined || Ids == ''|| Ids == null) {
-        console.log("---参数错误--->");
+    async function computeTodayIdealByTimes(startTime , endTime ,Ids){
+        if (startTime == undefined || startTime == ''|| startTime == null
+            ||endTime == undefined || endTime == ''|| endTime == null
+            ||Ids == undefined || Ids == ''|| Ids == null) {
+            console.log("---参数错误--->");
         return 0;
     }
     
@@ -569,3 +573,50 @@ async function computeTodayIdealByTimes(startTime , endTime ,Ids){
     return average;
 }
 exports.computeTodayIdealByTimes = computeTodayIdealByTimes;
+
+/*
+    overview右侧improvement provement前三
+    */
+    exports.showImpprojectTop = async function(linebodyIdList,endtime) {
+
+        var returnList = []
+        var threeupList = []
+
+        for(var i = 0;i < linebodyIdList.length;i++){
+            // 找到实施运行状态的项目
+            const lossstatusData = await Lossstatus.findAll({where:{linebodyLinebodyid:linebodyIdList[i],status:2}})
+            // const lossstatusDataLs = await Lossstatus.findAll({where:{linebodyLinebodyid:linebodyIdList[i]}})
+            // for(var j = 0;j < lossstatusDataLs.length;j++){
+            //     const lossstatusLslog = await Lossstatuslog.findAll({where:{lossstatusId:lossstatusDataLs[j].id}})
+            //     if((lossstatusLslog != null||lossstatusLslog!='') && lossstatusDataLs.status == 2){
+            //         lossstatusData.push(lossstatusDataLs[j])
+            //     }else{
+            //         losslogTimeList = lossstatusLslog.createdAt
+            //         losslogTimeList.push()
+            //     }
+            // }
+
+            const linebody = await Linebody.findById(linebodyIdList[i])
+            const weight = linebody.weight
+            // 计算能够产生的收益
+            if(lossstatusData != null||lossstatusData!=''){
+                for(var j = 0;j < lossstatusData.length;j++){
+                    var impproject= {
+                        name :'',
+                        value:''
+                    }
+                    const impvalue =  (lossstatusData[j].startperformance - lossstatusData[j].target)*weight*valueUnit
+                    impproject.name = lossstatusData[j].projectname
+                    impproject.value = impvalue
+                    threeupList.push(impproject)
+                }
+            }
+        }
+        threeupList.sort((m,n) => n.value - m.value)
+        if(threeupList.length <= 3){
+            returnList = threeupList
+        }else{
+            returnList = threeupList.slice(0,3)
+        }
+        return returnList
+    }

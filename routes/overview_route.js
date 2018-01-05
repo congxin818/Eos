@@ -15,4 +15,11 @@ router.post('/selectOverviewByTimesAndLinebodys', function(req, res, next) {
     controller.selectOverviewByTimesAndLinebodys(req , res , next);
 });
 
+/*
+	overview右侧improvement provement前三
+ */
+router.post('/showImpprojectTop', function(req, res, next) {
+    controller.showImpprojectTop(req , res , next);
+});
+
 module.exports = router;

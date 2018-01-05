@@ -944,8 +944,8 @@ return  sproductbigIdList
                             loss4idStringls =  loss4idStringList[j].split(",")
                             const loss4idStringlsData = await LinebodyLosstier4.findById(loss4idStringls[0])
                             const loss4idStringlsData1 = await LinebodyLosstier4.findById(loss4idStringls[1])
-                            showAddloss4After.starttime = loss4idStringlsData.starttime
-                            showAddloss4After.endtime = loss4idStringlsData1.endtime
+                            showAddloss4After.starttime = moment(loss4idStringlsData.starttime).format('YYYY-MM-DD HH:mm:ss')
+                            showAddloss4After.endtime = moment(loss4idStringlsData1.endtime).format('YYYY-MM-DD HH:mm:ss')
                             lossinf.push(showAddloss4After)
                         }
                     }
@@ -973,8 +973,8 @@ return  sproductbigIdList
                             const losstier4data = await LinebodyLosstier4.findById(loss4idDisconList[j])
                             showAddloss4After = await exports.updateNoLossdataReturn(losstier4data,showAddloss4After)
                             showAddloss4After.losstier4Dataid = loss4idDisconList[j]
-                            showAddloss4After.starttime = losstier4data.starttime
-                            showAddloss4After.endtime = losstier4data.endtime
+                            showAddloss4After.starttime = moment(losstier4data.starttime).format('YYYY-MM-DD HH:mm:ss')
+                            showAddloss4After.endtime = moment(losstier4data.endtime).format('YYYY-MM-DD HH:mm:ss')
                             lossinf.push(showAddloss4After)
                         }
                     }
