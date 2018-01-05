@@ -141,7 +141,7 @@ var dataSuccess = {
 
     async function  linebodyClear(){
         const linebody = await Linebody.findAll({where:{ workshopWorkshopid:null}});
-        console.log(JSON.stringify(linebody.length));
+        //console.log(JSON.stringify(linebody.length));
         for (var i = linebody.length - 1; i >= 0; i--) {
             await linebody[i].destroy();
         }

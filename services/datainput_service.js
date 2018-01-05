@@ -139,8 +139,11 @@ const moment = require('moment');
 
         // 格式化
         var formatTimeReturn = await exports.formatTime(starttime,endtime)
+        //console.log('formatTimeReturn----------->'+JSON.stringify(formatTimeReturn,null,4))
         var  formatStarttime = formatTimeReturn.formatStarttime //格式化开始时间
         var formatEndtime = formatTimeReturn.formatEndtime  // 格式化结束时间
+        //console.log('formatEndtime----------->'+formatEndtime.unix())
+        //console.log('formatStarttime----------->'+formatStarttime.unix())
         ccyTimeindex = (formatEndtime.unix() - formatStarttime.unix())/(15*60) - 2
         // 判断持续时间
 
@@ -209,7 +212,7 @@ const moment = require('moment');
                     formatEndtime : ''
                 }
                 // 格式化传来的四级loss data开始和结束时间
-                if(linebodyLosstier4List[i].starttime.getTime()%(15*6000)==0 &&linebodyLosstier4List[i].endtime.getTime()%(15*6000)==0){
+                if(linebodyLosstier4List[i].starttime.getTime()%(15*60000)==0 &&linebodyLosstier4List[i].endtime.getTime()%(15*60000)==0){
                     formatTimeReturn.formatStarttime = linebodyLosstier4List[i].starttime
                     formatTimeReturn.formatEndtime = linebodyLosstier4List[i].endtime
                 }else{
@@ -307,7 +310,7 @@ const moment = require('moment');
         }  
         if(moment(endtime).minute() < 15*(l + 1)&& timeendsetFlag == false){
             formatEndtime = moment(endtime).set({'minute': 15*(l + 1) ,'second': 00})
-            break
+            timeendsetFlag = true
         }
     }
 
@@ -859,7 +862,6 @@ return  sproductbigIdList
                         losstier4idList.push(linebodyloss4.losstier4Tier4id)
                     }
                 }
-                console.log('------->'+JSON.stringify(losstier4idList,null,4))
                 for(var i = 0;i< losstier4idList.length;i++){
                     const losstier4 = await Losstier4.findById(losstier4idList[i])
                     const linebodylosstier4 = await LinebodyLosstier4.findAll({
@@ -871,7 +873,6 @@ return  sproductbigIdList
                     var startflag = false // 连续的开始时间标志
                     var oldLoss4idstring
                     var losstier4nameList = []  // 这个四级名字的总数组
-                    console.log('------->'+JSON.stringify(linebodylosstier4,null,4))
                     if(linebodylosstier4 == null||linebodylosstier4 ==''){
                         break
                     }

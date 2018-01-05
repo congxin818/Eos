@@ -81,7 +81,7 @@ const kpiTwoShow = {
 
         // 对项目状态log表进行增加
         if(beforStatus != updateData.status||beforStage != updateData.stage){
-          updateDatalog = await impobjServices.addLostatuslog(req , res,beforStatus,beforStage)
+          updateDatalog = await impobjServices.addLostatuslog(req , res,beforStatus,beforStage,updateData.id)
         }
         if(updateData != null && updateDatalog != null){
           dataSuccess.data  = updateData
@@ -96,12 +96,11 @@ const kpiTwoShow = {
     improvment展示历史信息
     */
     exports.showImpItemhistory = async function(req , res) {
-      if(req.body.linebodyId == null||req.body.linebodyId == ''){
+      if(req.body.lossstatusId == null||req.body.lossstatusId == ''){
         res.end(JSON.stringify(parameterError))
       }
-        console.log('--展示历史信息--')
         // 对项目状态log表进行查找
-        const data = await impobjServices.showImpItemhistory(req.body.linebodyId)
+        const data = await impobjServices.showImpItemhistory(req.body.lossstatusId)
         if(data.length > 0){
           for(var i = 0;i < data.length;i++){
             data[i].createdAt  = moment(data[i].createdAt).format('YYYY-MM-DD')
@@ -132,7 +131,6 @@ const kpiTwoShow = {
       if(req.body.linebodyId == null||req.body.linebodyId == ''){
        res.end(JSON.stringify(parameterError))
      }
-        console.log('--展示现进行项目--')
        // 根据线体id把loss状态表中所有项目名字查找出来
        var lostatusNameList = await lossstatusServices.selectLostatusBylineid(req.body.linebodyId)
        if(lostatusNameList != null){

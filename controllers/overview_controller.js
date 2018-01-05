@@ -116,7 +116,10 @@ async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids 
         if (tier3[i] == undefined || tier3[i] == null || tier3[i] == '') {
             continue;
         }
-        const value = await this.computeAll3ByTimes(startTime , endTime , Ids , tier3[i].lossid);
+        let value = await this.computeAll3ByTimes(startTime , endTime , Ids , tier3[i].lossid);
+        if (value == undefined || value == ''|| value == null || value == 'NaN') {
+            value = 0;
+        }
         let tier3Data = {
             name:tier3[i].name,
             value:value
@@ -143,9 +146,9 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids , typ
     //console.log("---endTime_num--->"+JSON.stringify(moment(endTime)));
     
     let sTime_num = new Date(startTime).getTime();
-    console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+    //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
     let eTime_num = Number(sTime_num) + 86400000;
-    console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let returnData = new Array();
     while(eTime_num <= endTime_num){
         //console.log("---sTime--1->"+JSON.stringify(sTime));
@@ -191,7 +194,7 @@ async function computeTodayByTimes(startTime , endTime , Ids , type){
     //console.log("---sTime--->"+JSON.stringify(sTime));
     const returnTime = sTime.getFullYear() + '/' + Number(sTime.getMonth()+1) + '/' + sTime.getDate();
     const value =  await this.computeAll2ByTimes(sTime_num , eTime_num ,Ids , type);
-    console.log("---value--->"+JSON.stringify(value));
+    //console.log("---value--->"+JSON.stringify(value));
     let data = new Array();
     await data.push(returnTime);
     const returnValue = Number(1 - value) * 100;
@@ -199,7 +202,7 @@ async function computeTodayByTimes(startTime , endTime , Ids , type){
     await data.push(await (Number(Target) * 100).toFixed(2));
     await data.push(await (Number(Vision) * 100).toFixed(2));
     await data.push(await (Number(Ideal) * 100).toFixed(2));
-    console.log('\n')
+    //console.log('\n')
     return data;
 }
 exports.computeTodayByTimes = computeTodayByTimes;
@@ -214,7 +217,7 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null
         ||typeId == undefined || typeId == ''|| typeId == null) {
-        console.log("---yuzhizhe1--->");
+        //console.log("---yuzhizhe1--->");
         return;
     }
     
@@ -256,8 +259,8 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         average = Number(sum) / Number(weight);
     }
     //const returnTime = sTime.date();
-    console.log("---sum--->"+JSON.stringify(sum));
-    console.log("---weight--->"+JSON.stringify(weight));
+    // console.log("---sum--->"+JSON.stringify(sum));
+    // console.log("---weight--->"+JSON.stringify(weight));
     return average.toFixed(4);
 }
 exports.computeAll2ByTimes = computeAll2ByTimes;
@@ -326,7 +329,7 @@ async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
         ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null
         ||typeId == undefined || typeId == ''|| typeId == null) {
-        console.log("---yuzhizhe1--->");
+        //console.log("---yuzhizhe1--->");
         return -1;
     }
     //console.log("---startTime--2->"+JSON.stringify(startTime));
@@ -367,10 +370,10 @@ async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
         //average = sum / returnData.length;
     }
     //const returnTime = sTime.date();
-    console.log("---sum3--->"+JSON.stringify(sum));
-    console.log("---weight3--->"+JSON.stringify(weight));
+    // console.log("---sum3--->"+JSON.stringify(sum));
+    // console.log("---weight3--->"+JSON.stringify(weight));
     // console.log("---classflag--->"+JSON.stringify(classflag));
-    console.log('\n');
+    //console.log('\n');
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
 }
@@ -462,7 +465,7 @@ async function computeTodayTargetByTimes(startTime , endTime ,Ids){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null) {
-        console.log("---参数错误--->");
+        //console.log("---参数错误--->");
         return 0;
     }
     
@@ -500,7 +503,7 @@ async function computeTodayVisionByTimes(startTime , endTime ,Ids){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null) {
-        console.log("---参数错误--->");
+        //console.log("---参数错误--->");
         return 0;
     }
     
@@ -538,7 +541,7 @@ async function computeTodayIdealByTimes(startTime , endTime ,Ids){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
         ||Ids == undefined || Ids == ''|| Ids == null) {
-        console.log("---参数错误--->");
+        //console.log("---参数错误--->");
         return 0;
     }
     
