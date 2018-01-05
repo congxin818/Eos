@@ -105,7 +105,7 @@ const moment = require('moment');
 /*
     对项目状态log表进行增加
     */
-    exports.addLostatuslog = async function (req , res,beforStatus,beforStage){
+    exports.addLostatuslog = async function (req , res,beforStatus,beforStage,lossstatusId){
         var lossstatuslog = {
             projectnumber:req.body.projectnumber,
             projectname:req.body.projectname,
@@ -120,15 +120,15 @@ const moment = require('moment');
             beforstage:beforStage,
             stage:req.body.stage
         }
-        const linebody = await Linebody.findById(req.body.linebodyId)
-        lossstatuslog =  await linebody.createLinebodyLossstatuslog(lossstatuslog)
+        const lostatusdata = await Lossstatus.findById(lossstatusId)
+        lossstatuslog =  await lostatusdata.createLossstatusLossstatuslog(lossstatuslog)
         return lossstatuslog
     }
 
 /*
     improvment展示历史信息 查找log表
     */
-    exports.showImpItemhistory = async function(linebodyId) {      
+    exports.showImpItemhistory = async function(lossstatusId) {      
         return  await Lossstatuslog.findAll({attributes: ['beforstatus','status','beforstage','stage','createdAt'],
-           where:{linebodyLinebodyid: linebodyId}})
+           where:{lossstatusId: lossstatusId}})
     }

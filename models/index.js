@@ -86,8 +86,8 @@ Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
 Linebody.hasMany(Lossstatus, {as:'LinebodyLossstatus' ,constraints:true});
 //Losstier3和Lossstatus建立1：1关系
 Losstier3.hasOne(Lossstatus);
-//Linebody和Lossstatuslog建立1：N关系
-Linebody.hasMany(Lossstatuslog, {as:'LinebodyLossstatuslog' ,constraints:true});
+//Lossstatus和Lossstatuslog建立1：N关系
+Lossstatus.hasMany(Lossstatuslog, {as:'LossstatusLossstatuslog' ,constraints:true});
 
 //Kpionelev和Kpitwolev建立1：N关系
 Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
