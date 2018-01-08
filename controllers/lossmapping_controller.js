@@ -52,7 +52,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
-    //await userKpitwo.sort((n, m) => n.userKpitwolev.sequence - m.userKpitwolev.sequence);
+    await userKpitwo.sort((m, n) => n.userKpitwolev.sequence - m.userKpitwolev.sequence);
     let returnData = new Array();
     for (var i = userKpitwo.length - 1; i >= 0; i--) {
     	if (userKpitwo[i] == undefined || userKpitwo[i] == null || userKpitwo[i] == '') {
@@ -66,15 +66,17 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 
         // console.log("---tier2Value--->"+JSON.stringify(tier2Value , null , 4));
         // console.log('\n');
+        let tier2 = {
+            title:userKpitwo[i].name,
+            order:userKpitwo[i].userKpitwolev.sequence,
+            data:new Array(),
+            link:new Array()
+        };
     	if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0 || tier2Value == 'NaN') {
-            continue;
+                await returnData.push(tier2);
+                continue;
     	}
-    	let tier2 = {
-    		title:userKpitwo[i].name,
-    		order:userKpitwo[i].userKpitwolev.sequence,
-    		data:new Array(),
-    		link:new Array()
-    	};
+    	
     	const tier2Data = {
     		name:userKpitwo[i].name,
     		value:tier2Value
