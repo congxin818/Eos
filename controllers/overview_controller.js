@@ -59,7 +59,7 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         let tier2 = {
             title:userKpitwo[i].name,
             order:userKpitwo[i].userKpitwolev.sequence,
-            data:'',
+            data:new Array(),
             value:'',
             losstier3:'',
             impprojectTop:''
