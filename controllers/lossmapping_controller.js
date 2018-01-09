@@ -29,9 +29,7 @@ var dataSuccess = {
     根据times和linebodys查询Lossmapping数据
     */
 async function selectLossmappingByTimesAndLinebodys(req , res , next){
-    //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
-    //console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
-    //console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
+    const TestStart = new Date().getTime();
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
     	||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
     	||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null
@@ -73,10 +71,9 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
             link:new Array()
         };
     	if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0 || tier2Value == 'NaN') {
-                await returnData.push(tier2);
-                continue;
+            await returnData.push(tier2);
+            continue;
     	}
-    	
     	const tier2Data = {
     		name:userKpitwo[i].name,
     		value:tier2Value
@@ -123,11 +120,9 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
 		    		continue;
 		    	}
 		    	const tier4Value = await this.computeAll4ByTimes(req.body.startTime , req.body.endTime , Ids , losstier4All[k].tier4id);
-
                 // console.log("---tier4Value--->"+JSON.stringify(tier4Value , null , 4));
                 // console.log('\n');
 		    	if (tier4Value == undefined || tier4Value == null || tier4Value == '' || tier4Value == 0 || tier4Value == 'NaN') {
-
 		    		continue;
 		    	}
 		    	const tier4Data = {
@@ -146,10 +141,10 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
     	}
     	await returnData.push(tier2);
     }
-
-    //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
-    //const data = await this.computeAll2ByTimes(req.body.startTime , req.body.endTime , Ids , '2');
     dataSuccess.data = returnData;
+    const TestEnd = new Date().getTime();
+    const DateDiff = Number(TestEnd) - Number(TestStart);
+    console.log("---DataDiff--->"+JSON.stringify(DateDiff));
     res.end(JSON.stringify(dataSuccess));
 }
 exports.selectLossmappingByTimesAndLinebodys = selectLossmappingByTimesAndLinebodys;
