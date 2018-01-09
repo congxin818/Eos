@@ -8,6 +8,8 @@ var service = require('../services/user_service');
 var User = require('../models').User;//引入数据库User模块
 var errorUtil = require('../utils/errorUtil');
 var stringUtil = require('../utils/stringUtil');
+var UserKpitwolev = require('../models').UserKpitwolev;
+let userkpitwolev_service = require('../services/userkpitwolev_service.js');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -291,22 +293,41 @@ async function updateUserKpiTwolveById(req , res , next){
     console.log('changeOrder----->' + JSON.stringify(changeOrder));
     console.log('changedId----->' + JSON.stringify(changedId));
     console.log('changedOrder----->' + JSON.stringify(changedOrder));
-    const changeFalg = await service.updateUserKpiTwolveById(userId , changeId , changedOrder);
-    //console.log('changeFalg----->' + JSON.stringify(changeFalg));
+    const user = await User.findById(userId);
+    const change = await UserKpitwolev.findOne({where:{
+        userUserid:userId,
+        kpitwolevKpitwoid:changeId,
+        sequence:changeOrder
+    }});
+    const changed = await UserKpitwolev.findOne({where:{
+        userUserid:userId,
+        kpitwolevKpitwoid:changedId,
+        sequence:changedOrder
+    }});
+    if (change == undefined || change == null || change == ''
+        ||changed == undefined || changed == null || changed == ''
+        ||user == undefined || user == null || user == '') {
+        res.end(JSON.stringify(errorUtil.noExistError));
+        return;
+    }
+    const changeFalg = await userkpitwolev_service.updateSequenceById(userId , changeId , changedOrder);
     if (changeFalg != 1) {
-         res.end(JSON.stringify(changeFalg));
+         res.end(JSON.stringify(errorUtil.serviceError));
+         return;
     }else{
         // console.log('userId----->' + JSON.stringify(userId));
         // console.log('changeId----->' + JSON.stringify(changedId));
         // console.log('changedOrder----->' + JSON.stringify(changeOrder));
-        const changedFalg = await service.updateUserKpiTwolveById(userId , changedId , changeOrder);
+        const changedFalg = await userkpitwolev_service.updateSequenceById(userId , changedId , changeOrder);
         if (changedFalg != 1) {
-            res.end(JSON.stringify(changedFalg));
+            res.end(JSON.stringify(errorUtil.serviceError));
+            return;
         }else{
-            dataSuccess.data = changedFalg;
+            let tier2 = await user.getUserKpitwolevs({'attributes': ['name', 'kpitwoid']});
+            tier2.sort ((a, b) => { return a.userKpitwolev.sequence - b.userKpitwolev.sequence});
+            dataSuccess.data = tier2;
             res.end(JSON.stringify(dataSuccess));
         }
     }
-    //console.log('changedFalg----->' + changedFalg);
 }
 exports.updateUserKpiTwolveById = updateUserKpiTwolveById;
