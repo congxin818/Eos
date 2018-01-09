@@ -6,6 +6,7 @@ var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模�
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
 var Classinformation = require('../models').Classinformation;//引入数据库Classinformation模块
 var Kpitwolev = require('../models').Kpitwolev;//引入数据库Kpitwolev模块
+var Lossstatuslog = require('../models').Lossstatuslog;
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 
@@ -67,6 +68,7 @@ const valueUnit = 168000
     //dataSuccess.value = await this.getWantString(data);
     dataSuccess.value = await data2.pop().slice(1);
     dataSuccess.losstier3 = await this.selectLosstier3Top3ByTimesAndLinebodys(req.body.startTime , req.body.endTime , Ids , 'OEE')
+    
     dataSuccess.impprojectTop = await exports.showImpprojectTop(Ids,req.body.endTime)
     res.end(JSON.stringify(dataSuccess));
 }
@@ -584,17 +586,56 @@ exports.computeTodayIdealByTimes = computeTodayIdealByTimes;
 
         for(var i = 0;i < linebodyIdList.length;i++){
             // 找到实施运行状态的项目
-            const lossstatusData = await Lossstatus.findAll({where:{linebodyLinebodyid:linebodyIdList[i],status:2}})
-            // const lossstatusDataLs = await Lossstatus.findAll({where:{linebodyLinebodyid:linebodyIdList[i]}})
-            // for(var j = 0;j < lossstatusDataLs.length;j++){
-            //     const lossstatusLslog = await Lossstatuslog.findAll({where:{lossstatusId:lossstatusDataLs[j].id}})
-            //     if((lossstatusLslog != null||lossstatusLslog!='') && lossstatusDataLs.status == 2){
-            //         lossstatusData.push(lossstatusDataLs[j])
-            //     }else{
-            //         losslogTimeList = lossstatusLslog.createdAt
-            //         losslogTimeList.push()
-            //     }
-            // }
+            var lossstatusData =[]
+            const lossstatusDataLs = await Lossstatus.findAll({where:{linebodyLinebodyid:linebodyIdList[i]}})
+            if(lossstatusDataLs != null && lossstatusDataLs != ''){
+                for(var j = 0;j < lossstatusDataLs.length;j++){
+                    const lossstatusLslog = await Lossstatuslog.findAll({where:{lossstatusId:lossstatusDataLs[j].id}})
+                    if(lossstatusLslog == null||lossstatusLslog ==''){
+                        if(lossstatusDataLs[j].status == 2){
+                            lossstatusData.push(lossstatusDataLs[j])
+                        }
+                    }else{
+                        var losslogTimeList =[]
+                        for(var k = 0;k < lossstatusLslog.length;k++){
+                            var logdata= {
+                                statuslogData :'',
+                                createdAt:''
+                            }
+                            logdata.statuslogData = lossstatusLslog[k]
+                            logdata.createdAt = lossstatusLslog[k].createdAt
+                            losslogTimeList.push(logdata)
+                        }
+                        // 把结束时间放进排序数组中
+                        var logdata2= {
+                            statuslogData :'',
+                            createdAt:''
+                        }
+                        logdata2.statuslogData = null
+                        logdata2.createdAt = new Date(endtime)
+                        losslogTimeList.push(logdata2)
+                        losslogTimeList.sort((m,n) => m.createdAt - n.createdAt)
+                        var kflag
+                        for(var k = 0;k < losslogTimeList.length;k++){
+                            if(losslogTimeList[k].createdAt.getTime() == new Date(endtime).getTime()){
+                                kflag = k
+                                break
+                            }
+                        }
+                        // 小于结束时间的最大时间的log是否存在
+                        if(k == 0){
+                            if(losslogTimeList[k + 1].statuslogData.beforstatus == 2){
+                                lossstatusData.push(lossstatusDataLs[j])
+                            }
+                        }else{
+                            if(losslogTimeList[k - 1].statuslogData.status == 2){
+                                lossstatusData.push(lossstatusDataLs[j])
+                            }
+                        }
+
+                    }
+                }
+            }
 
             const linebody = await Linebody.findById(linebodyIdList[i])
             const weight = linebody.weight
