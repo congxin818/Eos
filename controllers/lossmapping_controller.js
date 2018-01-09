@@ -151,7 +151,6 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
     //const data = await this.computeAll2ByTimes(req.body.startTime , req.body.endTime , Ids , '2');
     dataSuccess.data = returnData;
     res.end(JSON.stringify(dataSuccess));
-
 }
 exports.selectLossmappingByTimesAndLinebodys = selectLossmappingByTimesAndLinebodys;
 

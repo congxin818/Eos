@@ -1,6 +1,3 @@
-
-
-
 var linebody_extend_service = require('../services/linebody_extend_service');
 var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
@@ -16,7 +13,7 @@ var dataSuccess = {
     data:'fas'
 };
 
-const valueUnit = 168000
+const valueUnit = 168000;
 
 /*
     根据times和linebodys查询Overview数据
@@ -174,9 +171,9 @@ async function selectBarchartByTimesAndLinebodys(startTime , endTime , Ids , typ
     //console.log("---endTime_num--->"+JSON.stringify(moment(endTime)));
     
     let sTime_num = new Date(startTime).getTime();
-    console.log("---sTime_num--->"+JSON.stringify(sTime_num));
+    //console.log("---sTime_num--->"+JSON.stringify(sTime_num));
     let eTime_num = Number(sTime_num) + 86400000;
-    console.log("---eTime_num--->"+JSON.stringify(eTime_num));
+    //console.log("---eTime_num--->"+JSON.stringify(eTime_num));
     let returnData = new Array();
     while(eTime_num <= endTime_num){
         //console.log("---sTime--1->"+JSON.stringify(sTime));
@@ -222,7 +219,7 @@ async function computeTodayByTimes(startTime , endTime , Ids , type){
     //console.log("---sTime--->"+JSON.stringify(sTime));
     const returnTime = sTime.getFullYear() + '/' + Number(sTime.getMonth()+1) + '/' + sTime.getDate();
     const value =  await this.computeAll2ByTimes(sTime_num , eTime_num ,Ids , type);
-    console.log("---value--->"+JSON.stringify(value));
+    //console.log("---value--->"+JSON.stringify(value));
     let data = new Array();
     await data.push(returnTime);
     const returnValue = Number(1 - value) * 100;
@@ -287,8 +284,8 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId){
         average = Number(sum) / Number(weight);
     }
     //const returnTime = sTime.date();
-    console.log("---sum--->"+JSON.stringify(sum));
-    console.log("---weight--->"+JSON.stringify(weight));
+    //console.log("---sum--->"+JSON.stringify(sum));
+    //console.log("---weight--->"+JSON.stringify(weight));
     return average.toFixed(4);
 }
 exports.computeAll2ByTimes = computeAll2ByTimes;
@@ -403,7 +400,7 @@ async function computeAll3ByTimes(startTime , endTime ,Ids , typeId){
     // console.log("---classflag--->"+JSON.stringify(classflag));
     console.log('\n');
     const average = Number(sum) / Number(weight);
-    return average.toFixed(4);
+    return average.toFixed(2);
 }
 exports.computeAll3ByTimes = computeAll3ByTimes;
 

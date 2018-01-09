@@ -7,7 +7,7 @@
 var service = require('../services/user_service');
 var User = require('../models').User;//引入数据库User模块
 var errorUtil = require('../utils/errorUtil');
-
+var stringUtil = require('../utils/stringUtil');
 var dataSuccess = {
     status: '0', 
     msg: '请求成功',
@@ -145,7 +145,7 @@ exports.selectUserById = function(req , res , next) {
 /*
 	添加一个User
 */
-var stringUtil = require('../utils/stringUtil');
+
 async function addUserOne(req , res , next) {
 	if (req == '') {
         res.end(JSON.stringify(parameterError));
@@ -286,9 +286,11 @@ async function updateUserKpiTwolveById(req , res , next){
         ||changedOrder == undefined || changedOrder == null || changedOrder =='') {
         res.end(JSON.stringify(errorUtil.parameterError));
     }
-    // console.log('userId----->' + JSON.stringify(userId));
-    // console.log('changeId----->' + JSON.stringify(changeId));
-    // console.log('changedOrder----->' + JSON.stringify(changedOrder));
+    console.log('userId----->' + JSON.stringify(userId));
+    console.log('changeId----->' + JSON.stringify(changeId));
+    console.log('changeOrder----->' + JSON.stringify(changeOrder));
+    console.log('changedId----->' + JSON.stringify(changedId));
+    console.log('changedOrder----->' + JSON.stringify(changedOrder));
     const changeFalg = await service.updateUserKpiTwolveById(userId , changeId , changedOrder);
     //console.log('changeFalg----->' + JSON.stringify(changeFalg));
     if (changeFalg != 1) {
