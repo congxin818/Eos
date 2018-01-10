@@ -579,6 +579,8 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId , allData , 
         weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
         //average = sum / returnData.length;
     }
+    console.log("---sum--->"+JSON.stringify(sum));
+    console.log("---weight--->"+JSON.stringify(weight));
     const average = Number(sum) / Number(weight);
     return average.toFixed(4);
 }
