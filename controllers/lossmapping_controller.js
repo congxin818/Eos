@@ -76,15 +76,14 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
             link:new Array()
         };
         if (tier2Value == undefined || tier2Value == null || tier2Value == '' || tier2Value == 0 || tier2Value == 'NaN') {
-                await returnData.push(tier2);
-                continue;
+            await returnData.push(tier2);
+            continue;
         }
         const tier2Data = {
             name:userKpitwo[i].name,
             value:tier2Value
         };
         await tier2.data.push(tier2Data);
-
         const losstier3All = await kpitwo.getKpitwolevLosscategory();
         for (var j = losstier3All.length - 1; j >= 0; j--) {
             if (losstier3All[j] == undefined || losstier3All[j] == null || losstier3All[j] == '') {
@@ -116,7 +115,6 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
             const losstier4All = await losstier3.getLosscategoryLosstier4();
             //console.log("---yuzhizhe1111-----" + JSON.stringify(losstier4All , null , 4));
             for (var k = losstier4All.length - 1; k >= 0; k--) {
-                //console.log("---yuzhizhe1-----");
                 if (losstier4All[k] == undefined || losstier4All[k] == null || losstier4All[k] == '') {
                     continue;
                 }
