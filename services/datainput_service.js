@@ -139,11 +139,8 @@ const moment = require('moment');
 
         // 格式化
         var formatTimeReturn = await exports.formatTime(starttime,endtime)
-        console.log('formatTimeReturn----------->'+JSON.stringify(formatTimeReturn,null,4))
         var  formatStarttime = formatTimeReturn.formatStarttime //格式化开始时间
         var formatEndtime = formatTimeReturn.formatEndtime  // 格式化结束时间
-        console.log('formatEndtime----------->'+formatEndtime.unix())
-        console.log('formatStarttime----------->'+formatStarttime.unix())
         ccyTimeindex = (formatEndtime.unix() - formatStarttime.unix())/(15*60) - 2
         // 判断持续时间
 
@@ -363,12 +360,10 @@ const moment = require('moment');
             }
         }
         for(var i=0; i< loss4idList2.length;i++){
-
             const losstier4Data = await LinebodyLosstier4.findById(loss4idList2[i])
-
             // 传来的时间是否在四级loss内
-            if( moment(req.body.starttime).unix() >= moment(losstier4Data.starttime).unix()
-                && moment(req.body.endtime).unix() <= moment(losstier4Data.endtime).unix()){
+            if(moment(req.body.starttime).unix() < moment(losstier4Data.endtime).unix()
+                && moment(req.body.endtime).unix() > moment(losstier4Data.starttime).unix()){
                 checkFlag = 1
             break
         }else{
@@ -400,20 +395,21 @@ const moment = require('moment');
             if( moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
                 || moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()){
                 if(moment(classstarttime).unix() == moment(classinfData.classstarttime).unix() 
-                   && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
+                    && moment(classendtime).unix() == moment(classinfData.classendtime).unix()){
+                        // 
                     checkFlag = 1
-                break
+                    break
+                }else{
+                    checkFlag = 0
+                }
             }else{
-                checkFlag = 0
+                checkFlag = 1
+                checkFlag = 1
+                break
             }
-        }else{
-            checkFlag = 1
-            checkFlag = 1
-            break
         }
+        return checkFlag
     }
-    return checkFlag
-}
 
 /*
     展示产品名字（最小的产品类）下拉列表
@@ -998,7 +994,7 @@ return  sproductbigIdList
                 classinformationClassinfid:classinfIdList[i]}})
             linebodyKpitwolev.push(linebodyKpitwolevOne)
         }
-    
+
         if (linebodyKpitwolev != null && linebodyKpitwolev != '') {
             var linebodyloss3idList =[]
             for(var i = 0;i< linebodyKpitwolev.length;i++){
