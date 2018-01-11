@@ -235,7 +235,6 @@ async function computeTodayByTimes(startTime , endTime , Ids , type , allTier2 ,
     await data.push(await (Number(Target) * 100).toFixed(2));
     await data.push(await (Number(Vision) * 100).toFixed(2));
     await data.push(await (Number(Ideal) * 100).toFixed(2));
-    console.log('\n')
     return data;
 }
 exports.computeTodayByTimes = computeTodayByTimes;
