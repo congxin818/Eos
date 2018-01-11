@@ -942,6 +942,8 @@ return  sproductbigIdList
                             const loss4idStringlsData1 = await LinebodyLosstier4.findById(loss4idStringls[1])
                             showAddloss4After.starttime = moment(loss4idStringlsData.starttime).format('YYYY-MM-DD HH:mm:ss')
                             showAddloss4After.endtime = moment(loss4idStringlsData1.endtime).format('YYYY-MM-DD HH:mm:ss')
+<<<<<<< HEAD
+=======
                             lossinf.push(showAddloss4After)
                         }
                     }
@@ -1106,6 +1108,7 @@ return  sproductbigIdList
                             const loss4idStringlsData1 = await LinebodyLosstier4.findById(loss4idStringls[1])
                             showAddloss4After.starttime = moment(loss4idStringlsData.starttime).format('YYYY-MM-DD HH:mm:ss')
                             showAddloss4After.endtime = moment(loss4idStringlsData1.endtime).format('YYYY-MM-DD HH:mm:ss')
+>>>>>>> 1542992dd2d660630e817db221b2727839ac04f3
                             lossinf.push(showAddloss4After)
                         }
                     }

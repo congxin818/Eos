@@ -95,7 +95,7 @@ exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;
 
 /*
     拼接右上方的数据结构
-    */
+*/
 async function getWantString(argument) {
     if (argument == undefined || argument == null || argument == '') {
         return;
@@ -122,7 +122,7 @@ exports.getWantString = getWantString;
 
 /*
     根据times和linebodys查询losstier3的TOP3
-    */
+*/
 async function selectLosstier3Top3ByTimesAndLinebodys(startTime , endTime , Ids , type , allTier2 , allClass){
     if (startTime == undefined || startTime == ''|| startTime == null
         ||endTime == undefined || endTime == ''|| endTime == null
