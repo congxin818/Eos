@@ -235,7 +235,10 @@ async function computeAll4ByTimes(startTime , endTime ,Ids , typeId , allData , 
         sum = await returnData.map(a => a.value).reduce ((pre, cur) => pre + cur);
         weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
     }
-    const average = Number(sum) / Number(weight);
+    let average = 0;
+    if (weight != 0) {
+        average = Number(sum) / Number(weight);
+    }
     return average.toFixed(4);
 }
 exports.computeAll4ByTimes = computeAll4ByTimes;
@@ -407,7 +410,10 @@ async function computeAll3ByTimes(startTime , endTime ,Ids , typeId , allData , 
         sum = await returnData.map(a => a.value).reduce ((pre, cur) => pre + cur);
         weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
     }
-    const average = Number(sum) / Number(weight);
+    let average = 0;
+    if (weight != 0) {
+        average = Number(sum) / Number(weight);
+    }
     return average.toFixed(4);
 }
 exports.computeAll3ByTimes = computeAll3ByTimes;
@@ -579,9 +585,10 @@ async function computeAll2ByTimes(startTime , endTime ,Ids , typeId , allData , 
         weight = await returnData.map(a => a.weight).reduce ((pre, cur) => pre + cur);
         //average = sum / returnData.length;
     }
-    // console.log("---sum--->"+JSON.stringify(sum));
-    // console.log("---weight--->"+JSON.stringify(weight));
-    const average = Number(sum) / Number(weight);
+    let average = 0;
+    if (weight != 0) {
+        average = Number(sum) / Number(weight);
+    }
     return average.toFixed(4);
 }
 exports.computeAll2ByTimes = computeAll2ByTimes;
