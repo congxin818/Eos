@@ -98,7 +98,11 @@ exports.updateFactoryById = function (req, res) {
 }
 
 async function factoryClear() {
-    const factory = await Factory.findAll({ where: { groupGroupid: null } });
+    const factory = await Factory.findAll({
+        where: {
+            groupGroupid: null
+        }
+    });
     console.log(JSON.stringify(factory.length));
     for (var i = factory.length - 1; i >= 0; i--) {
         await factory[i].destroy();

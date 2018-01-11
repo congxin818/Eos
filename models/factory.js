@@ -34,12 +34,12 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: 1
         }
     }, {
-            indexes: [{
-                name: 'Group_Factory',
-                method: 'BTREE',
-                fields: ['factorybelong']
-            }]
-        });
+        indexes: [{
+            name: 'Group_Factory',
+            method: 'BTREE',
+            fields: ['factorybelong']
+        }]
+    });
 }
 //Factory.sync();
 //module.exports = Factory;

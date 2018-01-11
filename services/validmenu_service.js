@@ -15,7 +15,11 @@ async function selectValmeuById(menuid) {
     console.log('yuzhizhe01');
     console.log(menuid);
 
-    const value = await Validmenu.findOne({ where: { validmenuid: menuid } })
+    const value = await Validmenu.findOne({
+        where: {
+            validmenuid: menuid
+        }
+    })
     return value;
     //    var p = new Promise(function(resolve, reject) {
     //        Validmenu.findOne({

@@ -98,7 +98,11 @@ exports.updateWorkshopById = function (req, res) {
 }
 
 async function workshopClear() {
-    const workshop = await Workshop.findAll({ where: { factoryFactoryid: null } });
+    const workshop = await Workshop.findAll({
+        where: {
+            factoryFactoryid: null
+        }
+    });
     console.log(JSON.stringify(workshop.length));
     for (var i = workshop.length - 1; i >= 0; i--) {
         await workshop[i].destroy();

@@ -12,9 +12,9 @@ var errorUtil = require('../utils/errorUtil');
  *	根据userID,kpitwoID跟新sequence（顺序）
  */
 async function updateSequenceById(userId, kpitwoId, newSequence) {
-    if (userId == undefined || userId == null || userId == ''
-        || kpitwoId == undefined || kpitwoId == null || kpitwoId == ''
-        || newSequence == undefined || newSequence == null || newSequence == '') {
+    if (userId == undefined || userId == null || userId == '' ||
+        kpitwoId == undefined || kpitwoId == null || kpitwoId == '' ||
+        newSequence == undefined || newSequence == null || newSequence == '') {
         return;
     }
     const value = {

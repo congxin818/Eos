@@ -65,8 +65,8 @@ exports.showImpItempool = async function (req, res) {
     improvment编辑项目状态
     */
 exports.updateImpItemstatus = async function (req, res) {
-  if (req.body.id == null || req.body.id == ''
-    || req.body.linebodyId == null || req.body.linebodyId == '') {
+  if (req.body.id == null || req.body.id == '' ||
+    req.body.linebodyId == null || req.body.linebodyId == '') {
     res.end(JSON.stringify(parameterError))
   }
   // 对项目状态表进行更改
@@ -146,9 +146,14 @@ exports.showObjectnowBylinedyid = async function (req, res) {
       if (lostatusNameList[i].status != 4) {
         if (lostatusNameList[i].objectstarttime != null) {
           const reviewday = moment(lostatusNameList[i].createdAt).date()
-          var reviewdata = moment().set({ 'date': reviewday })
+          var reviewdata = moment().set({
+            'date': reviewday
+          })
           if (reviewdata < moment()) {
-            reviewdata = moment().set({ 'month': moment().month() + 1, 'date': reviewday })
+            reviewdata = moment().set({
+              'month': moment().month() + 1,
+              'date': reviewday
+            })
           }
           // review日期
           showObjectnow.reviewdata = moment(reviewdata).format('YYYY-MM-DD')
@@ -170,9 +175,9 @@ exports.showObjectnowBylinedyid = async function (req, res) {
     根据loss id增加现进行项目
     */
 exports.addObjectnowBylossid = async function (req, res) {
-  if (req.body.lossIdList == null || req.body.lossIdList.length == 0
-    || req.body.lossIdList == '' || req.body.linebodyId == null
-    || req.body.linebodyId == '')
+  if (req.body.lossIdList == null || req.body.lossIdList.length == 0 ||
+    req.body.lossIdList == '' || req.body.linebodyId == null ||
+    req.body.linebodyId == '')
     res.end(JSON.stringify(parameterError))
 
   var addReturn

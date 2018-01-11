@@ -98,8 +98,8 @@ exports.selectProductAll = selectProductAll;
 	添加产品
  */
 async function addProductOne(req, res, next) {
-	if (req.body.name == undefined || req.body.name == null || req.body.name == ''
-		|| req.body.pId == undefined || req.body.pId == null || req.body.pId == '') {
+	if (req.body.name == undefined || req.body.name == null || req.body.name == '' ||
+		req.body.pId == undefined || req.body.pId == null || req.body.pId == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(req.body.pId)) {
@@ -111,7 +111,11 @@ async function addProductOne(req, res, next) {
 				if (bigclass == undefined || bigclass == null || bigclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const existSubclass = await Productsubclass.findOne({ where: { name: req.body.name } });
+					const existSubclass = await Productsubclass.findOne({
+						where: {
+							name: req.body.name
+						}
+					});
 					if (existSubclass == undefined || existSubclass == null || existSubclass == '') {
 						const subclass = {
 							name: req.body.name,
@@ -141,7 +145,11 @@ async function addProductOne(req, res, next) {
 				if (subclass == undefined || subclass == null || subclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const existProduct = await Productname.findOne({ where: { name: req.body.name } });
+					const existProduct = await Productname.findOne({
+						where: {
+							name: req.body.name
+						}
+					});
 					if (existProduct == undefined || existProduct == null || existProduct == '') {
 						const product = {
 							name: req.body.name,
@@ -173,7 +181,11 @@ async function addProductOne(req, res, next) {
 			res.end(JSON.stringify(errorUtil.parameterError));
 		}
 	} else {
-		const existBigclass = await Productbigclass.findOne({ where: { name: req.body.name } });
+		const existBigclass = await Productbigclass.findOne({
+			where: {
+				name: req.body.name
+			}
+		});
 		if (existBigclass == undefined || existBigclass == null || existBigclass == '') {
 			const bigclass = {
 				name: req.body.name
@@ -205,8 +217,8 @@ exports.addProductOne = addProductOne;
 	编辑产品
  */
 async function updateProductById(req, res, next) {
-	if (req.body.name == undefined || req.body.name == null || req.body.name == ''
-		|| req.body.id == undefined || req.body.id == null || req.body.id == '') {
+	if (req.body.name == undefined || req.body.name == null || req.body.name == '' ||
+		req.body.id == undefined || req.body.id == null || req.body.id == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(req.body.id)) {
@@ -218,12 +230,20 @@ async function updateProductById(req, res, next) {
 				if (bigclass == undefined || bigclass == null || bigclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const existBigclass = await Productbigclass.findOne({ where: { name: req.body.name } });
+					const existBigclass = await Productbigclass.findOne({
+						where: {
+							name: req.body.name
+						}
+					});
 					if (existBigclass == undefined || existBigclass == null || existBigclass == '') {
 						const newBigclass = {
 							name: req.body.name
 						};
-						const falg = await Productbigclass.update(newBigclass, { where: { id: pId } });
+						const falg = await Productbigclass.update(newBigclass, {
+							where: {
+								id: pId
+							}
+						});
 						if (falg == undefined || falg == null || falg == '' || falg != 1) {
 							res.end(JSON.stringify(errorUtil.serviceError));
 						} else {
@@ -239,12 +259,20 @@ async function updateProductById(req, res, next) {
 				if (subclass == undefined || subclass == null || subclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const existSubclass = await Productsubclass.findOne({ where: { name: req.body.name } });
+					const existSubclass = await Productsubclass.findOne({
+						where: {
+							name: req.body.name
+						}
+					});
 					if (existSubclass == undefined || existSubclass == null || existSubclass == '') {
 						const newSubclass = {
 							name: req.body.name
 						};
-						const falg = await Productsubclass.update(newSubclass, { where: { id: pId } });
+						const falg = await Productsubclass.update(newSubclass, {
+							where: {
+								id: pId
+							}
+						});
 						if (falg == undefined || falg == null || falg == '' || falg != 1) {
 							res.end(JSON.stringify(errorUtil.serviceError));
 						} else {
@@ -260,12 +288,20 @@ async function updateProductById(req, res, next) {
 				if (product == undefined || product == null || product == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const existSubclass = await Productname.findOne({ where: { name: req.body.name } });
+					const existSubclass = await Productname.findOne({
+						where: {
+							name: req.body.name
+						}
+					});
 					if (existSubclass == undefined || existSubclass == null || existSubclass == '') {
 						const newProduct = {
 							name: req.body.name
 						};
-						const falg = await Productname.update(newProduct, { where: { id: pId } });
+						const falg = await Productname.update(newProduct, {
+							where: {
+								id: pId
+							}
+						});
 						if (falg == undefined || falg == null || falg == '' || falg != 1) {
 							res.end(JSON.stringify(errorUtil.serviceError));
 						} else {
@@ -304,7 +340,11 @@ async function deleteProductById(req, res, next) {
 				if (bigclass == undefined || bigclass == null || bigclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const falg = await Productbigclass.destroy({ where: { id: pId } });
+					const falg = await Productbigclass.destroy({
+						where: {
+							id: pId
+						}
+					});
 					if (falg == undefined || falg == null || falg == '') {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					} else {
@@ -319,7 +359,11 @@ async function deleteProductById(req, res, next) {
 				if (subclass == undefined || subclass == null || subclass == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const falg = await Productsubclass.destroy({ where: { id: pId } });
+					const falg = await Productsubclass.destroy({
+						where: {
+							id: pId
+						}
+					});
 					if (falg == undefined || falg == null || falg == '' || falg != 1) {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					} else {
@@ -333,7 +377,11 @@ async function deleteProductById(req, res, next) {
 				if (product == undefined || product == null || product == '') {
 					res.end(JSON.stringify(errorUtil.noExistError));
 				} else {
-					const falg = await Productname.destroy({ where: { id: pId } });
+					const falg = await Productname.destroy({
+						where: {
+							id: pId
+						}
+					});
 					if (falg == undefined || falg == null || falg == '' || falg != 1) {
 						res.end(JSON.stringify(errorUtil.serviceError));
 					} else {
@@ -384,8 +432,8 @@ exports.selectProductnameById = selectProductnameById;
 	根据产品id修改产品单价
  */
 async function updateProductnameById(req, res, next) {
-	if (req.body.id == undefined || req.body.id == null || req.body.id == ''
-		|| req.body.price == undefined || req.body.price == null || req.body.price == '') {
+	if (req.body.id == undefined || req.body.id == null || req.body.id == '' ||
+		req.body.price == undefined || req.body.price == null || req.body.price == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(req.body.id)) {
@@ -399,7 +447,11 @@ async function updateProductnameById(req, res, next) {
 				let productname = {
 					price: req.body.price
 				};
-				const falg = await Productname.update(productname, { where: { id: pId } });
+				const falg = await Productname.update(productname, {
+					where: {
+						id: pId
+					}
+				});
 				if (falg == undefined || falg == null || falg == '' || falg != 1) {
 					res.end(JSON.stringify(errorUtil.serviceError));
 				} else {

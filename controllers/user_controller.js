@@ -5,7 +5,7 @@
  */
 
 var service = require('../services/user_service');
-var User = require('../models').User;//引入数据库User模块
+var User = require('../models').User; //引入数据库User模块
 var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
@@ -48,8 +48,8 @@ exports.findAndCount = findAndCount;
 async function userLogin(req, res, next) {
     //如果没有post数据或者数据为空,直接返回
     const userpsd = req.body.userPsd;
-    if (req.body.userName == undefined || req.body.userName == ''
-        || req.body.userPsd == undefined || req.body.userPsd == '') {
+    if (req.body.userName == undefined || req.body.userName == '' ||
+        req.body.userPsd == undefined || req.body.userPsd == '') {
         res.end(parameterError);
         return;
     }
@@ -153,10 +153,10 @@ async function addUserOne(req, res, next) {
     }
 
     //如果没有post数据或者数据为空,直接返回
-    if (req.body.userName == undefined || req.body.userName == ''
-        || req.body.userPsd == undefined || req.body.userPsd == ''
-        || req.body.userAbbName == undefined || req.body.userJob == undefined
-        || req.body.userLeader == undefined || req.body.validArea == undefined) {
+    if (req.body.userName == undefined || req.body.userName == '' ||
+        req.body.userPsd == undefined || req.body.userPsd == '' ||
+        req.body.userAbbName == undefined || req.body.userJob == undefined ||
+        req.body.userLeader == undefined || req.body.validArea == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
@@ -214,11 +214,11 @@ exports.massDeleteUserByUserIds = massDeleteUserByUserIds;
 //根据userId跟新User
 exports.updateUserById = function (req, res, next) {
     //如果没有post数据或者数据为空,直接返回
-    if (req.body.userId == undefined || req.body.userId == ''
-        || req.body.userName == undefined || req.body.userName == ''
-        || req.body.userPsd == undefined || req.body.userPsd == ''
-        || req.body.userAbbName == undefined || req.body.userJob == undefined
-        || req.body.userLeader == undefined) {
+    if (req.body.userId == undefined || req.body.userId == '' ||
+        req.body.userName == undefined || req.body.userName == '' ||
+        req.body.userPsd == undefined || req.body.userPsd == '' ||
+        req.body.userAbbName == undefined || req.body.userJob == undefined ||
+        req.body.userLeader == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
@@ -232,16 +232,16 @@ exports.updateUserById = function (req, res, next) {
     根据ID修改用户密码
  */
 async function updateUserPsdById(req, res, next) {
-    if (req == undefined || 　req == null || req == ''
-        || res == undefined || res == null || res == '') {
+    if (req == undefined || 　req == null || req == '' ||
+        res == undefined || res == null || res == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
     }
     const userId = req.body.userId;
     const userPsd = req.body.userPsd;
     const userNewPsd = req.body.userNewPsd;
-    if (userId == undefined || userId == null || userId == ''
-        || userPsd == undefined || userPsd == null || userPsd == ''
-        || userNewPsd == undefined || userNewPsd == null || userNewPsd == '') {
+    if (userId == undefined || userId == null || userId == '' ||
+        userPsd == undefined || userPsd == null || userPsd == '' ||
+        userNewPsd == undefined || userNewPsd == null || userNewPsd == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
     }
     const user = await User.findById(userId);
@@ -270,8 +270,8 @@ exports.updateUserPsdById = updateUserPsdById;
     根据ID修改用户tier2顺序
  */
 async function updateUserKpiTwolveById(req, res, next) {
-    if (req == undefined || 　req == null || req == ''
-        || res == undefined || res == null || res == '') {
+    if (req == undefined || 　req == null || req == '' ||
+        res == undefined || res == null || res == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
     }
     const userId = req.body.userId;
@@ -279,11 +279,11 @@ async function updateUserKpiTwolveById(req, res, next) {
     const changedId = req.body.changedId;
     const changeOrder = req.body.changeOrder;
     const changedOrder = req.body.changedOrder;
-    if (userId == undefined || userId == null || userId == ''
-        || changeId == undefined || changeId == null || changeId == ''
-        || changedId == undefined || changedId == null || changedId == ''
-        || changeOrder == undefined || changeOrder == null || changeOrder == ''
-        || changedOrder == undefined || changedOrder == null || changedOrder == '') {
+    if (userId == undefined || userId == null || userId == '' ||
+        changeId == undefined || changeId == null || changeId == '' ||
+        changedId == undefined || changedId == null || changedId == '' ||
+        changeOrder == undefined || changeOrder == null || changeOrder == '' ||
+        changedOrder == undefined || changedOrder == null || changedOrder == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
     }
     // console.log('userId----->' + JSON.stringify(userId));

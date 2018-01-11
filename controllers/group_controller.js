@@ -38,7 +38,9 @@ exports.selectGroupAll = function (req, res) {
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
-        } else { dataSuccess.data = data; }
+        } else {
+            dataSuccess.data = data;
+        }
         res.end(JSON.stringify(dataSuccess));
     });
 }

@@ -29,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
             type: Sequelize.INTEGER
         }
     }, {
-            charset: 'utf8',
-            collate: 'utf8_general_ci'
-        });
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+    });
 }

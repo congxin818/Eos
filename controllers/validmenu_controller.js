@@ -45,8 +45,8 @@ exports.selectValmeuById = function (req, res) {
 */
 exports.addValidmenuOne = function (req, res) {
     //如果没有post数据或者数据为空,直接返回
-    if (req.body.validmenuName == undefined || req.body.validmenuName == ''
-        || req.body.userId == undefined || req.body.userId == '') {
+    if (req.body.validmenuName == undefined || req.body.validmenuName == '' ||
+        req.body.userId == undefined || req.body.userId == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }

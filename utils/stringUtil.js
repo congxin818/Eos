@@ -59,5 +59,3 @@ async function jsonToArray(data) {
 	return arr;
 }
 exports.jsonToArray = jsonToArray;
-
-

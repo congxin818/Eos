@@ -37,11 +37,16 @@ exports.selectLosstier4ById = selectLosstier4ById;
     根据Name查询一个loss
  */
 async function selectLosstier4ByName(lossName, newpId) {
-    if (lossName == '' || lossName == undefined || lossName == null
-        || newpId == '' || newpId == undefined || newpId == null) {
+    if (lossName == '' || lossName == undefined || lossName == null ||
+        newpId == '' || newpId == undefined || newpId == null) {
         return;
     }
-    const loss = await Losstier4.findOne({ where: { name: lossName, pId: newpId } });
+    const loss = await Losstier4.findOne({
+        where: {
+            name: lossName,
+            pId: newpId
+        }
+    });
     if (loss == '' || loss == undefined || loss == null) {
         return;
     }
@@ -60,7 +65,11 @@ async function deleteLosstier4ById(lossId) {
     if (loss == '' || loss == undefined || loss == null) {
         return;
     }
-    const falg = await loss.destroy({ where: { lossid: lossId } });
+    const falg = await loss.destroy({
+        where: {
+            lossid: lossId
+        }
+    });
     if (falg == null && falg != 1) {
         return;
     }
@@ -72,8 +81,8 @@ exports.deleteLosstier4ById = deleteLosstier4ById;
 	添加
  */
 async function addLosstier4One(lossName, newpId) {
-    if (lossName == '' || lossName == undefined || lossName == null
-        || newpId == '' || newpId == undefined || newpId == null) {
+    if (lossName == '' || lossName == undefined || lossName == null ||
+        newpId == '' || newpId == undefined || newpId == null) {
         return;
     }
     //console.log('yuzhizhe_1---->' + lossName);
@@ -100,7 +109,11 @@ async function addLosstier4One(lossName, newpId) {
         const newLoss = {
             id: 'l' + lossId
         }
-        const falg = await Losstier4.update(newLoss, { where: { lossid: lossId } });
+        const falg = await Losstier4.update(newLoss, {
+            where: {
+                lossid: lossId
+            }
+        });
         if (falg == undefined || falg == null || falg == '' || falg != 1) {
             return;
         }
@@ -118,8 +131,8 @@ exports.addLosstier4One = addLosstier4One;
 	更新
  */
 async function updateLosstier4ById(lossId, lossName, newpId) {
-    if (lossId == '' || lossId == undefined || lossId == null
-        || lossName == '' || lossName == undefined || lossName == null) {
+    if (lossId == '' || lossId == undefined || lossId == null ||
+        lossName == '' || lossName == undefined || lossName == null) {
         return;
     }
     let loss = {
@@ -127,7 +140,11 @@ async function updateLosstier4ById(lossId, lossName, newpId) {
         name: lossName,
         pId: newpId
     };
-    const falg = await Losstier4.update(loss, { where: { lossid: lossId } });
+    const falg = await Losstier4.update(loss, {
+        where: {
+            lossid: lossId
+        }
+    });
     return falg;
 }
 exports.updateLosstier4ById = updateLosstier4ById;
@@ -136,7 +153,11 @@ exports.updateLosstier4ById = updateLosstier4ById;
     根据关联清理数据库
  */
 async function losstier4Clear() {
-    const loss = await Losstier4.findAll({ where: { losstier3Lossid: null } });
+    const loss = await Losstier4.findAll({
+        where: {
+            losstier3Lossid: null
+        }
+    });
     //console.log(JSON.stringify(workshop.length));
     for (var i = loss.length - 1; i >= 0; i--) {
         await loss[i].destroy();

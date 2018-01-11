@@ -106,20 +106,20 @@ exports.showLosstier3 = async function (req, res) {
     点击确定按钮，创建一条数据并添加时间
     */
 exports.addLosstier4time2 = async function (req, res) {
-    if (req.body.classinfId == null || req.body.classinfId == ''
-        || req.body.twolevName == null || req.body.twolevName == ''
-        || req.body.losstier3Id == null || req.body.losstier3Id == ''
-        || req.body.losstier4Id == null || req.body.losstier4Id == ''
-        || req.body.linebodyId == null || req.body.linebodyId == ''
-        || req.body.starttime == null || req.body.starttime == ''
-        || req.body.endtime == null || req.body.endtime == '') {
+    if (req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.twolevName == null || req.body.twolevName == '' ||
+        req.body.losstier3Id == null || req.body.losstier3Id == '' ||
+        req.body.losstier4Id == null || req.body.losstier4Id == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '' ||
+        req.body.starttime == null || req.body.starttime == '' ||
+        req.body.endtime == null || req.body.endtime == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         // 判断这个四级loss属于哪一天的开班时间
         var addReturn = null
         var classinforData = await datainputServices.classinforSelectById(req.body.classinfId)
-        if (moment(req.body.starttime) >= moment(classinforData.classstarttime)
-            && moment(req.body.endtime) <= moment(classinforData.classendtime)) {
+        if (moment(req.body.starttime) >= moment(classinforData.classstarttime) &&
+            moment(req.body.endtime) <= moment(classinforData.classendtime)) {
             // loss四级时间在开班时间内
             addReturn = await exports.addLosstierData(req, res)
         } else {
@@ -193,10 +193,10 @@ exports.showProductName = async function (req, res) {
     增加产品信息
     */
 exports.addProduct = async function (req, res) {
-    if (req.body.productNameId == null || req.body.productNameId == ''
-        || req.body.conformProduct == null || req.body.conformProduct == ''
-        || req.body.classinfId == null || req.body.classinfId == ''
-        || req.body.linebodyId == null || req.body.linebodyId == '') {
+    if (req.body.productNameId == null || req.body.productNameId == '' ||
+        req.body.conformProduct == null || req.body.conformProduct == '' ||
+        req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         var addReturn
@@ -219,8 +219,8 @@ exports.addProduct = async function (req, res) {
     展示产品信息
     */
 exports.showProduct = async function (req, res) {
-    if (req.body.classinfId == null || req.body.classinfId == ''
-        || req.body.linebodyId == null || req.body.linebodyId == '') {
+    if (req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         const showProduct = await exports.showProductinf(req.body.classinfId, req.body.linebodyId)
@@ -265,9 +265,9 @@ exports.showProductinf = async function (classinfId, linebodyId) {
     编辑产品信息
     */
 exports.updateProduct = async function (req, res) {
-    if (req.body.conformProduct == null || req.body.conformProduct == ''
-        || req.body.productIdList == null || req.body.productIdList == ''
-        || req.body.classinfIdList == null || req.body.classinfIdList == '') {
+    if (req.body.conformProduct == null || req.body.conformProduct == '' ||
+        req.body.productIdList == null || req.body.productIdList == '' ||
+        req.body.classinfIdList == null || req.body.classinfIdList == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         var productIdList = req.body.productIdList.split(",")
@@ -289,8 +289,8 @@ exports.updateProduct = async function (req, res) {
     删除产品信息
     */
 exports.deleteProduct = async function (req, res) {
-    if (req.body.productIdList == null || req.body.productIdList == ''
-        || req.body.classinfIdList == null || req.body.classinfIdList == '') {
+    if (req.body.productIdList == null || req.body.productIdList == '' ||
+        req.body.classinfIdList == null || req.body.classinfIdList == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         var productIdList = req.body.productIdList.split(",")
@@ -311,11 +311,11 @@ exports.deleteProduct = async function (req, res) {
     增加开班详细信息
     */
 exports.addClassinf = async function (req, res) {
-    if (req.body.classStarttime == null || req.body.classStarttime == ''
-        || req.body.classEndtime == null || req.body.classEndtime == ''
-        || req.body.shouldAttendance == null || req.body.shouldAttendance == ''
-        || req.body.actualAttendance == null || req.body.actualAttendance == ''
-        || req.body.linebodyId == null || req.body.linebodyId == '') {
+    if (req.body.classStarttime == null || req.body.classStarttime == '' ||
+        req.body.classEndtime == null || req.body.classEndtime == '' ||
+        req.body.shouldAttendance == null || req.body.shouldAttendance == '' ||
+        req.body.actualAttendance == null || req.body.actualAttendance == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         // 判断开班时间是否重合
@@ -336,11 +336,11 @@ exports.addClassinf = async function (req, res) {
     编辑添加loss后的三级四级项目时间
     */
 exports.updateObjectimeAfteradd = async function (req, res) {
-    if (req.body.losstier4DataidList == null || req.body.losstier4DataidList == ''
-        || req.body.starttime == null || req.body.starttime == ''
-        || req.body.endtime == null || req.body.endtime == ''
-        || req.body.classinfId == null || req.body.classinfId == ''
-        || req.body.linebodyId == null || req.body.linebodyId == '') {
+    if (req.body.losstier4DataidList == null || req.body.losstier4DataidList == '' ||
+        req.body.starttime == null || req.body.starttime == '' ||
+        req.body.endtime == null || req.body.endtime == '' ||
+        req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         var showAddloss4After = {
@@ -546,9 +546,9 @@ exports.deleteClassinfHistory = async function (req, res) {
     展示右侧产品loss班次
     */
 exports.showClassinfHisRight = async function (req, res) {
-    if (req.body.classinfId == null || req.body.classinfId == ''
-        || req.body.userId == null || req.body.userId == ''
-        || req.body.linebodyId == null || req.body.linebodyId == '') {
+    if (req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.userId == null || req.body.userId == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         var classinfHisRight = {

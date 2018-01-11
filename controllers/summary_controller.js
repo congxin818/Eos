@@ -5,7 +5,7 @@
  */
 
 
-var User = require('../models').User;//引入数据库User模块
+var User = require('../models').User; //引入数据库User模块
 var Linebody = require('../models').Linebody;
 var Workshop = require('../models').Workshop;
 var Kpitwolev = require('../models').Kpitwolev;
@@ -29,8 +29,8 @@ var dataSuccess = {
 async function selectProjectStateByTimeAndLinebodyIds(req, res, next) {
 	// console.log(JSON.stringify(req.body.time , null , 4));
 	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
-	if (req.body.time == undefined || req.body.time == null || req.body.time == ''
-		|| req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
+	if (req.body.time == undefined || req.body.time == null || req.body.time == '' ||
+		req.body.linebodyIds == undefined || req.body.linebodyIds == null || req.body.linebodyIds == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const Ids = await req.body.linebodyIds.split(",");
@@ -46,8 +46,8 @@ exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLine
 	查询OEE根据linebodyIds
  */
 async function selectOEEByLinebodyIds(time, linebodyIds) {
-	if (time == undefined || time == null || time == ''
-		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == '') {
+	if (time == undefined || time == null || time == '' ||
+		linebodyIds == undefined || linebodyIds == null || linebodyIds == '') {
 		return errorUtil.parameterError;
 	}
 	const Ids = await linebodyIds.split(",");
@@ -82,8 +82,8 @@ exports.selectOEEByLinebodyIds = selectOEEByLinebodyIds;
 	根据时间过滤
  */
 async function computeLossStatusBytime(allLossStatus, time) {
-	if (time == undefined || time == null || time == ''
-		|| allLossStatus == undefined || allLossStatus == null || allLossStatus == '') {
+	if (time == undefined || time == null || time == '' ||
+		allLossStatus == undefined || allLossStatus == null || allLossStatus == '') {
 		return;
 	}
 	const Time = new Date(time).getTime();
@@ -91,9 +91,9 @@ async function computeLossStatusBytime(allLossStatus, time) {
 		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
 			const projectStartTime = allLossStatus[i][j].objectstarttime;
 			const projectEndTime = allLossStatus[i][j].planendtime;
-			if (projectStartTime == null || projectStartTime == ''
-				|| projectEndTime == null || projectEndTime == '') {
-				allLossStatus[i].splice(j, 1);//删除该元素
+			if (projectStartTime == null || projectStartTime == '' ||
+				projectEndTime == null || projectEndTime == '') {
+				allLossStatus[i].splice(j, 1); //删除该元素
 				continue;
 			}
 			// console.log('==========>projectStartTime--->'+JSON.stringify(projectStartTime));
@@ -108,12 +108,12 @@ async function computeLossStatusBytime(allLossStatus, time) {
 			// console.log('==========>projectEndTime--->'+mEndTime);
 			// console.log('\n\n');
 			if (Time < mStartTime || Time > mEndTime) {
-				allLossStatus[i].splice(j, 1);//删除该元素
+				allLossStatus[i].splice(j, 1); //删除该元素
 				continue;
 			}
 		}
 		if (allLossStatus[i].length == 0 || allLossStatus[i] == undefined || allLossStatus[i] == null) {
-			allLossStatus.splice(i, 1);//删除该元素
+			allLossStatus.splice(i, 1); //删除该元素
 			continue;
 		}
 	}
@@ -125,8 +125,8 @@ exports.computeLossStatusBytime = computeLossStatusBytime;
 	得到设备损失数组
  */
 async function selectAllDataByAllLossStatus(allLossStatus, Size) {
-	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == ''
-		|| Size == undefined || Size == null || Size == '') {
+	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == '' ||
+		Size == undefined || Size == null || Size == '') {
 		return;
 	}
 	let OEE = {
@@ -163,14 +163,14 @@ async function selectAllDataByAllLossStatus(allLossStatus, Size) {
 	let Defect_follow = 0;
 	let Defect_close = 0;
 
-	let Identify_problem = 0;//1.明确问题,代表码：a
-	let Grasp_status = 0;//2.把握现状,代表码：b
-	let Set_goals = 0;//3.设定目标,代表码：c
-	let Analysis_cause = 0;//4.分析原因,代表码：d
-	let Countermeasures_plan = 0;//对策计划,代表码：e
-	let Countermeasures_ = 0;//对策落实,代表码：f
-	let Effect_confirmation = 0;//效果确认,代表码：g
-	let Consolidation_results = 0;//成果巩固,代表码：h
+	let Identify_problem = 0; //1.明确问题,代表码：a
+	let Grasp_status = 0; //2.把握现状,代表码：b
+	let Set_goals = 0; //3.设定目标,代表码：c
+	let Analysis_cause = 0; //4.分析原因,代表码：d
+	let Countermeasures_plan = 0; //对策计划,代表码：e
+	let Countermeasures_ = 0; //对策落实,代表码：f
+	let Effect_confirmation = 0; //效果确认,代表码：g
+	let Consolidation_results = 0; //成果巩固,代表码：h
 	for (var i = allLossStatus.length - 1; i >= 0; i--) {
 		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
 			const losstier3 = await Losstier3.findById(allLossStatus[i][j].losstier3Lossid);
@@ -326,42 +326,42 @@ async function selectAllDataByAllLossStatus(allLossStatus, Size) {
 		key: '明确问题',
 		order: 1,
 		value: Identify_problem
-	};//1.明确问题,代表码：a
+	}; //1.明确问题,代表码：a
 	let GraspStatus = {
 		key: '把握现状',
 		order: 2,
 		value: Grasp_status
-	};//2.把握现状,代表码：b
+	}; //2.把握现状,代表码：b
 	let SetGoals = {
 		key: '设定目标',
 		order: 3,
 		value: Set_goals
-	};//3.设定目标,代表码：c
+	}; //3.设定目标,代表码：c
 	let AnalysisCause = {
 		key: '分析根因',
 		order: 4,
 		value: Analysis_cause
-	};//4.分析原因,代表码：d
+	}; //4.分析原因,代表码：d
 	let CountermeasuresPlan = {
 		key: '对策计划',
 		order: 5,
 		value: Countermeasures_plan
-	};//5.	对策计划,代表码：e
+	}; //5.	对策计划,代表码：e
 	let Countermeasures = {
 		key: '对策落实',
 		order: 6,
 		value: Countermeasures_
-	};//6.	对策落实,代表码：f
+	}; //6.	对策落实,代表码：f
 	let EffectConfirmation = {
 		key: '效果确认',
 		order: 7,
 		value: Effect_confirmation
-	};//7.	效果确认,代表码：g
+	}; //7.	效果确认,代表码：g
 	let ConsolidationResults = {
 		key: '成果巩固',
 		order: 8,
 		value: Consolidation_results
-	};//8.	成果巩固,代表码：h
+	}; //8.	成果巩固,代表码：h
 
 	let allStageData = new Array();
 	await allStageData.push(ConsolidationResults);
@@ -395,4 +395,3 @@ async function selectAllDataByAllLossStatus(allLossStatus, Size) {
 	return allData;
 }
 exports.selectAllDataByAllLossStatus = selectAllDataByAllLossStatus
-

@@ -54,8 +54,7 @@ exports.addLinebodyOne = async function (req, res) {
         visionendtime: req.body.visionEndtime,
         idealvalue: req.body.idealValue,
         idealstrattime: req.body.idealStrattime,
-        idealendtime: req.body.idealEndtime
-        ,
+        idealendtime: req.body.idealEndtime,
         weight: req.body.weight
     };
     var workshopId = req.body.pId.slice(1, );
@@ -90,8 +89,7 @@ exports.deleteLinebodyById = async function (req, res) {
     */
 exports.updateLinebodyById = function (req, res) {
     var linebody = {
-        linebodyname: req.body.name
-        ,
+        linebodyname: req.body.name,
         weight: req.body.weight
     };
     var p = new Promise(function (resolve, reject) {
@@ -140,7 +138,11 @@ exports.updateLinebodyInfById = async function (req, res) {
 }
 
 async function linebodyClear() {
-    const linebody = await Linebody.findAll({ where: { workshopWorkshopid: null } });
+    const linebody = await Linebody.findAll({
+        where: {
+            workshopWorkshopid: null
+        }
+    });
     console.log(JSON.stringify(linebody.length));
     for (var i = linebody.length - 1; i >= 0; i--) {
         await linebody[i].destroy();
@@ -152,8 +154,8 @@ exports.linebodyClear = linebodyClear;
     根据id更新线体权重
     */
 async function updateLinebodyWeightById(linebodyId, weight) {
-    if (linebodyId == undefined || linebodyId == null || linebodyId == ''
-        || weight == undefined || weight == null || weight == '') {
+    if (linebodyId == undefined || linebodyId == null || linebodyId == '' ||
+        weight == undefined || weight == null || weight == '') {
         return errorUtil.parameterError;
     }
     var linebody = {

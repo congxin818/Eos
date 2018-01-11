@@ -5,8 +5,8 @@
  */
 
 
-var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
-var Linebody = require('../models').Linebody;//引入数据库Linebody模块
+var Lossstatus = require('../models').Lossstatus; //引入数据库Lossstatus模块
+var Linebody = require('../models').Linebody; //引入数据库Linebody模块
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 var dataSuccess = {
@@ -19,9 +19,9 @@ var dataSuccess = {
     用户登录接口
     */
 async function selectSavingBookByTimesAndLinebodys(req, res, next) {
-    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null
-        || req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null
-        || req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null) {
+    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null ||
+        req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null ||
+        req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
@@ -75,9 +75,9 @@ exports.selectSavingBookByTimesAndLinebodys = selectSavingBookByTimesAndLinebody
 
 
 async function computeByTimes(startTime, endTime, allData) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || allData == undefined || allData == '' || allData == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        allData == undefined || allData == '' || allData == null) {
         return;
     }
 

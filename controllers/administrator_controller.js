@@ -1,4 +1,4 @@
-var Administrator = require('../models/administrator');//引入数据库Message模块
+var Administrator = require('../models/administrator'); //引入数据库Message模块
 var service = require('../services/administrator_service');
 var dataSuccess = {
     status: '0',
@@ -46,8 +46,8 @@ exports.selectByUserName = function (req, res, next) {
 //添加一个Administrator
 exports.addOne = function (req, res, next) {
     //如果没有post数据或者数据为空,直接返回
-    if (req.body.username == undefined || req.body.username == ''
-        || req.body.password == undefined || req.body.password == '') {
+    if (req.body.username == undefined || req.body.username == '' ||
+        req.body.password == undefined || req.body.password == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }
@@ -77,8 +77,8 @@ exports.deleteByUserName = function (req, res, next) {
 //根据username跟新Administrator
 exports.updateByUserName = function (req, res, next) {
     //如果没有post数据或者数据为空,直接返回
-    if (req.body.username == undefined || req.body.username == ''
-        || req.body.password == undefined || req.body.password == '') {
+    if (req.body.username == undefined || req.body.username == '' ||
+        req.body.password == undefined || req.body.password == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }
@@ -96,8 +96,8 @@ exports.adminLogin = function (req, res, next) {
     //console.log('req -> ' + JSON.stringify(req.body));
     //如果没有post数据或者数据为空,直接返回
     const adminPsd = req.body.adminPsd;
-    if (req.body.adminName == undefined || req.body.adminName == ''
-        || req.body.adminPsd == undefined || req.body.adminPsd == '') {
+    if (req.body.adminName == undefined || req.body.adminName == '' ||
+        req.body.adminPsd == undefined || req.body.adminPsd == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }

@@ -5,7 +5,7 @@
  */
 
 var service = require('../services/user_service');
-var User = require('../models').User;//引入数据库User模块
+var User = require('../models').User; //引入数据库User模块
 var Linebody = require('../models').Linebody;
 var Workshop = require('../models').Workshop;
 var Kpitwolev = require('../models').Kpitwolev;
@@ -32,10 +32,10 @@ async function selectLossmappingByTimesAndLinebodys(req, res, next) {
     //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
     //console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
     //console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
-    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null
-        || req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null
-        || req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null
-        || req.body.userId == undefined || req.body.userId == '' || req.body.userId == null) {
+    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null ||
+        req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null ||
+        req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null ||
+        req.body.userId == undefined || req.body.userId == '' || req.body.userId == null) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
@@ -159,10 +159,10 @@ exports.selectLossmappingByTimesAndLinebodys = selectLossmappingByTimesAndLinebo
     endTime:当天结束时间
     */
 async function computeAll4ByTimes(startTime, endTime, Ids, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null) {
         console.log("---yuzhizhe1--->");
         return;
     }
@@ -217,10 +217,10 @@ exports.computeAll4ByTimes = computeAll4ByTimes;
     endTime:15分钟结束时间
 */
 async function computeQuarter4ByTimes(startTime, endTime, Ids, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null) {
         //console.log("---yuzhizhe1--->");
         return 0;
     }
@@ -241,7 +241,11 @@ async function computeQuarter4ByTimes(startTime, endTime, Ids, typeId) {
         // console.log("---sTime_num--->"+JSON.stringify(new Date(sTime_num)));
         //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num), new Date(eTime_num), Ids[i]);
-        const linebodyLosstier4 = await linebody.getLinebodyLosstier4({ where: { losstier4Tier4id: typeId } });
+        const linebodyLosstier4 = await linebody.getLinebodyLosstier4({
+            where: {
+                losstier4Tier4id: typeId
+            }
+        });
         //console.log("---linebodyLosstier4--->"+JSON.stringify(linebodyLosstier4 , null , 4));
         const value = await this.computeQuarterValueByTimes(sTime_num, eTime_num, linebodyLosstier4);
 
@@ -267,10 +271,10 @@ exports.computeQuarter4ByTimes = computeQuarter4ByTimes;
     endTime:当天结束时间
     */
 async function computeAll3ByTimes(startTime, endTime, Ids, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null) {
         console.log("---yuzhizhe1--->");
         return;
     }
@@ -328,10 +332,10 @@ exports.computeAll3ByTimes = computeAll3ByTimes;
     endTime:15分钟结束时间
 */
 async function computeQuarter3ByTimes(startTime, endTime, Ids, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null) {
         //console.log("---yuzhizhe1--->");
         return 0;
     }
@@ -355,7 +359,11 @@ async function computeQuarter3ByTimes(startTime, endTime, Ids, typeId) {
         // console.log("---sTime_num--->"+JSON.stringify(new Date(sTime_num)));
         //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num), new Date(eTime_num), Ids[i]);
-        const linebodyLosstier3 = await linebody.getLinebodyLosstier3({ where: { losstier3Lossid: typeId } });
+        const linebodyLosstier3 = await linebody.getLinebodyLosstier3({
+            where: {
+                losstier3Lossid: typeId
+            }
+        });
         //console.log("---linebodyLosstier3--->"+JSON.stringify(linebodyLosstier3 , null , 4));
         const value = await this.computeQuarterValueByTimes(sTime_num, eTime_num, linebodyLosstier3);
 
@@ -393,10 +401,10 @@ exports.computeQuarter3ByTimes = computeQuarter3ByTimes;
     endTime:当天结束时间
     */
 async function computeAll2ByTimes(startTime, endTime, Ids, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null) {
         console.log("---yuzhizhe1--->");
         return;
     }
@@ -451,10 +459,10 @@ exports.computeAll2ByTimes = computeAll2ByTimes;
     endTime:15分钟结束时间
 */
 async function computeQuarter2ByTimes(startTime, endTime, Ids, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null) {
         //console.log("---yuzhizhe1--->");
         return 0;
     }
@@ -478,7 +486,11 @@ async function computeQuarter2ByTimes(startTime, endTime, Ids, typeId) {
         // console.log("---sTime_num--->"+JSON.stringify(new Date(sTime_num)));
         //console.log("---losstier4.tier4id--->"+JSON.stringify(losstier4.tier4id));
         const classflag = await linebody_extend_service.getClassflag(new Date(sTime_num), new Date(eTime_num), Ids[i]);
-        const kinebodyKpitwolev = await linebody.getLinebodyKpitwolev({ where: { kpitwolevKpitwoid: typeId } });
+        const kinebodyKpitwolev = await linebody.getLinebodyKpitwolev({
+            where: {
+                kpitwolevKpitwoid: typeId
+            }
+        });
         //console.log("---kinebodyKpitwolev--->"+JSON.stringify(kinebodyKpitwolev , null , 4));
         const value = await this.computeQuarterValueByTimes(sTime_num, eTime_num, kinebodyKpitwolev);
 
@@ -505,9 +517,9 @@ exports.computeQuarter2ByTimes = computeQuarter2ByTimes;
     endTime:15分钟结束时间
     */
 async function computeQuarterValueByTimes(startTime, endTime, allData) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || allData == undefined || allData == '' || allData == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        allData == undefined || allData == '' || allData == null) {
         //console.log("---allData为空--->");
         return 0;
     }
@@ -521,8 +533,8 @@ async function computeQuarterValueByTimes(startTime, endTime, allData) {
         const csTime = new Date(allData[i].starttime).getTime();
         const ceTime = new Date(allData[i].endtime).getTime();
         //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
-        if (csTime == undefined || csTime == '' || csTime == null
-            || ceTime == undefined || ceTime == '' || ceTime == null) {
+        if (csTime == undefined || csTime == '' || csTime == null ||
+            ceTime == undefined || ceTime == '' || ceTime == null) {
             //console.log('yuzhizhe03');
             continue;
         }
