@@ -9,7 +9,7 @@ var router = express.Router();
 var controller = require('../controllers/summary_controller');
 
 //分页查找
-router.post('/selectProjectStateByTimeAndLinebodyIds', function(req, res, next) {
-    controller.selectProjectStateByTimeAndLinebodyIds(req , res , next);
+router.post('/selectProjectStateByTimeAndLinebodyIds', function (req, res, next) {
+    controller.selectProjectStateByTimeAndLinebodyIds(req, res, next);
 });
 module.exports = router;

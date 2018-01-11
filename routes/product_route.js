@@ -10,44 +10,44 @@ var controller = require('../controllers/product_controller');
 
 
 //查找所有用户
-router.get('/selectProductAll', function(req, res, next) {
-    controller.selectProductAll(req , res , next);
+router.get('/selectProductAll', function (req, res, next) {
+	controller.selectProductAll(req, res, next);
 });
 
 
 /*
 	添加产品
  */
-router.post('/addProductOne', function(req, res, next) {
-    controller.addProductOne(req , res , next);
+router.post('/addProductOne', function (req, res, next) {
+	controller.addProductOne(req, res, next);
 });
 
 /*
 	编辑产品
  */
-router.post('/updateProductById', function(req, res, next) {
-    controller.updateProductById(req , res , next);
+router.post('/updateProductById', function (req, res, next) {
+	controller.updateProductById(req, res, next);
 });
 
 /*
 	删除产品
  */
-router.post('/deleteProductById', function(req, res, next) {
-    controller.deleteProductById(req , res , next);
+router.post('/deleteProductById', function (req, res, next) {
+	controller.deleteProductById(req, res, next);
 });
 
 /*
 	查询产品
  */
-router.post('/selectProductnameById', function(req, res, next) {
-    controller.selectProductnameById(req , res , next);
+router.post('/selectProductnameById', function (req, res, next) {
+	controller.selectProductnameById(req, res, next);
 });
 
 /*
 	编辑产品
  */
-router.post('/updateProductnameById', function(req, res, next) {
-    controller.updateProductnameById(req , res , next);
+router.post('/updateProductnameById', function (req, res, next) {
+	controller.updateProductnameById(req, res, next);
 });
 
 
