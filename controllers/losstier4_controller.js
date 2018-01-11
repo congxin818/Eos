@@ -37,8 +37,8 @@ async function addLosstier4One(req, res, next) {
 	}
 	const lossname = req.body.name;
 	const pid = req.body.pId;
-	if (lossname == undefined || lossname == null || lossname == ''
-		|| pid == undefined || pid == null || pid == '') {
+	if (lossname == undefined || lossname == null || lossname == '' ||
+		pid == undefined || pid == null || pid == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(pid)) {
@@ -67,14 +67,24 @@ exports.addLosstier4One = addLosstier4One;
 	根据ID删除
  */
 async function deleteLosstier4ById(req, res, next) {
+<<<<<<< HEAD
 	if (req == null || res == null
 		|| req.query.id == undefined || req.query.id == null || req.query.id == '') {
+=======
+	if (req == null || res == null ||
+		req.query.id == undefined || req.query.id == null || req.query.id == '') {
+>>>>>>> 6d702145d171af404637d85fdeb1ab31e2a520d7
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const type = req.query.id.slice(0, 1);
 	const ID = req.query.id.slice(1);
+<<<<<<< HEAD
 	if (type == '' || type == null || type == undefined
 		|| ID == undefined || ID == null || ID == '') {
+=======
+	if (type == '' || type == null || type == undefined ||
+		ID == undefined || ID == null || ID == '') {
+>>>>>>> 6d702145d171af404637d85fdeb1ab31e2a520d7
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (type == 't') {
@@ -102,9 +112,9 @@ async function updateLosstier4ById(req, res, next) {
 	const lossname = req.body.name;
 	const pid = req.body.pId;
 	const ID = req.body.id;
-	if (lossname == undefined || lossname == null || lossname == ''
-		|| pid == undefined || pid == null || pid == ''
-		|| ID == undefined || ID == null || ID == '') {
+	if (lossname == undefined || lossname == null || lossname == '' ||
+		pid == undefined || pid == null || pid == '' ||
+		ID == undefined || ID == null || ID == '') {
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (isNaN(pid)) {
