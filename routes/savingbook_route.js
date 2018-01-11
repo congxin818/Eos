@@ -11,8 +11,8 @@ var controller = require('../controllers/savingbook_controller');
 /*
 	添加产品
  */
-router.post('/selectSavingBookByTimesAndLinebodys', function(req, res, next) {
-    controller.selectSavingBookByTimesAndLinebodys(req , res , next);
+router.post('/selectSavingBookByTimesAndLinebodys', function (req, res, next) {
+	controller.selectSavingBookByTimesAndLinebodys(req, res, next);
 });
 
 module.exports = router;

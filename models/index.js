@@ -30,85 +30,193 @@ var Productname = sequelize.import('./productname.js');
 var LinebodyProductname = sequelize.import('./linebodyproductname.js');
 
 //user和group之间N:M关系
-User.belongsToMany(Group,{through: 'userGroups', as:'UserGroups'});
-Group.belongsToMany(User,{through: 'userGroups', as:'UserGroups'});
+User.belongsToMany(Group, {
+  through: 'userGroups',
+  as: 'UserGroups'
+});
+Group.belongsToMany(User, {
+  through: 'userGroups',
+  as: 'UserGroups'
+});
 
 //user和factory之间N:M关系
-User.belongsToMany(Factory,{through: 'userFactorys', as:'UserFactorys'});
-Factory.belongsToMany(User,{through: 'userFactorys', as:'UserFactorys'});
+User.belongsToMany(Factory, {
+  through: 'userFactorys',
+  as: 'UserFactorys'
+});
+Factory.belongsToMany(User, {
+  through: 'userFactorys',
+  as: 'UserFactorys'
+});
 
 //user和Workshop之间N:M关系
-User.belongsToMany(Workshop,{through: 'userWorkshops', as:'UserWorkshops'});
-Workshop.belongsToMany(User,{through: 'userWorkshops', as:'UserWorkshops'});
+User.belongsToMany(Workshop, {
+  through: 'userWorkshops',
+  as: 'UserWorkshops'
+});
+Workshop.belongsToMany(User, {
+  through: 'userWorkshops',
+  as: 'UserWorkshops'
+});
 
 //user和Linebody之间N:M关系
-User.belongsToMany(Linebody,{through: 'userLinebodys', as:'UserLinebodys'});
-Linebody.belongsToMany(User,{through: 'userLinebodys', as:'UserLinebodys'});
+User.belongsToMany(Linebody, {
+  through: 'userLinebodys',
+  as: 'UserLinebodys'
+});
+Linebody.belongsToMany(User, {
+  through: 'userLinebodys',
+  as: 'UserLinebodys'
+});
 
 //user和Validmenu之间N:M关系
-User.belongsToMany(Validmenu,{through: 'userValidmenus', as:'UserValidmenus'});
-Validmenu.belongsToMany(User,{through: 'userValidmenus', as:'UserValidmenus'});
+User.belongsToMany(Validmenu, {
+  through: 'userValidmenus',
+  as: 'UserValidmenus'
+});
+Validmenu.belongsToMany(User, {
+  through: 'userValidmenus',
+  as: 'UserValidmenus'
+});
 
 //user和Kpitwolev之间N:M关系
-User.belongsToMany(Kpitwolev,{through: UserKpitwolev, as:'UserKpitwolevs'});
-Kpitwolev.belongsToMany(User,{through: UserKpitwolev, as:'UserKpitwolevs'});
+User.belongsToMany(Kpitwolev, {
+  through: UserKpitwolev,
+  as: 'UserKpitwolevs'
+});
+Kpitwolev.belongsToMany(User, {
+  through: UserKpitwolev,
+  as: 'UserKpitwolevs'
+});
 
 //线体和产品名字结构建立N:M关系
 // Linebody.hasMany(Productname, {as:'LinebodyProductname' , constraints:true});
-Linebody.belongsToMany(Productname,{through: LinebodyProductname,as:'LinebodyProductnames'});
-Productname.belongsToMany(Linebody,{through: LinebodyProductname,as:'LinebodyProductnames'});
+Linebody.belongsToMany(Productname, {
+  through: LinebodyProductname,
+  as: 'LinebodyProductnames'
+});
+Productname.belongsToMany(Linebody, {
+  through: LinebodyProductname,
+  as: 'LinebodyProductnames'
+});
 
 //Linebody和Kpitwolev建立M：N关系
-Linebody.hasMany(LinebodyKpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
-Kpitwolev.hasMany(LinebodyKpitwolev, {as:'LinebodyKpitwolev' , constraints:true});
+Linebody.hasMany(LinebodyKpitwolev, {
+  as: 'LinebodyKpitwolev',
+  constraints: true
+});
+Kpitwolev.hasMany(LinebodyKpitwolev, {
+  as: 'LinebodyKpitwolev',
+  constraints: true
+});
 
 //Linebody和Loss三级建立M：N关系
-Linebody.hasMany(LinebodyLosstier3, {as:'LinebodyLosstier3' , constraints:true});
-Losstier3.hasMany(LinebodyLosstier3, {as:'LinebodyLosstier3' , constraints:true});
+Linebody.hasMany(LinebodyLosstier3, {
+  as: 'LinebodyLosstier3',
+  constraints: true
+});
+Losstier3.hasMany(LinebodyLosstier3, {
+  as: 'LinebodyLosstier3',
+  constraints: true
+});
 
 //Linebody和Loss4级建立M：N关系
-Linebody.hasMany(LinebodyLosstier4, {as:'LinebodyLosstier4', constraints:true});
-Losstier4.hasMany(LinebodyLosstier4, {as:'LinebodyLosstier4', constraints:true});
+Linebody.hasMany(LinebodyLosstier4, {
+  as: 'LinebodyLosstier4',
+  constraints: true
+});
+Losstier4.hasMany(LinebodyLosstier4, {
+  as: 'LinebodyLosstier4',
+  constraints: true
+});
 
 //LinebodyKpitwolev和LinebodyLosstier3建立1：N关系
-LinebodyKpitwolev.hasMany(LinebodyLosstier3, {as:'KpitwolevLosstier3Data' , constraints:true});
+LinebodyKpitwolev.hasMany(LinebodyLosstier3, {
+  as: 'KpitwolevLosstier3Data',
+  constraints: true
+});
 //LinebodyKpitwolev和LinebodyLosstier3建立1：N关系
-LinebodyLosstier3.hasMany(LinebodyLosstier4, {as:'Losstier3Losstier4Data' , constraints:true});
+LinebodyLosstier3.hasMany(LinebodyLosstier4, {
+  as: 'Losstier3Losstier4Data',
+  constraints: true
+});
 
 //Group和Factory建立1：N关系
-Group.hasMany(Factory, {as:'GroupFactory' , constraints:true});
+Group.hasMany(Factory, {
+  as: 'GroupFactory',
+  constraints: true
+});
 //Group和Workshop建立1：N关系
-Factory.hasMany(Workshop, {as:'FactoryWorkshop' ,constraints:true});
+Factory.hasMany(Workshop, {
+  as: 'FactoryWorkshop',
+  constraints: true
+});
 //Workshop和Linebody建立1：N关系
-Workshop.hasMany(Linebody, {as:'WorkshopLinebody' ,constraints:true});
+Workshop.hasMany(Linebody, {
+  as: 'WorkshopLinebody',
+  constraints: true
+});
 
 //Linebody和Lossstatus建立1：N关系
-Linebody.hasMany(Lossstatus, {as:'LinebodyLossstatus' ,constraints:true});
+Linebody.hasMany(Lossstatus, {
+  as: 'LinebodyLossstatus',
+  constraints: true
+});
 //Losstier3和Lossstatus建立1：1关系
 Losstier3.hasOne(Lossstatus);
 //Lossstatus和Lossstatuslog建立1：N关系
-Lossstatus.hasMany(Lossstatuslog, {as:'LossstatusLossstatuslog' ,constraints:true});
+Lossstatus.hasMany(Lossstatuslog, {
+  as: 'LossstatusLossstatuslog',
+  constraints: true
+});
 
 //Kpionelev和Kpitwolev建立1：N关系
-Kpionelev.hasMany(Kpitwolev, {as:'KpionelevKpitwolev' , constraints:true});
+Kpionelev.hasMany(Kpitwolev, {
+  as: 'KpionelevKpitwolev',
+  constraints: true
+});
 //Kpitwolev和Losscategory建立1：N关系
-Kpitwolev.hasMany(Losstier3, {as:'KpitwolevLosscategory' , constraints:true});
+Kpitwolev.hasMany(Losstier3, {
+  as: 'KpitwolevLosscategory',
+  constraints: true
+});
 //Tier4和Losscategory建立1：N关系
-Losstier3.hasMany(Losstier4, {as:'LosscategoryLosstier4' , constraints:true});
+Losstier3.hasMany(Losstier4, {
+  as: 'LosscategoryLosstier4',
+  constraints: true
+});
 
 //班次表和LinebodyKpitwolev建立1：N关系
-Classinformation.hasMany(LinebodyKpitwolev, {as:'ClassinfKpitwolevData' , constraints:true});
+Classinformation.hasMany(LinebodyKpitwolev, {
+  as: 'ClassinfKpitwolevData',
+  constraints: true
+});
 //班次表和产品数据表建立1：N关系
-Classinformation.hasMany(Productdata, {as:'ClassinfProductData' , constraints:true});
+Classinformation.hasMany(Productdata, {
+  as: 'ClassinfProductData',
+  constraints: true
+});
 
 //产品大类和产品小类建立1:N关系
-Productbigclass.hasMany(Productsubclass, {as:'ProductbigSubclass' , constraints:true});
+Productbigclass.hasMany(Productsubclass, {
+  as: 'ProductbigSubclass',
+  constraints: true
+});
 //产品小类和产品名字建立1:N关系
-Productsubclass.hasMany(Productname, {as:'ProductsubclassName' , constraints:true});
+Productsubclass.hasMany(Productname, {
+  as: 'ProductsubclassName',
+  constraints: true
+});
 //产品名字线体关联表和产品数据建立1:N关系
-LinebodyProductname.hasMany(Productdata, {as:'LineProductnameproductdata' , constraints:true});
+LinebodyProductname.hasMany(Productdata, {
+  as: 'LineProductnameproductdata',
+  constraints: true
+});
 //线体表和班次表建立1:N关系
-Linebody.hasMany(Classinformation, {as:'LinebodyClassinf' , constraints:true});
+Linebody.hasMany(Classinformation, {
+  as: 'LinebodyClassinf',
+  constraints: true
+});
 
 sequelize.sync();
 

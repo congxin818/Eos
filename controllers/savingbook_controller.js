@@ -5,23 +5,23 @@
  */
 
 
-var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
-var Linebody = require('../models').Linebody;//引入数据库Linebody模块
+var Lossstatus = require('../models').Lossstatus; //引入数据库Lossstatus模块
+var Linebody = require('../models').Linebody; //引入数据库Linebody模块
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 var dataSuccess = {
-    status: '0', 
+    status: '0',
     msg: '请求成功',
-    data:'fas'
+    data: 'fas'
 };
 
 /*
     用户登录接口
     */
-async function selectSavingBookByTimesAndLinebodys(req , res , next){
-    if (req.body.startTime == undefined ||req.body.startTime == ''||req.body.startTime == null
-    	||req.body.endTime == undefined ||req.body.endTime == ''||req.body.endTime == null
-    	||req.body.linebodyIds == undefined ||req.body.linebodyIds == ''||req.body.linebodyIds == null) {
+async function selectSavingBookByTimesAndLinebodys(req, res, next) {
+    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null ||
+        req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null ||
+        req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
@@ -32,41 +32,41 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
     }
     let allData = new Array();
     for (var i = Ids.length - 1; i >= 0; i--) {
-    	const linebody = await Linebody.findById(Ids[i]);
-    	if (linebody == undefined || linebody == '' || linebody == null) {
-    		continue;
-    	}
-    	const lossstatus = await linebody.getLinebodyLossstatus();
-    	//console.log("------>"+JSON.stringify(lossstatus));
-    	for (var k = lossstatus.length - 1; k >= 0; k--) {
-    		if (lossstatus[k] == undefined || lossstatus[k] == null || lossstatus[k] == '') {
-	    		continue;
-	    	}else{
-	    		await allData.push(lossstatus[k]);
-	    	}
-    	}
+        const linebody = await Linebody.findById(Ids[i]);
+        if (linebody == undefined || linebody == '' || linebody == null) {
+            continue;
+        }
+        const lossstatus = await linebody.getLinebodyLossstatus();
+        //console.log("------>"+JSON.stringify(lossstatus));
+        for (var k = lossstatus.length - 1; k >= 0; k--) {
+            if (lossstatus[k] == undefined || lossstatus[k] == null || lossstatus[k] == '') {
+                continue;
+            } else {
+                await allData.push(lossstatus[k]);
+            }
+        }
     }
     const endTime = moment(req.body.endTime);
     //console.log("---endTime_num--->"+JSON.stringify(endTime_num));
     let sTime = moment(req.body.startTime);
-    
+
     let eTime = sTime.endOf('month');
     let eTime_num = eTime.valueOf();
 
     let returnData = new Array();
-    while(eTime_num <= endTime.valueOf()){
-    	const value =  await this.computeByTimes(sTime , eTime , allData);
-    	//console.log("---value--->"+JSON.stringify(value));
-    	if (value == undefined || value == null || value == '') {
-    		continue;
-    	}else{
-    		await returnData.push(value);
-    	}
+    while (eTime_num <= endTime.valueOf()) {
+        const value = await this.computeByTimes(sTime, eTime, allData);
+        //console.log("---value--->"+JSON.stringify(value));
+        if (value == undefined || value == null || value == '') {
+            continue;
+        } else {
+            await returnData.push(value);
+        }
 
-    	sTime = sTime.add(1 , 'months');
-    	eTime = sTime.endOf('month');
-		//console.log("---eTime--->"+JSON.stringify(eTime));
-    	eTime_num = eTime.valueOf();
+        sTime = sTime.add(1, 'months');
+        eTime = sTime.endOf('month');
+        //console.log("---eTime--->"+JSON.stringify(eTime));
+        eTime_num = eTime.valueOf();
     }
     dataSuccess.data = returnData;
     res.end(JSON.stringify(dataSuccess));
@@ -74,11 +74,11 @@ async function selectSavingBookByTimesAndLinebodys(req , res , next){
 exports.selectSavingBookByTimesAndLinebodys = selectSavingBookByTimesAndLinebodys;
 
 
-async function computeByTimes(startTime , endTime , allData){
-	if (startTime == undefined ||startTime == ''||startTime == null
-    	||endTime == undefined ||endTime == ''||endTime == null
-    	||allData == undefined ||allData == ''||allData == null) {
-        return ;
+async function computeByTimes(startTime, endTime, allData) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        allData == undefined || allData == '' || allData == null) {
+        return;
     }
 
     const sTime = moment(startTime);
@@ -87,17 +87,17 @@ async function computeByTimes(startTime , endTime , allData){
     const sTime_num = sTime.valueOf();
     const eTime_num = eTime.valueOf();
 
-    const returnTime = sTime.year() + '/' + Number(sTime.month()+1);
+    const returnTime = sTime.year() + '/' + Number(sTime.month() + 1);
     //console.log("---returnTime--->"+JSON.stringify(returnTime));
- 	let data = new Array();
- 	await data.push(returnTime);
- 	let expectSum = 0;
- 	let actualSum = 0;
+    let data = new Array();
+    await data.push(returnTime);
+    let expectSum = 0;
+    let actualSum = 0;
     for (var i = allData.length - 1; i >= 0; i--) {
         const status = allData[i].status;
         if (status === 4 || status === null || status === '') {
             continue;
-        }else{
+        } else {
             if (status === 3) {
                 //console.log("---sTime--->"+JSON.stringify(moment(allData[i].updatedAt)));
                 const csTime = moment(allData[i].updatedAt).add(1, 'months').startOf('month');
@@ -109,8 +109,8 @@ async function computeByTimes(startTime , endTime , allData){
                 const ceTime_num = ceTime.valueOf();
 
                 if (sTime_num > ceTime_num || eTime_num < csTime_num) {
-                    
-                }else{
+
+                } else {
                     //expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
                     actualSum += Number(allData[i].startperformance - allData[i].performance) * 168000;
                 }
@@ -127,14 +127,14 @@ async function computeByTimes(startTime , endTime , allData){
             if (sTime_num > ceTime_num_ || eTime_num < csTime_num_) {
                 //console.log("---yuzhizhe--->");
                 continue;
-            }else{
+            } else {
                 expectSum += Number(allData[i].startperformance - allData[i].target) * 168000;
                 //actualSum += Number(allData[i].startperformance - allData[i].performance) * 168000;
             }
         }
-    	
 
-    	//console.log("---ceTime--->"+JSON.stringify(ceTime));
+
+        //console.log("---ceTime--->"+JSON.stringify(ceTime));
     }
     await data.push(Number(actualSum).toFixed(2));
     await data.push(Number(expectSum).toFixed(2));

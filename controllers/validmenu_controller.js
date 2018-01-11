@@ -8,13 +8,13 @@
 var Validmenu = require('../models/validmenu');
 var services = require('../services/validmenu_service');
 var dataSuccess = {
-    status: '0', 
+    status: '0',
     msg: '请求成功',
-    data:'fas'
+    data: 'fas'
 };
 
 var parameterError = {
-    status: '1', 
+    status: '1',
     msg: '参数错误'
 };
 
@@ -22,20 +22,20 @@ var parameterError = {
 	查找某个用户所有有效菜单数据，根据id
     用于init显示
 */
-exports.selectValmeuById = function(req , res) {
-    if (req.body.validMenuId == ''||req.body.validMenuId == undefined) {
+exports.selectValmeuById = function (req, res) {
+    if (req.body.validMenuId == '' || req.body.validMenuId == undefined) {
         res.end(JSON.stringify(parameterError));
         return;
     }
-	services.selectValmeuById(req.body.validMenuId).then(function(data){
+    services.selectValmeuById(req.body.validMenuId).then(function (data) {
         //console.log(data);
         if (data == '' || data == undefined || data == null) {
             dataSuccess.data = null;
             res.end(JSON.stringify(dataSuccess));
-        }else{
+        } else {
             dataSuccess.data = data;
             res.end(JSON.stringify(dataSuccess));
-        } 
+        }
     });
 }
 
@@ -43,15 +43,15 @@ exports.selectValmeuById = function(req , res) {
 /*
 	添加一个有效菜单
 */
-exports.addValidmenuOne = function(req , res) {
-	//如果没有post数据或者数据为空,直接返回
-    if (req.body.validmenuName == undefined ||req.body.validmenuName == ''
-        ||req.body.userId==undefined||req.body.userId== '') {
-              res.end(JSON.stringify(parameterError));
+exports.addValidmenuOne = function (req, res) {
+    //如果没有post数据或者数据为空,直接返回
+    if (req.body.validmenuName == undefined || req.body.validmenuName == '' ||
+        req.body.userId == undefined || req.body.userId == '') {
+        res.end(JSON.stringify(parameterError));
         return;
     }
     //创建一条记录,创建成功后返回json数据
-    services.addValidmenuOne(req , res).then(function(data){
+    services.addValidmenuOne(req, res).then(function (data) {
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
     });
@@ -60,14 +60,14 @@ exports.addValidmenuOne = function(req , res) {
 /*
 	根据id删除有效菜单
 */
-exports.deleteValidmenuById = function(req , res) {
+exports.deleteValidmenuById = function (req, res) {
 
-    if (req.query.validmenuId == undefined ||req.query.validmenuId == '') {
+    if (req.query.validmenuId == undefined || req.query.validmenuId == '') {
         res.end(JSON.stringify(parameterError));
         return;
     }
     //先查找,再调用删除,最后返回json数据
-    services.deleteValidmenuById(req , res).then(function(data){
+    services.deleteValidmenuById(req, res).then(function (data) {
         //console.log(data);
         dataSuccess.data = data;
         res.end(JSON.stringify(dataSuccess));
