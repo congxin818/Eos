@@ -6,57 +6,57 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../mysql').sequelize();
 
-module.exports = function(sequelize , DataTypes){
-//var Linebody = sequelize.define('linebody' , {
-	return sequelize.define('linebody' , {
-        linebodyid:{ //自增长id,主键,整形
-            type:Sequelize.INTEGER,
-            autoIncrement:true,
+module.exports = function (sequelize, DataTypes) {
+    //var Linebody = sequelize.define('linebody' , {
+    return sequelize.define('linebody', {
+        linebodyid: { //自增长id,主键,整形
+            type: Sequelize.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
         linebodyname: { //车间名字
             type: Sequelize.STRING(50),
-            charset:'utf8',
-            collate:'utf8_general_ci'
+            charset: 'utf8',
+            collate: 'utf8_general_ci'
         },
         linebodybelong: { //车间所属
             type: Sequelize.STRING(50),
-            charset:'utf8',
-            collate:'utf8_general_ci'
+            charset: 'utf8',
+            collate: 'utf8_general_ci'
         },
-        checked:{
-            type:Sequelize.BOOLEAN,
+        checked: {
+            type: Sequelize.BOOLEAN,
             defaultValue: false
         },
-        targetvalue:{
+        targetvalue: {
             type: Sequelize.FLOAT,
         },
-        targetstrattime:{
+        targetstrattime: {
             type: Sequelize.DATE,
         },
-        targetendtime:{
+        targetendtime: {
             type: Sequelize.DATE,
         },
-        visionvalue:{
+        visionvalue: {
             type: Sequelize.FLOAT,
         },
-        visionstrattime:{
+        visionstrattime: {
             type: Sequelize.DATE,
         },
-        visionendtime:{
+        visionendtime: {
             type: Sequelize.DATE,
         },
-        idealvalue:{
+        idealvalue: {
             type: Sequelize.FLOAT,
         },
-        idealstrattime:{
+        idealstrattime: {
             type: Sequelize.DATE,
         },
-        idealendtime:{
+        idealendtime: {
             type: Sequelize.DATE,
         },
-        weight:{
-            type:Sequelize.INTEGER,
+        weight: {
+            type: Sequelize.INTEGER,
             defaultValue: 1
         }
 

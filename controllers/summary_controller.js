@@ -18,15 +18,15 @@ var Classinformation = require('../models').Classinformation;
 var errorUtil = require('../utils/errorUtil');
 
 var dataSuccess = {
-    status: '0', 
-    msg: '请求成功',
-    data:'fas'
+	status: '0',
+	msg: '请求成功',
+	data: 'fas'
 };
 
 /*
 	项目状态分布（上）接口
  */
-async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
+async function selectProjectStateByTimeAndLinebodyIds(req, res, next) {
 	// console.log(JSON.stringify(req.body.time , null , 4));
 	// console.log(JSON.stringify(req.body.linebodyIds , null , 4));
 	if (req.body.time == undefined || req.body.time == null || req.body.time == ''
@@ -37,15 +37,15 @@ async function selectProjectStateByTimeAndLinebodyIds(req , res , next){
 	if (Ids == undefined || Ids == null || Ids == '' || Ids.length == 0) {
 		res.end(JSON.stringify(errorUtil.serviceError));
 	}
-	const allData = await this.selectOEEByLinebodyIds(req.body.time , req.body.linebodyIds);
-	res.end(JSON.stringify(allData , null , 4));
+	const allData = await this.selectOEEByLinebodyIds(req.body.time, req.body.linebodyIds);
+	res.end(JSON.stringify(allData, null, 4));
 }
 exports.selectProjectStateByTimeAndLinebodyIds = selectProjectStateByTimeAndLinebodyIds;
 
 /*
 	查询OEE根据linebodyIds
  */
-async function selectOEEByLinebodyIds(time , linebodyIds){
+async function selectOEEByLinebodyIds(time, linebodyIds) {
 	if (time == undefined || time == null || time == ''
 		|| linebodyIds == undefined || linebodyIds == null || linebodyIds == '') {
 		return errorUtil.parameterError;
@@ -71,7 +71,7 @@ async function selectOEEByLinebodyIds(time , linebodyIds){
 	// 	return errorUtil.serviceError;
 	// }
 	//console.log('yuzhizhe02----->'+JSON.stringify(allLossStatus , null , 4));
-	const allData = await this.selectAllDataByAllLossStatus(allLossStatus , Ids.length);
+	const allData = await this.selectAllDataByAllLossStatus(allLossStatus, Ids.length);
 	//console.log(JSON.stringify(allLossStatus , null , 4));
 	dataSuccess.data = allData;
 	return dataSuccess;
@@ -81,10 +81,10 @@ exports.selectOEEByLinebodyIds = selectOEEByLinebodyIds;
 /*
 	根据时间过滤
  */
-async function computeLossStatusBytime(allLossStatus , time){
+async function computeLossStatusBytime(allLossStatus, time) {
 	if (time == undefined || time == null || time == ''
 		|| allLossStatus == undefined || allLossStatus == null || allLossStatus == '') {
-		return ;
+		return;
 	}
 	const Time = new Date(time).getTime();
 	for (var i = allLossStatus.length - 1; i >= 0; i--) {
@@ -92,8 +92,8 @@ async function computeLossStatusBytime(allLossStatus , time){
 			const projectStartTime = allLossStatus[i][j].objectstarttime;
 			const projectEndTime = allLossStatus[i][j].planendtime;
 			if (projectStartTime == null || projectStartTime == ''
-				||projectEndTime == null || projectEndTime == '') {
-				allLossStatus[i].splice(j , 1);//删除该元素
+				|| projectEndTime == null || projectEndTime == '') {
+				allLossStatus[i].splice(j, 1);//删除该元素
 				continue;
 			}
 			// console.log('==========>projectStartTime--->'+JSON.stringify(projectStartTime));
@@ -108,12 +108,12 @@ async function computeLossStatusBytime(allLossStatus , time){
 			// console.log('==========>projectEndTime--->'+mEndTime);
 			// console.log('\n\n');
 			if (Time < mStartTime || Time > mEndTime) {
-				allLossStatus[i].splice(j , 1);//删除该元素
+				allLossStatus[i].splice(j, 1);//删除该元素
 				continue;
 			}
 		}
-		if (allLossStatus[i].length == 0 || allLossStatus[i] == undefined || allLossStatus[i] == null ) {
-			allLossStatus.splice(i , 1);//删除该元素
+		if (allLossStatus[i].length == 0 || allLossStatus[i] == undefined || allLossStatus[i] == null) {
+			allLossStatus.splice(i, 1);//删除该元素
 			continue;
 		}
 	}
@@ -124,21 +124,21 @@ exports.computeLossStatusBytime = computeLossStatusBytime;
 /*
 	得到设备损失数组
  */
-async function selectAllDataByAllLossStatus(allLossStatus , Size){
+async function selectAllDataByAllLossStatus(allLossStatus, Size) {
 	if (allLossStatus == undefined || allLossStatus == null || allLossStatus == ''
 		|| Size == undefined || Size == null || Size == '') {
-		return ;
+		return;
 	}
 	let OEE = {
-		key:'设备损失',
+		key: '设备损失',
 		value: new Array()
 	};
 	let Safety = {
-		key:'人力损失',
+		key: '人力损失',
 		value: new Array()
 	};
 	let Defect = {
-		key:'物料损失',
+		key: '物料损失',
 		value: new Array()
 	};
 
@@ -174,118 +174,118 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	for (var i = allLossStatus.length - 1; i >= 0; i--) {
 		for (var j = allLossStatus[i].length - 1; j >= 0; j--) {
 			const losstier3 = await Losstier3.findById(allLossStatus[i][j].losstier3Lossid);
-			if (losstier3 == null || losstier3 == ''|| losstier3 == undefined) {
-				continue ;
+			if (losstier3 == null || losstier3 == '' || losstier3 == undefined) {
+				continue;
 			}
 			// console.log('==========>projectStartTime--->'+JSON.stringify(projectStartTime));
 			// console.log('==========>projectEndTime--->'+JSON.stringify(projectEndTime));
 			// const mStartTime = moment(classstarttime);
 			// const mEndTime = moment(classendtime);
 			const kpitwo = await Kpitwolev.findById(losstier3.kpitwolevKpitwoid);
-			if (kpitwo == null || kpitwo == ''|| kpitwo == undefined) {
-				continue ;
+			if (kpitwo == null || kpitwo == '' || kpitwo == undefined) {
+				continue;
 			}
 			const status = allLossStatus[i][j].status;
 			const stage = allLossStatus[i][j].stage;
 			if (kpitwo.name == 'OEE') {
 				if (status == 1) {
 					OEE_began += 1;
-				}else if(status == 2){
+				} else if (status == 2) {
 					OEE_run += 1;
 					if (stage == 'a') {
 						Identify_problem += 1;
-					}else if(stage == 'b'){
+					} else if (stage == 'b') {
 						Grasp_status += 1;
-					}else if(stage == 'c'){
+					} else if (stage == 'c') {
 						Set_goals += 1;
-					}else if(stage == 'd'){
+					} else if (stage == 'd') {
 						Analysis_cause += 1;
-					}else if(stage == 'e'){
+					} else if (stage == 'e') {
 						Countermeasures_plan += 1;
-					}else if(stage == 'f'){
+					} else if (stage == 'f') {
 						Countermeasures_ += 1;
-					}else if(stage == 'g'){
+					} else if (stage == 'g') {
 						Effect_confirmation += 1;
-					}else if(stage == 'h'){
+					} else if (stage == 'h') {
 						Consolidation_results += 1;
 					}
 				}
 				// else if(status == 3){
 				// 	OEE_delay += 1;
 				// }
-				else if(status == 3){
+				else if (status == 3) {
 					OEE_follow += 1;
-				}else if(status == 4){
+				} else if (status == 4) {
 					OEE_close += 1;
-				}else{
-					continue ;
+				} else {
+					continue;
 				}
 
-			}else if(kpitwo.name == 'Safety'){
+			} else if (kpitwo.name == 'Safety') {
 				if (status == 1) {
 					Safety_began += 1;
-				}else if(status == 2){
+				} else if (status == 2) {
 					Safety_run += 1;
 					if (stage == 'a') {
 						Identify_problem += 1;
-					}else if(stage == 'b'){
+					} else if (stage == 'b') {
 						Grasp_status += 1;
-					}else if(stage == 'c'){
+					} else if (stage == 'c') {
 						Set_goals += 1;
-					}else if(stage == 'd'){
+					} else if (stage == 'd') {
 						Analysis_cause += 1;
-					}else if(stage == 'e'){
+					} else if (stage == 'e') {
 						Countermeasures_plan += 1;
-					}else if(stage == 'f'){
+					} else if (stage == 'f') {
 						Countermeasures_ += 1;
-					}else if(stage == 'g'){
+					} else if (stage == 'g') {
 						Effect_confirmation += 1;
-					}else if(stage == 'h'){
+					} else if (stage == 'h') {
 						Consolidation_results += 1;
 					}
 				}
 				// else if(status == 3){
 				// 	Safety_delay += 1;
 				// }
-				else if(status == 3){
+				else if (status == 3) {
 					Safety_follow += 1;
-				}else if(status == 4){
+				} else if (status == 4) {
 					Safety_close += 1;
-				}else{
-					continue ;
+				} else {
+					continue;
 				}
-			}else{
+			} else {
 				if (status == 1) {
 					Defect_began += 1;
-				}else if(status == 2){
+				} else if (status == 2) {
 					Defect_run += 1;
 					if (stage == 'a') {
 						Identify_problem += 1;
-					}else if(stage == 'b'){
+					} else if (stage == 'b') {
 						Grasp_status += 1;
-					}else if(stage == 'c'){
+					} else if (stage == 'c') {
 						Set_goals += 1;
-					}else if(stage == 'd'){
+					} else if (stage == 'd') {
 						Analysis_cause += 1;
-					}else if(stage == 'e'){
+					} else if (stage == 'e') {
 						Countermeasures_plan += 1;
-					}else if(stage == 'f'){
+					} else if (stage == 'f') {
 						Countermeasures_ += 1;
-					}else if(stage == 'g'){
+					} else if (stage == 'g') {
 						Effect_confirmation += 1;
-					}else if(stage == 'h'){
+					} else if (stage == 'h') {
 						Consolidation_results += 1;
 					}
 				}
 				// else if(status == 3){
 				// 	Defect_delay += 1;
 				// }
-				else if(status == 3){
+				else if (status == 3) {
 					Defect_follow += 1;
-				}else if(status == 4){
+				} else if (status == 4) {
 					Defect_close += 1;
-				}else{
-					continue ;
+				} else {
+					continue;
 				}
 			}
 		}
@@ -314,53 +314,53 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	await allStatusData.push(Defect);
 
 	let statusOtherData = {
-		projectNumber:Size * 10,
-		beganNumber:OEE_began + Safety_began + Defect_began,
-		runNumber:OEE_run + Safety_run + Defect_run,
+		projectNumber: Size * 10,
+		beganNumber: OEE_began + Safety_began + Defect_began,
+		runNumber: OEE_run + Safety_run + Defect_run,
 		//delayNumber:OEE_delay + Safety_delay + Defect_delay,
-		followNumber:OEE_follow + Safety_follow + Defect_follow,
-		closeNumber:OEE_close + Safety_close + Defect_close
+		followNumber: OEE_follow + Safety_follow + Defect_follow,
+		closeNumber: OEE_close + Safety_close + Defect_close
 	};
 
 	let IdentifyProblem = {
-		key:'明确问题',
-		order:1,
-		value:Identify_problem
+		key: '明确问题',
+		order: 1,
+		value: Identify_problem
 	};//1.明确问题,代表码：a
 	let GraspStatus = {
-		key:'把握现状',
-		order:2,
-		value:Grasp_status
+		key: '把握现状',
+		order: 2,
+		value: Grasp_status
 	};//2.把握现状,代表码：b
 	let SetGoals = {
-		key:'设定目标',
-		order:3,
-		value:Set_goals
+		key: '设定目标',
+		order: 3,
+		value: Set_goals
 	};//3.设定目标,代表码：c
 	let AnalysisCause = {
-		key:'分析根因',
-		order:4,
-		value:Analysis_cause
+		key: '分析根因',
+		order: 4,
+		value: Analysis_cause
 	};//4.分析原因,代表码：d
 	let CountermeasuresPlan = {
-		key:'对策计划',
-		order:5,
-		value:Countermeasures_plan
+		key: '对策计划',
+		order: 5,
+		value: Countermeasures_plan
 	};//5.	对策计划,代表码：e
 	let Countermeasures = {
-		key:'对策落实',
-		order:6,
-		value:Countermeasures_
+		key: '对策落实',
+		order: 6,
+		value: Countermeasures_
 	};//6.	对策落实,代表码：f
 	let EffectConfirmation = {
-		key:'效果确认',
-		order:7,
-		value:Effect_confirmation
+		key: '效果确认',
+		order: 7,
+		value: Effect_confirmation
 	};//7.	效果确认,代表码：g
 	let ConsolidationResults = {
-		key:'成果巩固',
-		order:8,
-		value:Consolidation_results
+		key: '成果巩固',
+		order: 8,
+		value: Consolidation_results
 	};//8.	成果巩固,代表码：h
 
 	let allStageData = new Array();
@@ -373,24 +373,24 @@ async function selectAllDataByAllLossStatus(allLossStatus , Size){
 	await allStageData.push(GraspStatus);
 	await allStageData.push(IdentifyProblem);
 
-	allStageData.sort ((a, b) => a.order - b.order);
+	allStageData.sort((a, b) => a.order - b.order);
 
 	let stageOtherData = {
-		IdentifyProblem:Identify_problem,
-		GraspStatus:Grasp_status,
-		SetGoals:Set_goals,
-		AnalysisCause:Analysis_cause,
-		CountermeasuresPlan:Countermeasures_plan,
-		Countermeasures:Countermeasures_,
-		EffectConfirmation:Effect_confirmation,
-		ConsolidationResults:Consolidation_results
+		IdentifyProblem: Identify_problem,
+		GraspStatus: Grasp_status,
+		SetGoals: Set_goals,
+		AnalysisCause: Analysis_cause,
+		CountermeasuresPlan: Countermeasures_plan,
+		Countermeasures: Countermeasures_,
+		EffectConfirmation: Effect_confirmation,
+		ConsolidationResults: Consolidation_results
 	};
 
 	let allData = {
-		status:allStatusData,
-		statusOther:statusOtherData,
-		stage:allStageData,
-		stageOther:stageOtherData
+		status: allStatusData,
+		statusOther: statusOtherData,
+		stage: allStageData,
+		stageOther: stageOtherData
 	};
 	return allData;
 }

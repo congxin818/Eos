@@ -11,8 +11,8 @@ var controller = require('../controllers/overview_controller');
 /*
 	添加产品
  */
-router.post('/selectOverviewByTimesAndLinebodys', function(req, res, next) {
-    controller.selectOverviewByTimesAndLinebodys(req , res , next);
+router.post('/selectOverviewByTimesAndLinebodys', function (req, res, next) {
+	controller.selectOverviewByTimesAndLinebodys(req, res, next);
 });
 
 module.exports = router;
