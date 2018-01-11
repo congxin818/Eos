@@ -40,51 +40,51 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 设置请求头
 // application/json  接口返回json数据
 // charset=utf-8 解决json数据中中文乱码
-app.use("*", function(request, response, next) {
-    response.writeHead(200, { "Content-Type": "application/json;charset=utf-8", "Access-Control-Allow-Origin": "*"});
+app.use("*", function (request, response, next) {
+    response.writeHead(200, { "Content-Type": "application/json;charset=utf-8", "Access-Control-Allow-Origin": "*" });
     next();
 });
 
 // 路由
 app.use('/', index);//在app中注册index该接口
-app.use('/admin' , administrator);
-app.use('/user' , user);
-app.use('/groupSet' , groupSet);//在app中注册集团设置接口
-app.use('/factorySet' , factorySet);//在app中注册工厂设置接口
-app.use('/workshopSet' , workshopSet);//在app中注册车间设置接口
-app.use('/linebodySet' , linebodySet);//在app中注册线体设置接口
-app.use('/areaAllSet' , areaAllSet);//在app中注册区域设置接口
-app.use('/validmenuSet' , validmenuSet);//在app中注册有效菜单设置接口
-app.use('/KPISet' , kpiSet);//在app中注册KPI设置接口
-app.use('/losscategory' , losstier3);
-app.use('/impobject' , impobject);
-app.use('/lossmapping' , lossmapping);
-app.use('/datainput' , datainput);
-app.use('/summary' , summary);
-app.use('/product' , product);
-app.use('/overview' , overview);
-app.use('/savingbook' , savingbook);
+app.use('/admin', administrator);
+app.use('/user', user);
+app.use('/groupSet', groupSet);//在app中注册集团设置接口
+app.use('/factorySet', factorySet);//在app中注册工厂设置接口
+app.use('/workshopSet', workshopSet);//在app中注册车间设置接口
+app.use('/linebodySet', linebodySet);//在app中注册线体设置接口
+app.use('/areaAllSet', areaAllSet);//在app中注册区域设置接口
+app.use('/validmenuSet', validmenuSet);//在app中注册有效菜单设置接口
+app.use('/KPISet', kpiSet);//在app中注册KPI设置接口
+app.use('/losscategory', losstier3);
+app.use('/impobject', impobject);
+app.use('/lossmapping', lossmapping);
+app.use('/datainput', datainput);
+app.use('/summary', summary);
+app.use('/product', product);
+app.use('/overview', overview);
+app.use('/savingbook', savingbook);
 // 404 错误
 var errorData_404 = {
-    status: '404', 
+    status: '404',
     msg: 'Not Found!',
 };
 
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  res.end(JSON.stringify(errorData_404));
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    res.end(JSON.stringify(errorData_404));
 });
 
 // 500 
 var errorData_500 = {
-    status: '500', 
+    status: '500',
     msg: 'Not Found!',
 };
 
-app.use(function(err, req, res, next) {
-  errorData_500.msg =  err.message;
-  res.end(JSON.stringify(errorData_500));
+app.use(function (err, req, res, next) {
+    errorData_500.msg = err.message;
+    res.end(JSON.stringify(errorData_500));
 });
 
 module.exports = app;

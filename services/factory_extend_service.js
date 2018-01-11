@@ -10,27 +10,27 @@ var Factory = require('../models').Factory;
 /*
 	根据工厂名字查找一条工厂数据
     */
-    exports.selectFactoryByName = function(req , res) {
-        var p = new Promise(function(resolve , reject) {
-            Factory.findOne({
-                where:{
-                    factoryname:req.body.name
-                }
-            }).then(function(data){
-                resolve(data);
-            });
+exports.selectFactoryByName = function (req, res) {
+    var p = new Promise(function (resolve, reject) {
+        Factory.findOne({
+            where: {
+                factoryname: req.body.name
+            }
+        }).then(function (data) {
+            resolve(data);
         });
-        return p;
-    }
+    });
+    return p;
+}
 
 /*
     根据pId查找一条工厂数据
     */
-    exports.selectFactoryBypId = async function(req , res) {
-      const data= await  Factory.findAll({
-        where:{
-            factorybelong:req.body.pId
+exports.selectFactoryBypId = async function (req, res) {
+    const data = await Factory.findAll({
+        where: {
+            factorybelong: req.body.pId
         }
     })
-      return data;
-  }
+    return data;
+}

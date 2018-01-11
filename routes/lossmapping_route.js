@@ -9,7 +9,7 @@ var router = express.Router();
 var controller = require('../controllers/lossmapping_controller');
 
 //test
-router.post('/selectLossmappingByTimesAndLinebodys', async function(req, res, next) {
-	controller.selectLossmappingByTimesAndLinebodys(req , res , next);
+router.post('/selectLossmappingByTimesAndLinebodys', async function (req, res, next) {
+	controller.selectLossmappingByTimesAndLinebodys(req, res, next);
 });
 module.exports = router;
