@@ -19,9 +19,7 @@ const valueUnit = 168000;
     根据times和linebodys查询Overview数据
     */
 async function selectOverviewByTimesAndLinebodys(req , res , next){
-    //console.log("---req.body.startTime--->"+JSON.stringify(req.body.startTime));
-    //console.log("---req.body.endTime--->"+JSON.stringify(req.body.endTime));
-    //console.log("---req.body.linebodyIds--->"+JSON.stringify(req.body.linebodyIds));
+    const TestStart = new Date().getTime();
     if (req.body.startTime == undefined || req.body.startTime == ''|| req.body.startTime == null
         ||req.body.endTime == undefined || req.body.endTime == ''|| req.body.endTime == null
         ||req.body.linebodyIds == undefined || req.body.linebodyIds == ''|| req.body.linebodyIds == null
@@ -87,6 +85,9 @@ async function selectOverviewByTimesAndLinebodys(req , res , next){
         await returnData.push(tier2);
     }
     dataSuccess.data = returnData;
+    const TestEnd = new Date().getTime();
+    const DateDiff = Number(TestEnd) - Number(TestStart);
+    console.log("---Overview_DataDiff--->"+JSON.stringify(DateDiff));
     res.end(JSON.stringify(dataSuccess));
 }
 exports.selectOverviewByTimesAndLinebodys = selectOverviewByTimesAndLinebodys;

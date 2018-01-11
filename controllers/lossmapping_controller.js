@@ -150,7 +150,7 @@ async function selectLossmappingByTimesAndLinebodys(req , res , next){
     dataSuccess.data = returnData;
     const TestEnd = new Date().getTime();
     const DateDiff = Number(TestEnd) - Number(TestStart);
-    console.log("---DataDiff--->"+JSON.stringify(DateDiff));
+    console.log("---Loss_DataDiff--->"+JSON.stringify(DateDiff));
     res.end(JSON.stringify(dataSuccess));
 }
 exports.selectLossmappingByTimesAndLinebodys = selectLossmappingByTimesAndLinebodys;
