@@ -10,28 +10,28 @@ var Workshop = require('../models').Workshop;
 /*
 	根据车间名字查找一条车间数据
     */
-    exports.selectWorkshopByName = function(req , res) {
-        var p = new Promise(function(resolve , reject) {
-            Workshop.findOne({
-                where:{
-                    workshopname:req.body.name,
-                    workshopbelong:req.body.pId
-                }
-            }).then(function(data){
-                resolve(data);
-            });
+exports.selectWorkshopByName = function (req, res) {
+    var p = new Promise(function (resolve, reject) {
+        Workshop.findOne({
+            where: {
+                workshopname: req.body.name,
+                workshopbelong: req.body.pId
+            }
+        }).then(function (data) {
+            resolve(data);
         });
-        return p;
-    }
+    });
+    return p;
+}
 
 /*
     根据pId查找一条车间数据
     */
-    exports.selectWorkshopBypId = async function(req , res) {
-     const data= await Workshop.findAll({
-        where:{
-            workshopbelong:req.query.pId
+exports.selectWorkshopBypId = async function (req, res) {
+    const data = await Workshop.findAll({
+        where: {
+            workshopbelong: req.query.pId
         }
     })
-     return data;
- }
+    return data;
+}

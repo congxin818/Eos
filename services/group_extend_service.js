@@ -9,13 +9,13 @@ var Group = require('../models').Group;
 /*
 	根据集团名字查找一条集团数据
 */
-exports.selectGroupByName = function(req , res) {
-    var p = new Promise(function(resolve , reject) {
+exports.selectGroupByName = function (req, res) {
+    var p = new Promise(function (resolve, reject) {
         Group.findOne({
-            where:{
-                groupname:req.body.name
+            where: {
+                groupname: req.body.name
             }
-        }).then(function(data){
+        }).then(function (data) {
             resolve(data);
         });
     });

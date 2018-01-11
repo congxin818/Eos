@@ -11,12 +11,11 @@ var Kpionelev = require('../models').Kpionelev;
 /*
     显示一级目录
 */
-exports.selectOneLevAll = function(req , res) {
-    var p = new Promise(function(resolve, reject) {
-        Kpionelev.findAll().then(function(data) {
+exports.selectOneLevAll = function (req, res) {
+    var p = new Promise(function (resolve, reject) {
+        Kpionelev.findAll().then(function (data) {
             resolve(data);
         });
     });
     return p;
 }
-

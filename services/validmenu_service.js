@@ -15,31 +15,35 @@ async function selectValmeuById(menuid) {
     // console.log('yuzhizhe01');
     // console.log(menuid);
 
-    const value = await Validmenu.findOne ({ where: {validmenuid:menuid}})
+    const value = await Validmenu.findOne({
+        where: {
+            validmenuid: menuid
+        }
+    })
     return value;
- //    var p = new Promise(function(resolve, reject) {
- //        Validmenu.findOne({
- //            where:{
- //                validmenuid:menuid
- //            }
- //        }).then(function(data) {
- //            resolve(data);
- //        });
- //    });
-	// return p;
+    //    var p = new Promise(function(resolve, reject) {
+    //        Validmenu.findOne({
+    //            where:{
+    //                validmenuid:menuid
+    //            }
+    //        }).then(function(data) {
+    //            resolve(data);
+    //        });
+    //    });
+    // return p;
 }
 exports.selectValmeuById = selectValmeuById;
 /*
 	根据有效菜单id和用户id添加一条有效菜单数据
 */
-exports.addValidmenuOne = function(req , res) {
+exports.addValidmenuOne = function (req, res) {
     var validmenu = {
         validmenuname: req.body.validmenuName,
         userid: req.body.userId
     };
-    var p = new Promise(function(resolve, reject) {
+    var p = new Promise(function (resolve, reject) {
         //创建一条记录,创建成功后跳转回首页
-        Validmenu.create(validmenu).then(function(data){
+        Validmenu.create(validmenu).then(function (data) {
             resolve(data);
         });
     });
@@ -49,17 +53,17 @@ exports.addValidmenuOne = function(req , res) {
 /*
 	根据有效菜单id删除一条有效菜单数据
 */
-exports.deleteValidmenuById = function(req , res) {
-    var p = new Promise(function(resolve , reject) {
+exports.deleteValidmenuById = function (req, res) {
+    var p = new Promise(function (resolve, reject) {
         //先查找,再调用删除,最后返回首页
         Validmenu.findOne({
-            where:{
-                validmenuid:req.query.validmenuId
+            where: {
+                validmenuid: req.query.validmenuId
             }
-        }).then(function(data){
-        	data.destroy().then(function(data){
-            resolve(data);
-            });     
+        }).then(function (data) {
+            data.destroy().then(function (data) {
+                resolve(data);
+            });
         });
     });
     return p;
