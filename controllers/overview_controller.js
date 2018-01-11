@@ -1,5 +1,6 @@
 var linebody_extend_service = require('../services/linebody_extend_service');
 var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
+var Lossstatuslog = require('../models').Lossstatuslog;//引入数据库Lossstatus模块
 var Linebody = require('../models').Linebody;//引入数据库Linebody模块
 var User = require('../models').User;//引入数据库User模块
 var Classinformation = require('../models').Classinformation;//引入数据库Classinformation模块
