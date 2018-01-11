@@ -340,7 +340,6 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
     }
     return linebodyLosstier3List
 }
-
 /*
     格式化loss data的开始时间和结束时间
     例： 开始时间 16:05:00 --> 16:00:00 结束时间 16:05:00 --> 16:15:00
@@ -414,6 +413,33 @@ exports.selectLosstier3By = async function (twolevDataid, losstier3Id, linebodyI
             linebodyKpitwolevId: twolevDataid
         }
     })
+}
+
+/*
+    判断更改的四级loss是否和更改前的重合
+    */
+exports.checkUpdateLoss4Data = async function (losstier4DataidList, starttime, endtime) {
+    var checkFlag = 0
+    var updatebeforStarttime
+    var updatebeforEndtime
+    const loss4dataS = await LinebodyLosstier4.findById(losstier4DataidList[0])
+    if (losstier4DataidList.length == 1) {
+        updatebeforStarttime = loss4dataS.starttime
+        updatebeforEndtime = loss4dataS.endtime
+    } else {
+        const loss4dataE = await LinebodyLosstier4.findById(losstier4DataidList[1])
+        updatebeforStarttime = loss4dataS.starttime
+        updatebeforEndtime = loss4dataE.endtime
+    }
+
+    // 更改后的时间是否重合
+    if (moment(starttime).unix() < moment(updatebeforEndtime).unix() &&
+        moment(endtime).unix() > moment(updatebeforStarttime).unix()) {
+        checkFlag = 1
+    } else {
+        checkFlag = 0
+    }
+    return checkFlag
 }
 
 /*
@@ -775,7 +801,7 @@ exports.deleteLoss32data = async function (losstier4Dataid) {
     // 更改三级loss
     const losstier3Data = await LinebodyLosstier3.findById(losstier4Data.linebodylosstier3Id)
     newloss3Value = losstier3Data.value - losstier4Data.value
-    if (newloss3Value == 0) {
+    if (newloss3Value <= 0) {
         await losstier3Data.destroy();
     } else {
         losstier3data = {
@@ -790,7 +816,7 @@ exports.deleteLoss32data = async function (losstier4Dataid) {
     // 更改二级loss
     const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
     newloss2Value = kpitwolevData.value - losstier4Data.value
-    if (newloss2Value == 0) {
+    if (newloss2Value <= 0) {
         await kpitwolevData.destroy();
     } else {
         kpitwolevdata = {

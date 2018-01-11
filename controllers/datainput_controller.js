@@ -57,16 +57,18 @@ var showAddPrpductData = {
     根据用户设置的顺序展示二级结构
     */
 exports.showKpitwolev = async function (req, res) {
-    if (req.body.userId == null || req.body.userId == '')
+    if (req.body.userId == null || req.body.userId == '') {
         res.end(JSON.stringify(parameterError))
-    const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
-    var showList = []
-    for (var i = 0; i < kpitwolevidList.length; i++) {
-        var kpitwolev = await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
-        showList.push(kpitwolev.name)
+    } else {
+        const kpitwolevidList = await datainputServices.selectKpitwolevidByuser(req.body.userId)
+        var showList = []
+        for (var i = 0; i < kpitwolevidList.length; i++) {
+            var kpitwolev = await datainputServices.selectKpitwolevNameByid(kpitwolevidList[i].kpitwolevKpitwoid)
+            showList.push(kpitwolev.name)
+        }
+        dataSuccess.data = showList
+        res.end(JSON.stringify(dataSuccess))
     }
-    dataSuccess.data = showList
-    res.end(JSON.stringify(dataSuccess))
 }
 
 
@@ -110,32 +112,32 @@ exports.addLosstier4time2 = async function (req, res) {
         req.body.losstier4Id == null || req.body.losstier4Id == '' ||
         req.body.linebodyId == null || req.body.linebodyId == '' ||
         req.body.starttime == null || req.body.starttime == '' ||
-        req.body.endtime == null || req.body.endtime == '')
+        req.body.endtime == null || req.body.endtime == '') {
         res.end(JSON.stringify(parameterError))
-
-    // 判断这个四级loss属于哪一天的开班时间
-    var addReturn = null
-    var classinforData = await datainputServices.classinforSelectById(req.body.classinfId)
-    if (moment(req.body.starttime) >= moment(classinforData.classstarttime) &&
-        moment(req.body.endtime) <= moment(classinforData.classendtime)) {
-        // loss四级时间在开班时间内
-        addReturn = await exports.addLosstierData(req, res)
     } else {
-        addReturn = 202
-    }
+        // 判断这个四级loss属于哪一天的开班时间
+        var addReturn = null
+        var classinforData = await datainputServices.classinforSelectById(req.body.classinfId)
+        if (moment(req.body.starttime) >= moment(classinforData.classstarttime) &&
+            moment(req.body.endtime) <= moment(classinforData.classendtime)) {
+            // loss四级时间在开班时间内
+            addReturn = await exports.addLosstierData(req, res)
+        } else {
+            addReturn = 202
+        }
 
-    // 返回值设定
-    if (addReturn != null && addReturn != 1 && addReturn != 202) {
-        dataSuccess.data = addReturn
-        res.end(JSON.stringify(dataSuccess))
-    } else if (addReturn == 1) {
-        res.end(JSON.stringify(errorUtil.existError))
-    } else if (addReturn == 202) {
-        res.end(JSON.stringify(lossnotinclass))
-    } else {
-        res.end(JSON.stringify(addObjectError))
+        // 返回值设定
+        if (addReturn != null && addReturn != 1 && addReturn != 202) {
+            dataSuccess.data = addReturn
+            res.end(JSON.stringify(dataSuccess))
+        } else if (addReturn == 1) {
+            res.end(JSON.stringify(errorUtil.existError))
+        } else if (addReturn == 202) {
+            res.end(JSON.stringify(lossnotinclass))
+        } else {
+            res.end(JSON.stringify(addObjectError))
+        }
     }
-
 }
 
 /*
@@ -178,9 +180,9 @@ exports.addLosstierData = async function (req, res) {
     展示产品名字（最小的产品类）下拉列表
     */
 exports.showProductName = async function (req, res) {
-    if (req.body.linebodyId == null || req.body.linebodyId == '')
+    if (req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
-    else {
+    } else {
         const data = await datainputServices.selectProductnameById(req.body.linebodyId)
         dataSuccess.data = data
         res.end(JSON.stringify(dataSuccess))
@@ -194,8 +196,7 @@ exports.addProduct = async function (req, res) {
     if (req.body.productNameId == null || req.body.productNameId == '' ||
         req.body.conformProduct == null || req.body.conformProduct == '' ||
         req.body.classinfId == null || req.body.classinfId == '' ||
-        req.body.linebodyId == null || req.body.linebodyId == ''
-    ) {
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
         var addReturn
@@ -219,9 +220,9 @@ exports.addProduct = async function (req, res) {
     */
 exports.showProduct = async function (req, res) {
     if (req.body.classinfId == null || req.body.classinfId == '' ||
-        req.body.linebodyId == null || req.body.linebodyId == '')
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
-    else {
+    } else {
         const showProduct = await exports.showProductinf(req.body.classinfId, req.body.linebodyId)
         dataSuccess.data = showProduct
         res.end(JSON.stringify(dataSuccess))
@@ -266,9 +267,9 @@ exports.showProductinf = async function (classinfId, linebodyId) {
 exports.updateProduct = async function (req, res) {
     if (req.body.conformProduct == null || req.body.conformProduct == '' ||
         req.body.productIdList == null || req.body.productIdList == '' ||
-        req.body.classinfIdList == null || req.body.classinfIdList == '')
+        req.body.classinfIdList == null || req.body.classinfIdList == '') {
         res.end(JSON.stringify(parameterError))
-    else {
+    } else {
         var productIdList = req.body.productIdList.split(",")
         for (var i = 0; i < productIdList.length; i++) {
             // 更改一条产品信息
@@ -289,9 +290,9 @@ exports.updateProduct = async function (req, res) {
     */
 exports.deleteProduct = async function (req, res) {
     if (req.body.productIdList == null || req.body.productIdList == '' ||
-        req.body.classinfIdList == null || req.body.classinfIdList == '')
+        req.body.classinfIdList == null || req.body.classinfIdList == '') {
         res.end(JSON.stringify(parameterError))
-    else {
+    } else {
         var productIdList = req.body.productIdList.split(",")
         for (var i = 0; i < productIdList.length; i++) {
             // 删除一条产品信息
@@ -314,9 +315,9 @@ exports.addClassinf = async function (req, res) {
         req.body.classEndtime == null || req.body.classEndtime == '' ||
         req.body.shouldAttendance == null || req.body.shouldAttendance == '' ||
         req.body.actualAttendance == null || req.body.actualAttendance == '' ||
-        req.body.linebodyId == null || req.body.linebodyId == '')
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
-    else {
+    } else {
         // 判断开班时间是否重合
         var checkFlag = await datainputServices.checkClassData(req.body.linebodyId, req.body.classStarttime, req.body.classEndtime)
         if (checkFlag == 1) {
@@ -361,106 +362,120 @@ exports.updateObjectimeAfteradd = async function (req, res) {
         req.body.losstier3Id = lossreq.losstier3Id
         req.body.twolevName = lossreq.losstier2name
 
-        // 更改之前loss是否跨15分钟
-        if (losstier4DataidList.length == 1) {
-            // 开始和结束的值
-            if (moment(reqStarttime).unix() < moment(losstier4Data0.starttime).unix()) {
-                // 参数设定
-                req.body.starttime = reqStarttime
-                req.body.endtime = losstier4Data0.starttime
-                showAddloss4After = await exports.addLosstierData(req, res)
+        const checkFlag = await datainputServices.checkUpdateLoss4Data(losstier4DataidList, req.body.starttime, req.body.endtime)
+        if (checkFlag == 0) {
+            // 更改后loss和之前完全不重合
+            for (var i = 0; i < losstier4DataidList.length; i++) {
+                await datainputServices.deleteLoss32data(losstier4DataidList[i])
+                await datainputServices.deleteLoss4data(losstier4DataidList[i])
             }
-            if (moment(reqEndtime).unix() > moment(losstier4Data0.endtime).unix()) {
-                // 参数设定
-                req.body.starttime = losstier4Data0.endtime
-                req.body.endtime = reqEndtime
-                showAddloss4After = await exports.addLosstierData(req, res)
-            }
-            if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
-                // 小于15分钟，直接update
-                const updateReturn = await datainputServices.updateLoss4data(
-                    losstier4Data0, reqStarttime, reqEndtime)
-            }
-            if (moment(reqEndtime).unix() < moment(losstier4Data0.endtime).unix()) {
-                // 小于15分钟，直接update
-                const updateReturn = await datainputServices.updateLoss4data(
-                    losstier4Data0, reqStarttime, reqEndtime)
-            }
+
+            // 增加传入的loss
+            showAddloss4After = await exports.addLosstierData(req, res)
         } else {
-            // 开始和结束的值
-            const losstier4Data1 = await datainputServices.selectLosstier4DataByid(losstier4DataidList[1])
-
-            if (moment(reqStarttime).unix() < moment(losstier4Data0.starttime).unix()) {
-                // 参数设定
-                req.body.starttime = reqStarttime
-                req.body.endtime = losstier4Data0.starttime
-                showAddloss4After = await exports.addLosstierData(req, res)
-            }
-            if (moment(reqEndtime).unix() > moment(losstier4Data1.endtime).unix()) {
-                // 参数设定
-                req.body.starttime = losstier4Data1.endtime
-                req.body.endtime = reqEndtime
-                showAddloss4After = await exports.addLosstierData(req, res)
-            }
-            if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
-                var ccyTimeindex = ''
-                // 超过15分钟 ccyTimeindex
-                for (var i = 0; i < losstier4DataidList.length; i++) {
-                    if (i == 1) {
-                        continue
-                    }
-                    const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[i])
-                    if (moment(reqStarttime).unix() >= moment(losstier4Data.endtime).unix()) {
-                        //删除超过的部分
-                        await datainputServices.deleteLoss32data(losstier4DataidList[i])
-                        await datainputServices.deleteLoss4data(losstier4DataidList[i])
-                    } else {
-                        ccyTimeindex = i
-                        break
-                    }
+            // 更改后loss和之前重合
+            // 更改之前loss是否跨15分钟
+            if (losstier4DataidList.length == 1) {
+                // 开始和结束的值
+                if (moment(reqStarttime).unix() < moment(losstier4Data0.starttime).unix()) {
+                    // 参数设定
+                    req.body.starttime = reqStarttime
+                    req.body.endtime = losstier4Data0.starttime
+                    showAddloss4After = await exports.addLosstierData(req, res)
                 }
-                if (ccyTimeindex == '') {
-                    ccyTimeindex = 1
+                if (moment(reqEndtime).unix() > moment(losstier4Data0.endtime).unix()) {
+                    // 参数设定
+                    req.body.starttime = losstier4Data0.endtime
+                    req.body.endtime = reqEndtime
+                    showAddloss4After = await exports.addLosstierData(req, res)
                 }
-                // 更改余下的部分
-                const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[ccyTimeindex])
-                const updateReturn = await datainputServices.updateLoss4data(
-                    losstier4Data, reqStarttime, losstier4Data.endtime)
-            }
-            if (moment(reqEndtime).unix() < moment(losstier4Data1.endtime).unix()) {
-                var ccyTimeindex = ''
-                // 超过15分钟 超过的整个删除
-                for (var i = losstier4DataidList.length - 1; i >= 0; i--) {
-                    if (i == 1)
-                        continue
-                    var loopFlag = false
-                    if (loopFlag == false) {
-                        if (moment(reqEndtime).unix() <= moment(losstier4Data1.starttime).unix()) {
-                            await datainputServices.deleteLoss32data(losstier4DataidList[1])
-                            await datainputServices.deleteLoss4data(losstier4DataidList[1])
+                if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
+                    // 小于15分钟，直接update
+                    const updateReturn = await datainputServices.updateLoss4data(
+                        losstier4Data0, reqStarttime, reqEndtime)
+                }
+                if (moment(reqEndtime).unix() < moment(losstier4Data0.endtime).unix()) {
+                    // 小于15分钟，直接update
+                    const updateReturn = await datainputServices.updateLoss4data(
+                        losstier4Data0, reqStarttime, reqEndtime)
+                }
+            } else {
+                // 开始和结束的值
+                const losstier4Data1 = await datainputServices.selectLosstier4DataByid(losstier4DataidList[1])
 
+                if (moment(reqStarttime).unix() < moment(losstier4Data0.starttime).unix()) {
+                    // 参数设定
+                    req.body.starttime = reqStarttime
+                    req.body.endtime = losstier4Data0.starttime
+                    showAddloss4After = await exports.addLosstierData(req, res)
+                }
+                if (moment(reqEndtime).unix() > moment(losstier4Data1.endtime).unix()) {
+                    // 参数设定
+                    req.body.starttime = losstier4Data1.endtime
+                    req.body.endtime = reqEndtime
+                    showAddloss4After = await exports.addLosstierData(req, res)
+                }
+                if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
+                    var ccyTimeindex = ''
+                    // 超过15分钟 ccyTimeindex
+                    for (var i = 0; i < losstier4DataidList.length; i++) {
+                        if (i == 1) {
+                            continue
+                        }
+                        const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[i])
+                        if (moment(reqStarttime).unix() >= moment(losstier4Data.endtime).unix()) {
+                            //删除超过的部分
+                            await datainputServices.deleteLoss32data(losstier4DataidList[i])
+                            await datainputServices.deleteLoss4data(losstier4DataidList[i])
                         } else {
-                            ccyTimeindex = 1
+                            ccyTimeindex = i
                             break
                         }
-                        loopFlag = true
                     }
-                    const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[i])
-                    if (moment(reqEndtime).unix() <= moment(losstier4Data.starttime).unix()) {
-                        //删除超过的部分
-                        await datainputServices.deleteLoss32data(losstier4DataidList[i])
-                        await datainputServices.deleteLoss4data(losstier4DataidList[i])
-                    } else {
-                        ccyTimeindex = i
-                        break
+                    if (ccyTimeindex == '') {
+                        ccyTimeindex = 1
                     }
+                    // 更改余下的部分
+                    const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[ccyTimeindex])
+                    const updateReturn = await datainputServices.updateLoss4data(
+                        losstier4Data, reqStarttime, losstier4Data.endtime)
                 }
-                // 更改余下的部分
-                const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[ccyTimeindex])
-                const updateReturn = await datainputServices.updateLoss4data(
-                    losstier4Data, losstier4Data.starttime, reqEndtime)
+                if (moment(reqEndtime).unix() < moment(losstier4Data1.endtime).unix()) {
+                    var ccyTimeindex = ''
+                    // 超过15分钟 超过的整个删除
+                    for (var i = losstier4DataidList.length - 1; i >= 0; i--) {
+                        if (i == 1)
+                            continue
+                        var loopFlag = false
+                        if (loopFlag == false) {
+                            if (moment(reqEndtime).unix() <= moment(losstier4Data1.starttime).unix()) {
+                                await datainputServices.deleteLoss32data(losstier4DataidList[1])
+                                await datainputServices.deleteLoss4data(losstier4DataidList[1])
+
+                            } else {
+                                ccyTimeindex = 1
+                                break
+                            }
+                            loopFlag = true
+                        }
+                        const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[i])
+                        if (moment(reqEndtime).unix() <= moment(losstier4Data.starttime).unix()) {
+                            //删除超过的部分
+                            await datainputServices.deleteLoss32data(losstier4DataidList[i])
+                            await datainputServices.deleteLoss4data(losstier4DataidList[i])
+                        } else {
+                            ccyTimeindex = i
+                            break
+                        }
+                    }
+                    // 更改余下的部分
+                    const losstier4Data = await datainputServices.selectLosstier4DataByid(losstier4DataidList[ccyTimeindex])
+                    const updateReturn = await datainputServices.updateLoss4data(
+                        losstier4Data, losstier4Data.starttime, reqEndtime)
+                }
             }
         }
+
         // 设置返回值
         const showlossinf = await datainputServices.showloss4inf(req.body.classinfId, req.body.linebodyId, lossreq.losstier2name)
         dataSuccess.data = showlossinf
@@ -513,9 +528,9 @@ exports.showClassinfHistory = async function (req, res) {
     开班历史信息删除接口
     */
 exports.deleteClassinfHistory = async function (req, res) {
-    if (req.body.classinfId == null || req.body.classinfId == '')
+    if (req.body.classinfId == null || req.body.classinfId == '') {
         res.end(JSON.stringify(parameterError))
-    else {
+    } else {
         // 删除一条开班历史信息
         const deleteReturn = await datainputServices.deleteClassinfHistory(req.body.classinfId)
         if (deleteReturn == null || deleteReturn == '') {

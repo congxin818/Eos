@@ -147,7 +147,6 @@ exports.selectUserById = function (req, res, next) {
 /*
 	添加一个User
 */
-
 async function addUserOne(req, res, next) {
     if (req == '') {
         res.end(JSON.stringify(parameterError));
