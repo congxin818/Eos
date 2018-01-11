@@ -247,9 +247,6 @@ const moment = require('moment');
 
                     // 在三级data中更新所属的二级data
                     await addKpitwolevdata.addKpitwolevLosstier3Data(addLosstier3data)
-
-                    
-
                 }else{
                     // 这个四级loss的时间在三级loss，把四级的value值加到三级上
                     var newValue = linebodyLosstier4List[i].value + losstier3Data.value
@@ -530,13 +527,13 @@ return  sproductbigIdList
     添加产品信息数据
     */
     exports.addProduct = async function(req , res) {
-        var productdata = {
+        var productdataValue = {
             conformproduct : req.body.conformProduct
         }
         const classinformation = await Classinformation.findById(req.body.classinfId) 
         const lineproductname = await LinebodyProductname.findOne({
             where:{productnameId:req.body.productNameId,linebodyLinebodyid:req.body.linebodyId}})
-        productdata = await Productdata.create(productdata)
+        var productdata = await Productdata.create(productdataValue)
         await lineproductname.addLineProductnameproductdata(productdata)
         await classinformation.addClassinfProductData(productdata)
         return productdata
@@ -564,7 +561,7 @@ return  sproductbigIdList
     根据productnameId查找产品数据
     */
     exports.selectProductDataByName = async function(linebodyproductnameId,classinfId) {
-        return  await Productdata.findAll({where:{linebodyproductnameId:linebodyproductnameId,classinformationClassinfid:classinfId}})
+        return  await Productdata.findOne({where:{linebodyproductnameId:linebodyproductnameId,classinformationClassinfid:classinfId}})
     }
 
 /*
@@ -942,8 +939,6 @@ return  sproductbigIdList
                             const loss4idStringlsData1 = await LinebodyLosstier4.findById(loss4idStringls[1])
                             showAddloss4After.starttime = moment(loss4idStringlsData.starttime).format('YYYY-MM-DD HH:mm:ss')
                             showAddloss4After.endtime = moment(loss4idStringlsData1.endtime).format('YYYY-MM-DD HH:mm:ss')
-<<<<<<< HEAD
-=======
                             lossinf.push(showAddloss4After)
                         }
                     }
@@ -1108,7 +1103,6 @@ return  sproductbigIdList
                             const loss4idStringlsData1 = await LinebodyLosstier4.findById(loss4idStringls[1])
                             showAddloss4After.starttime = moment(loss4idStringlsData.starttime).format('YYYY-MM-DD HH:mm:ss')
                             showAddloss4After.endtime = moment(loss4idStringlsData1.endtime).format('YYYY-MM-DD HH:mm:ss')
->>>>>>> 1542992dd2d660630e817db221b2727839ac04f3
                             lossinf.push(showAddloss4After)
                         }
                     }
