@@ -103,7 +103,7 @@ async function factoryClear() {
             groupGroupid: null
         }
     });
-    console.log(JSON.stringify(factory.length));
+    //console.log(JSON.stringify(factory.length));
     for (var i = factory.length - 1; i >= 0; i--) {
         await factory[i].destroy();
     }

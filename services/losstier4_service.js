@@ -122,7 +122,7 @@ async function addLosstier4One(lossName, newpId) {
         kpiTwo.addKpitwolevLosscategory(data);
         return data;
     } catch (err) {
-        console.log('yuzhizhe_err---->' + err);
+        //console.log('yuzhizhe_err---->' + err);
     }
 }
 exports.addLosstier4One = addLosstier4One;

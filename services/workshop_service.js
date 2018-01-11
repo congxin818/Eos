@@ -62,12 +62,12 @@ exports.addWorkshopOne = async function (req, res) {
 exports.deleteWorkshopById = async function (req, res) {
     //先查找,再调用删除,最后返回首页
     const workshop = await Workshop.findById(req.query.workshopId);
-    console.log('workshop--->' + JSON.stringify(workshop));
+    //console.log('workshop--->'+ JSON.stringify(workshop));
     if (workshop == null || workshop == '') {
         return errorUtil.noExistError;
     }
     const falg = await workshop.destroy();
-    console.log('falg--->' + JSON.stringify(falg));
+    //console.log('falg--->' + JSON.stringify(falg));
     if (falg == null || falg == '') {
         return errorUtil.noExistError;
     }
@@ -103,7 +103,7 @@ async function workshopClear() {
             factoryFactoryid: null
         }
     });
-    console.log(JSON.stringify(workshop.length));
+    //console.log(JSON.stringify(workshop.length));
     for (var i = workshop.length - 1; i >= 0; i--) {
         await workshop[i].destroy();
     }

@@ -340,7 +340,6 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
     }
     return linebodyLosstier3List
 }
-
 /*
     格式化loss data的开始时间和结束时间
     例： 开始时间 16:05:00 --> 16:00:00 结束时间 16:05:00 --> 16:15:00

@@ -67,14 +67,34 @@ exports.addLosstier4One = addLosstier4One;
 	根据ID删除
  */
 async function deleteLosstier4ById(req, res, next) {
+<<<<<<< HEAD
 	if (req == null || res == null ||
 		req.query.id == undefined || req.query.id == null || req.query.id == '') {
+=======
+<<<<<<< HEAD
+	if (req == null || res == null
+		|| req.query.id == undefined || req.query.id == null || req.query.id == '') {
+=======
+	if (req == null || res == null ||
+		req.query.id == undefined || req.query.id == null || req.query.id == '') {
+>>>>>>> 6d702145d171af404637d85fdeb1ab31e2a520d7
+>>>>>>> Android
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	const type = req.query.id.slice(0, 1);
 	const ID = req.query.id.slice(1);
+<<<<<<< HEAD
 	if (type == '' || type == null || type == undefined ||
 		ID == undefined || ID == null || ID == '') {
+=======
+<<<<<<< HEAD
+	if (type == '' || type == null || type == undefined
+		|| ID == undefined || ID == null || ID == '') {
+=======
+	if (type == '' || type == null || type == undefined ||
+		ID == undefined || ID == null || ID == '') {
+>>>>>>> 6d702145d171af404637d85fdeb1ab31e2a520d7
+>>>>>>> Android
 		res.end(JSON.stringify(errorUtil.parameterError));
 	}
 	if (type == 't') {

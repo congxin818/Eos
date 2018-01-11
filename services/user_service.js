@@ -129,10 +129,10 @@ async function selectUserById(req, res, next) {
                     if (falg) {
                         await updateAreaArray(allData, ch);
                     }
-                    console.log(JSON.stringify(falg))
+                    //console.log(JSON.stringify(falg))
                 } catch (err) {
-                    console.log('error ------>')
-                    console.log(err)
+                    // console.log ('error ------>')
+                    // console.log (err)
                     return errorUtil.serviceError;
                 }
 
@@ -152,10 +152,10 @@ async function selectUserById(req, res, next) {
                     if (falg) {
                         await updateAreaArray(allData, ch);
                     }
-                    console.log(JSON.stringify(falg))
+                    //console.log(JSON.stringify(falg))
                 } catch (err) {
-                    console.log('error ------>')
-                    console.log(err)
+                    // console.log ('error ------>')
+                    // console.log (err)
                     return errorUtil.serviceError;
                 }
 
@@ -175,10 +175,10 @@ async function selectUserById(req, res, next) {
                     if (falg) {
                         await updateAreaArray(allData, ch);
                     }
-                    console.log(JSON.stringify(falg))
+                    //console.log(JSON.stringify(falg))
                 } catch (err) {
-                    console.log('error ------>')
-                    console.log(err)
+                    // console.log ('error ------>')
+                    // console.log (err)
                     return errorUtil.serviceError;
                 }
 
@@ -198,10 +198,10 @@ async function selectUserById(req, res, next) {
                     if (falg) {
                         await updateAreaArray(allData, ch);
                     }
-                    console.log(JSON.stringify(falg))
+                    //console.log(JSON.stringify(falg))
                 } catch (err) {
-                    console.log('error ------>')
-                    console.log(err)
+                    //console.log ('error ------>')
+                    //console.log (err)
                     return errorUtil.serviceError;
                 }
             }
@@ -354,7 +354,7 @@ async function addUserOne(req, res, next) {
         dataSuccess.data = data;
         return dataSuccess;
     } catch (err) {
-        console.log('yuzhizhe_error------>' + err);
+        //console.log('yuzhizhe_error------>' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
             return errorUtil.existError
         } else {
@@ -509,7 +509,7 @@ async function updateUserById(req, res, next) {
         dataSuccess.data = falg;
         return dataSuccess;
     } catch (err) {
-        console.log('yuzhizhe_error---->' + err);
+        //console.log('yuzhizhe_error---->' + err);
         return errorUtil.serviceError;
     }
 }
@@ -571,7 +571,7 @@ async function updateUserKpiTwolveById(userId, kpiTwolevId, newOrder) {
         //console.log ('value ' + JSON.stringify (value, null, 4) + '\n\n\n\n\n\n')
         return value;
     } catch (err) {
-        console.log(`error --> ${err}`)
+        //console.log (`error --> ${err}`)
     }
 }
 exports.updateUserKpiTwolveById = updateUserKpiTwolveById;

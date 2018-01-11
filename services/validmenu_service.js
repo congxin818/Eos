@@ -12,8 +12,8 @@ var Validmenu = require('../models').Validmenu;
     用于init显示
 */
 async function selectValmeuById(menuid) {
-    console.log('yuzhizhe01');
-    console.log(menuid);
+    // console.log('yuzhizhe01');
+    // console.log(menuid);
 
     const value = await Validmenu.findOne({
         where: {
