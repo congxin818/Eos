@@ -33,8 +33,14 @@ exports.addTwoLevOne = async function (req, res) {
     //创建一条记录,创建成功后跳转回首页
     const data = await Kpitwolev.create(twoLev)
     // id:data.kpitwoid
-    var kpitwoUpdate = { id: 't' + data.kpitwoid };
-    await Kpitwolev.update(kpitwoUpdate, { where: { kpitwoid: data.kpitwoid } })
+    var kpitwoUpdate = {
+        id: 't' + data.kpitwoid
+    };
+    await Kpitwolev.update(kpitwoUpdate, {
+        where: {
+            kpitwoid: data.kpitwoid
+        }
+    })
     return data
 }
 

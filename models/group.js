@@ -28,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: 1
         }
     }, {
-            charset: 'utf8',
-            collate: 'utf8_general_ci'
-        });
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+    });
 }

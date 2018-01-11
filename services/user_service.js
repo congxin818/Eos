@@ -5,7 +5,7 @@
  */
 
 
-var User = require('../models').User;//引入数据库User模块
+var User = require('../models').User; //引入数据库User模块
 var Group = require('../models').Group;
 let Factory = require('../models').Factory;
 let Workshop = require('../models').Workshop;
@@ -36,9 +36,9 @@ async function findAndCount(req, res, next) {
         page = parseInt(req.query.page);
     }
     const data = await User.findAndCountAll({
-        where: '',//为空，获取全部，也可以自己添加条件
-        offset: (page - 1) * pageSize,//开始的数据索引，比如当page=2 时offset=10 ，而pagesize我们定义为10，则现在为索引为10，也就是从第11条开始返回数据条目
-        limit: pageSize//每页限制返回的数据条数
+        where: '', //为空，获取全部，也可以自己添加条件
+        offset: (page - 1) * pageSize, //开始的数据索引，比如当page=2 时offset=10 ，而pagesize我们定义为10，则现在为索引为10，也就是从第11条开始返回数据条目
+        limit: pageSize //每页限制返回的数据条数
     });
     dataSuccess.data = data;
     return dataSuccess;
@@ -62,7 +62,11 @@ exports.selectUserAll = selectUserAll;
     */
 async function selectUserByName(req, res, next) {
 
-    const user = await User.findOne({ where: { username: req.body.userName } })
+    const user = await User.findOne({
+        where: {
+            username: req.body.userName
+        }
+    })
 
     if (user == '' || user == undefined || user == null) {
         return null
@@ -92,7 +96,11 @@ exports.selectUserByName = selectUserByName;
 
 async function selectUserById(req, res, next) {
 
-    const user = await User.findOne({ where: { userid: req.body.userId } })
+    const user = await User.findOne({
+        where: {
+            userid: req.body.userId
+        }
+    })
 
     if (user == '' || user == undefined || user == null) {
         return null
@@ -200,8 +208,12 @@ async function selectUserById(req, res, next) {
         }
     }
     const validmenu = await user.getUserValidmenus();
-    let tier2 = await user.getUserKpitwolevs({ 'attributes': ['name', 'kpitwoid'] });
-    tier2.sort((a, b) => { return a.userKpitwolev.sequence - b.userKpitwolev.sequence });
+    let tier2 = await user.getUserKpitwolevs({
+        'attributes': ['name', 'kpitwoid']
+    });
+    tier2.sort((a, b) => {
+        return a.userKpitwolev.sequence - b.userKpitwolev.sequence
+    });
     //const value = await stringUtil.bubbleSort(tier2);
 
     var extraData = {
@@ -332,18 +344,20 @@ async function addUserOne(req, res, next) {
                 i++
                 //console.log (`i ====================================> ${i}`)
                 //console.log (JSON.stringify (value, null, 4));
-                await data.addUserKpitwolevs(value, { through: { sequence: i } });
+                await data.addUserKpitwolevs(value, {
+                    through: {
+                        sequence: i
+                    }
+                });
             });
         }
         dataSuccess.data = data;
         return dataSuccess;
-    }
-    catch (err) {
+    } catch (err) {
         //console.log('yuzhizhe_error------>' + err);
         if (err.parent.code == 'ER_DUP_ENTRY') {
             return errorUtil.existError
-        }
-        else {
+        } else {
             return errorUtil.serviceError
         }
     }
@@ -361,7 +375,11 @@ async function deleteUserById(userId) {
     if (user == undefined || user == null || user == '') {
         return errorUtil.noExistError;
     }
-    const falg = await User.destroy({ where: { userid: userId } });
+    const falg = await User.destroy({
+        where: {
+            userid: userId
+        }
+    });
     if (falg == null || falg != 1) {
         return errorUtil.noExistError;
     }
@@ -391,7 +409,11 @@ async function updateUserById(req, res, next) {
         return errorUtil.noExistError;
     }
 
-    const falg = await User.update(newUser, { where: { userid: req.body.userId } });
+    const falg = await User.update(newUser, {
+        where: {
+            userid: req.body.userId
+        }
+    });
 
     if (falg == null || falg != 1) {
         return errorUtil.noExistError;
@@ -486,8 +508,7 @@ async function updateUserById(req, res, next) {
         }
         dataSuccess.data = falg;
         return dataSuccess;
-    }
-    catch (err) {
+    } catch (err) {
         //console.log('yuzhizhe_error---->' + err);
         return errorUtil.serviceError;
     }
@@ -496,8 +517,8 @@ exports.updateUserById = updateUserById;
 
 //根据userId跟新User
 async function updateUserPsdById(userId, userNewPsd) {
-    if (userId == undefined || userId == null || userId == ''
-        || userNewPsd == undefined || userNewPsd == null || userNewPsd == '') {
+    if (userId == undefined || userId == null || userId == '' ||
+        userNewPsd == undefined || userNewPsd == null || userNewPsd == '') {
         return;
     }
     var newUser = {
@@ -509,7 +530,11 @@ async function updateUserPsdById(userId, userNewPsd) {
         return errorUtil.noExistError;
     }
 
-    const falg = await User.update(newUser, { where: { userid: userId } });
+    const falg = await User.update(newUser, {
+        where: {
+            userid: userId
+        }
+    });
     return falg;
 }
 exports.updateUserPsdById = updateUserPsdById;
@@ -518,8 +543,8 @@ exports.updateUserPsdById = updateUserPsdById;
     修改用户关联的KPI二级目录的顺序
  */
 async function updateUserKpiTwolveById(userId, kpiTwolevId, newOrder) {
-    if (userId == undefined || userId == null || userId == ''
-        || newOrder == undefined || newOrder == null || newOrder == '') {
+    if (userId == undefined || userId == null || userId == '' ||
+        newOrder == undefined || newOrder == null || newOrder == '') {
         return errorUtil.parameterError;
     }
     const user = await User.findById(userId);
@@ -527,8 +552,8 @@ async function updateUserKpiTwolveById(userId, kpiTwolevId, newOrder) {
 
     const kpitwo = await Kpitwolev.findById(kpiTwolevId);
     //console.log ('kpitwo' + JSON.stringify (kpitwo, null, 4) + '\n\n\n\n\n\n')
-    if (user == undefined || user == null || user == ''
-        || kpitwo == undefined || kpitwo == null || kpitwo == '') {
+    if (user == undefined || user == null || user == '' ||
+        kpitwo == undefined || kpitwo == null || kpitwo == '') {
         return errorUtil.noExistError;
     }
 
@@ -545,8 +570,7 @@ async function updateUserKpiTwolveById(userId, kpiTwolevId, newOrder) {
         const value = await userkpitwolev_service.updateSequenceById(userId, kpiTwolevId, newOrder);
         //console.log ('value ' + JSON.stringify (value, null, 4) + '\n\n\n\n\n\n')
         return value;
-    }
-    catch (err) {
+    } catch (err) {
         //console.log (`error --> ${err}`)
     }
 }

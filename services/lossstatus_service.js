@@ -20,7 +20,9 @@ exports.selectLostatusBySid = selectLostatusBySid;
     */
 async function selectLostatusBylineid(linebodyid) {
   const lostatusNameList = await Lossstatus.findAll({
-    where: { linebodyLinebodyid: linebodyid }
+    where: {
+      linebodyLinebodyid: linebodyid
+    }
   });
   return lostatusNameList
 }
@@ -31,7 +33,10 @@ exports.selectLostatusBylineid = selectLostatusBylineid;
  */
 async function selectLostatusById(losstier3id, linebodyid) {
   const lossstatusList = await Lossstatus.findAll({
-    where: { losstier3Lossid: losstier3id, linebodyLinebodyid: linebodyid }
+    where: {
+      losstier3Lossid: losstier3id,
+      linebodyLinebodyid: linebodyid
+    }
   })
   var lossstatus
   if (lossstatusList != null) {
@@ -64,7 +69,9 @@ async function updateLostatusById(req, res) {
     stage: req.body.stage
   };
   var updataReturn = await Lossstatus.update(lossstatus, {
-    where: { id: req.body.id }
+    where: {
+      id: req.body.id
+    }
   })
   if (updataReturn == 1) {
     updataReturn = await Lossstatus.findById(req.body.id)
@@ -79,7 +86,10 @@ exports.updateLostatusById = updateLostatusById;
     */
 async function deleteObjectnowBylossid(linebodyid, lossid) {
   const lossstatus = await Lossstatus.findOne({
-    where: { linebodyLinebodyid: linebodyid, losstier3Lossid: lossid }
+    where: {
+      linebodyLinebodyid: linebodyid,
+      losstier3Lossid: lossid
+    }
   });
   const deleteReturn = await lossstatus.destroy()
   return deleteReturn

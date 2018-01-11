@@ -40,9 +40,9 @@ exports.selectPtoductnameById = selectPtoductnameById;
  	添加
  */
 async function addProductnameOne(name, price, pId) {
-	if (name == undefined || name == null || name == ''
-		|| price == undefined || price == null || price == ''
-		|| pId == undefined || pId == null || pId == '') {
+	if (name == undefined || name == null || name == '' ||
+		price == undefined || price == null || price == '' ||
+		pId == undefined || pId == null || pId == '') {
 		return errorUtil.parameterError;
 	}
 	let productname = {
@@ -66,7 +66,11 @@ async function deleteProductnameById(id) {
 	if (productname == undefined || productname == null || productname == '') {
 		return errorUtil.noExistError;
 	}
-	const falg = await Productname.destroy({ where: { id: id } });
+	const falg = await Productname.destroy({
+		where: {
+			id: id
+		}
+	});
 	if (falg == null || falg != 1) {
 		return errorUtil.serviceError;
 	}
@@ -88,7 +92,11 @@ async function updateProductnameById(id, price) {
 	let productname = {
 		price: price
 	};
-	const falg = await Productname.update(productname, { where: { id: id } });
+	const falg = await Productname.update(productname, {
+		where: {
+			id: id
+		}
+	});
 	if (falg == null || falg != 1) {
 		return errorUtil.serviceError;
 	}
@@ -100,7 +108,11 @@ exports.updateProductnameById = updateProductnameById;
 	清理函数
  */
 async function ProductnameClear() {
-	const product = await Productname.findAll({ where: { productsubclassId: null } });
+	const product = await Productname.findAll({
+		where: {
+			productsubclassId: null
+		}
+	});
 	//console.log(JSON.stringify(subclass.length));
 	for (var i = product.length - 1; i >= 0; i--) {
 		await product[i].destroy();

@@ -20,8 +20,8 @@ module.exports = function (sequelize, DataTypes) {
             collate: 'utf8_general_ci'
         }
     }, {
-            timestamps: false
-        });
+        timestamps: false
+    });
 }
 //Validmenu.sync();
 

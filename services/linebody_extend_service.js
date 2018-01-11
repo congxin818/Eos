@@ -46,7 +46,10 @@ exports.selectLinebodyBypId = async function (req, res) {
 exports.getClassflag = async function (classstarttime, classendtime, linebodyid) {
     var classflag
     var classidList = await Classinformation.findAll({
-        'attributes': ['classinfid'], where: { linebodyLinebodyid: linebodyid }
+        'attributes': ['classinfid'],
+        where: {
+            linebodyLinebodyid: linebodyid
+        }
     })
     var classidList2 = []
     if (classidList == null || classidList == '') {
@@ -63,8 +66,8 @@ exports.getClassflag = async function (classstarttime, classendtime, linebodyid)
         const classinfdata = await Classinformation.findById(classidList2[i]);
 
         // 传来的时间是否在开班时间内
-        if (moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix()
-            && moment(classendtime).unix() <= moment(classinfdata.classendtime).unix()) {
+        if (moment(classstarttime).unix() >= moment(classinfdata.classstarttime).unix() &&
+            moment(classendtime).unix() <= moment(classinfdata.classendtime).unix()) {
             classflag = 1;
             break;
         } else {

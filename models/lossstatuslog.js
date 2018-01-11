@@ -64,7 +64,7 @@ module.exports = function (sequelize, DataTypes) {
             type: Sequelize.STRING(50)
         },
     }, {
-            charset: 'utf8',
-            collate: 'utf8_general_ci'
-        });
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+    });
 }

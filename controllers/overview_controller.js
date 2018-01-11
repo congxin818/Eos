@@ -1,10 +1,10 @@
 var linebody_extend_service = require('../services/linebody_extend_service');
-var Lossstatus = require('../models').Lossstatus;//引入数据库Lossstatus模块
-var Lossstatuslog = require('../models').Lossstatuslog;//引入数据库Lossstatus模块
-var Linebody = require('../models').Linebody;//引入数据库Linebody模块
-var User = require('../models').User;//引入数据库User模块
-var Classinformation = require('../models').Classinformation;//引入数据库Classinformation模块
-var Kpitwolev = require('../models').Kpitwolev;//引入数据库Kpitwolev模块
+var Lossstatus = require('../models').Lossstatus; //引入数据库Lossstatus模块
+var Lossstatuslog = require('../models').Lossstatuslog; //引入数据库Lossstatus模块
+var Linebody = require('../models').Linebody; //引入数据库Linebody模块
+var User = require('../models').User; //引入数据库User模块
+var Classinformation = require('../models').Classinformation; //引入数据库Classinformation模块
+var Kpitwolev = require('../models').Kpitwolev; //引入数据库Kpitwolev模块
 var errorUtil = require('../utils/errorUtil');
 var moment = require('moment');
 
@@ -21,10 +21,10 @@ const valueUnit = 168000;
     */
 async function selectOverviewByTimesAndLinebodys(req, res, next) {
     const TestStart = new Date().getTime();
-    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null
-        || req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null
-        || req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null
-        || req.body.userId == undefined || req.body.userId == '' || req.body.userId == null
+    if (req.body.startTime == undefined || req.body.startTime == '' || req.body.startTime == null ||
+        req.body.endTime == undefined || req.body.endTime == '' || req.body.endTime == null ||
+        req.body.linebodyIds == undefined || req.body.linebodyIds == '' || req.body.linebodyIds == null ||
+        req.body.userId == undefined || req.body.userId == '' || req.body.userId == null
     ) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
@@ -124,12 +124,12 @@ exports.getWantString = getWantString;
     根据times和linebodys查询losstier3的TOP3
     */
 async function selectLosstier3Top3ByTimesAndLinebodys(startTime, endTime, Ids, type, allTier2, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || type == undefined || type == '' || type == null
-        || allTier2 == undefined || allTier2 == '' || allTier2 == null
-        || allClass == undefined || allClass == '' || allClass == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        type == undefined || type == '' || type == null ||
+        allTier2 == undefined || allTier2 == '' || allTier2 == null ||
+        allClass == undefined || allClass == '' || allClass == null) {
         return;
     }
     //console.log("---yuzhizhe0-----" + JSON.stringify(type , null , 4));
@@ -164,12 +164,12 @@ exports.selectLosstier3Top3ByTimesAndLinebodys = selectLosstier3Top3ByTimesAndLi
     根据times和linebodys查询Overview中柱状图数据
     */
 async function selectBarchartByTimesAndLinebodys(startTime, endTime, Ids, type, allTier2, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || type == undefined || type == '' || type == null
-        || allTier2 == undefined || allTier2 == '' || allTier2 == null
-        || allClass == undefined || allClass == '' || allClass == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        type == undefined || type == '' || type == null ||
+        allTier2 == undefined || allTier2 == '' || allTier2 == null ||
+        allClass == undefined || allClass == '' || allClass == null) {
         return;
     }
 
@@ -206,12 +206,12 @@ exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
     endTime:当天结束时间
     */
 async function computeTodayByTimes(startTime, endTime, Ids, type, allTier2, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || type == undefined || type == '' || type == null
-        || allTier2 == undefined || allTier2 == '' || allTier2 == null
-        || allClass == undefined || allClass == '' || allClass == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        type == undefined || type == '' || type == null ||
+        allTier2 == undefined || allTier2 == '' || allTier2 == null ||
+        allClass == undefined || allClass == '' || allClass == null) {
         console.log("---yuzhizhe1--->");
         return;
     }
@@ -245,9 +245,9 @@ exports.computeTodayByTimes = computeTodayByTimes;
    endTime:当天结束时间
    */
 async function selectTier3ByTimesAndLinebodys(startTime, endTime, Ids) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null) {
         return;
     }
     const sTime_num = new Date(startTime).getTime();
@@ -266,8 +266,8 @@ async function selectTier3ByTimesAndLinebodys(startTime, endTime, Ids) {
             }
             const csTime = new Date(linebodyLosstier3[h].starttime).getTime();
             const ceTime = new Date(linebodyLosstier3[h].endtime).getTime();
-            if (csTime == undefined || csTime == '' || csTime == null
-                || ceTime == undefined || ceTime == '' || ceTime == null) {
+            if (csTime == undefined || csTime == '' || csTime == null ||
+                ceTime == undefined || ceTime == '' || ceTime == null) {
                 //console.log('yuzhizhe03');
                 continue;
             }
@@ -288,12 +288,12 @@ exports.selectTier3ByTimesAndLinebodys = selectTier3ByTimesAndLinebodys;
     endTime:当天结束时间
     */
 async function computeAll3ByTimes(startTime, endTime, Ids, typeId, allData, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null
-        || allData == undefined || allData == '' || allData == null
-        || allClass == undefined || allClass == '' || allClass == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null ||
+        allData == undefined || allData == '' || allData == null ||
+        allClass == undefined || allClass == '' || allClass == null) {
         //console.log("---yuzhizhe1--->");
         return;
     }
@@ -336,12 +336,12 @@ exports.computeAll3ByTimes = computeAll3ByTimes;
     endTime:15分钟结束时间
 */
 async function computeQuarter3ByTimes(startTime, endTime, Ids, typeId, allData, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null
-        || allData == undefined || allData == '' || allData == null
-        || allClass == undefined || allClass == '' || allClass == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null ||
+        allData == undefined || allData == '' || allData == null ||
+        allClass == undefined || allClass == '' || allClass == null) {
         //console.log("---yuzhizhe1--->");
         return 0;
     }
@@ -378,11 +378,11 @@ exports.computeQuarter3ByTimes = computeQuarter3ByTimes;
     endTime:15分钟结束时间
     */
 async function computeQuarter3ValueByTimes(startTime, endTime, allData, linebodyId, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || allData == undefined || allData == '' || allData == null
-        || typeId == undefined || typeId == '' || typeId == null
-        || linebodyId == undefined || linebodyId == '' || linebodyId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        allData == undefined || allData == '' || allData == null ||
+        typeId == undefined || typeId == '' || typeId == null ||
+        linebodyId == undefined || linebodyId == '' || linebodyId == null) {
         //console.log("---allData为空--->");
         return 0;
     }
@@ -390,15 +390,15 @@ async function computeQuarter3ValueByTimes(startTime, endTime, allData, linebody
     const eTime_num = endTime;
     let valueSum = 0;
     for (var i = allData.length - 1; i >= 0; i--) {
-        if (allData[i] == null || allData[i] == '' || allData[i].losstier3Lossid != typeId
-            || allData[i].linebodyLinebodyid != linebodyId) {
+        if (allData[i] == null || allData[i] == '' || allData[i].losstier3Lossid != typeId ||
+            allData[i].linebodyLinebodyid != linebodyId) {
             continue;
         }
         const csTime = new Date(allData[i].starttime).getTime();
         const ceTime = new Date(allData[i].endtime).getTime();
         //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
-        if (csTime == undefined || csTime == '' || csTime == null
-            || ceTime == undefined || ceTime == '' || ceTime == null) {
+        if (csTime == undefined || csTime == '' || csTime == null ||
+            ceTime == undefined || ceTime == '' || ceTime == null) {
             //console.log('yuzhizhe03');
             continue;
         }
@@ -419,9 +419,9 @@ exports.computeQuarter3ValueByTimes = computeQuarter3ValueByTimes;
    endTime:当天结束时间
    */
 async function selectTier2ByTimesAndLinebodys(startTime, endTime, Ids) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null) {
         return;
     }
     const sTime_num = new Date(startTime).getTime();
@@ -440,8 +440,8 @@ async function selectTier2ByTimesAndLinebodys(startTime, endTime, Ids) {
             }
             const csTime = new Date(linebodyLosstier2[h].starttime).getTime();
             const ceTime = new Date(linebodyLosstier2[h].endtime).getTime();
-            if (csTime == undefined || csTime == '' || csTime == null
-                || ceTime == undefined || ceTime == '' || ceTime == null) {
+            if (csTime == undefined || csTime == '' || csTime == null ||
+                ceTime == undefined || ceTime == '' || ceTime == null) {
                 //console.log('yuzhizhe03');
                 continue;
             }
@@ -462,12 +462,12 @@ exports.selectTier2ByTimesAndLinebodys = selectTier2ByTimesAndLinebodys;
     endTime:当天结束时间
     */
 async function computeAll2ByTimes(startTime, endTime, Ids, typeId, allData, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null
-        || allData == undefined || allData == '' || allData == null
-        || allClass == undefined || allClass == '' || allClass == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null ||
+        allData == undefined || allData == '' || allData == null ||
+        allClass == undefined || allClass == '' || allClass == null) {
         //console.log("---yuzhizhe1--->");
         return;
     }
@@ -511,12 +511,12 @@ exports.computeAll2ByTimes = computeAll2ByTimes;
     endTime:15分钟结束时间
 */
 async function computeQuarter2ByTimes(startTime, endTime, Ids, typeId, allData, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null
-        || typeId == undefined || typeId == '' || typeId == null
-        || allClass == undefined || allClass == '' || allClass == null
-        || allData == undefined || allData == '' || allData == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null ||
+        typeId == undefined || typeId == '' || typeId == null ||
+        allClass == undefined || allClass == '' || allClass == null ||
+        allData == undefined || allData == '' || allData == null) {
         //console.log("---yuzhizhe1--->");
         return 0;
     }
@@ -553,11 +553,11 @@ exports.computeQuarter2ByTimes = computeQuarter2ByTimes;
     endTime:15分钟结束时间
     */
 async function computeQuarter2ValueByTimes(startTime, endTime, allData, linebodyId, typeId) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || allData == undefined || allData == '' || allData == null
-        || typeId == undefined || typeId == '' || typeId == null
-        || linebodyId == undefined || linebodyId == '' || linebodyId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        allData == undefined || allData == '' || allData == null ||
+        typeId == undefined || typeId == '' || typeId == null ||
+        linebodyId == undefined || linebodyId == '' || linebodyId == null) {
         //console.log("---allData为空--->");
         return 0;
     }
@@ -565,15 +565,15 @@ async function computeQuarter2ValueByTimes(startTime, endTime, allData, linebody
     const eTime_num = endTime;
     let valueSum = 0;
     for (var i = allData.length - 1; i >= 0; i--) {
-        if (allData[i] == null || allData[i] == '' || allData[i].kpitwolevKpitwoid != typeId
-            || allData[i].linebodyLinebodyid != linebodyId) {
+        if (allData[i] == null || allData[i] == '' || allData[i].kpitwolevKpitwoid != typeId ||
+            allData[i].linebodyLinebodyid != linebodyId) {
             continue;
         }
         const csTime = new Date(allData[i].starttime).getTime();
         const ceTime = new Date(allData[i].endtime).getTime();
         //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
-        if (csTime == undefined || csTime == '' || csTime == null
-            || ceTime == undefined || ceTime == '' || ceTime == null) {
+        if (csTime == undefined || csTime == '' || csTime == null ||
+            ceTime == undefined || ceTime == '' || ceTime == null) {
             //console.log('yuzhizhe03');
             continue;
         }
@@ -594,9 +594,9 @@ exports.computeQuarter2ValueByTimes = computeQuarter2ValueByTimes;
    endTime:当天结束时间
    */
 async function selectAllClassInfoByTimesAndLinebodys(startTime, endTime, Ids) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null) {
         return;
     }
     const sTime_num = new Date(startTime).getTime();
@@ -615,8 +615,8 @@ async function selectAllClassInfoByTimesAndLinebodys(startTime, endTime, Ids) {
             }
             const csTime = new Date(linebodyClassinf[h].classstarttime).getTime();
             const ceTime = new Date(linebodyClassinf[h].classendtime).getTime();
-            if (csTime == undefined || csTime == '' || csTime == null
-                || ceTime == undefined || ceTime == '' || ceTime == null) {
+            if (csTime == undefined || csTime == '' || csTime == null ||
+                ceTime == undefined || ceTime == '' || ceTime == null) {
                 //console.log('yuzhizhe03');
                 continue;
             }
@@ -637,10 +637,10 @@ exports.selectAllClassInfoByTimesAndLinebodys = selectAllClassInfoByTimesAndLine
     endTime:15分钟结束时间
     */
 async function selectClassInfo(startTime, endTime, linebodyId, allClass) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || allClass == undefined || allClass == '' || allClass == null
-        || linebodyId == undefined || linebodyId == '' || linebodyId == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        allClass == undefined || allClass == '' || allClass == null ||
+        linebodyId == undefined || linebodyId == '' || linebodyId == null) {
         //console.log("---allData为空--->");
         return 0;
     }
@@ -654,8 +654,8 @@ async function selectClassInfo(startTime, endTime, linebodyId, allClass) {
         const csTime = new Date(allClass[i].classstarttime).getTime();
         const ceTime = new Date(allClass[i].classendtime).getTime();
         //console.log('----sTime_num-->'+JSON.stringify(sTime , null , 4));
-        if (csTime == undefined || csTime == '' || csTime == null
-            || ceTime == undefined || ceTime == '' || ceTime == null) {
+        if (csTime == undefined || csTime == '' || csTime == null ||
+            ceTime == undefined || ceTime == '' || ceTime == null) {
             //console.log('yuzhizhe03');
             continue;
         }
@@ -677,9 +677,9 @@ exports.selectClassInfo = selectClassInfo;
     endTime:当天结束时间
     */
 async function computeTodayTargetByTimes(startTime, endTime, Ids) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null) {
         console.log("---参数错误--->");
         return 0;
     }
@@ -715,9 +715,9 @@ exports.computeTodayTargetByTimes = computeTodayTargetByTimes;
     endTime:当天结束时间
     */
 async function computeTodayVisionByTimes(startTime, endTime, Ids) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null) {
         console.log("---参数错误--->");
         return 0;
     }
@@ -753,9 +753,9 @@ exports.computeTodayVisionByTimes = computeTodayVisionByTimes;
     endTime:当天结束时间
     */
 async function computeTodayIdealByTimes(startTime, endTime, Ids) {
-    if (startTime == undefined || startTime == '' || startTime == null
-        || endTime == undefined || endTime == '' || endTime == null
-        || Ids == undefined || Ids == '' || Ids == null) {
+    if (startTime == undefined || startTime == '' || startTime == null ||
+        endTime == undefined || endTime == '' || endTime == null ||
+        Ids == undefined || Ids == '' || Ids == null) {
         console.log("---参数错误--->");
         return 0;
     }
@@ -794,10 +794,18 @@ exports.showImpprojectTop = async function (linebodyIdList, endtime) {
     for (var i = 0; i < linebodyIdList.length; i++) {
         // 找到实施运行状态的项目
         var lossstatusData = []
-        const lossstatusDataLs = await Lossstatus.findAll({ where: { linebodyLinebodyid: linebodyIdList[i] } })
+        const lossstatusDataLs = await Lossstatus.findAll({
+            where: {
+                linebodyLinebodyid: linebodyIdList[i]
+            }
+        })
         if (lossstatusDataLs != null && lossstatusDataLs != '') {
             for (var j = 0; j < lossstatusDataLs.length; j++) {
-                const lossstatusLslog = await Lossstatuslog.findAll({ where: { lossstatusId: lossstatusDataLs[j].id } })
+                const lossstatusLslog = await Lossstatuslog.findAll({
+                    where: {
+                        lossstatusId: lossstatusDataLs[j].id
+                    }
+                })
                 if (lossstatusLslog == null || lossstatusLslog == '') {
                     if (lossstatusDataLs[j].status == 2) {
                         lossstatusData.push(lossstatusDataLs[j])

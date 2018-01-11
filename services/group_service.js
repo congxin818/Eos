@@ -87,4 +87,3 @@ exports.updateGroupById = async function (req, res) {
     })
     return data
 }
-

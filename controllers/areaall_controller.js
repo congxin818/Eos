@@ -127,8 +127,8 @@ var areaValSet = function (id, name, pId, checked) {
     */
 exports.updateArea = async function (req, res) {
     //如果没有post数据或者数据为空,直接返回
-    if (req.body.id == null || req.body.id == '' || req.body.name == null
-        || req.body.name == '') {
+    if (req.body.id == null || req.body.id == '' || req.body.name == null ||
+        req.body.name == '') {
         return parameterError
     }
     var areaFlag = await req.body.id.slice(0, 1);
@@ -268,18 +268,15 @@ exports.deleteArea = async function (req, res) {
     if (!isNaN(areaFlag)) {
         // 删除一个集团
         deleteReturn = await groupconler.deleteGroupById(req, res);
-    }
-    else if (areaFlag == 'f') {
+    } else if (areaFlag == 'f') {
         // 删除一个工厂
         req.query.factoryId = areaId;
         deleteReturn = await factoryconler.deleteFactoryById(req, res);
-    }
-    else if (areaFlag == 'w') {
+    } else if (areaFlag == 'w') {
         // 删除一个车间
         req.query.workshopId = areaId;
         deleteReturn = await workshopconler.deleteWorkshopById(req, res);
-    }
-    else if (areaFlag == 'l') {
+    } else if (areaFlag == 'l') {
         // 删除一个线体           
         req.query.linebodyId = areaId;
         deleteReturn = await linebodyconler.deleteLinebodyById(req, res);
@@ -306,10 +303,10 @@ exports.showAreaAll = async function (req, res) {
 }
 
 /**
-    * 时间转为秒
-    * @param time 时间(00:00:00)
-    * @returns {string} 时间戳（单位：秒）
-    */
+ * 时间转为秒
+ * @param time 时间(00:00:00)
+ * @returns {string} 时间戳（单位：秒）
+ */
 async function time_to_sec(time) {
     var s = '';
     if (time == undefined || time == null || time == '') {
@@ -326,10 +323,10 @@ async function time_to_sec(time) {
 exports.time_to_sec = time_to_sec;
 
 /**
-     * 时间秒数格式化
-     * @param s 时间戳（单位：秒）
-     * @returns {*} 格式化后的时分秒
-     */
+ * 时间秒数格式化
+ * @param s 时间戳（单位：秒）
+ * @returns {*} 格式化后的时分秒
+ */
 async function sec_to_time(s) {
     var t;
     if (s > -1) {
@@ -342,9 +339,13 @@ async function sec_to_time(s) {
             t = hour + ":";
         }
 
-        if (min < 10) { t += "0"; }
+        if (min < 10) {
+            t += "0";
+        }
         t += min + ":";
-        if (sec < 10) { t += "0"; }
+        if (sec < 10) {
+            t += "0";
+        }
         t += sec.toFixed(2);
     } else {
         t = '00:00:00';
@@ -354,10 +355,10 @@ async function sec_to_time(s) {
 exports.sec_to_time = sec_to_time;
 
 /**
-     * 根据线体ID查询线体的所有能生产的产品
-     * @param req 请求
-     * @returns res 请求返回
-     */
+ * 根据线体ID查询线体的所有能生产的产品
+ * @param req 请求
+ * @returns res 请求返回
+ */
 async function selectLinebodyProductsByLinebodyId(req, res, next) {
     if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(errorUtil.parameterError));
@@ -475,22 +476,26 @@ exports.selectLinebodyProductsByLinebodyId = selectLinebodyProductsByLinebodyId;
  * 根据线体id添加能产品
  */
 async function addLinebodyProductByLinebodyId(req, res, next) {
-    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == ''
-        || req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
-        || req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
+    if (req.body.linebodyId == undefined || req.body.linebodyId == null || req.body.linebodyId == '' ||
+        req.body.productId == undefined || req.body.productId == null || req.body.productId == '' ||
+        req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
     ) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
     }
     const linebody = await Linebody.findById(req.body.linebodyId);
     const product = await Productname.findById(req.body.productId);
-    if (linebody == undefined || linebody == null || linebody == ''
-        || product == undefined || product == null || product == '') {
+    if (linebody == undefined || linebody == null || linebody == '' ||
+        product == undefined || product == null || product == '') {
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
     const time = await this.sec_to_time(req.body.cTime);
-    const flag = await linebody.addLinebodyProductnames(product, { through: { normalcycletime: time } });
+    const flag = await linebody.addLinebodyProductnames(product, {
+        through: {
+            normalcycletime: time
+        }
+    });
     if (flag == undefined || flag == null || flag == '' || flag == 1) {
         res.end(JSON.stringify(errorUtil.existError));
         return;
@@ -514,7 +519,11 @@ async function deleteLinebodyProductById(req, res, next) {
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
-    const flag = await linebodyProductname.destroy({ where: { id: req.body.id } });
+    const flag = await linebodyProductname.destroy({
+        where: {
+            id: req.body.id
+        }
+    });
     if (flag == undefined || flag == null || flag == '') {
         res.end(JSON.stringify(errorUtil.serviceError));
         return;
@@ -530,9 +539,9 @@ exports.deleteLinebodyProductById = deleteLinebodyProductById;
  * 根据线体id编辑产品
  */
 async function updateLinebodyProductById(req, res, next) {
-    if (req.body.id == undefined || req.body.id == null || req.body.id == ''
-        || req.body.productId == undefined || req.body.productId == null || req.body.productId == ''
-        || req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
+    if (req.body.id == undefined || req.body.id == null || req.body.id == '' ||
+        req.body.productId == undefined || req.body.productId == null || req.body.productId == '' ||
+        req.body.cTime == undefined || req.body.cTime == null || req.body.cTime == ''
     ) {
         res.end(JSON.stringify(errorUtil.parameterError));
         return;
@@ -540,9 +549,9 @@ async function updateLinebodyProductById(req, res, next) {
     const linebodyProductname = await LinebodyProductname.findById(req.body.id);
     const product = await Productname.findById(req.body.productId);
     const linebody = await Linebody.findById(linebodyProductname.linebodyLinebodyid);
-    if (linebodyProductname == undefined || linebodyProductname == null || linebodyProductname == ''
-        || product == undefined || product == null || product == ''
-        || linebody == undefined || linebody == null || linebody == '') {
+    if (linebodyProductname == undefined || linebodyProductname == null || linebodyProductname == '' ||
+        product == undefined || product == null || product == '' ||
+        linebody == undefined || linebody == null || linebody == '') {
         res.end(JSON.stringify(errorUtil.noExistError));
         return;
     }
@@ -566,7 +575,11 @@ async function updateLinebodyProductById(req, res, next) {
         normalcycletime: time,
         productnameId: req.body.productId
     }
-    const flag = await LinebodyProductname.update(value, { where: { id: req.body.id } });
+    const flag = await LinebodyProductname.update(value, {
+        where: {
+            id: req.body.id
+        }
+    });
     console.log(JSON.stringify(flag, null, 4));
     if (flag == undefined || flag == null || flag == '' || flag != 1) {
         res.end(JSON.stringify(errorUtil.serviceError));
@@ -576,4 +589,3 @@ async function updateLinebodyProductById(req, res, next) {
     }
 }
 exports.updateLinebodyProductById = updateLinebodyProductById;
-

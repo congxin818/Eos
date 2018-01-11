@@ -5,8 +5,7 @@ exports.sequelize = function () {
     return new Sequelize(
         settings.mysql.database,
         settings.mysql.user,
-        settings.mysql.password,
-        {
+        settings.mysql.password, {
             'dialect': 'mysql',
             'host': settings.mysql.host,
             'port': settings.mysql.port,

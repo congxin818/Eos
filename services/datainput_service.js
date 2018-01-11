@@ -28,7 +28,12 @@ const moment = require('moment');
 exports.selectKpitwolevidByuser = async function (userId) {
     return await UserKpitwolev.findAll({
         attributes: ['kpitwolevKpitwoid'],
-        where: { userUserid: userId }, order: [['sequence', 'ASC']]
+        where: {
+            userUserid: userId
+        },
+        order: [
+            ['sequence', 'ASC']
+        ]
     })
 }
 
@@ -58,7 +63,11 @@ exports.addKpitwolevByname = async function (kpitwolev, linebodyId, classinfId) 
     根据二级目录名字找到对应二级目录
     */
 exports.selectTwoLevByName = async function (twolevName) {
-    const kpitwolevdata = await Kpitwolev.findOne({ where: { name: twolevName } })
+    const kpitwolevdata = await Kpitwolev.findOne({
+        where: {
+            name: twolevName
+        }
+    })
     return kpitwolevdata;
 }
 
@@ -66,7 +75,12 @@ exports.selectTwoLevByName = async function (twolevName) {
     根据二级目录id找到对应三级目录结构
     */
 exports.selectLosstier3BytwoId = async function (twolevid) {
-    const losstier3data = await Losstier3.findAll({ 'attributes': ['lossid', 'name'], where: { kpitwolevKpitwoid: twolevid } })
+    const losstier3data = await Losstier3.findAll({
+        'attributes': ['lossid', 'name'],
+        where: {
+            kpitwolevKpitwoid: twolevid
+        }
+    })
     return losstier3data;
 }
 
@@ -74,7 +88,12 @@ exports.selectLosstier3BytwoId = async function (twolevid) {
     根据三级目录id找到对应四级目录结构
     */
 exports.selectLosstier4Bytier3Id = async function (tier3id) {
-    const losstier4data = await Losstier4.findAll({ 'attributes': ['tier4id', 'name', 'losstier3Lossid'], where: { losstier3Lossid: tier3id } })
+    const losstier4data = await Losstier4.findAll({
+        'attributes': ['tier4id', 'name', 'losstier3Lossid'],
+        where: {
+            losstier3Lossid: tier3id
+        }
+    })
     return losstier4data;
 }
 
@@ -136,13 +155,13 @@ exports.addLosstier4datavalue = async function (req, res) {
     const endtime = new Date(req.body.endtime)
     //中间有多少个完整的15分钟
 
-    var ccyTimeindex    //完整的15分钟个数
+    var ccyTimeindex //完整的15分钟个数
     var LinebodyLosstier4List = [] //返回增加的loss4值
 
     // 格式化
     var formatTimeReturn = await exports.formatTime(starttime, endtime)
     var formatStarttime = formatTimeReturn.formatStarttime //格式化开始时间
-    var formatEndtime = formatTimeReturn.formatEndtime  // 格式化结束时间
+    var formatEndtime = formatTimeReturn.formatEndtime // 格式化结束时间
     ccyTimeindex = (formatEndtime.unix() - formatStarttime.unix()) / (15 * 60) - 2
     // 判断持续时间
 
@@ -154,7 +173,11 @@ exports.addLosstier4datavalue = async function (req, res) {
             endtime: moment(formatStarttime).add(15, 'minutes')
         }
         var addLosstier4data = await exports.addLosstier4data(req.body.losstier4Id, req.body.linebodyId)
-        await LinebodyLosstier4.update(losstier4data, { where: { id: addLosstier4data.id } })
+        await LinebodyLosstier4.update(losstier4data, {
+            where: {
+                id: addLosstier4data.id
+            }
+        })
         addLosstier4data = await LinebodyLosstier4.findById(addLosstier4data.id)
         LinebodyLosstier4List.push(addLosstier4data)
 
@@ -165,7 +188,11 @@ exports.addLosstier4datavalue = async function (req, res) {
             endtime: endtime
         }
         var addLosstier4dataEnd = await exports.addLosstier4data(req.body.losstier4Id, req.body.linebodyId)
-        await LinebodyLosstier4.update(losstier4dataEnd, { where: { id: addLosstier4dataEnd.id } })
+        await LinebodyLosstier4.update(losstier4dataEnd, {
+            where: {
+                id: addLosstier4dataEnd.id
+            }
+        })
         addLosstier4dataEnd = await LinebodyLosstier4.findById(addLosstier4dataEnd.id)
         LinebodyLosstier4List.push(addLosstier4dataEnd)
         if (ccyTimeindex > 0) {
@@ -177,7 +204,11 @@ exports.addLosstier4datavalue = async function (req, res) {
                     endtime: moment(formatStarttime).add(15 * (i + 2), 'minutes')
                 }
                 var addLosstier4data = await exports.addLosstier4data(req.body.losstier4Id, req.body.linebodyId)
-                await LinebodyLosstier4.update(losstier4data, { where: { id: addLosstier4data.id } })
+                await LinebodyLosstier4.update(losstier4data, {
+                    where: {
+                        id: addLosstier4data.id
+                    }
+                })
                 addLosstier4data = await LinebodyLosstier4.findById(addLosstier4data.id)
                 LinebodyLosstier4List.push(addLosstier4data)
 
@@ -191,7 +222,11 @@ exports.addLosstier4datavalue = async function (req, res) {
             endtime: endtime
         }
         var addLosstier4data = await exports.addLosstier4data(req.body.losstier4Id, req.body.linebodyId)
-        await LinebodyLosstier4.update(losstier4data, { where: { id: addLosstier4data.id } })
+        await LinebodyLosstier4.update(losstier4data, {
+            where: {
+                id: addLosstier4data.id
+            }
+        })
         addLosstier4data = await LinebodyLosstier4.findById(addLosstier4data.id)
         LinebodyLosstier4List.push(addLosstier4data)
     }
@@ -232,7 +267,11 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
                     endtime: formatTimeReturn.formatEndtime
                 }
                 var addLosstier3data = await exports.addLosstier3data(req.body.losstier3Id, req.body.linebodyId)
-                await LinebodyLosstier3.update(losstier3data, { where: { id: addLosstier3data.id } })
+                await LinebodyLosstier3.update(losstier3data, {
+                    where: {
+                        id: addLosstier3data.id
+                    }
+                })
                 addLosstier3data = await LinebodyLosstier3.findById(addLosstier3data.id)
                 linebodyLosstier3List.push(addLosstier3data)
 
@@ -240,7 +279,11 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
                 await addLosstier3data.addLosstier3Losstier4Data(linebodyLosstier4List[i])
 
                 // 新建二级loss data
-                const kpitwolev = await Kpitwolev.findOne({ where: { name: req.body.twolevName } })
+                const kpitwolev = await Kpitwolev.findOne({
+                    where: {
+                        name: req.body.twolevName
+                    }
+                })
                 const kpitwolevData = await LinebodyKpitwolev.findById(addLosstier3data.linebodyKpitwolevId)
                 var kpitwolevdata = {
                     value: addLosstier3data.value,
@@ -248,7 +291,11 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
                     endtime: formatTimeReturn.formatEndtime
                 }
                 var addKpitwolevdata = await exports.addKpitwolevByname(kpitwolev, req.body.linebodyId, req.body.classinfId)
-                await LinebodyKpitwolev.update(kpitwolevdata, { where: { id: addKpitwolevdata.id } })
+                await LinebodyKpitwolev.update(kpitwolevdata, {
+                    where: {
+                        id: addKpitwolevdata.id
+                    }
+                })
 
                 // 在三级data中更新所属的二级data
                 await addKpitwolevdata.addKpitwolevLosstier3Data(addLosstier3data)
@@ -263,8 +310,14 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
                 }
                 losstier3Data.addValue = linebodyLosstier4List[i].value
                 //newValue-----------------
-                var losstier3data = { value: newValue }
-                await LinebodyLosstier3.update(losstier3data, { where: { id: losstier3Data.id } })
+                var losstier3data = {
+                    value: newValue
+                }
+                await LinebodyLosstier3.update(losstier3data, {
+                    where: {
+                        id: losstier3Data.id
+                    }
+                })
                 addLosstier3data = await LinebodyLosstier3.findById(losstier3Data.id)
                 linebodyLosstier3List.push(addLosstier3data)
                 // 在四级data中更新所属的三级data
@@ -277,8 +330,14 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
                     newloss2Value = 1
                 }
                 // newloss2Value-----------
-                var kpitwolevdata = { value: newloss2Value }
-                await LinebodyKpitwolev.update(kpitwolevdata, { where: { id: kpitwolevData.id } })
+                var kpitwolevdata = {
+                    value: newloss2Value
+                }
+                await LinebodyKpitwolev.update(kpitwolevdata, {
+                    where: {
+                        id: kpitwolevData.id
+                    }
+                })
             }
         }
     }
@@ -291,7 +350,7 @@ exports.addLosstier3datavalue = async function (req, res, linebodyLosstier4List)
     */
 exports.formatTime = async function (starttime, endtime) {
     var formatStarttime //格式化开始时间
-    var formatEndtime   // 格式化结束时间
+    var formatEndtime // 格式化结束时间
 
     var timesetFlag = false
     var timeendsetFlag = false
@@ -306,12 +365,18 @@ exports.formatTime = async function (starttime, endtime) {
         }
 
         if (moment(starttime).minute() < 15 * (l + 1) && timesetFlag == false) {
-            formatStarttime = moment(starttime).set({ 'minute': 15 * l, 'second': 00 })
+            formatStarttime = moment(starttime).set({
+                'minute': 15 * l,
+                'second': 00
+            })
             timesetFlag = true
 
         }
         if (moment(endtime).minute() < 15 * (l + 1) && timeendsetFlag == false) {
-            formatEndtime = moment(endtime).set({ 'minute': 15 * (l + 1), 'second': 00 })
+            formatEndtime = moment(endtime).set({
+                'minute': 15 * (l + 1),
+                'second': 00
+            })
             timeendsetFlag = true
         }
     }
@@ -327,7 +392,11 @@ exports.formatTime = async function (starttime, endtime) {
     验证添加的这个二级loss数据是否重复
     */
 exports.selectKpitwolevDataBy = async function (req, res) {
-    const kpitwolev = await Kpitwolev.findOne({ where: { name: req.body.twolevName } })
+    const kpitwolev = await Kpitwolev.findOne({
+        where: {
+            name: req.body.twolevName
+        }
+    })
     return await LinebodyKpitwolev.findOne({
         where: {
             classinformationClassinfid: req.body.classinfId,
@@ -374,8 +443,8 @@ exports.selectLosstier4DataBy = async function (req, res) {
     for (var i = 0; i < loss4idList2.length; i++) {
         const losstier4Data = await LinebodyLosstier4.findById(loss4idList2[i])
         // 传来的时间是否在四级loss内
-        if (moment(req.body.starttime).unix() < moment(losstier4Data.endtime).unix()
-            && moment(req.body.endtime).unix() > moment(losstier4Data.starttime).unix()) {
+        if (moment(req.body.starttime).unix() < moment(losstier4Data.endtime).unix() &&
+            moment(req.body.endtime).unix() > moment(losstier4Data.starttime).unix()) {
             checkFlag = 1
             break
         } else {
@@ -392,7 +461,9 @@ exports.checkClassData = async function (linebodyId, classstarttime, classendtim
     var checkFlag = 0
     var classdataList = await Classinformation.findAll({
         'attributes': ['classinfid'],
-        where: { linebodyLinebodyid: linebodyId }
+        where: {
+            linebodyLinebodyid: linebodyId
+        }
     })
     var classdataList2 = []
     if (classdataList == null || classdataList == '') {
@@ -406,10 +477,10 @@ exports.checkClassData = async function (linebodyId, classstarttime, classendtim
     for (var i = 0; i < classdataList2.length; i++) {
         const classinfData = await Classinformation.findById(classdataList2[i])
         // 传来的时间是否重合
-        if (moment(classstarttime).unix() >= moment(classinfData.classendtime).unix()
-            || moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()) {
-            if (moment(classstarttime).unix() == moment(classinfData.classstarttime).unix()
-                && moment(classendtime).unix() == moment(classinfData.classendtime).unix()) {
+        if (moment(classstarttime).unix() >= moment(classinfData.classendtime).unix() ||
+            moment(classendtime).unix() <= moment(classinfData.classstarttime).unix()) {
+            if (moment(classstarttime).unix() == moment(classinfData.classstarttime).unix() &&
+                moment(classendtime).unix() == moment(classinfData.classendtime).unix()) {
                 // 
                 checkFlag = 1
                 break
@@ -429,7 +500,11 @@ exports.checkClassData = async function (linebodyId, classstarttime, classendtim
     展示产品名字（最小的产品类）下拉列表
     */
 exports.selectProductnameById = async function (linebodyId) {
-    const lineproductnameList = await LinebodyProductname.findAll({ where: { linebodyLinebodyid: linebodyId } })
+    const lineproductnameList = await LinebodyProductname.findAll({
+        where: {
+            linebodyLinebodyid: linebodyId
+        }
+    })
 
     var productnameIdList = []
     var productsubIdList = []
@@ -468,7 +543,11 @@ exports.selectProductnameById = async function (linebodyId) {
             childData.label = productbigclass.name
 
             // 查询大类下的产品小类
-            const productsubclass = await Productsubclass.findAll({ where: { productbigclassId: productbigIdListNo[i] } })
+            const productsubclass = await Productsubclass.findAll({
+                where: {
+                    productbigclassId: productbigIdListNo[i]
+                }
+            })
             if (productsubclass != null) {
                 for (var j = 0; j < productsubclass.length; j++) {
                     var sproductnameIdList = []
@@ -482,7 +561,11 @@ exports.selectProductnameById = async function (linebodyId) {
                         childsubData.label = productsubclass[j].name
 
                         // 查询产品小类下的产品名称
-                        const productname = await Productname.findAll({ where: { productsubclassId: productsubclass[j].id } })
+                        const productname = await Productname.findAll({
+                            where: {
+                                productsubclassId: productsubclass[j].id
+                            }
+                        })
                         if (productname != null) {
                             for (var k = 0; k < productname.length; k++) {
                                 var childrenname = {
@@ -530,7 +613,11 @@ exports.unique2 = async function (thisList) {
     展示产品数据信息数据
     */
 exports.selectProductByclassId = async function (classinfId) {
-    return await Productdata.findAll({ where: { classinformationClassinfid: classinfId } })
+    return await Productdata.findAll({
+        where: {
+            classinformationClassinfid: classinfId
+        }
+    })
 }
 
 /*
@@ -538,10 +625,16 @@ exports.selectProductByclassId = async function (classinfId) {
     */
 exports.selectProductdataBy = async function (linebodyId, classinfId, productnameId) {
     const lineproductname = await LinebodyProductname.findOne({
-        where: { productnameId: productnameId, linebodyLinebodyid: linebodyId }
+        where: {
+            productnameId: productnameId,
+            linebodyLinebodyid: linebodyId
+        }
     })
     return await Productdata.findOne({
-        where: { classinformationClassinfid: classinfId, linebodyproductnameId: lineproductname.id }
+        where: {
+            classinformationClassinfid: classinfId,
+            linebodyproductnameId: lineproductname.id
+        }
     })
 }
 
@@ -554,7 +647,10 @@ exports.addProduct = async function (req, res) {
     }
     const classinformation = await Classinformation.findById(req.body.classinfId)
     const lineproductname = await LinebodyProductname.findOne({
-        where: { productnameId: req.body.productNameId, linebodyLinebodyid: req.body.linebodyId }
+        where: {
+            productnameId: req.body.productNameId,
+            linebodyLinebodyid: req.body.linebodyId
+        }
     })
     productdata = await Productdata.create(productdata)
     await lineproductname.addLineProductnameproductdata(productdata)
@@ -584,7 +680,12 @@ exports.selectCCYtimeById = async function (linebodyproductnameId) {
     根据productnameId查找产品数据
     */
 exports.selectProductDataByName = async function (linebodyproductnameId, classinfId) {
-    return await Productdata.findAll({ where: { linebodyproductnameId: linebodyproductnameId, classinformationClassinfid: classinfId } })
+    return await Productdata.findAll({
+        where: {
+            linebodyproductnameId: linebodyproductnameId,
+            classinformationClassinfid: classinfId
+        }
+    })
 }
 
 /*
@@ -605,8 +706,11 @@ exports.updateProduct = async function (req, res) {
         conformproduct: req.body.conformProduct
     }
 
-    const updateReturn = await Productdata.update(productdata,
-        { where: { productid: req.body.productId } })
+    const updateReturn = await Productdata.update(productdata, {
+        where: {
+            productid: req.body.productId
+        }
+    })
     return updateReturn
 }
 
@@ -677,8 +781,14 @@ exports.deleteLoss32data = async function (losstier4Dataid) {
     if (newloss3Value == 0) {
         await losstier3Data.destroy();
     } else {
-        losstier3data = { value: newloss3Value }
-        const updateloss3Return = await LinebodyLosstier3.update(losstier3data, { where: { id: losstier3Data.id } })
+        losstier3data = {
+            value: newloss3Value
+        }
+        const updateloss3Return = await LinebodyLosstier3.update(losstier3data, {
+            where: {
+                id: losstier3Data.id
+            }
+        })
     }
     // 更改二级loss
     const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
@@ -686,8 +796,14 @@ exports.deleteLoss32data = async function (losstier4Dataid) {
     if (newloss2Value == 0) {
         await kpitwolevData.destroy();
     } else {
-        kpitwolevdata = { value: newloss2Value }
-        const updateloss2Return = await LinebodyKpitwolev.update(kpitwolevdata, { where: { id: kpitwolevData.id } })
+        kpitwolevdata = {
+            value: newloss2Value
+        }
+        const updateloss2Return = await LinebodyKpitwolev.update(kpitwolevdata, {
+            where: {
+                id: kpitwolevData.id
+            }
+        })
     }
     return
 }
@@ -699,13 +815,17 @@ exports.updateLoss4data = async function (losstier4Data, starttime, endtime) {
 
     // 更新四级lossdata
     var updateLoss4dataReturn = false
-    const oldLoss4value = losstier4Data.value  //保存loss4改之前的value
+    const oldLoss4value = losstier4Data.value //保存loss4改之前的value
     var losstier4data = {
         value: (moment(endtime).unix() - moment(starttime).unix()) / (15 * 60),
         starttime: starttime,
         endtime: endtime
     }
-    const updatelosstier4 = await LinebodyLosstier4.update(losstier4data, { where: { id: losstier4Data.id } })
+    const updatelosstier4 = await LinebodyLosstier4.update(losstier4data, {
+        where: {
+            id: losstier4Data.id
+        }
+    })
     const sLosstier4data = await LinebodyLosstier4.findById(losstier4Data.id)
 
     // 更新三级lossdata
@@ -715,8 +835,14 @@ exports.updateLoss4data = async function (losstier4Data, starttime, endtime) {
         losstier3Data.destroy()
     }
     //newValue-----------------
-    var losstier3data = { value: newValue }
-    const updatelosstier3 = await LinebodyLosstier3.update(losstier3data, { where: { id: losstier3Data.id } })
+    var losstier3data = {
+        value: newValue
+    }
+    const updatelosstier3 = await LinebodyLosstier3.update(losstier3data, {
+        where: {
+            id: losstier3Data.id
+        }
+    })
 
     // 更新二级loss
     const kpitwolevData = await LinebodyKpitwolev.findById(losstier3Data.linebodyKpitwolevId)
@@ -725,8 +851,14 @@ exports.updateLoss4data = async function (losstier4Data, starttime, endtime) {
         kpitwolevData.destroy()
     }
     // newloss2Value-----------
-    var kpitwolevdata = { value: newloss2Value }
-    const updatelosstier2 = await LinebodyKpitwolev.update(kpitwolevdata, { where: { id: kpitwolevData.id } })
+    var kpitwolevdata = {
+        value: newloss2Value
+    }
+    const updatelosstier2 = await LinebodyKpitwolev.update(kpitwolevdata, {
+        where: {
+            id: kpitwolevData.id
+        }
+    })
 
     if (updatelosstier4 == 1 && updatelosstier3 == 1 && updatelosstier2 == 1) {
         updateLoss4dataReturn = true
@@ -756,7 +888,12 @@ exports.updateNoLossdataReturn = async function (losstier4data, showAddloss4Afte
 exports.selectClassinfBylineby = async function (linebodyId) {
     const classinfidList = await Classinformation.findAll({
         attributes: ['classinfid'],
-        where: { linebodyLinebodyid: linebodyId }, order: [['classstarttime', 'ASC']]
+        where: {
+            linebodyLinebodyid: linebodyId
+        },
+        order: [
+            ['classstarttime', 'ASC']
+        ]
     })
     var showClassinfdata = []
     var thelastYear
@@ -807,7 +944,11 @@ exports.deleteClassinfHistory = async function (classinfId) {
     根据loss3Data为空清理loss4Data
     */
 exports.productClear = async function () {
-    const productdata = await Productdata.findAll({ where: { classinformationClassinfid: null } });
+    const productdata = await Productdata.findAll({
+        where: {
+            classinformationClassinfid: null
+        }
+    });
     for (var i = productdata.length - 1; i >= 0; i--) {
         await productdata[i].destroy();
     }
@@ -817,7 +958,11 @@ exports.productClear = async function () {
     根据开班为空清理loss2Data
     */
 exports.loss2DataClear = async function () {
-    const linebodyKpitwolev = await LinebodyKpitwolev.findAll({ where: { classinformationClassinfid: null } });
+    const linebodyKpitwolev = await LinebodyKpitwolev.findAll({
+        where: {
+            classinformationClassinfid: null
+        }
+    });
     for (var i = linebodyKpitwolev.length - 1; i >= 0; i--) {
         await linebodyKpitwolev[i].destroy();
     }
@@ -827,7 +972,11 @@ exports.loss2DataClear = async function () {
     根据loss2Data为空清理loss3Data
     */
 exports.loss3DataClear = async function () {
-    const linebodylosstier3 = await LinebodyLosstier3.findAll({ where: { linebodyKpitwolevId: null } });
+    const linebodylosstier3 = await LinebodyLosstier3.findAll({
+        where: {
+            linebodyKpitwolevId: null
+        }
+    });
     for (var i = linebodylosstier3.length - 1; i >= 0; i--) {
         await linebodylosstier3[i].destroy();
     }
@@ -836,7 +985,11 @@ exports.loss3DataClear = async function () {
     根据loss3Data为空清理loss4Data
     */
 exports.loss4DataClear = async function () {
-    const linebodylosstier4 = await LinebodyLosstier4.findAll({ where: { linebodylosstier3Id: null } });
+    const linebodylosstier4 = await LinebodyLosstier4.findAll({
+        where: {
+            linebodylosstier3Id: null
+        }
+    });
     for (var i = linebodylosstier4.length - 1; i >= 0; i--) {
         await linebodylosstier4[i].destroy();
     }
@@ -847,9 +1000,14 @@ exports.loss4DataClear = async function () {
     */
 exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
     var lossinf = []
-    const kpitwolev = await Kpitwolev.findOne({ where: { name: losstier2name } })
+    const kpitwolev = await Kpitwolev.findOne({
+        where: {
+            name: losstier2name
+        }
+    })
     const linebodyKpitwolev = await LinebodyKpitwolev.findAll({
-        attributes: ['id'], where: {
+        attributes: ['id'],
+        where: {
             linebodyLinebodyid: linebodyId,
             kpitwolevKpitwoid: kpitwolev.kpitwoid,
             classinformationClassinfid: classinfId
@@ -859,16 +1017,25 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
     if (linebodyKpitwolev != null && linebodyKpitwolev != '') {
         var linebodyloss3idList = []
         for (var i = 0; i < linebodyKpitwolev.length; i++) {
-            const linebodylosstier3 = await LinebodyLosstier3.findOne({ where: { linebodyKpitwolevId: linebodyKpitwolev[i].id } })
+            const linebodylosstier3 = await LinebodyLosstier3.findOne({
+                where: {
+                    linebodyKpitwolevId: linebodyKpitwolev[i].id
+                }
+            })
             linebodyloss3idList.push(linebodylosstier3.id)
         }
         if (linebodyloss3idList != null && linebodyloss3idList != '') {
             var linebodyloss4idList = [] // loss四级总idList
             var losstier4idList = [] // loss四级名字
-            var loss4idLists = []   //四级连续id的总数组
+            var loss4idLists = [] //四级连续id的总数组
             for (var i = 0; i < linebodyloss3idList.length; i++) {
                 const linebodylosstier42 = await LinebodyLosstier4.findAll({
-                    where: { linebodylosstier3Id: linebodyloss3idList[i] }, order: [['starttime', 'ASC']]
+                    where: {
+                        linebodylosstier3Id: linebodyloss3idList[i]
+                    },
+                    order: [
+                        ['starttime', 'ASC']
+                    ]
                 })
                 if (linebodylosstier42 == null || linebodylosstier42 == '') {
                     break
@@ -887,7 +1054,13 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
             for (var i = 0; i < losstier4idList.length; i++) {
                 const losstier4 = await Losstier4.findById(losstier4idList[i])
                 const linebodylosstier4 = await LinebodyLosstier4.findAll({
-                    where: { losstier4Tier4id: losstier4.tier4id, linebodyLinebodyid: linebodyId }, order: [['starttime', 'ASC']]
+                    where: {
+                        losstier4Tier4id: losstier4.tier4id,
+                        linebodyLinebodyid: linebodyId
+                    },
+                    order: [
+                        ['starttime', 'ASC']
+                    ]
                 })
                 var thelastlosstier4 // 上一个的data
                 var loss4idStringList = [] //四级连续id的string数组
@@ -895,7 +1068,7 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
                 var loss4idList = []
                 var startflag = false // 连续的开始时间标志
                 var oldLoss4idstring
-                var losstier4nameList = []  // 这个四级名字的总数组
+                var losstier4nameList = [] // 这个四级名字的总数组
                 if (linebodylosstier4 == null || linebodylosstier4 == '') {
                     break
                 }
@@ -1012,11 +1185,16 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
     */
 exports.showloss4inf2 = async function (classinfIdList, linebodyId, losstier2name) {
     var lossinf = []
-    const kpitwolev = await Kpitwolev.findOne({ where: { name: losstier2name } })
+    const kpitwolev = await Kpitwolev.findOne({
+        where: {
+            name: losstier2name
+        }
+    })
     var linebodyKpitwolev = []
     for (var i = 0; i < classinfIdList.length; i++) {
         const linebodyKpitwolevOne = await LinebodyKpitwolev.findAll({
-            attributes: ['id'], where: {
+            attributes: ['id'],
+            where: {
                 linebodyLinebodyid: linebodyId,
                 kpitwolevKpitwoid: kpitwolev.kpitwoid,
                 classinformationClassinfid: classinfIdList[i]
@@ -1028,16 +1206,25 @@ exports.showloss4inf2 = async function (classinfIdList, linebodyId, losstier2nam
     if (linebodyKpitwolev != null && linebodyKpitwolev != '') {
         var linebodyloss3idList = []
         for (var i = 0; i < linebodyKpitwolev.length; i++) {
-            const linebodylosstier3 = await LinebodyLosstier3.findOne({ where: { linebodyKpitwolevId: linebodyKpitwolev[i].id } })
+            const linebodylosstier3 = await LinebodyLosstier3.findOne({
+                where: {
+                    linebodyKpitwolevId: linebodyKpitwolev[i].id
+                }
+            })
             linebodyloss3idList.push(linebodylosstier3.id)
         }
         if (linebodyloss3idList != null && linebodyloss3idList != '') {
             var linebodyloss4idList = [] // loss四级总idList
             var losstier4idList = [] // loss四级名字
-            var loss4idLists = []   //四级连续id的总数组
+            var loss4idLists = [] //四级连续id的总数组
             for (var i = 0; i < linebodyloss3idList.length; i++) {
                 const linebodylosstier42 = await LinebodyLosstier4.findAll({
-                    where: { linebodylosstier3Id: linebodyloss3idList[i] }, order: [['starttime', 'ASC']]
+                    where: {
+                        linebodylosstier3Id: linebodyloss3idList[i]
+                    },
+                    order: [
+                        ['starttime', 'ASC']
+                    ]
                 })
                 if (linebodylosstier42 == null || linebodylosstier42 == '') {
                     break
@@ -1056,7 +1243,13 @@ exports.showloss4inf2 = async function (classinfIdList, linebodyId, losstier2nam
             for (var i = 0; i < losstier4idList.length; i++) {
                 const losstier4 = await Losstier4.findById(losstier4idList[i])
                 const linebodylosstier4 = await LinebodyLosstier4.findAll({
-                    where: { losstier4Tier4id: losstier4.tier4id, linebodyLinebodyid: linebodyId }, order: [['starttime', 'ASC']]
+                    where: {
+                        losstier4Tier4id: losstier4.tier4id,
+                        linebodyLinebodyid: linebodyId
+                    },
+                    order: [
+                        ['starttime', 'ASC']
+                    ]
                 })
                 var thelastlosstier4 // 上一个的data
                 var loss4idStringList = [] //四级连续id的string数组
@@ -1064,7 +1257,7 @@ exports.showloss4inf2 = async function (classinfIdList, linebodyId, losstier2nam
                 var loss4idList = []
                 var startflag = false // 连续的开始时间标志
                 var oldLoss4idstring
-                var losstier4nameList = []  // 这个四级名字的总数组
+                var losstier4nameList = [] // 这个四级名字的总数组
                 if (linebodylosstier4 == null || linebodylosstier4 == '') {
                     break
                 }

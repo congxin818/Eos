@@ -33,8 +33,8 @@ exports.selectPtoductsubclassById = selectPtoductsubclassById;
  	添加
  */
 async function addProductsubclassOne(name, pId) {
-	if (name == undefined || name == null || name == ''
-		|| pId == undefined || pId == null || pId == '') {
+	if (name == undefined || name == null || name == '' ||
+		pId == undefined || pId == null || pId == '') {
 		return errorUtil.parameterError;
 	}
 	let productsubclass = {
@@ -57,7 +57,11 @@ async function deleteProductsubclassById(id) {
 	if (productsubclass == undefined || productsubclass == null || productsubclass == '') {
 		return errorUtil.noExistError;
 	}
-	const falg = await Productsubclass.destroy({ where: { id: id } });
+	const falg = await Productsubclass.destroy({
+		where: {
+			id: id
+		}
+	});
 	if (falg == null || falg != 1) {
 		return errorUtil.serviceError;
 	}
@@ -79,7 +83,11 @@ async function updateProductsubclassById(id, name, price) {
 	let productsubclass = {
 		name: name
 	};
-	const falg = await Productsubclass.update(productsubclass, { where: { id: id } });
+	const falg = await Productsubclass.update(productsubclass, {
+		where: {
+			id: id
+		}
+	});
 	if (falg == null || falg != 1) {
 		return errorUtil.serviceError;
 	}
@@ -90,7 +98,11 @@ exports.updateProductsubclassById = updateProductsubclassById;
 	清理函数
  */
 async function ProductsubclassClear() {
-	const subclass = await Productsubclass.findAll({ where: { productbigclassId: null } });
+	const subclass = await Productsubclass.findAll({
+		where: {
+			productbigclassId: null
+		}
+	});
 	//console.log(JSON.stringify(subclass.length));
 	for (var i = subclass.length - 1; i >= 0; i--) {
 		await subclass[i].destroy();

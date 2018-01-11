@@ -22,7 +22,12 @@ const moment = require('moment');
 exports.selectKpitwolevidByuser = async function (userId) {
     return await UserKpitwolev.findAll({
         attributes: ['kpitwolevKpitwoid'],
-        where: { userUserid: userId }, order: [['sequence', 'ASC']]
+        where: {
+            userUserid: userId
+        },
+        order: [
+            ['sequence', 'ASC']
+        ]
     })
 }
 
@@ -47,7 +52,9 @@ exports.selectKpitwoAll = async function () {
 exports.selectLosstier3Bytwoid = async function (twoid) {
     const losstier3 = await Losstier3.findAll({
         'attributes': ['name', 'lossid'],
-        where: { kpitwolevKpitwoid: twoid }
+        where: {
+            kpitwolevKpitwoid: twoid
+        }
     })
     return losstier3
 }
@@ -56,8 +63,14 @@ exports.selectLosstier3Bytwoid = async function (twoid) {
 */
 exports.selectObjectnowBytwolevid = async function (linebodyid, twolevid) {
     result = await sequelize.query(
-        'SELECT losstier3.name, losstier3.lossid,linebodylosstier3.addobjectnow FROM losstier3s AS losstier3 INNER JOIN linebodylosstier3s AS linebodylosstier3 ON losstier3.lossid = linebodylosstier3.losstier3Lossid AND linebodylosstier3.linebodyLinebodyid = :linebodyLinebodyid WHERE (losstier3.kpitwolevKpitwoid = :kpitwolevKpitwoid AND linebodylosstier3.addobjectnow = :addobjectnow);',
-        { replacements: { linebodyLinebodyid: linebodyid, kpitwolevKpitwoid: twolevid, addobjectnow: true }, type: sequelize.QueryTypes.SELECT }
+        'SELECT losstier3.name, losstier3.lossid,linebodylosstier3.addobjectnow FROM losstier3s AS losstier3 INNER JOIN linebodylosstier3s AS linebodylosstier3 ON losstier3.lossid = linebodylosstier3.losstier3Lossid AND linebodylosstier3.linebodyLinebodyid = :linebodyLinebodyid WHERE (losstier3.kpitwolevKpitwoid = :kpitwolevKpitwoid AND linebodylosstier3.addobjectnow = :addobjectnow);', {
+            replacements: {
+                linebodyLinebodyid: linebodyid,
+                kpitwolevKpitwoid: twolevid,
+                addobjectnow: true
+            },
+            type: sequelize.QueryTypes.SELECT
+        }
     );
     return result;
 }
@@ -65,10 +78,21 @@ exports.selectObjectnowBytwolevid = async function (linebodyid, twolevid) {
     把二级目录对应的loss三级目录按value查找出来
     */
 exports.selectLossByKpitwo = async function (linebodyid, kpitwoid) {
-    linebody = await Linebody.findOne({ where: { linebodyid: linebodyid } })
+    linebody = await Linebody.findOne({
+        where: {
+            linebodyid: linebodyid
+        }
+    })
 
-    let tier3 = await linebody.getLinebodyLosstier3({ 'attributes': ['name', 'lossid'], where: { kpitwolevKpitwoid: kpitwoid } });
-    tier3.sort((a, b) => { return a.linebodylosstier3.value - b.linebodylosstier3.value });
+    let tier3 = await linebody.getLinebodyLosstier3({
+        'attributes': ['name', 'lossid'],
+        where: {
+            kpitwolevKpitwoid: kpitwoid
+        }
+    });
+    tier3.sort((a, b) => {
+        return a.linebodylosstier3.value - b.linebodylosstier3.value
+    });
     return tier3;
 }
 
@@ -98,7 +122,12 @@ exports.addObjectnowBylossid = async function (linebodyid, lossid) {
     */
 exports.checkAddexist = async function (linebodyid, lossid) {
     // 验证数据是否已经存在
-    const data = await Lossstatus.findOne({ where: { linebodyLinebodyid: linebodyid, losstier3Lossid: lossid } })
+    const data = await Lossstatus.findOne({
+        where: {
+            linebodyLinebodyid: linebodyid,
+            losstier3Lossid: lossid
+        }
+    })
     if (data != null) {
         if (data.status != 4) {
             return errorUtil.existError
@@ -135,6 +164,8 @@ exports.addLostatuslog = async function (req, res, beforStatus, beforStage, loss
 exports.showImpItemhistory = async function (lossstatusId) {
     return await Lossstatuslog.findAll({
         attributes: ['beforstatus', 'status', 'beforstage', 'stage', 'createdAt'],
-        where: { lossstatusId: lossstatusId }
+        where: {
+            lossstatusId: lossstatusId
+        }
     })
 }

@@ -55,7 +55,11 @@ async function deleteProductbigclassById(id) {
 	if (productbigclass == undefined || productbigclass == null || productbigclass == '') {
 		return errorUtil.noExistError;
 	}
-	const falg = await Productbigclass.destroy({ where: { id: id } });
+	const falg = await Productbigclass.destroy({
+		where: {
+			id: id
+		}
+	});
 	if (falg == null || falg != 1) {
 		return errorUtil.serviceError;
 	}
@@ -77,7 +81,11 @@ async function updateProductbigclassById(id, name, price) {
 	let productbig = {
 		name: name
 	};
-	const falg = await Productbigclass.update(productbig, { where: { id: id } });
+	const falg = await Productbigclass.update(productbig, {
+		where: {
+			id: id
+		}
+	});
 	if (falg == null || falg != 1) {
 		return errorUtil.serviceError;
 	}
