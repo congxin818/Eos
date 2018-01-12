@@ -64,8 +64,9 @@ async function selectOverviewByTimesAndLinebodys(req, res, next) {
             impprojectTop: ''
         };
         if (userKpitwo[i].name == 'OEE') {
-            console.log("---yuzhizhe0-----" + JSON.stringify(userKpitwo[i].name, null, 4));
+            //console.log("---yuzhizhe0-----" + JSON.stringify(userKpitwo[i].name, null, 4));
             const tier2Data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime, req.body.endTime, Ids, userKpitwo[i].kpitwoid, allTier2, allClass);
+            console.log("---tier2Data-----" + JSON.stringify(tier2Data, null, 4));
             if (tier2Data == undefined || tier2Data == null || tier2Data == '' || tier2Data == 'NaN') {
                 await returnData.push(tier2);
                 continue;
@@ -167,9 +168,7 @@ async function selectBarchartByTimesAndLinebodys(startTime, endTime, Ids, type, 
     if (startTime == undefined || startTime == '' || startTime == null ||
         endTime == undefined || endTime == '' || endTime == null ||
         Ids == undefined || Ids == '' || Ids == null ||
-        type == undefined || type == '' || type == null ||
-        allTier2 == undefined || allTier2 == '' || allTier2 == null ||
-        allClass == undefined || allClass == '' || allClass == null) {
+        type == undefined || type == '' || type == null) {
         return;
     }
 
@@ -195,7 +194,7 @@ async function selectBarchartByTimesAndLinebodys(startTime, endTime, Ids, type, 
         sTime_num = Number(sTime_num) + 86400000;
         eTime_num = Number(eTime_num) + 86400000;
     }
-
+    //console.log("---returnData-----" + JSON.stringify(returnData, null, 4));
     return returnData;
 }
 exports.selectBarchartByTimesAndLinebodys = selectBarchartByTimesAndLinebodys;
@@ -209,9 +208,7 @@ async function computeTodayByTimes(startTime, endTime, Ids, type, allTier2, allC
     if (startTime == undefined || startTime == '' || startTime == null ||
         endTime == undefined || endTime == '' || endTime == null ||
         Ids == undefined || Ids == '' || Ids == null ||
-        type == undefined || type == '' || type == null ||
-        allTier2 == undefined || allTier2 == '' || allTier2 == null ||
-        allClass == undefined || allClass == '' || allClass == null) {
+        type == undefined || type == '' || type == null) {
         console.log("---yuzhizhe1--->");
         return;
     }
@@ -469,13 +466,13 @@ async function computeAll2ByTimes(startTime, endTime, Ids, typeId, allData, allC
         allData == undefined || allData == '' || allData == null ||
         allClass == undefined || allClass == '' || allClass == null) {
         //console.log("---yuzhizhe1--->");
-        return;
+        return 0;
     }
     const sTime = new Date(startTime);
     let sTime_num = sTime.getTime();
     let eTime_num = Number(sTime_num) + 900000;
 
-    const endTime_num = new Date(endTime).getTime()
+    const endTime_num = new Date(endTime).getTime();
 
     let returnData = new Array();
     while (eTime_num <= endTime_num) {
