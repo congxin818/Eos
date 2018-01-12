@@ -388,12 +388,12 @@ exports.updateObjectimeAfteradd = async function (req, res) {
                 if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
                     // 小于15分钟，直接update
                     const updateReturn = await datainputServices.updateLoss4data(
-                        losstier4Data0, reqStarttime, reqEndtime)
+                        losstier4Data0, reqStarttime, losstier4Data0.endtime)
                 }
                 if (moment(reqEndtime).unix() < moment(losstier4Data0.endtime).unix()) {
                     // 小于15分钟，直接update
                     const updateReturn = await datainputServices.updateLoss4data(
-                        losstier4Data0, reqStarttime, reqEndtime)
+                        losstier4Data0, losstier4Data0.starttime, reqEndtime)
                 }
             } else {
                 // 开始和结束的值

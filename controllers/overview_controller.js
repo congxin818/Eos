@@ -323,7 +323,7 @@ async function computeAll3ByTimes(startTime, endTime, Ids, typeId, allData, allC
     if (weight != 0) {
         average = Number(sum) / Number(weight);
     }
-    return average.toFixed(4);
+    return average.toFixed(2);
 }
 exports.computeAll3ByTimes = computeAll3ByTimes;
 
