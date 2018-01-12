@@ -54,7 +54,7 @@ async function selectLossmappingByTimesAndLinebodys(req, res, next) {
     const allTier3 = await this.selectTier3ByTimesAndLinebodys(req.body.startTime, req.body.endTime, Ids);
     const allTier2 = await this.selectTier2ByTimesAndLinebodys(req.body.startTime, req.body.endTime, Ids);
     const allClass = await this.selectAllClassInfoByTimesAndLinebodys(req.body.startTime, req.body.endTime, Ids);
-    //console.log("---allTier4--->"+JSON.stringify(allClass , null , 4));
+    //console.log("---allTier4--->" + JSON.stringify(allClass, null, 4));
     await userKpitwo.sort((m, n) => n.userKpitwolev.sequence - m.userKpitwolev.sequence);
     let returnData = new Array();
     for (var i = userKpitwo.length - 1; i >= 0; i--) {
