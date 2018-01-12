@@ -11,6 +11,6 @@ exports.sequelize = function () {
             'port': settings.mysql.port,
             'charset': 'utf8',
             'collate': 'utf8_general_ci',
-            'logging': false
+            //'logging': false
         });
 }
