@@ -78,7 +78,7 @@ async function selectOverviewByTimesAndLinebodys(req, res, next) {
             //dataSuccess.value = await this.getWantString(data);
             tier2.value = await data2.pop().slice(1);
             tier2.losstier3 = await this.selectLosstier3Top3ByTimesAndLinebodys(req.body.startTime, req.body.endTime, Ids, userKpitwo[i].kpitwoid, allTier3, allClass);
-            tier2.impprojectTop = await exports.showImpprojectTop(Ids, req.body.endTime);
+            //tier2.impprojectTop = await exports.showImpprojectTop(Ids, req.body.endTime);
         } else {
 
         }
