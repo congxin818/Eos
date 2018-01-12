@@ -66,7 +66,7 @@ async function selectOverviewByTimesAndLinebodys(req, res, next) {
         if (userKpitwo[i].name == 'OEE') {
             console.log("---yuzhizhe0-----" + JSON.stringify(userKpitwo[i].name, null, 4));
             const tier2Data = await this.selectBarchartByTimesAndLinebodys(req.body.startTime, req.body.endTime, Ids, userKpitwo[i].kpitwoid, allTier2, allClass);
-            if (tier2Data == undefined || tier2Data == null || tier2Data == '' || tier2Data == 0 || tier2Data == 'NaN') {
+            if (tier2Data == undefined || tier2Data == null || tier2Data == '' || tier2Data == 'NaN') {
                 await returnData.push(tier2);
                 continue;
             }
