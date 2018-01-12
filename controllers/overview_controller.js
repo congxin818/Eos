@@ -128,9 +128,7 @@ async function selectLosstier3Top3ByTimesAndLinebodys(startTime, endTime, Ids, t
     if (startTime == undefined || startTime == '' || startTime == null ||
         endTime == undefined || endTime == '' || endTime == null ||
         Ids == undefined || Ids == '' || Ids == null ||
-        type == undefined || type == '' || type == null ||
-        allTier2 == undefined || allTier2 == '' || allTier2 == null ||
-        allClass == undefined || allClass == '' || allClass == null) {
+        type == undefined || type == '' || type == null) {
         return;
     }
     //console.log("---yuzhizhe0-----" + JSON.stringify(type , null , 4));
@@ -292,7 +290,7 @@ async function computeAll3ByTimes(startTime, endTime, Ids, typeId, allData, allC
         allData == undefined || allData == '' || allData == null ||
         allClass == undefined || allClass == '' || allClass == null) {
         //console.log("---yuzhizhe1--->");
-        return;
+        return 0;
     }
     const sTime = new Date(startTime);
     let sTime_num = sTime.getTime();
