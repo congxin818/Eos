@@ -858,7 +858,7 @@ exports.showImpprojectTop = async function (linebodyIdList, endtime) {
                 }
                 const impvalue = (lossstatusData[j].startperformance - lossstatusData[j].target) * weight * valueUnit
                 impproject.name = lossstatusData[j].projectname
-                impproject.value = impvalue
+                impproject.value = impvalue.toFixed(2);
                 threeupList.push(impproject)
             }
         }
