@@ -266,18 +266,15 @@ exports.showProductinf = async function (classinfId, linebodyId) {
     */
 exports.updateProduct = async function (req, res) {
     if (req.body.conformProduct == null || req.body.conformProduct == '' ||
-        req.body.productIdList == null || req.body.productIdList == '' ||
-        req.body.classinfIdList == null || req.body.classinfIdList == '') {
+        req.body.productId == null || req.body.productId == '' ||
+        req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
-        var productIdList = req.body.productIdList.split(",")
-        for (var i = 0; i < productIdList.length; i++) {
-            // 更改一条产品信息
-            req.body.productId = productIdList[i]
-            const updateReturn = await datainputServices.updateProduct(req, res)
-            if (updateReturn != 1) {
-                res.end(JSON.stringify(updateError))
-            }
+        // 更改一条产品信息
+        const updateReturn = await datainputServices.updateProduct(req, res)
+        if (updateReturn != 1) {
+            res.end(JSON.stringify(updateError))
         }
         // 调用展示全部产品信息
         exports.showProduct(req, res)
@@ -289,18 +286,17 @@ exports.updateProduct = async function (req, res) {
     删除产品信息
     */
 exports.deleteProduct = async function (req, res) {
-    if (req.body.productIdList == null || req.body.productIdList == '' ||
-        req.body.classinfIdList == null || req.body.classinfIdList == '') {
+    if (req.body.productId == null || req.body.productId == '' ||
+        req.body.classinfId == null || req.body.classinfId == '' ||
+        req.body.linebodyId == null || req.body.linebodyId == '') {
         res.end(JSON.stringify(parameterError))
     } else {
-        var productIdList = req.body.productIdList.split(",")
-        for (var i = 0; i < productIdList.length; i++) {
-            // 删除一条产品信息
-            const deleteReturn = await datainputServices.deleteProduct(productIdList[i])
-            if (deleteReturn == null || deleteReturn == '') {
-                res.end(JSON.stringify(updateError))
-            }
+        // 删除一条产品信息
+        const deleteReturn = await datainputServices.deleteProduct(req.body.productId)
+        if (deleteReturn == null || deleteReturn == '') {
+            res.end(JSON.stringify(updateError))
         }
+
         // 调用展示全部产品信息
         exports.showProduct(req, res)
     }
