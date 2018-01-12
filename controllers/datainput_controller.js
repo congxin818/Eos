@@ -416,7 +416,7 @@ exports.updateObjectimeAfteradd = async function (req, res) {
                     showAddloss4After = await exports.addLosstierData(req, res)
                 }
                 if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
-                    var ccyTimeindex = ''
+                    var ccyTimeindex = null
                     // 超过15分钟 ccyTimeindex
                     for (var i = 0; i < losstier4DataidList.length; i++) {
                         if (i == 1) {
@@ -432,7 +432,7 @@ exports.updateObjectimeAfteradd = async function (req, res) {
                             break
                         }
                     }
-                    if (ccyTimeindex == '') {
+                    if (ccyTimeindex == null) {
                         ccyTimeindex = 1
                     }
                     // 更改余下的部分
