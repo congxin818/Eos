@@ -1074,7 +1074,6 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
                 }
             }
             for (var i = 0; i < losstier4idList.length; i++) {
-                console.log('---------------------->')
                 const losstier4 = await Losstier4.findById(losstier4idList[i])
                 const linebodylosstier4 = await LinebodyLosstier4.findAll({
                     where: {
@@ -1092,16 +1091,15 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
                 var startflag = false // 连续的开始时间标志
                 var oldLoss4idstring
                 var losstier4nameList = [] // 这个四级名字的总数组
+                var linebodylosstier4Inlosstier4 = [] // 查到的所有的四级在linebodylosstier4[]数组中的
                 if (linebodylosstier4 == null || linebodylosstier4 == '') {
-                    console.log('break---------->')
                     break
                 }
-                console.log('大loss4idList---------->' + JSON.stringify(linebodyloss4idList, null, 4))
-                console.log('linebodylosstier4---------->' + JSON.stringify(linebodylosstier4, null, 4))
                 for (var j = 0; j < linebodylosstier4.length; j++) {
                     if (linebodyloss4idList.indexOf(linebodylosstier4[j].id) == -1) {
                         continue
                     }
+                    linebodylosstier4Inlosstier4.push(linebodylosstier4[j].id)
                     losstier4nameList.push(linebodylosstier4[j].id)
                     if (thelastlosstier4 == null || thelastlosstier4 == '') {
                         startflag = true
@@ -1173,7 +1171,7 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
                 }
 
                 // 得到不连续的数组
-                if (linebodylosstier4.length == 1) {
+                if (linebodylosstier4Inlosstier4.length == 1) {
                     loss4idDisconList.push(linebodylosstier4[0].id)
                 } else {
                     loss4idDisconList = losstier4nameList
@@ -1182,7 +1180,6 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
                         loss4idDisconList.splice(index, 1)
                     }
                 }
-                console.log('loss4idDisconList---------->' + JSON.stringify(loss4idDisconList, null, 4))
                 if (loss4idDisconList != null && loss4idDisconList != '') {
                     for (var j = 0; j < loss4idDisconList.length; j++) {
                         var showAddloss4After = {
