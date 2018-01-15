@@ -1172,7 +1172,7 @@ exports.showloss4inf = async function (classinfId, linebodyId, losstier2name) {
 
                 // 得到不连续的数组
                 if (linebodylosstier4Inlosstier4.length == 1) {
-                    loss4idDisconList.push(linebodylosstier4[0].id)
+                    loss4idDisconList.push(linebodylosstier4Inlosstier4[0])
                 } else {
                     loss4idDisconList = losstier4nameList
                     for (var j = 0; j < loss4idLists.length; j++) {
