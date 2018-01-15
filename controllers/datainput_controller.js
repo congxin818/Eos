@@ -352,6 +352,7 @@ exports.updateObjectimeAfteradd = async function (req, res) {
                 starttime: '',
                 endtime: ''
             }
+<<<<<<< HEAD
             var losstier4DataidList = req.body.losstier4DataidList.split(",")
             const reqEndtime = req.body.endtime // 传入的结束日期，存值
             const reqStarttime = req.body.starttime // 传入的结束日期，存值
@@ -369,6 +370,37 @@ exports.updateObjectimeAfteradd = async function (req, res) {
                 for (var i = 0; i < losstier4DataidList.length; i++) {
                     await datainputServices.deleteLoss32data(losstier4DataidList[i])
                     await datainputServices.deleteLoss4data(losstier4DataidList[i])
+=======
+
+            // 增加传入的loss
+            showAddloss4After = await exports.addLosstierData(req, res)
+        } else {
+            // 更改后loss和之前重合
+            // 更改之前loss是否跨15分钟
+            if (losstier4DataidList.length == 1) {
+                // 开始和结束的值
+                if (moment(reqStarttime).unix() < moment(losstier4Data0.starttime).unix()) {
+                    // 参数设定
+                    req.body.starttime = reqStarttime
+                    req.body.endtime = losstier4Data0.starttime
+                    showAddloss4After = await exports.addLosstierData(req, res)
+                }
+                if (moment(reqEndtime).unix() > moment(losstier4Data0.endtime).unix()) {
+                    // 参数设定
+                    req.body.starttime = losstier4Data0.endtime
+                    req.body.endtime = reqEndtime
+                    showAddloss4After = await exports.addLosstierData(req, res)
+                }
+                if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
+                    // 小于15分钟，直接update
+                    const updateReturn = await datainputServices.updateLoss4data(
+                        losstier4Data0, reqStarttime, losstier4Data0.endtime)
+                }
+                if (moment(reqEndtime).unix() < moment(losstier4Data0.endtime).unix()) {
+                    // 小于15分钟，直接update
+                    const updateReturn = await datainputServices.updateLoss4data(
+                        losstier4Data0, losstier4Data0.starttime, reqEndtime)
+>>>>>>> Android
                 }
 
                 // 增加传入的loss
@@ -384,11 +416,16 @@ exports.updateObjectimeAfteradd = async function (req, res) {
                         req.body.endtime = losstier4Data0.starttime
                         showAddloss4After = await exports.addLosstierData(req, res)
                     }
+<<<<<<< HEAD
                     if (moment(reqEndtime).unix() > moment(losstier4Data0.endtime).unix()) {
                         // 参数设定
                         req.body.starttime = losstier4Data0.endtime
                         req.body.endtime = reqEndtime
                         showAddloss4After = await exports.addLosstierData(req, res)
+=======
+                    if (ccyTimeindex == null) {
+                        ccyTimeindex = 1
+>>>>>>> Android
                     }
                     if (moment(reqStarttime).unix() > moment(losstier4Data0.starttime).unix()) {
                         // 小于15分钟，直接update
